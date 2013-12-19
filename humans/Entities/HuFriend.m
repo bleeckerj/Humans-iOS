@@ -18,7 +18,8 @@
 @synthesize service = _service;
 @synthesize serviceID = _serviceID;
 @synthesize username = _username;
-
+@synthesize profileImage;
+@synthesize largeProfileImage;
 
 - (void) dealloc
 {

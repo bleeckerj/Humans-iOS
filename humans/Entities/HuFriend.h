@@ -18,6 +18,8 @@
 @property (strong, nonatomic) NSString *service;
 @property (strong, nonatomic) NSString *serviceID;
 @property (strong, nonatomic) NSString *username;
+@property (strong, nonatomic) UIImage *profileImage;
+@property (strong, nonatomic) UIImage *largeProfileImage;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
