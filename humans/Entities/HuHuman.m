@@ -62,5 +62,15 @@
 
 	
 }
+-(NSDictionary *)dictionary
+{
+    return [NSDictionary dictionaryWithObjectsAndKeys:[self humanid],  @"humanid", [self name], @"name", [self serviceUsers], @"serviceUsers", nil];
+}
+
+-(NSDictionary *)proxyForJson
+{
+    return [self dictionary];
+}
+
 
 @end
