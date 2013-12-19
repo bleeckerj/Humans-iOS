@@ -82,7 +82,26 @@
 		self.username = username_;
 	}
 
-	
+
 }
+
+-(NSString *)jsonString
+{
+    NSError *writeError = nil; 
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.dictionary options:NSJSONWritingPrettyPrinted error:&writeError];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
+}
+
+-(NSDictionary *)dictionary {
+    return [NSDictionary dictionaryWithObjectsAndKeys:self.id,@"id",self.imageURL, @"imageURL",self.lastUpdated, @"lastUpdated",
+            self.onBehalfOf, @"onBehalfOf", self.service, @"service", self.serviceID, @"serviceID", self.username, @"username", nil];
+}
+
+-(NSDictionary *)proxyForJson
+{
+    return [self dictionary];
+}
+
 
 @end
