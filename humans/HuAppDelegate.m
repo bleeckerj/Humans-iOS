@@ -7,12 +7,25 @@
 //
 
 #import "HuAppDelegate.h"
+#import "LoggerClient.h"
+#import "defines.h"
 
 @implementation HuAppDelegate
+
+@synthesize humansAppUser;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    LoggerInit();
+    //LoggerSetViewerHost(LoggerGetDefaultLogger(), CFSTR("10.0.0.79"), 49767);
+    LoggerStart(LoggerGetDefaultLogger());
+    LOG_GENERAL(0, @"Are we running?");
+    LOG_UI(0, @"Model %@ IS_IPHONE? %@", [ [ UIDevice currentDevice ] model ], (IS_IPHONE?@"YES":@"NO"));
+    LOG_UI(0, @"Widescreen %d", ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON ));
+
+    humansAppUser = [[HuUserHandler alloc]init];
+    
     return YES;
 }
 							
