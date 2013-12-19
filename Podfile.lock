@@ -1,9 +1,15 @@
 PODS:
   - AFNetworking (1.3.3)
   - ConciseKit (0.1.2)
+  - GMGridView (1.1.1)
   - iCarousel (1.7.6)
   - ISO8601DateFormatterValueTransformer (0.5.0):
     - RKValueTransformers (~> 1.0.0)
+  - MGBoxKit (2.1.1):
+    - MGBoxKit/Categories
+  - MGBoxKit/Categories (2.1.1)
+  - NSLogger (1.1)
+  - OCMock (2.2.1)
   - RestKit (0.22.0):
     - RestKit/Core
   - RestKit/Core (0.22.0):
@@ -32,7 +38,11 @@ PODS:
 
 DEPENDENCIES:
   - ConciseKit
+  - GMGridView
   - iCarousel
+  - MGBoxKit
+  - NSLogger
+  - OCMock
   - RestKit
   - SAMCache
   - SBJson
@@ -42,8 +52,12 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
+  GMGridView: a17a31f010990eb8f802abb4cab50e6e03e993ea
   iCarousel: e23a26d7ba722215a42144e80adb0dcb59bebc41
   ISO8601DateFormatterValueTransformer: d0af1f50a9df42db72d7418db31938b8473e0af8
+  MGBoxKit: 5de9fd5f49539c30348ef750e2b9ea5a14374b88
+  NSLogger: 4567fef08d0db18a89cce91b2053823fc0950738
+  OCMock: 80e4cfbc71a0e1bd28caf10a9fda27da7c4c8402
   RestKit: dc107a0aa4f962575ad0385bac5b3c5e4f591f4e
   RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182
   SAMCache: 0e89f0947169946b59063989d57c71587271d4c8

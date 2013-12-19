@@ -8,7 +8,15 @@ pod 'RestKit'
 pod 'SSKeychain'
 pod 'SAMCache'
 pod 'iCarousel'
+pod 'GMGridView'
+pod 'NSLogger'
+pod 'MGBoxKit'
+pod 'OCMock'
+pod 'MGBoxKit'
+#target :humansTests, :exclusive => true do
+#    pod 'OCHamcrest', '~> 3.0'
+#end
 #
 # Testing and Search are optional components
-#pod 'RestKit/Testing', '~> 0.22.0'
-#pod 'RestKit/Search',  '~> 0.22.0'
+#pod 'RestKit/Testing'
+#pod 'RestKit/Search'
