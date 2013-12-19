@@ -10,7 +10,7 @@
 @interface HuOnBehalfOf : NSObject
 
 
-
+@property (strong, nonatomic) NSString *serviceName;
 @property (strong, nonatomic) NSString *serviceUserID;
 @property (strong, nonatomic) NSString *serviceUsername;
 

@@ -10,7 +10,7 @@
 
 @implementation HuOnBehalfOf
 
-
+@synthesize serviceName = _serviceName;
 @synthesize serviceUserID = _serviceUserID;
 @synthesize serviceUsername = _serviceUsername;
 
@@ -45,8 +45,31 @@
 	{
 		self.serviceUsername = serviceUsername_;
 	}
+	id serviceName_ = [dic objectForKey:@"serviceName"];
+	if([serviceName_ isKindOfClass:[NSString class]])
+	{
+		self.serviceName = serviceName_;
+	}
 
 	
 }
 
+-(NSString *)serviceName
+{
+    if(_serviceName == nil) {
+        return @"";
+    } else {
+        return _serviceName;
+    }
+}
+
+-(NSDictionary *)dictionary {
+    
+    return [NSDictionary dictionaryWithObjectsAndKeys:[self serviceName], @"serviceName", [self serviceUserID], @"serviceUserID", [self serviceUsername], @"serviceUsername", nil];
+}
+
+-(NSDictionary *)proxyForJson
+{
+    return [self dictionary];
+}
 @end
