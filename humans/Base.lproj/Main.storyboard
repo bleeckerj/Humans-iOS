@@ -101,6 +101,10 @@
                                     <action selector="touchUp_signInButton:" destination="DI2-bc-a2Y" eventType="touchUpInside" id="Gqu-5m-qlt"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="silhouette-circle.png" translatesAutoresizingMaskIntoConstraints="NO" id="t9r-nC-mLd">
+                                <rect key="frame" x="20" y="327" width="58" height="58"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.9647059440612793" green="0.9647059440612793" blue="0.9647059440612793" alpha="1" colorSpace="deviceRGB"/>
                     </view>
@@ -116,6 +120,9 @@
             <point key="canvasLocation" x="1471" y="-30"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="silhouette-circle.png" width="58" height="58"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
