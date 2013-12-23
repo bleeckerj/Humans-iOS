@@ -1,10 +1,26 @@
 PODS:
   - AFNetworking (1.3.3)
+  - BlocksKit (2.0.0):
+    - BlocksKit/All
+  - BlocksKit/All (2.0.0):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+    - BlocksKit/MessageUI
+    - BlocksKit/UIKit
+  - BlocksKit/Core (2.0.0)
+  - BlocksKit/DynamicDelegate (2.0.0):
+    - libffi
+  - BlocksKit/MessageUI (2.0.0):
+    - BlocksKit/DynamicDelegate
+  - BlocksKit/UIKit (2.0.0):
+    - BlocksKit/DynamicDelegate
   - ConciseKit (0.1.2)
   - GMGridView (1.1.1)
   - iCarousel (1.7.6)
   - ISO8601DateFormatterValueTransformer (0.5.0):
     - RKValueTransformers (~> 1.0.0)
+  - libffi (3.0.13)
+  - MBProgressHUD (0.8)
   - MGBoxKit (2.1.1):
     - MGBoxKit/Categories
   - MGBoxKit/Categories (2.1.1)
@@ -31,30 +47,42 @@ PODS:
   - RKValueTransformers (1.0.1)
   - SAMCache (0.2.0)
   - SBJson (3.2)
+  - SDWebImage (3.5.1):
+    - SDWebImage/Core
+  - SDWebImage/Core (3.5.1)
   - SOCKit (1.1)
   - SSKeychain (1.2.1)
   - SSToolkit (1.0.4)
   - TransitionKit (2.0.0)
+  - UIImage-Categories (0.0.1)
 
 DEPENDENCIES:
+  - BlocksKit (~> 2.0.0)
   - ConciseKit
   - GMGridView
   - iCarousel
+  - MBProgressHUD (~> 0.8)
   - MGBoxKit
   - NSLogger
   - OCMock
   - RestKit
   - SAMCache
   - SBJson
+  - SDWebImage
   - SSKeychain
   - SSToolkit
+  - UIImage-Categories
+  - UIImage-Categories (~> 0.0.1)
 
 SPEC CHECKSUMS:
   AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
+  BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
   GMGridView: a17a31f010990eb8f802abb4cab50e6e03e993ea
   iCarousel: e23a26d7ba722215a42144e80adb0dcb59bebc41
   ISO8601DateFormatterValueTransformer: d0af1f50a9df42db72d7418db31938b8473e0af8
+  libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
+  MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   MGBoxKit: 5de9fd5f49539c30348ef750e2b9ea5a14374b88
   NSLogger: 4567fef08d0db18a89cce91b2053823fc0950738
   OCMock: 80e4cfbc71a0e1bd28caf10a9fda27da7c4c8402
@@ -62,9 +90,11 @@ SPEC CHECKSUMS:
   RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182
   SAMCache: 0e89f0947169946b59063989d57c71587271d4c8
   SBJson: abc2bf2baef456d5dae213f9826fe2b6fdf19861
+  SDWebImage: a408b548a634b792372e07e753fc1079aff5032a
   SOCKit: 2f3bc4d07910de12dcc202815e07db68a3802581
   SSKeychain: d18926838c2e7cd342e2a49e9f869858e49f035a
   SSToolkit: 689acaedac79c2079e492e528a55bcb5db9d98c4
   TransitionKit: 433284465abacdc07852d7db6dd0cc075010059a
+  UIImage-Categories: d9f10e0afb9b281b35a3c2b0c7d16d1ca251d824
 
 COCOAPODS: 0.28.0
