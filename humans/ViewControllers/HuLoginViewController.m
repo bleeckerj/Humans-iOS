@@ -11,6 +11,7 @@
 #import "HuAppDelegate.h"
 #import "HuUserHandler.h"
 #import "SBJsonWriter.h"
+#import "HuHumansScrollViewController.h"
 
 @interface HuLoginViewController ()
 {
@@ -49,6 +50,11 @@
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
     userHandler = [delegate humansAppUser];
     
+    UIFont *font = [UIFont fontWithName:@"DINAlternate-Bold" size:30.0f];
+    
+    self.emailTextField.font=[font fontWithSize:19];
+    self.usernameTextField.font=[font fontWithSize:19];
+    self.passwordTextField.font=[font fontWithSize:19];
 	// Do any additional setup after loading the view.
 //            CGRect rect = CGRectMake(10, 10, 200, 30);
 //            usernameTextField  = [[UITextField alloc]initWithFrame:rect];
@@ -66,6 +72,12 @@
             SBJsonWriter *writer = [[SBJsonWriter alloc] init];
             NSString *user_json = [writer stringWithObject:[[userHandler humans_user] dictionary]];
             LOG_GENERAL(0, @"User %@", user_json);
+            HuHumansScrollViewController *humansScrollViewController = [[HuHumansScrollViewController alloc]init];
+            [humansScrollViewController setArrayOfHumans:[[userHandler humans_user]humans]];
+            [self presentViewController:humansScrollViewController animated:YES completion:^{
+                //
+                LOG_UI(0, @"Should've pesented");
+            }];
         } else {
             //shake
         }
