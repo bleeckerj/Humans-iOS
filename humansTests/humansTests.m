@@ -5,9 +5,10 @@
 //  Created by julian on 12/13/13.
 //  Copyright (c) 2013 nearfuturelaboratory. All rights reserved.
 //
-
 #import <XCTest/XCTest.h>
+#import "XCTestCase+AsyncTesting.h"
 
+#import "HuUserHandler.h"
 @interface humansTests : XCTestCase
 
 @end
@@ -28,7 +29,12 @@
 
 - (void)testExample
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    HuUserHandler *handler = [[HuUserHandler alloc]init];
+    BOOL result = [handler usernameExists:@"fabien"];
+    
+    LOG_GENERAL(0, @"Hello %@", (result ? @"Exists" : @"Doesn't Exist"));
+    [self waitForTimeout:30];
+    //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 }
 
 @end
