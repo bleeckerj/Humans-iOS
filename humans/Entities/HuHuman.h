@@ -20,4 +20,6 @@
 - (void) parseJSONDictionary:(NSDictionary *)dic;
 -(NSDictionary *)dictionary;
 -(NSDictionary *)proxyForJson;
+-(NSArray *)serviceUserProfileImages;
+
 @end

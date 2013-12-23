@@ -7,6 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "XCTestCase+AsyncTesting.h"
+#import "HuHumansScrollViewController.h"
+#import <OCMock/OCMock.h>
+#import "HuHuman.h"
 
 @interface HuHumansScrollViewControllerTest : XCTestCase
 
@@ -28,7 +32,25 @@
 
 - (void)testExample
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    HuHumansScrollViewController *controller = [[HuHumansScrollViewController alloc]init];
+    NSUInteger five = (long)4;
+    id mockArrayOfHumans = [OCMockObject mockForClass:[NSArray class]];
+    [[[mockArrayOfHumans stub] andReturnValue:OCMOCK_VALUE(five)] count];
+    id mockHuman = [OCMockObject mockForClass:[HuHuman class]];
+    [[[mockHuman stub] andReturn:@"Shecky"] name];
+    [controller setArrayOfHumans:mockArrayOfHumans];
+    [[[mockArrayOfHumans stub] andReturn:mockHuman] objectAtIndex:0];
+    [[[mockArrayOfHumans stub] andReturn:mockHuman] objectAtIndex:1];
+    [[[mockArrayOfHumans stub] andReturn:mockHuman] objectAtIndex:2];
+    [[[mockArrayOfHumans stub] andReturn:mockHuman] objectAtIndex:3];
+    UIViewController *main = [[[[UIApplication sharedApplication]delegate]window]rootViewController];
+    [main presentViewController:controller animated:YES completion:^{
+        //
+        
+        
+    }];
+        
+    // XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 }
 
 @end

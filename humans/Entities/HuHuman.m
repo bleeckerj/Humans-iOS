@@ -7,7 +7,7 @@
 // Import
 #import "HuHuman.h"
 #import "HuServiceUser.h"
-
+#import "SBJsonWriter.h"
 
 @implementation HuHuman
 
@@ -20,7 +20,7 @@
 - (void) dealloc
 {
 	
-
+    
 }
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic
@@ -41,13 +41,13 @@
 	{
 		self.humanid = humanid_;
 	}
-
+    
 	id name_ = [dic objectForKey:@"name"];
 	if([name_ isKindOfClass:[NSString class]])
 	{
 		self.name = name_;
 	}
-
+    
 	id serviceUsers_ = [dic objectForKey:@"serviceUsers"];
 	if([serviceUsers_ isKindOfClass:[NSArray class]])
 	{
@@ -59,9 +59,22 @@
 		}
 		self.serviceUsers = [NSArray arrayWithArray:array];
 	}
-
+    
 	
 }
+
+-(NSArray *)serviceUserProfileImages
+{
+    NSMutableArray *result = [[NSMutableArray alloc]init];
+    for(int i=0; i<self.serviceUsers.count; i++) {
+        HuServiceUser *s = [self.serviceUsers objectAtIndex:i];
+        if(s && [s imageURL]) {
+        [result addObject:[s imageURL]];
+        }
+    }
+    return result;
+}
+
 -(NSDictionary *)dictionary
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:[self humanid],  @"humanid", [self name], @"name", [self serviceUsers], @"serviceUsers", nil];
@@ -72,5 +85,12 @@
     return [self dictionary];
 }
 
+
+- (NSString *)description
+{
+    SBJsonWriter *writer = [[SBJsonWriter alloc] init];
+    NSString *json = [writer stringWithObject:[self dictionary]];
+    return json;
+}
 
 @end

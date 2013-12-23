@@ -34,6 +34,7 @@
     
     LOG_GENERAL(0, @"Hello %@", (result ? @"Exists" : @"Doesn't Exist"));
     [self waitForTimeout:30];
+
     //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 }
 

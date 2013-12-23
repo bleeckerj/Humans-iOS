@@ -15,6 +15,7 @@
 #import "HuHuman.h"
 #import <SBJson/SBJson.h>
 #import "OCMock/OCMock.h"
+#import "XCTest+Async.h"
 
 @interface HuUserHandlerTest : XCTestCase
 
@@ -28,7 +29,13 @@ HuUserHandler *user_handler;
 {
     [super setUp];
     user_handler = [[HuUserHandler alloc]init];
-    [user_handler setAccess_token:@"c1b93c987f0cdfe70a376243b891ff3a"];
+    ASYNC_TEST_START
+    [user_handler userRequestTokenForUsername:@"fabien" forPassword:@"fabien" withCompletionHandler:^(BOOL success, NSError *error) {
+        //
+        ASYNC_TEST_DONE
+
+    }];
+    ASYNC_TEST_END
 }
 
 - (void)tearDown
@@ -61,13 +68,29 @@ HuUserHandler *user_handler;
 - (void)test_userRequestTokenForUsername
 {
     //HuUserHandler *handler = [[HuUserHandler alloc]init];
-    [user_handler userRequestTokenForUsername:@"darthjulian" forPassword:@"darthjulian"];
+    [user_handler userRequestTokenForUsername:@"fabien" forPassword:@"fabien" withCompletionHandler:^(BOOL success, NSError *error) {
+        //
+    }];
     [self waitForTimeout:10];
 //    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:30]
     XCTAssertNotNil([user_handler access_token], @"Attempted to request token for valid username and failed");
     //assertThat([user_handler access_token], is(notNilValue()));
 }
 
+- (void)test_getStatusForHuman
+{
+    //    [[[mockArrayOfHumans stub] andReturnValue:OCMOCK_VALUE(five)] count];
+    ASYNC_TEST_START
+    NSArray *humans = [[user_handler humans_user]humans];
+    [user_handler getStatusForHuman:[humans objectAtIndex:0] withCompletionHandler:^(BOOL success, NSError *error) {
+        ASYNC_TEST_DONE
+        LOG_GENERAL(0, @"Status: %@", [user_handler statusForHuman:[humans objectAtIndex:0]]);
+    }];
+    ASYNC_TEST_END_LONG_TIMEOUT
+    
+    //[self waitForTimeout:30];
+    
+}
 
 
 - (void)test_userFriendsGet

@@ -10,21 +10,25 @@
 #import "AFJSONRequestOperation.h"
 #import <RestKit.h>
 
+
 @implementation HuHumansHTTPClient
 
 
-static NSString * const kHumansLocalDevBaseURLString = @"http://localhost:8080/";
+static NSString * const kHumansLocalDevBaseURLString = @"https://localhost:8443/";
 static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturelaboratory.com:8443/";
+
 
 
 + (HuHumansHTTPClient *)sharedDevClient {
     static HuHumansHTTPClient *_sharedClient = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedClient = [[HuHumansHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:kHumansLocalDevBaseURLString]];
+        _sharedClient = [[HuHumansHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:kHumansProdBaseURLString]];
         [_sharedClient setDefaultHeader:@"Accept" value:RKMIMETypeJSON];
         [_sharedClient setDefaultHeader:@"Content-Type" value:RKMIMETypeJSON];
+        
         [_sharedClient setAllowsInvalidSSLCertificate:YES];
+        
 
     });
     
