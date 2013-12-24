@@ -19,12 +19,17 @@
 #import "HuOnBehalfOf.h"
 #import "HuServiceUser.h"
 #import "HuAppDelegate.h"
+#import "RKValueTransformers.h"
 
 @implementation HuUserHandler
 
 @synthesize client;
 @synthesize humans_user;
 @synthesize statusForHumanId;
+@synthesize lastStatusResultHeader;
+
+NSDateFormatter *twitter_formatter;
+
 
 - (id)init
 {
@@ -36,6 +41,8 @@
     
 }
 
+// An array of status. This will check this temporary object cache first. No strategy for dumping it other than
+// when the application or GC dumps it..
 - (NSArray *)statusForHuman:(HuHuman *)aHuman
 {
     __block id obj =  [[self statusForHumanId]objectForKey:[aHuman humanid]];
@@ -50,6 +57,9 @@
 
 - (void)commonInit
 {
+    twitter_formatter = [NSDateFormatter new];
+    [twitter_formatter setDateFormat:@"MMM dd, yyyy hh:mm:ss a"];
+
     statusForHumanId = [[NSMutableDictionary alloc]init];
     client = [HuHumansHTTPClient sharedDevClient];
     
@@ -238,7 +248,7 @@
                          parameters:queryParams
                             success:^(RKObjectRequestOperation * operaton, RKMappingResult *mappingResult)
      {
-         LOG_UI_VERBOSE(0, @"success: mappings %@", mappingResult);
+         LOG_GENERAL(0, @"success: mappings %@", mappingResult);
          NSMutableArray *results = [NSMutableArray new];
          for (HuFriend *item in [mappingResult array]) {
              [results addObject:item];
@@ -248,7 +258,7 @@
          }
      }
      
-                            failure:^(RKObjectRequestOperation * operaton, NSError * error)
+     failure:^(RKObjectRequestOperation * operaton, NSError * error)
      {
          LOG_NETWORK(0, @"failure: operation: %@ \n\nerror: %@", operaton, error);
          LOG_NETWORK(0, @"errorMessage: %@", [[error userInfo] objectForKey:RKObjectMapperErrorObjectsKey]);
@@ -259,55 +269,100 @@
     
 }
 
-
 - (void)getStatusForHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    RKDynamicMapping *dynamicMapping = [RKDynamicMapping new];
-    
+    [self getStatusForHuman:(HuHuman *)aHuman atPage:0 withCompletionHandler:(CompletionHandlerWithResult)completionHandler];
+
+}
+- (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+  
     RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPClient:client];
-    
-    
-    [dynamicMapping addMatcher:[self twitterStatusMatcher]];
-    [dynamicMapping addMatcher:[self instagramStatusMatcher]];
-    
-    // Success
-    RKResponseDescriptor *dynamicResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:dynamicMapping method:RKRequestMethodAny pathPattern:nil keyPath:@"status" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
-    [objectManager addResponseDescriptor:dynamicResponseDescriptor];
 
-    // Errors
-    RKObjectMapping *errorMapping = [RKObjectMapping mappingForClass:[RKErrorMessage class]];
+    RKDynamicMapping *statusMapping = [RKDynamicMapping new];
+    
+    [statusMapping addMatcher:[self twitterStatusMatcher]];
+    [statusMapping addMatcher:[self instagramStatusMatcher]];
+    
 
-    RKResponseDescriptor *errorDescriptor =
-    [RKResponseDescriptor responseDescriptorWithMapping:errorMapping
-                                                 method:RKRequestMethodPOST
+    // Head - The service sends this back with metadata about the status request
+    RKObjectMapping *headMapping = [RKObjectMapping mappingForClass:[HuRestStatusHeader class]];
+    [headMapping addAttributeMappingsFromArray:@[@"count", @"human_id", @"human_name", @"page", @"pages", @"total_status"]];
+    
+    
+    RKResponseDescriptor *headResponseDescriptor =
+    [RKResponseDescriptor responseDescriptorWithMapping:headMapping
+                                                 method:RKRequestMethodAny
+                                            pathPattern:nil
+                                                keyPath:@"head"
+                                            statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:headResponseDescriptor];
+    
+    
+    // Status Success
+    RKResponseDescriptor *statusResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:statusMapping method:RKRequestMethodAny pathPattern:nil keyPath:@"status" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:statusResponseDescriptor];
+    
+    
+    // Client Errors
+    RKObjectMapping *clientErrorMapping = [RKObjectMapping mappingForClass:[RKErrorMessage class]];
+    
+    [clientErrorMapping addPropertyMapping:
+     [RKAttributeMapping attributeMappingFromKeyPath:nil toKeyPath:@"errorMessage"]];
+
+    RKResponseDescriptor *clientErrorDescriptor =
+    [RKResponseDescriptor responseDescriptorWithMapping:clientErrorMapping
+                                                 method:RKRequestMethodAny
                                             pathPattern:nil
                                                 keyPath:@"message"
                                             statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassClientError)];
     
-    [objectManager addResponseDescriptor:errorDescriptor];
-
+    [objectManager addResponseDescriptor:clientErrorDescriptor];
+  
+    
+    // Server Errors
+    RKObjectMapping *serverErrorMapping = [RKObjectMapping mappingForClass:[RKErrorMessage class]];
+    
+    [serverErrorMapping addPropertyMapping:
+     [RKAttributeMapping attributeMappingFromKeyPath:nil toKeyPath:@"errorMessage"]];
+    
+    RKResponseDescriptor *serverErrorDescriptor =
+    [RKResponseDescriptor responseDescriptorWithMapping:serverErrorMapping
+                                                 method:RKRequestMethodAny
+                                            pathPattern:nil
+                                                keyPath:@"message"
+                                            statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassServerError)];
+    
+    [objectManager addResponseDescriptor:serverErrorDescriptor];
+    
     
     NSDictionary *queryParams;
-    queryParams = [NSDictionary dictionaryWithObjectsAndKeys:[self access_token], @"access_token", [aHuman humanid], @"humanid", @"1", @"page", nil];
+    queryParams = [NSDictionary dictionaryWithObjectsAndKeys:[self access_token], @"access_token", [aHuman humanid], @"humanid", aPage, @"page", nil];
     
     //__block NSArray *array;
+    LOG_GENERAL(0, @"query=%@", queryParams);
     
     [objectManager getObjectsAtPath:@"/rest/human/status"
                          parameters:queryParams
       success:^(RKObjectRequestOperation * operaton, RKMappingResult *mappingResult)
      {
          
-        // NSArray *result = [mappingResult array];
          LOG_GENERAL(0, @"success: mappings: %@", [mappingResult array]);
-         [[self statusForHumanId] setObject:[mappingResult array] forKey:[aHuman humanid]];
+         [[self statusForHumanId] setObject:[[mappingResult dictionary]objectForKey:@"status"] forKey:[aHuman humanid]];
+         [self setLastStatusResultHeader:[[mappingResult dictionary]objectForKey:@"status"]];
+         LOG_GENERAL(0,@"%@",[[mappingResult dictionary]objectForKey:@"head"]);
+         LOG_GENERAL(0, @"%@", [[mappingResult dictionary]objectForKey:@"status"]);
          if(completionHandler) {
              completionHandler(true, nil);
          }
     }
-      failure:^(RKObjectRequestOperation * operaton, NSError * error)
+      failure:^(RKObjectRequestOperation * operation, NSError * error)
      {
-         LOG_GENERAL (0, @"failure: operation: %@ \n\nerror: %@", operaton, error);
+         LOG_GENERAL (0, @"failure: error: %@", error);
+         LOG_GENERAL(0, @"%@", [error localizedDescription] );
+         [self setLastStatusResultHeader:nil];
          if(completionHandler) {
              completionHandler(false, error);
          }
@@ -317,6 +372,8 @@
     
 }
 
+
+// TWITTER
 - (RKObjectMappingMatcher *)twitterStatusMatcher
 {
     RKObjectMapping *twitterStatusMapping = [RKObjectMapping mappingForClass:[TwitterStatus class]];
@@ -324,17 +381,27 @@
                                                                @"id" : @"tweet_id",
                                                                @"text" : @"text",
                                                                //@"user" : @"user",
-                                                               @"created_at" : @"created_at",
-                                                               @"service" : @"name"
+                                                               //@"created_at" : @"created_at",
+                                                               //@"service" : @"name"
                                                                }];
-    //twitterUserMapping.dateFormatters = [NSArray arrayWithObject: dateFormatter];
-
+    
+    
+    // Transform date
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDateFormat:@"MMM dd, yyyy hh:mm:ss a"];
+    
+    [[RKValueTransformer defaultValueTransformer]insertValueTransformer:dateFormatter atIndex:0];
+    
+    RKAttributeMapping *created_at_mapping = [RKAttributeMapping attributeMappingFromKeyPath:@"created_at" toKeyPath:@"created_at"];
+    created_at_mapping.valueTransformer = [RKValueTransformer defaultValueTransformer];//dateTransformer;
+    [twitterStatusMapping addPropertyMapping:created_at_mapping];
+    
     
     RKObjectMapping *twitterUserMapping = [RKObjectMapping mappingForClass:[TwitterUser class]];
-    [twitterUserMapping addAttributeMappingsFromArray:@[@"id", @"lastUpdated", @"created_at", @"description", @"favourites_count", @"following", @"followers_count", @"friends_count", @"geo_enabled", @"location", @"name", @"screen_name", @"time_zone", @"url", @"utc_offset", @"verified"]];
+    [twitterUserMapping addAttributeMappingsFromArray:@[@"id", @"lastUpdated",/* @"created_at",*/ @"description", @"favourites_count", @"following", @"followers_count", @"friends_count", @"geo_enabled", @"location", @"name", @"screen_name", @"time_zone", @"url", @"utc_offset", @"verified", @"profile_image_url", @"protected", @"statuses_count", @"listed_count"]];
     
     
-    
+    [twitterUserMapping addPropertyMapping:[created_at_mapping copy]];
     [twitterStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user"
                                                                                          toKeyPath:@"user"
                                                                                        withMapping:twitterUserMapping]];
@@ -346,18 +413,25 @@
 }
 
 
+// INSTAGRAM
 - (RKObjectMappingMatcher *)instagramStatusMatcher
 {
     RKObjectMapping *instagramStatusMapping = [RKObjectMapping mappingForClass:[InstagramStatus class]];
     [instagramStatusMapping addAttributeMappingsFromDictionary:@{@"id": @"instagram_id",
                                                                  //@"caption", @"caption",
                                                                  @"created_time": @"created_time",
-                                                                 @"service" : @"service"
+                                                                 @"service" : @"service",
+                                                                 @"filter" : @"filter",
+                                                                 @"link" : @"link",
+                                                                 @"type" : @"type"
                                                                  }];
     
+
+    // Caption
     RKObjectMapping *instagramCaptionMapping = [RKObjectMapping mappingForClass:[InstagramCaption class]];
     [instagramCaptionMapping addAttributeMappingsFromArray:@[@"created_time", @"id", @"text"]];
     
+    // Caption.User
     RKObjectMapping *instagramCaptionUserMapping = [RKObjectMapping mappingForClass:[InstagramUser class]];
     [instagramCaptionUserMapping addAttributeMappingsFromArray:@[@"id",@"profile_picture", @"username", @"full_name"]];
     
@@ -365,10 +439,11 @@
     
     [instagramStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"caption" toKeyPath:@"caption" withMapping:instagramCaptionMapping]];
     
+    // Images
     RKObjectMapping *instagramImagesMapping = [RKObjectMapping mappingForClass:[InstagramImages class]];
     //[instagramImagesMapping addAttributeMappingsFromArray:@[@"low_resolution", @"standard_resolution", @"thumbnail"]];
     
-    
+    // Images.Image
     RKObjectMapping *instagramImageMapping = [RKObjectMapping mappingForClass:[InstagramImage class]];
     [instagramImageMapping addAttributeMappingsFromArray:@[@"height", @"url", @"width"]];
     
@@ -376,10 +451,25 @@
     [instagramImagesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"standard_resolution" toKeyPath:@"standard_resolution" withMapping:instagramImageMapping]];
     [instagramImagesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"thumbnail" toKeyPath:@"thumbnail" withMapping:instagramImageMapping]];
     
-    
-    
     [instagramStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"images" toKeyPath:@"images" withMapping:instagramImagesMapping]];
-  
+
+    // Comments
+    RKObjectMapping *instagramCommentsMapping = [RKObjectMapping mappingForClass:[InstagramComments class]];
+    [instagramCommentsMapping addAttributeMappingsFromArray:@[@"count"]];
+    [instagramStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"comments" toKeyPath:@"comments" withMapping:instagramCommentsMapping]];
+    
+    // Comments.Commentors
+    RKObjectMapping *instagramCommenterMapping = [RKObjectMapping mappingForClass:[InstagramCommenter class]];
+    [instagramCommenterMapping addAttributeMappingsFromArray:@[@"created_time", @"id", @"text"]];
+    
+    [instagramCommentsMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"data" toKeyPath:@"data" withMapping:instagramCommenterMapping]];
+    
+    // Comments.Commentor.From
+    RKObjectMapping *instagramCommenterUserMapping = [RKObjectMapping mappingForClass:[InstagramUser class]];
+    [instagramCommenterUserMapping addAttributeMappingsFromArray:@[@"id",@"full_name", @"profile_picture",@"username"]];
+    [instagramCommenterMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"from" toKeyPath:@"from" withMapping:instagramCommenterUserMapping]];
+    
+    // Transient User (??)
     RKObjectMapping *instagramTransientUserMapping = [RKObjectMapping mappingForClass:[TransientInstagramUser class]];
     [instagramTransientUserMapping addAttributeMappingsFromArray:@[@"bio", @"full_name", @"id", @"lastUpdated", @"profile_picture", @"username", @"website", @"version"]];
     
@@ -388,9 +478,29 @@
     [instagramCountsMapping addAttributeMappingsFromArray:@[@"followed_by", @"follows", @"media"]];
     
     [instagramTransientUserMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"counts" toKeyPath:@"counts" withMapping:instagramCountsMapping]];
-    
+  
     [instagramStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"transient_instagram_user" toKeyPath:@"transient_instagram_user" withMapping:instagramTransientUserMapping]];
 
+    
+    RKObjectMapping *instagramUserMapping = [RKObjectMapping mappingForClass:[InstagramUser class]];
+    [instagramUserMapping addAttributeMappingsFromArray:@[@"bio", @"full_name", @"id", @"profile_picture", @"username", @"website"]];
+    
+    [instagramStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:instagramUserMapping]];
+ 
+    //RKObjectMapping *instagamLocationMapping
+    
+    RKObjectMapping *likesMapping = [RKObjectMapping mappingForClass:[InstagramLikes class]];
+    [likesMapping addAttributeMappingsFromArray:@[@"count"]];
+    
+    RKObjectMapping *likeMapping = [RKObjectMapping mappingForClass:[InstagramLike class]];
+    [likeMapping addAttributeMappingsFromArray:@[@"full_name", @"id", @"profile_picture", @"username"]];
+    
+    [likesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"data" toKeyPath:@"data" withMapping:likeMapping]];
+    
+    [instagramStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"likes" toKeyPath:@"likes" withMapping:likesMapping]];
+    
+    
+    
     RKObjectMappingMatcher *instagramStatusMatcher = [RKObjectMappingMatcher matcherWithKeyPath:@"service" expectedValue:@"instagram" objectMapping:instagramStatusMapping];
     
     return instagramStatusMatcher;
@@ -445,3 +555,18 @@
 }
 
 @end
+
+
+
+//    RKValueTransformer *dateTransformer = [RKBlockValueTransformer valueTransformerWithValidationBlock:^BOOL(__unsafe_unretained Class inputValueClass, __unsafe_unretained Class outputValueClass) {
+//        //
+//        return ([inputValueClass isSubclassOfClass:[NSString class]] && [outputValueClass isSubclassOfClass:[NSDate class]]);
+//    } transformationBlock:^BOOL(id inputValue, __autoreleasing id *outputValue, __unsafe_unretained Class outputClass, NSError *__autoreleasing *error) {
+//        //
+//        RKValueTransformerTestInputValueIsKindOfClass(inputValue, [NSString class], error);
+//        RKValueTransformerTestOutputValueClassIsSubclassOfClass(outputClass, [NSDate class], error);
+//
+//        *outputValue = [twitter_formatter dateFromString:inputValue];
+//
+//        return YES;
+//    }];
