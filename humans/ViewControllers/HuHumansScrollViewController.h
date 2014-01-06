@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "HuHuman.h"
 #import "HuAppDelegate.h"
+#import "HuStatusCarouselViewController.h"
 
 @interface HuHumansScrollViewController : UIViewController
 
 @property (nonatomic, strong) NSArray *arrayOfHumans;
+@property (nonatomic, strong) HuStatusCarouselViewController *statusCarouselViewController;
 
 -(void)showHuman:(HuHuman *)human;
 

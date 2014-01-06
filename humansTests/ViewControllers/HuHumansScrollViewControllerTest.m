@@ -35,7 +35,7 @@
     HuHumansScrollViewController *controller = [[HuHumansScrollViewController alloc]init];
     NSUInteger five = (long)4;
     id mockArrayOfHumans = [OCMockObject mockForClass:[NSArray class]];
-    [[[mockArrayOfHumans stub] andReturnValue:OCMOCK_VALUE(five)] count];
+    //[[[mockArrayOfHumans stub] andReturnValue:OCMOCK_VALUE(five)] count];
     id mockHuman = [OCMockObject mockForClass:[HuHuman class]];
     [[[mockHuman stub] andReturn:@"Shecky"] name];
     [controller setArrayOfHumans:mockArrayOfHumans];

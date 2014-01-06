@@ -11,7 +11,7 @@
 
 @interface HuViewForServiceStatus : UIView
 
-- (id)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus;
+- (UIView *)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus;
 //+ (UIView *)viewForStatus:(id<HuServiceStatus>)mstatus;
 
 @end

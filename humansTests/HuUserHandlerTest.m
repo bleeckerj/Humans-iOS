@@ -16,6 +16,9 @@
 #import <SBJson/SBJson.h>
 #import "OCMock/OCMock.h"
 #import "XCTest+Async.h"
+#define HC_SHORTHAND
+#import <OCHamcrest/OCHamcrest.h>
+#import "HuServiceStatus.h"
 
 @interface HuUserHandlerTest : XCTestCase
 
@@ -30,7 +33,7 @@ HuUserHandler *user_handler;
     [super setUp];
     user_handler = [[HuUserHandler alloc]init];
     ASYNC_TEST_START
-    [user_handler userRequestTokenForUsername:@"fabien" forPassword:@"fabien" withCompletionHandler:^(BOOL success, NSError *error) {
+    [user_handler userRequestTokenForUsername:@"darthjulian" forPassword:@"darthjulian" withCompletionHandler:^(BOOL success, NSError *error) {
         //
         ASYNC_TEST_DONE
 
@@ -82,13 +85,65 @@ HuUserHandler *user_handler;
     //    [[[mockArrayOfHumans stub] andReturnValue:OCMOCK_VALUE(five)] count];
     ASYNC_TEST_START
     NSArray *humans = [[user_handler humans_user]humans];
-    [user_handler getStatusForHuman:[humans objectAtIndex:0] withCompletionHandler:^(BOOL success, NSError *error) {
+    [user_handler getStatusForHuman:[humans objectAtIndex:0] atPage:0 withCompletionHandler:^(BOOL success, NSError *error) {
         ASYNC_TEST_DONE
-        LOG_GENERAL(0, @"Status: %@", [user_handler statusForHuman:[humans objectAtIndex:0]]);
+        
+        HuRestStatusHeader *head = [user_handler lastStatusResultHeader];
+        NSString *human_id = [head human_id];
+        HuHuman *human = [humans objectAtIndex:0];
+        
+        XCTAssertNotNil(head, @"The 'head' from the status query is nil. No bueno.");
+        XCTAssertNotEqual(human_id, [human humanid], @"The 'head' human_id is different from the one we asked for. %@ %@", [head human_id], [human humanid]);
+        
+
+        
+        NSArray *status = [[user_handler statusForHumanId] objectForKey:human_id];
+        XCTAssertNotNil(status, @"Status for human_id=%@ is nil. No bueno. %@", human_id, [humans objectAtIndex:0]);
+#pragma warning All of the asserts below caused linker errors after they once worked / won't work fo 64-bit tests
+        
+        assertThat(status, isNot(isEmpty()));
+        
+        for (int i=0; i<[status count]; i++) {
+            id obj = [status objectAtIndex:i];
+            NSDate *date = [obj dateForSorting];
+            assertThat(obj, conformsTo(@protocol(HuServiceStatus)));
+            assertThat(obj, anyOf(instanceOf([TwitterStatus class]), instanceOf([InstagramStatus class]), nil));
+            assertThat(date, is(greaterThan([NSDate dateWithTimeIntervalSince1970:0])));
+        }
+        
+        
+        LOG_GENERAL(0, @"Status: %@", [[user_handler statusForHumanId] objectForKey:human_id]);
+        LOG_GENERAL(0, @"Header: %@", head);
     }];
-    ASYNC_TEST_END_LONG_TIMEOUT
+    ASYNC_TEST_END
     
     //[self waitForTimeout:30];
+    
+}
+
+- (void)test_getStatusForHuman_ServerError
+{
+    id human = [OCMockObject mockForClass:[HuHuman class]];
+    [[[human stub] andReturn:@"x0x0x0"] humanid];
+
+    ASYNC_TEST_START
+    [user_handler getStatusForHuman:human atPage:0 withCompletionHandler:^(BOOL success, NSError *error) {
+        ASYNC_TEST_DONE
+        
+        HuRestStatusHeader *head = [user_handler lastStatusResultHeader];
+        NSString *human_id = [head human_id];
+#pragma warning These asserts caused linker errors after they once worked
+        //assertThatBool(success, equalToBool(NO));
+        //assertThat(error, isNot(nil));
+        //assertThat([error localizedDescription], containsString(@"none such human found for"));
+        HuRestStatusHeader *header = [user_handler lastStatusResultHeader];
+        //assertThat(header, equalTo(nil));
+        
+        NSArray *status = [[user_handler statusForHumanId] objectForKey:human_id];
+        //assertThat(status, anyOf(isEmpty(), equalTo(nil), nil));
+        LOG_GENERAL(0, @"All these asserts stopped linking, wtf?");
+    }];
+    ASYNC_TEST_END_LONG_TIMEOUT
     
 }
 
@@ -97,14 +152,14 @@ HuUserHandler *user_handler;
 {
     //6fa703c8a13704477ba923062c678ccf
     __block NSMutableArray *friends;
-    [user_handler setAccess_token:@"6fa703c8a13704477ba923062c678ccf"];
+    ASYNC_TEST_START
     [user_handler userFriendsGet:^(NSMutableArray *results) {
         //
         //LOG_GENERAL(0, @"%@", results);
         friends = [NSMutableArray arrayWithArray:results];
 
     }];
-    [self waitForTimeout:30];
+    ASYNC_TEST_END
     for(HuFriend *friend in friends) {
         UIImage *image = [friend largeProfileImage];
         LOG_GENERAL(0, @"%@ %@",[friend username], [friend service]);
