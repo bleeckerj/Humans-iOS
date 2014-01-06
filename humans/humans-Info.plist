@@ -32,6 +32,7 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
+		<string>CREAMPUF.TTF</string>
 		<string>HelveticaLTStd-BlkObl.otf</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>

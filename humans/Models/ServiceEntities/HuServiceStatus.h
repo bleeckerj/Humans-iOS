@@ -19,10 +19,18 @@
 @property NSTimeInterval statusTime;
 @property NSString *statusText;
 
+@optional
+-(NSString *)statusLowResImageURL;
+-(NSString *)statusImageURL;
+
 @required
 -(NSDate *) dateForSorting;
 -(NSUInteger)hash;
 -(BOOL)isEqual:(id)object;
-
+-(NSString *)tinyServiceImageBadgeName;
+-(NSString *)tinyMonochromeServiceImageBadgeName;
+-(NSString *)serviceImageBadgeName;
+-(NSString *)monochromeServiceImageBadgeName;
+-(NSURL *)userProfileImageURL;
 
 @end

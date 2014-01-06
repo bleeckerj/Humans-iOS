@@ -24,6 +24,6 @@
 + (HuStatusPhotoBox *)photoBoxFor:(NSString *)url size:(CGSize)size;
 + (HuStatusPhotoBox *)photoBoxFor:(NSString *)url size:(CGSize)size deferLoad:(BOOL)deferLoad;
 - (void)loadPhoto;
-- (void)loadPhotoWithCompletionHandler:(CompletionHandler)handler;
+- (void)loadPhotoWithCompletionHandler:(CompletionHandlerWithResult)handler;
 
 @end

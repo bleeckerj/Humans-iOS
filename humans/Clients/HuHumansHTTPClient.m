@@ -23,7 +23,7 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     static HuHumansHTTPClient *_sharedClient = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedClient = [[HuHumansHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:kHumansProdBaseURLString]];
+        _sharedClient = [[HuHumansHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:kHumansLocalDevBaseURLString]];
         [_sharedClient setDefaultHeader:@"Accept" value:RKMIMETypeJSON];
         [_sharedClient setDefaultHeader:@"Content-Type" value:RKMIMETypeJSON];
         

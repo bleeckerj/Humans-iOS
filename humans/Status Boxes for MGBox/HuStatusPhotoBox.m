@@ -105,7 +105,7 @@
     [self loadPhotoWithCompletionHandler:nil];
 }
 
-- (void)loadPhotoWithCompletionHandler:(CompletionHandler)handler {
+- (void)loadPhotoWithCompletionHandler:(CompletionHandlerWithResult)handler {
     
     if(self.hasLoaded == NO) {
         if(self.imageView == nil) {
@@ -129,6 +129,9 @@
             } else {
                 bself.hasLoaded = NO;
                 bself.alpha = 0.3;
+                if(handler) {
+                    handler(NO, error);
+                }
             }
             //                //dispatch_async(dispatch_get_main_queue(), ^{
             //                AppDelegate *delegate = [[UIApplication sharedApplication]delegate];
@@ -157,7 +160,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 // ditch the spinner
-                UIActivityIndicatorView *spinner = [self.subviews objectAtIndex:0];
+                UIActivityIndicatorView *spinner = [bself.subviews objectAtIndex:0];
                 [spinner stopAnimating];
                 [spinner removeFromSuperview];
                 
@@ -181,15 +184,17 @@
                 [bself.topParentBox layout];
                 //[bself setNeedsDisplay];
                 
-                if(handler) {
-                    handler();
-                }
                 
                 
                 // fade the image in
-                [UIView animateWithDuration:0.4 animations:^{
+                [UIView animateWithDuration:0.8 animations:^{
                     bself.imageView.alpha = 1;
                 }];
+                
+                if(handler) {
+                    handler(YES, nil);
+                }
+
                 
             });
         }];

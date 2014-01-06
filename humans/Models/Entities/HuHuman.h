@@ -5,6 +5,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "defines.h"
 
 @class NSArray;
 
@@ -15,11 +16,14 @@
 @property (strong, nonatomic) NSString *humanid;
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSArray *serviceUsers;
+@property (strong, atomic) NSMutableArray *profile_images;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
 -(NSDictionary *)dictionary;
 -(NSDictionary *)proxyForJson;
--(NSArray *)serviceUserProfileImages;
+-(NSArray *)serviceUserProfileImageURLs;
+-(void)loadServiceUsersProfileImagesWithCompletionHandler:(CompletionHandler)completionHandler;
+-(UIImage *)largestServiceUserProfileImage;
 
 @end

@@ -33,7 +33,44 @@
 @synthesize user = _user;
 @synthesize user_has_liked = _user_has_liked;
 @synthesize version = _version;
+@synthesize hasBeenRead;
+@synthesize doNotShow;
+@synthesize serviceUsername;
+@synthesize serviceSolidColor;
+@synthesize statusTime;
+@synthesize statusText;
 
+
+// HuServiceStatus protocol methods
+- (NSString *)statusImageURL
+{
+    return [[[self images] standard_resolution]url];
+}
+
+- (NSString *)statusLowResImageURL
+{
+    return [[self.images low_resolution]url];
+}
+
+- (UIColor *)serviceSolidColor
+{
+    return [UIColor greenColor];
+}
+
+- (NSString *)serviceUsername
+{
+    return [[self transient_instagram_user]username];
+}
+
+- (NSTimeInterval)statusTime
+{
+    return [[self created_time]timeIntervalSince1970];
+}
+
+- (NSDate *)dateForSorting
+{
+    return [NSDate dateWithTimeIntervalSince1970:[self statusTime]];
+}
 
 - (NSString *)statusText
 {
@@ -41,9 +78,22 @@
 }
 
 
-- (NSString *)low_resolution_url
+//- (NSString *)low_resolution_url
+//{
+//    return [[self.images low_resolution]url];
+//}
+
+
+- (NSString *)tinyMonochromeServiceImageBadgeName
 {
-    return [[self.images low_resolution]url];
+    return @"instagram-camera-white-tiny.png";
+}
+
+- (NSURL *)userProfileImageURL
+{
+    NSURL *result = nil;
+    result = [NSURL URLWithString:[[self user]profile_picture]];
+    return result;
 }
 
 - (void) dealloc

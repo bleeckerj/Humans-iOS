@@ -11,10 +11,21 @@
 #endif
 #endif
 
+#define ASYNC_START    __block BOOL hasCalledBack = NO;
+#define ASYNC_DONE     hasCalledBack = YES;
+#define ASYNC_END      NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:10]; \
+while (hasCalledBack == NO && [loopUntil timeIntervalSinceNow] > 0) { \
+[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:loopUntil]; \
+} \
+if (!hasCalledBack) { assert(@"Timeout"); }
+
 
 #ifdef DEBUG
 
 
+#define LOG_TODO(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"todo",level,__VA_ARGS__)
+#define LOG_DEBUG(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"debug",level,__VA_ARGS__)
+#define LOG_ERROR(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"error",level,__VA_ARGS__)
 
 #define LOG_NETWORK(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"network",level,__VA_ARGS__)
 #define LOG_GENERAL(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"general",level,__VA_ARGS__)
@@ -43,6 +54,9 @@
 
 
 #else
+#define LOG_TODO(...)    do{}while(0)
+#define LOG_DEBUG(...)    do{}while(0)
+
 #define LOG_NETWORK(...)    do{}while(0)
 #define LOG_GENERAL(...)    do{}while(0)
 #define LOG_GRAPHICS(...)   do{}while(0)
@@ -197,6 +211,7 @@
 
 #define MAX_USERS_PER_FRIEND 12
 
+typedef void(^UIImageViewResultsHandler)(UIImageView *image_view);
 typedef void(^ArrayOfResultsHandler)(NSMutableArray *results);
 typedef void(^BlockIteratorHandler)(id status, NSUInteger idx, BOOL *stop);
 typedef void(^FetchStatusHandler)(BOOL success, NSMutableArray *status, NSError *error);

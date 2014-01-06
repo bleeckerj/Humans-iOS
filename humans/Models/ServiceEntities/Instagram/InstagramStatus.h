@@ -20,7 +20,7 @@
 
 @property (strong, nonatomic) InstagramCaption *caption;
 @property (strong, nonatomic) InstagramComments *comments;
-@property (strong, nonatomic) NSDecimalNumber *created_time;
+@property (strong, nonatomic) NSDate *created_time;
 @property (strong, nonatomic) NSString *filter;
 @property (strong, nonatomic) NSString *instagram_id;
 @property (strong, nonatomic) InstagramImages *images;

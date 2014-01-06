@@ -12,6 +12,19 @@
 #import "HuUser.h"
 #import "HuHuman.h"
 
+// new twitter
+#import "HuTwitterStatus.h"
+#import "HuTwitterUser.h"
+#import "HuTwitterCoordinates.h"
+#import "HuTwitterPlace.h"
+#import "HuTwitterStatusEntities.h"
+#import "HuTwitterEntitesHashtag.h"
+#import "HuTwitterEntitiesSymbols.h"
+#import "HuTwitterEntitiesUserMentions.h"
+#import "HuTwitterEntitiesURL.h"
+#import "HuTwitterStatusMedia.h"
+#import "HuTwitterMediaSize.h"
+
 #import "TwitterStatus.h"
 #import "TwitterUser.h"
 
