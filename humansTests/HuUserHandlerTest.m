@@ -85,12 +85,12 @@ HuUserHandler *user_handler;
     //    [[[mockArrayOfHumans stub] andReturnValue:OCMOCK_VALUE(five)] count];
     ASYNC_TEST_START
     NSArray *humans = [[user_handler humans_user]humans];
-    [user_handler getStatusForHuman:[humans objectAtIndex:0] atPage:0 withCompletionHandler:^(BOOL success, NSError *error) {
+    [user_handler getStatusForHuman:[humans objectAtIndex:3] atPage:0 withCompletionHandler:^(BOOL success, NSError *error) {
         ASYNC_TEST_DONE
         
         HuRestStatusHeader *head = [user_handler lastStatusResultHeader];
         NSString *human_id = [head human_id];
-        HuHuman *human = [humans objectAtIndex:0];
+        HuHuman *human = [humans objectAtIndex:3];
         
         XCTAssertNotNil(head, @"The 'head' from the status query is nil. No bueno.");
         XCTAssertNotEqual(human_id, [human humanid], @"The 'head' human_id is different from the one we asked for. %@ %@", [head human_id], [human humanid]);
@@ -99,7 +99,7 @@ HuUserHandler *user_handler;
         
         NSArray *status = [[user_handler statusForHumanId] objectForKey:human_id];
         XCTAssertNotNil(status, @"Status for human_id=%@ is nil. No bueno. %@", human_id, [humans objectAtIndex:0]);
-#pragma warning All of the asserts below caused linker errors after they once worked / won't work fo 64-bit tests
+#pragma warning All of the asserts below caused linker errors after they once worked / wont work fo 64-bit tests
         
         assertThat(status, isNot(isEmpty()));
         
@@ -107,8 +107,18 @@ HuUserHandler *user_handler;
             id obj = [status objectAtIndex:i];
             NSDate *date = [obj dateForSorting];
             assertThat(obj, conformsTo(@protocol(HuServiceStatus)));
-            assertThat(obj, anyOf(instanceOf([TwitterStatus class]), instanceOf([InstagramStatus class]), nil));
+            assertThat(obj, anyOf(instanceOf([HuTwitterStatus class]), instanceOf([InstagramStatus class]), nil));
             assertThat(date, is(greaterThan([NSDate dateWithTimeIntervalSince1970:0])));
+            if([obj isKindOfClass:[HuTwitterStatus class]]) {
+                assertThat([(HuTwitterStatus *)obj user], notNilValue());
+                HuTwitterUser *user =[(HuTwitterStatus *)obj user];
+                assertThat([user profile_image_url], equalTo([[obj userProfileImageURL]absoluteString]));
+            }
+            if([obj isKindOfClass:[InstagramStatus class]]) {
+                assertThat([(InstagramStatus *)obj user], notNilValue());
+                InstagramUser *user = [(InstagramStatus *)obj user];
+                assertThat([user profile_picture], equalTo([[obj userProfileImageURL]absoluteString]));
+            }
         }
         
         

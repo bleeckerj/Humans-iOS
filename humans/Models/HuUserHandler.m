@@ -426,7 +426,7 @@ NSDateFormatter *twitter_formatter;
     //
     RKObjectMapping *coordinatesMapping = [RKObjectMapping mappingForClass:[HuTwitterCoordinates class]];
     [coordinatesMapping addAttributeMappingsFromArray:@[@"coordinates", @"type"]];
-    [twitterStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"coordinates" toKeyPath:@"coodinates" withMapping:coordinatesMapping]];
+    [twitterStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"coordinates" toKeyPath:@"coordinates" withMapping:coordinatesMapping]];
     
     
     //
@@ -471,7 +471,21 @@ NSDateFormatter *twitter_formatter;
                                                         @"profile_text_color"]];
     
     
-    [twitterUserMapping addPropertyMapping:[created_at_mapping copy]];
+    
+    // Transform date
+    NSDateFormatter *userCreatedAtDateFormatter = [NSDateFormatter new];
+    [userCreatedAtDateFormatter setDateFormat:@"EEE MMM d HH:mm:ss Z yyyy"];
+    [[RKValueTransformer defaultValueTransformer]insertValueTransformer:userCreatedAtDateFormatter atIndex:0];
+
+//    
+//    LOG_TODO(0, @"I hate date transformations: %@",  [userCreatedAtDateFormatter stringFromDate:[[NSDate alloc]init]]);
+//    NSString *test = @"Sat Jun 28 17:19:16 +0000 2008";
+//    NSDate *test_date = [userCreatedAtDateFormatter dateFromString:test];
+//    LOG_TODO(0, @"Did this take? %@ for this %@", test_date, test);
+    
+    RKAttributeMapping *user_created_at_mapping = [RKAttributeMapping attributeMappingFromKeyPath:@"created_at" toKeyPath:@"created_at"];
+    user_created_at_mapping.valueTransformer = [RKValueTransformer defaultValueTransformer];//dateTransformer;
+    [twitterUserMapping addPropertyMapping:user_created_at_mapping];
     
     [twitterStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user"
                                                                                          toKeyPath:@"user"
@@ -516,7 +530,17 @@ NSDateFormatter *twitter_formatter;
     // entitites.media
     //
     RKObjectMapping *twitterEntitiesMediaMapping = [RKObjectMapping mappingForClass:[HuTwitterStatusMedia class]];
-    [twitterEntitiesMediaMapping addAttributeMappingsFromArray:@[@"expanded_url", @"indices", @"display_url", @"url"]];
+    [twitterEntitiesMediaMapping addAttributeMappingsFromArray:@[@"media_url", @"media_url_https", @"id", @"id_str", @"expanded_url", @"sizes", @"indices", @"display_url", @"url"]];
+    
+//    RKObjectMapping *twitterEntitiesMediaSizesMapping = [RKObjectMapping mappingForClass:[HuTwitterMediaSize class]];
+//    [twitterEntitiesMediaSizesMapping addAttributeMappingsFromArray:@[@"w",@"h", @"resize"]];
+//    
+//    RKObjectMapping *sizes = [RKObjectMapping mappingForClass:[NSArray class]];
+//    [sizes addAttributeMappingsFromArray:@[@"small", @"medium", @"large", @"thumb"]];
+//    //TODO: Sort this crazy stuff out. each "small" has a w,h,resize, each "medium" has a, etc.
+//    
+//    [twitterEntitiesMediaSizesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"sizes" toKeyPath:@"sizes" withMapping:sizes]];
+    
     [twitterStatusEntitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"media" toKeyPath:@"media" withMapping:twitterEntitiesMediaMapping]];
     
     

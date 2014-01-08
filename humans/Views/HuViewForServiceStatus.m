@@ -9,7 +9,7 @@
 #import "HuViewForServiceStatus.h"
 #import "InstagramStatus.h"
 //#import "FlickrStatus.h"
-#import "TwitterStatus.h"
+#import "HuTwitterStatus.h"
 #import "HuStatusPhotoBox.h"
 #import "UIView+MGEasyFrame.h"
 #import "UIView+BlocksKit.h"
@@ -17,9 +17,9 @@
 #import "LoggerClient.h"
 
 @interface HuTwitterStatusView : HuViewForServiceStatus {
-   // HuStatusPhotoBox *photoBox;
+    HuStatusPhotoBox *photoBox;
     UITextView *statusView;
-    TwitterStatus *status;
+    HuTwitterStatus *status;
 
 }
 @end
@@ -54,7 +54,7 @@
 {
     HuViewForServiceStatus* hView = nil;
     
-    if([mstatus isKindOfClass:[TwitterStatus class]]) {
+    if([mstatus isKindOfClass:[HuTwitterStatus class]]) {
         hView = [[HuTwitterStatusView alloc]initWithFrame:frame forStatus:mstatus];
     }
     if([mstatus isKindOfClass:[InstagramStatus class]]) {
@@ -81,13 +81,14 @@
     
 }
 
+
 @end
 
 @implementation HuTwitterStatusView
 {
 }
 
--(HuTwitterStatusView *)initWithFrame:(CGRect)frame forStatus:(TwitterStatus *)mstatus
+-(HuTwitterStatusView *)initWithFrame:(CGRect)frame forStatus:(HuTwitterStatus *)mstatus
 {
     self = [super initWithFrame:frame];
     if(self) {
@@ -101,7 +102,13 @@
 
         [self setBackgroundColor:[UIColor blackColor]];
         
-        if([status statusText] != nil) {
+        if([status containsMedia]) {
+            photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:YES];
+            [photoBox setBackgroundColor:[UIColor orangeColor]];
+            [self addSubview:photoBox];
+        }
+        
+        if([status statusText] != nil && [status containsMedia] == false) {
             statusView = [[UITextView alloc]initWithFrame:[self getStatusViewFrame]];
             statusView.editable = NO;
             //statusField.lineBreakMode = UILineBreakModeTailTruncation;
@@ -148,6 +155,27 @@
 - (void)showOrRefreshPhoto
 {
     LOG_TWITTER(0, @"TO DO: If Twitter Has Photo Do Something..");
+    if([status containsMedia]) {
+        if([photoBox urlStr] == nil) {
+            LOG_TWITTER(0, @"Weird. The photo box urlStr should've been set?");
+            [photoBox setUrlStr:[status statusImageURL]];
+        }
+        [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
+            if(success) {
+                LOG_TWITTER(0, @"If this was an image from Twitter itself, I don't quite yet know how to show it..%@", error);
+            } else {
+                LOG_TODO(0, @"You'll want to indicate that there was a network problem or something %@", error);
+            }
+            [self updateStatusView];
+        }];
+   
+    }
+}
+
+- (void)updateStatusView
+{
+    [statusView setFrame:[self getStatusViewFrame]];
+    [self layoutSubviews];
 }
 
 @end

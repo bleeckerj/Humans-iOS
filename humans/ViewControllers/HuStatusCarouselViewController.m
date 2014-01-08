@@ -9,7 +9,7 @@
 #import "HuStatusCarouselViewController.h"
 #import "defines.h"
 #import "iCarousel.h"
-#import "TwitterStatus.h"
+//#import "HuTwitterStatus.h"
 #import "InstagramStatus.h"
 #import "InstagramCaption.h"
 #import "HuHeaderForServiceStatusView.h"
@@ -140,7 +140,7 @@
 #pragma mark iCarouselDelegate methods
 
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index {
-    LOG_UI(0, @"Did select Item at Index %ld", index );
+    LOG_UI(0, @"Did select Item at Index %d", index );
 }
 
 - (CGFloat)carouselItemWidth:(iCarousel *)carousel {
@@ -269,7 +269,7 @@ NSUInteger last_index, current_index;
 #pragma mark iCarouselDelegate methods
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    LOG_UI(0, @"checking number of items in carousel=%ld", [items count]);
+    LOG_UI(0, @"checking number of items in carousel=%d", [items count]);
     return [items count];
 }
 
@@ -279,7 +279,7 @@ NSUInteger last_index, current_index;
     if([aCarousel currentItemIndex] > -1) {
     HuViewForServiceStatus *view = (HuViewForServiceStatus *)[aCarousel itemViewAtIndex:[aCarousel currentItemIndex]];
 
-    LOG_GENERAL(0, @"curent index is %ld", [aCarousel currentItemIndex]);
+    LOG_GENERAL(0, @"curent index is %d", [aCarousel currentItemIndex]);
     LOG_GENERAL(0, @"%@ %@", [items objectAtIndex:[aCarousel currentItemIndex]], view);
     [view showOrRefreshPhoto];
 //        if([view isKindOfClass:[HuInstagramStatusView class]]) {
@@ -291,11 +291,11 @@ NSUInteger last_index, current_index;
 
 - (UIView *)carousel:(iCarousel *)mcarousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
-    UIView *result;
+    HuViewForServiceStatus *result;
     
     
     result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:index]];
-    LOG_GENERAL(0, @"For index %ld showing %@", index, result);
+    LOG_GENERAL(0, @"For index %d out of %d showing %@", index, [items count], result);
     return result;
 
     //TODO: tie the friendToView status more delegate-y to the view controller..can refactor to

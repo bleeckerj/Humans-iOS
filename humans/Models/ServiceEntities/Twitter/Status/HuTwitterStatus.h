@@ -6,11 +6,14 @@
 
 #import <Foundation/Foundation.h>
 #import "HuServiceStatus.h"
+#import "HuTwitterStatusMedia.h"
+#import "defines.h"
 
 @class HuTwitterUser;
 @class HuTwitterCoordinates;
 @class HuTwitterPlace;
 @class HuTwitterStatusEntities;
+@class HuTwitterStatusMedia;
 
 @interface HuTwitterStatus : NSObject <HuServiceStatus>
 
@@ -42,5 +45,6 @@
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
+- (BOOL)containsMedia;
 
 @end

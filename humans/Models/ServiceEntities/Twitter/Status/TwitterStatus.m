@@ -25,6 +25,8 @@
 @synthesize statusText;
 @synthesize statusTime;
 
+
+
 -(NSURL *)userProfileImageURL
 {
     NSURL *result = nil;
