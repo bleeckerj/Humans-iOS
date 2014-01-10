@@ -66,6 +66,7 @@
 		B9C2C27A187BB6E100F1DF47 /* TwitterUser.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C25C187BB6E100F1DF47 /* TwitterUser.m */; };
 		B9C2C281187BBA6E00F1DF47 /* HuHumanTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C27F187BBA6E00F1DF47 /* HuHumanTest.m */; };
 		B9C2C282187BBA6E00F1DF47 /* HuServiceUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */; };
+		B9C2C28B187C619A00F1DF47 /* HuTwitterStatusTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */; };
 		B9DEEBAE18642DEF003DAD9E /* angry_unicorn.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB7618642DEE003DAD9E /* angry_unicorn.png */; };
 		B9DEEBAF18642DEF003DAD9E /* angry_unicorn_tiny.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB7718642DEE003DAD9E /* angry_unicorn_tiny.png */; };
 		B9DEEBB018642DEF003DAD9E /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB7818642DEE003DAD9E /* arrow.png */; };
@@ -271,6 +272,7 @@
 		B9C2C25C187BB6E100F1DF47 /* TwitterUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterUser.m; sourceTree = "<group>"; };
 		B9C2C27F187BBA6E00F1DF47 /* HuHumanTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuHumanTest.m; sourceTree = "<group>"; };
 		B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuServiceUserTest.m; sourceTree = "<group>"; };
+		B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuTwitterStatusTest.m; sourceTree = "<group>"; };
 		B9DEEB7618642DEE003DAD9E /* angry_unicorn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = angry_unicorn.png; path = "/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Resources/Graphics/angry_unicorn.png"; sourceTree = "<absolute>"; };
 		B9DEEB7718642DEE003DAD9E /* angry_unicorn_tiny.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = angry_unicorn_tiny.png; path = "/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Resources/Graphics/angry_unicorn_tiny.png"; sourceTree = "<absolute>"; };
 		B9DEEB7818642DEE003DAD9E /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow.png; path = "/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Resources/Graphics/arrow.png"; sourceTree = "<absolute>"; };
@@ -570,6 +572,7 @@
 		B9C2C27D187BBA6E00F1DF47 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B9C2C28C187C61A700F1DF47 /* Service Entities */,
 				B9C2C27E187BBA6E00F1DF47 /* Entities */,
 			);
 			path = Models;
@@ -582,6 +585,31 @@
 				B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */,
 			);
 			path = Entities;
+			sourceTree = "<group>";
+		};
+		B9C2C289187C619A00F1DF47 /* Status */ = {
+			isa = PBXGroup;
+			children = (
+				B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */,
+			);
+			name = Status;
+			path = ServiceEntities/Twitter/Status;
+			sourceTree = "<group>";
+		};
+		B9C2C28C187C61A700F1DF47 /* Service Entities */ = {
+			isa = PBXGroup;
+			children = (
+				B9C2C28D187C61B900F1DF47 /* Twitter */,
+			);
+			name = "Service Entities";
+			sourceTree = "<group>";
+		};
+		B9C2C28D187C61B900F1DF47 /* Twitter */ = {
+			isa = PBXGroup;
+			children = (
+				B9C2C289187C619A00F1DF47 /* Status */,
+			);
+			name = Twitter;
 			sourceTree = "<group>";
 		};
 		B9DEEB7518642DEE003DAD9E /* Graphics */ = {
@@ -1108,6 +1136,7 @@
 				B9F646DC18679567008EB970 /* XCTestCase+AsyncTesting.h in Sources */,
 				B9F646DD18679567008EB970 /* XCTestCase+AsyncTesting.m in Sources */,
 				B9F646A6186655F4008EB970 /* HuHumansScrollViewControllerTest.m in Sources */,
+				B9C2C28B187C619A00F1DF47 /* HuTwitterStatusTest.m in Sources */,
 				B99E017D18604B0400E70892 /* HuUserHandlerTest.m in Sources */,
 				B9C2C281187BBA6E00F1DF47 /* HuHumanTest.m in Sources */,
 				B9F517A2185BC4930083CA36 /* humansTests.m in Sources */,
