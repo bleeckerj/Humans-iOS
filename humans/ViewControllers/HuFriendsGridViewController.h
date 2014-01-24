@@ -18,5 +18,6 @@
 -(void)preloadFriendProfileDataWithCompletionHandler:(CompletionHandler)completionHandler;
 -(void)setup;
 - (void)reloadFriendsGridView;
+-(NSDictionary*)proxyForJson;
 
 @end

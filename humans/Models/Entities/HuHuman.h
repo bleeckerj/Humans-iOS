@@ -15,7 +15,7 @@
 
 @property (strong, nonatomic) NSString *humanid;
 @property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) NSArray *serviceUsers;
+@property (strong, nonatomic) NSMutableArray *serviceUsers;
 @property (strong, atomic) NSMutableArray *profile_images;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
@@ -25,5 +25,6 @@
 -(NSArray *)serviceUserProfileImageURLs;
 -(void)loadServiceUsersProfileImagesWithCompletionHandler:(CompletionHandler)completionHandler;
 -(UIImage *)largestServiceUserProfileImage;
+-(NSString *)jsonString;
 
 @end

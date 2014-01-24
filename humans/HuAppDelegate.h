@@ -8,9 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "HuUserHandler.h"
+#import "HuJediFindFriends_ViewController.h"
+//#import "HuFindFollowsMain_ViewController.h"
+
+@class HuJediFindFriends_ViewController;
+
 
 @interface HuAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) HuUserHandler *humansAppUser;
+
+@property (nonatomic, retain) HuJediFindFriends_ViewController *jediFindFriendsViewController;
+//@property (nonatomic, retain) HuFindFollowsMain_ViewController *findFollowsMainViewController;
 @end

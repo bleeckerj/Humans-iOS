@@ -48,13 +48,20 @@
 @property (nonatomic, copy) HuUser *humans_user;
 @property (nonatomic, readonly) NSMutableDictionary *statusForHumanId;
 @property (nonatomic, retain) HuRestStatusHeader *lastStatusResultHeader;
+@property (nonatomic, retain) NSMutableArray *friends;
 
-- (void)userGetWithCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+- (void)getStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler;
+- (void)getStatusCountForHuman:(HuHuman *)human after:(NSTimeInterval)timestamp withCompletionHandler:(CompletionHandlerWithData)completionHandler;
+
+- (void)getHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userRequestTokenForUsername:(NSString *)username forPassword:(NSString *)password withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+- (void)userAddHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+
 - (BOOL)usernameExists:(NSString *)username;
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;
 - (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)getStatusForHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (NSArray *)statusForHuman:(HuHuman *)aHuman;
+-(void)searchFriendsWith:(NSRegularExpression *)regex withCompletionHandler:(ArrayOfResultsHandler)handler;
 
 @end

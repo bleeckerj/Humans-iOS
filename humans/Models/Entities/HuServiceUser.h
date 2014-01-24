@@ -16,8 +16,8 @@
 @property (strong, nonatomic) NSString *imageURL;
 @property (strong, nonatomic) NSString *lastUpdated;
 @property (strong, nonatomic) HuOnBehalfOf *onBehalfOf;
-@property (strong, nonatomic) NSString *service;
-@property (strong, nonatomic) NSString *serviceID;
+@property (strong, nonatomic) NSString *serviceName;
+@property (strong, nonatomic) NSString *serviceUserID;
 @property (strong, nonatomic) NSString *username;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;

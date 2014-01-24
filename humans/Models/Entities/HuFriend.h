@@ -15,20 +15,28 @@
 @property (strong, nonatomic) NSString *imageURL;
 @property (strong, nonatomic) NSString *largeImageURL;
 @property (strong, nonatomic) HuOnBehalfOf *onBehalfOf;
-@property (strong, nonatomic) NSString *service;
-@property (strong, nonatomic) NSString *serviceID;
+@property (strong, nonatomic) NSString *serviceName;
+@property (strong, nonatomic) NSString *serviceUserID;
 @property (strong, nonatomic) NSString *username;
-@property (strong, nonatomic) UIImage *profileImage;
-@property (strong, nonatomic) UIImage *largeProfileImage;
 
-@property (atomic, readonly) NSString *serviceImageBadge;
-@property (atomic, readonly) NSString *tinyServiceImageBadge;
-@property (atomic, readonly) NSString *monochromeServiceImageBadge;
-@property (atomic, readonly) NSString *monochromeTinyServiceImageBadge;
-@property (atomic, readonly) NSString *serviceSolidColor;
+@property (strong, nonatomic) UIImage *profileImage;
+
+@property (nonatomic, copy) NSString *lastname;
+@property (nonatomic, copy) NSString *firstname;
+@property (copy, nonatomic) NSString *fullname;
+@property (strong, nonatomic) NSString *lastUpdated;
+
+//@property (strong, nonatomic) UIImage *largeProfileImage;
+//
+@property (atomic, copy) NSString *serviceImageBadge;
+@property (atomic, copy) NSString *tinyServiceImageBadge;
+@property (atomic, copy) NSString *monochromeServiceImageBadge;
+@property (atomic, copy) NSString *monochromeTinyServiceImageBadge;
+@property (atomic, copy) NSString *serviceSolidColor;
 
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
+- (void)getProfileImageWithCompletionHandler:(FetchImageHandler)completionHandler;
 
 @end

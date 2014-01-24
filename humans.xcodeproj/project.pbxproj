@@ -16,6 +16,15 @@
 		B9161905186803050010A34F /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = B9161900186803050010A34F /* UIImage+RoundedCorner.m */; };
 		B916190A18680E3C0010A34F /* UILabel+withDate.m in Sources */ = {isa = PBXBuildFile; fileRef = B916190918680E3C0010A34F /* UILabel+withDate.m */; };
 		B92400C0185C12FA00A10410 /* HuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B92400BE185C12FA00A10410 /* HuViewController.m */; };
+		B937464F188CCA120037A95C /* FindFollowsForService_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */; };
+		B9374650188CCA120037A95C /* HuFindFollowsMain_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464C188CCA120037A95C /* HuFindFollowsMain_ViewController.m */; };
+		B9374651188CCA120037A95C /* HuJediFindFriends_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464E188CCA120037A95C /* HuJediFindFriends_ViewController.m */; };
+		B9374654188CCD970037A95C /* StateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = B9374653188CCD970037A95C /* StateMachine.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B9374658188CCF920037A95C /* HuProfilePhotoBlank.m in Sources */ = {isa = PBXBuildFile; fileRef = B9374657188CCF920037A95C /* HuProfilePhotoBlank.m */; };
+		B937465B188CD0910037A95C /* HuServiceUserProfilePhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = B937465A188CD0910037A95C /* HuServiceUserProfilePhoto.m */; };
+		B9509C78188DF7DA00D3DC1A /* HumanAppIcon29pt.png in Resources */ = {isa = PBXBuildFile; fileRef = B9509C75188DF7DA00D3DC1A /* HumanAppIcon29pt.png */; };
+		B9509C79188DF7DA00D3DC1A /* HumanAppIcon40pt.png in Resources */ = {isa = PBXBuildFile; fileRef = B9509C76188DF7DA00D3DC1A /* HumanAppIcon40pt.png */; };
+		B9509C7A188DF7DA00D3DC1A /* HumanAppIcon60pt.png in Resources */ = {isa = PBXBuildFile; fileRef = B9509C77188DF7DA00D3DC1A /* HumanAppIcon60pt.png */; };
 		B99657CF1867FDA800C4AB01 /* DateyMGStyledBox.m in Sources */ = {isa = PBXBuildFile; fileRef = B99657C01867FDA800C4AB01 /* DateyMGStyledBox.m */; };
 		B99657D11867FDA800C4AB01 /* HuInstagramStatus_Box.m in Sources */ = {isa = PBXBuildFile; fileRef = B99657C41867FDA800C4AB01 /* HuInstagramStatus_Box.m */; };
 		B99657D21867FDA800C4AB01 /* HuStatusPhotoBox.m in Sources */ = {isa = PBXBuildFile; fileRef = B99657C61867FDA800C4AB01 /* HuStatusPhotoBox.m */; };
@@ -77,8 +86,6 @@
 		B9DEEBB518642DEF003DAD9E /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB7D18642DEE003DAD9E /* Default@2x.png */; };
 		B9DEEBB618642DEF003DAD9E /* flickr-white-large-chiclet.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB7E18642DEE003DAD9E /* flickr-white-large-chiclet.png */; };
 		B9DEEBB718642DEF003DAD9E /* foursquare-icon-36x36.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB7F18642DEE003DAD9E /* foursquare-icon-36x36.png */; };
-		B9DEEBB818642DEF003DAD9E /* HumanAppIcon-01.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB8018642DEE003DAD9E /* HumanAppIcon-01.png */; };
-		B9DEEBB918642DEF003DAD9E /* HumanAppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB8118642DEE003DAD9E /* HumanAppIcon.png */; };
 		B9DEEBBA18642DEF003DAD9E /* Instagram_Icon_Large.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB8318642DEE003DAD9E /* Instagram_Icon_Large.png */; };
 		B9DEEBBB18642DEF003DAD9E /* Instagram_Icon_Medium.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB8418642DEE003DAD9E /* Instagram_Icon_Medium.png */; };
 		B9DEEBBC18642DEF003DAD9E /* Instagram_Icon_Small.png in Resources */ = {isa = PBXBuildFile; fileRef = B9DEEB8518642DEE003DAD9E /* Instagram_Icon_Small.png */; };
@@ -175,6 +182,22 @@
 		B92400BD185C12FA00A10410 /* HuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuViewController.h; sourceTree = "<group>"; };
 		B92400BE185C12FA00A10410 /* HuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuViewController.m; sourceTree = "<group>"; };
 		B92400C1185C158600A10410 /* defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = defines.h; path = Supporting/defines.h; sourceTree = "<group>"; };
+		B9374649188CCA120037A95C /* FindFollowsForService_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindFollowsForService_ViewController.h; sourceTree = "<group>"; };
+		B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindFollowsForService_ViewController.m; sourceTree = "<group>"; };
+		B937464B188CCA120037A95C /* HuFindFollowsMain_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFindFollowsMain_ViewController.h; sourceTree = "<group>"; };
+		B937464C188CCA120037A95C /* HuFindFollowsMain_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFindFollowsMain_ViewController.m; sourceTree = "<group>"; };
+		B937464D188CCA120037A95C /* HuJediFindFriends_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuJediFindFriends_ViewController.h; sourceTree = "<group>"; };
+		B937464E188CCA120037A95C /* HuJediFindFriends_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuJediFindFriends_ViewController.m; sourceTree = "<group>"; };
+		B9374652188CCD970037A95C /* StateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateMachine.h; path = Supporting/StateMachine/StateMachine.h; sourceTree = "<group>"; };
+		B9374653188CCD970037A95C /* StateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateMachine.m; path = Supporting/StateMachine/StateMachine.m; sourceTree = "<group>"; };
+		B9374656188CCF920037A95C /* HuProfilePhotoBlank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuProfilePhotoBlank.h; path = Views/HuProfilePhotoBlank.h; sourceTree = "<group>"; };
+		B9374657188CCF920037A95C /* HuProfilePhotoBlank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuProfilePhotoBlank.m; path = Views/HuProfilePhotoBlank.m; sourceTree = "<group>"; };
+		B9374659188CD0910037A95C /* HuServiceUserProfilePhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuServiceUserProfilePhoto.h; path = Views/HuServiceUserProfilePhoto.h; sourceTree = "<group>"; };
+		B937465A188CD0910037A95C /* HuServiceUserProfilePhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuServiceUserProfilePhoto.m; path = Views/HuServiceUserProfilePhoto.m; sourceTree = "<group>"; };
+		B9509C75188DF7DA00D3DC1A /* HumanAppIcon29pt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HumanAppIcon29pt.png; path = humans/Resources/Graphics/HumanAppIcon29pt.png; sourceTree = SOURCE_ROOT; };
+		B9509C76188DF7DA00D3DC1A /* HumanAppIcon40pt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HumanAppIcon40pt.png; path = humans/Resources/Graphics/HumanAppIcon40pt.png; sourceTree = SOURCE_ROOT; };
+		B9509C77188DF7DA00D3DC1A /* HumanAppIcon60pt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HumanAppIcon60pt.png; path = humans/Resources/Graphics/HumanAppIcon60pt.png; sourceTree = SOURCE_ROOT; };
+		B9509C7D188DFADC00D3DC1A /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		B9787924186360A900D72288 /* XCTestCase+AsyncTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "XCTestCase+AsyncTesting.h"; path = "../humans/Supporting/XCTestCase+AsyncTesting.h"; sourceTree = "<group>"; };
 		B9787925186360A900D72288 /* XCTestCase+AsyncTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "XCTestCase+AsyncTesting.m"; path = "../humans/Supporting/XCTestCase+AsyncTesting.m"; sourceTree = "<group>"; };
 		B99657BF1867FDA800C4AB01 /* DateyMGStyledBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateyMGStyledBox.h; sourceTree = "<group>"; };
@@ -196,7 +219,7 @@
 		B99E016D1860044400E70892 /* HuHumansHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuHumansHTTPClient.h; path = Clients/HuHumansHTTPClient.h; sourceTree = "<group>"; };
 		B99E016E1860044400E70892 /* HuHumansHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuHumansHTTPClient.m; path = Clients/HuHumansHTTPClient.m; sourceTree = "<group>"; };
 		B99E017618601B2400E70892 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		B99E017C18604B0400E70892 /* HuUserHandlerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuUserHandlerTest.m; sourceTree = "<group>"; };
+		B99E017C18604B0400E70892 /* HuUserHandlerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUserHandlerTest.m; path = ../HuUserHandlerTest.m; sourceTree = "<group>"; };
 		B99E01971862AEEB00E70892 /* HuLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuLoginViewController.h; sourceTree = "<group>"; };
 		B99E01981862AEEB00E70892 /* HuLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuLoginViewController.m; sourceTree = "<group>"; };
 		B9C2C20A187BB65700F1DF47 /* HuFriend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFriend.h; sourceTree = "<group>"; };
@@ -283,8 +306,6 @@
 		B9DEEB7D18642DEE003DAD9E /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Resources/Graphics/Default@2x.png"; sourceTree = "<absolute>"; };
 		B9DEEB7E18642DEE003DAD9E /* flickr-white-large-chiclet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "flickr-white-large-chiclet.png"; path = "/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Resources/Graphics/flickr-white-large-chiclet.png"; sourceTree = "<absolute>"; };
 		B9DEEB7F18642DEE003DAD9E /* foursquare-icon-36x36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "foursquare-icon-36x36.png"; path = "/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Resources/Graphics/foursquare-icon-36x36.png"; sourceTree = "<absolute>"; };
-		B9DEEB8018642DEE003DAD9E /* HumanAppIcon-01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "HumanAppIcon-01.png"; path = "/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Resources/Graphics/HumanAppIcon-01.png"; sourceTree = "<absolute>"; };
-		B9DEEB8118642DEE003DAD9E /* HumanAppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HumanAppIcon.png; path = "/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Resources/Graphics/HumanAppIcon.png"; sourceTree = "<absolute>"; };
 		B9DEEB8318642DEE003DAD9E /* Instagram_Icon_Large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Instagram_Icon_Large.png; sourceTree = "<group>"; };
 		B9DEEB8418642DEE003DAD9E /* Instagram_Icon_Medium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Instagram_Icon_Medium.png; sourceTree = "<group>"; };
 		B9DEEB8518642DEE003DAD9E /* Instagram_Icon_Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Instagram_Icon_Small.png; sourceTree = "<group>"; };
@@ -419,6 +440,7 @@
 		B92400BA185C12FA00A10410 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B9374648188CCA120037A95C /* Finding and Searching */,
 				B92400BB185C12FA00A10410 /* HuFriendsGridViewController.h */,
 				B92400BC185C12FA00A10410 /* HuFriendsGridViewController.m */,
 				B92400BD185C12FA00A10410 /* HuViewController.h */,
@@ -431,6 +453,29 @@
 				B9F646E21867BF6E008EB970 /* HuStatusCarouselViewController.m */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		B9374648188CCA120037A95C /* Finding and Searching */ = {
+			isa = PBXGroup;
+			children = (
+				B9374649188CCA120037A95C /* FindFollowsForService_ViewController.h */,
+				B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */,
+				B937464B188CCA120037A95C /* HuFindFollowsMain_ViewController.h */,
+				B937464C188CCA120037A95C /* HuFindFollowsMain_ViewController.m */,
+				B937464D188CCA120037A95C /* HuJediFindFriends_ViewController.h */,
+				B937464E188CCA120037A95C /* HuJediFindFriends_ViewController.m */,
+			);
+			name = "Finding and Searching";
+			path = "../Finding and Searching";
+			sourceTree = "<group>";
+		};
+		B9374655188CCDA50037A95C /* StateMachine */ = {
+			isa = PBXGroup;
+			children = (
+				B9374652188CCD970037A95C /* StateMachine.h */,
+				B9374653188CCD970037A95C /* StateMachine.m */,
+			);
+			name = StateMachine;
 			sourceTree = "<group>";
 		};
 		B99657BE1867FDA800C4AB01 /* Status Boxes for MGBox */ = {
@@ -572,6 +617,7 @@
 		B9C2C27D187BBA6E00F1DF47 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B99E017C18604B0400E70892 /* HuUserHandlerTest.m */,
 				B9C2C28C187C61A700F1DF47 /* Service Entities */,
 				B9C2C27E187BBA6E00F1DF47 /* Entities */,
 			);
@@ -615,6 +661,9 @@
 		B9DEEB7518642DEE003DAD9E /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				B9509C75188DF7DA00D3DC1A /* HumanAppIcon29pt.png */,
+				B9509C76188DF7DA00D3DC1A /* HumanAppIcon40pt.png */,
+				B9509C77188DF7DA00D3DC1A /* HumanAppIcon60pt.png */,
 				B9DEEBE418642FC6003DAD9E /* silhouette-circle.png */,
 				B9DEEB7618642DEE003DAD9E /* angry_unicorn.png */,
 				B9DEEB7718642DEE003DAD9E /* angry_unicorn_tiny.png */,
@@ -626,8 +675,6 @@
 				B9DEEB7D18642DEE003DAD9E /* Default@2x.png */,
 				B9DEEB7E18642DEE003DAD9E /* flickr-white-large-chiclet.png */,
 				B9DEEB7F18642DEE003DAD9E /* foursquare-icon-36x36.png */,
-				B9DEEB8018642DEE003DAD9E /* HumanAppIcon-01.png */,
-				B9DEEB8118642DEE003DAD9E /* HumanAppIcon.png */,
 				B9DEEB8218642DEE003DAD9E /* Instagram Logos and Icons */,
 				B9DEEB8918642DEE003DAD9E /* noun_project_1734.png */,
 				B9DEEB8A18642DEE003DAD9E /* noun_project_4520.png */,
@@ -735,6 +782,7 @@
 		B9F51775185BC4930083CA36 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B9509C7D188DFADC00D3DC1A /* Crashlytics.framework */,
 				B99E017618601B2400E70892 /* SystemConfiguration.framework */,
 				B9F517AB185BC4E20083CA36 /* StoreKit.framework */,
 				B9F51776185BC4930083CA36 /* Foundation.framework */,
@@ -768,6 +816,7 @@
 		B9F5177D185BC4930083CA36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B9374655188CCDA50037A95C /* StateMachine */,
 				B91618F6186803050010A34F /* UIImage-categories */,
 				B92400C1185C158600A10410 /* defines.h */,
 				B9F5177E185BC4930083CA36 /* humans-Info.plist */,
@@ -783,7 +832,6 @@
 			children = (
 				B9C2C27D187BBA6E00F1DF47 /* Models */,
 				B9F646AB18675A45008EB970 /* ViewControllers */,
-				B99E017C18604B0400E70892 /* HuUserHandlerTest.m */,
 				B9F517A1185BC4930083CA36 /* humansTests.m */,
 				B9F5179C185BC4930083CA36 /* Supporting Files */,
 			);
@@ -805,6 +853,10 @@
 		B9F646A7186755E4008EB970 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B9374659188CD0910037A95C /* HuServiceUserProfilePhoto.h */,
+				B937465A188CD0910037A95C /* HuServiceUserProfilePhoto.m */,
+				B9374656188CCF920037A95C /* HuProfilePhotoBlank.h */,
+				B9374657188CCF920037A95C /* HuProfilePhotoBlank.m */,
 				B9C2C21C187BB67B00F1DF47 /* HuHeaderForServiceStatusView.h */,
 				B9C2C21D187BB67B00F1DF47 /* HuHeaderForServiceStatusView.m */,
 				B9C2C21E187BB67B00F1DF47 /* HuViewForServiceStatus.h */,
@@ -887,7 +939,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = Hu;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = nearfuturelaboratory;
 				TargetAttributes = {
 					B9F51772185BC4930083CA36 = {
@@ -932,6 +984,7 @@
 				B9DEEBC918642DEF003DAD9E /* checkbox-checked.png in Resources */,
 				B9DEEBC018642DEF003DAD9E /* noun_project_1734.png in Resources */,
 				B9DEEBD618642DEF003DAD9E /* instagram-camera.png in Resources */,
+				B9509C79188DF7DA00D3DC1A /* HumanAppIcon40pt.png in Resources */,
 				B9F5178F185BC4930083CA36 /* Images.xcassets in Resources */,
 				B9DEEBB218642DEF003DAD9E /* blank-square.png in Resources */,
 				B9DEEBC318642DEF003DAD9E /* twitter-bird-new.svg in Resources */,
@@ -946,6 +999,7 @@
 				B9DEEBBB18642DEF003DAD9E /* Instagram_Icon_Medium.png in Resources */,
 				B9DEEBD118642DEF003DAD9E /* flickr-peepers.png in Resources */,
 				B9DEEBC218642DEF003DAD9E /* twitter-bird-blue-on-white.png in Resources */,
+				B9509C7A188DF7DA00D3DC1A /* HumanAppIcon60pt.png in Resources */,
 				B9DEEBD818642DEF003DAD9E /* reload-gray.png in Resources */,
 				B9DEEBDE18642DEF003DAD9E /* twitter-bird-gray.png in Resources */,
 				B9DEEBD518642DEF003DAD9E /* instagram-camera-white-tiny.png in Resources */,
@@ -958,7 +1012,6 @@
 				B9DEEBC718642DEF003DAD9E /* address-book-gray.png in Resources */,
 				B9F51781185BC4930083CA36 /* InfoPlist.strings in Resources */,
 				B9DEEBEB18643B35003DAD9E /* HelveticaLTStd-BlkObl.otf in Resources */,
-				B9DEEBB818642DEF003DAD9E /* HumanAppIcon-01.png in Resources */,
 				B9DEEBD218642DEF003DAD9E /* garbage-gray.png in Resources */,
 				B9DEEBB518642DEF003DAD9E /* Default@2x.png in Resources */,
 				B9DEEBE118642DEF003DAD9E /* user-profile-image-mask-48px.png in Resources */,
@@ -972,7 +1025,6 @@
 				B9DEEBCD18642DEF003DAD9E /* delete-x.png in Resources */,
 				B9DEEBD018642DEF003DAD9E /* flickr-peepers-white-tiny.png in Resources */,
 				B9DEEBDA18642DEF003DAD9E /* right-arrowhead-gray.png in Resources */,
-				B9DEEBB918642DEF003DAD9E /* HumanAppIcon.png in Resources */,
 				B9DEEBCE18642DEF003DAD9E /* flickr-peepers-color.png in Resources */,
 				B9DEEBE318642DEF003DAD9E /* user-profile-image-mask.png in Resources */,
 				B9DEEBAF18642DEF003DAD9E /* angry_unicorn_tiny.png in Resources */,
@@ -984,6 +1036,7 @@
 				B9DEEBB718642DEF003DAD9E /* foursquare-icon-36x36.png in Resources */,
 				B9DEEBBF18642DEF003DAD9E /* Instagram_Logo_Small.png in Resources */,
 				B9DEEBB618642DEF003DAD9E /* flickr-white-large-chiclet.png in Resources */,
+				B9509C78188DF7DA00D3DC1A /* HumanAppIcon29pt.png in Resources */,
 				B9DEEBCC18642DEF003DAD9E /* delete-x-22sq.png in Resources */,
 				B9DEEBD318642DEF003DAD9E /* instagram-camera-color.png in Resources */,
 			);
@@ -1073,8 +1126,10 @@
 				B9C2C218187BB65700F1DF47 /* HuOnBehalfOf.m in Sources */,
 				B99657D31867FDA800C4AB01 /* HuTextFieldLine.m in Sources */,
 				B9C2C219187BB65700F1DF47 /* HuServices.m in Sources */,
+				B937464F188CCA120037A95C /* FindFollowsForService_ViewController.m in Sources */,
 				B916190A18680E3C0010A34F /* UILabel+withDate.m in Sources */,
 				B9F646E31867BF6E008EB970 /* HuStatusCarouselViewController.m in Sources */,
+				B9374650188CCA120037A95C /* HuFindFollowsMain_ViewController.m in Sources */,
 				B9C2C225187BB6CF00F1DF47 /* HuRestStatusHeader.m in Sources */,
 				B9C2C267187BB6E100F1DF47 /* InstagramLike.m in Sources */,
 				B99657CF1867FDA800C4AB01 /* DateyMGStyledBox.m in Sources */,
@@ -1105,6 +1160,7 @@
 				B9C2C21A187BB65700F1DF47 /* HuServiceUser.m in Sources */,
 				B99657D11867FDA800C4AB01 /* HuInstagramStatus_Box.m in Sources */,
 				B99E016B1860028900E70892 /* HuUserHandler.m in Sources */,
+				B9374651188CCA120037A95C /* HuJediFindFriends_ViewController.m in Sources */,
 				B9C2C216187BB65700F1DF47 /* HuFriend.m in Sources */,
 				B9C2C26D187BB6E100F1DF47 /* HuTwitterBoundingBox.m in Sources */,
 				B9C2C265187BB6E100F1DF47 /* InstagramImage.m in Sources */,
@@ -1113,6 +1169,7 @@
 				B9C2C269187BB6E100F1DF47 /* InstagramStatus.m in Sources */,
 				B9C2C277187BB6E100F1DF47 /* HuTwitterStatusMedia.m in Sources */,
 				B9161905186803050010A34F /* UIImage+RoundedCorner.m in Sources */,
+				B9374654188CCD970037A95C /* StateMachine.m in Sources */,
 				B9C2C26C187BB6E100F1DF47 /* HuTwitterAttributes.m in Sources */,
 				B9C2C274187BB6E100F1DF47 /* HuTwitterPlace.m in Sources */,
 				B9161904186803050010A34F /* UIImage+ResizeToFit.m in Sources */,
@@ -1123,6 +1180,8 @@
 				B9C2C26F187BB6E100F1DF47 /* HuTwitterEntitesHashtag.m in Sources */,
 				B9C2C26A187BB6E100F1DF47 /* InstagramUser.m in Sources */,
 				B9C2C21B187BB65700F1DF47 /* HuUser.m in Sources */,
+				B9374658188CCF920037A95C /* HuProfilePhotoBlank.m in Sources */,
+				B937465B188CD0910037A95C /* HuServiceUserProfilePhoto.m in Sources */,
 				B99657D51867FDA800C4AB01 /* PhotoBox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1185,7 +1244,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1225,7 +1283,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1262,6 +1319,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans",
+					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
 				INFOPLIST_FILE = "humans/humans-Info.plist";
@@ -1283,6 +1345,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans",
+					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
 				INFOPLIST_FILE = "humans/humans-Info.plist";
@@ -1301,7 +1368,6 @@
 			baseConfigurationReference = BE6FC55D9C314A2D9154BA19 /* Pods-humansTests.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/humans.app/humans";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -1332,7 +1398,6 @@
 			baseConfigurationReference = BE6FC55D9C314A2D9154BA19 /* Pods-humansTests.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/humans.app/humans";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

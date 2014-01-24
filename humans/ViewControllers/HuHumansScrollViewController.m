@@ -86,9 +86,9 @@
     //add_human.alpha = 1.0;
     add_human.onTap = ^{
         LOG_UI(0, @"Tapped Add Human Limit?");
-        //        AppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+                HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
         //
-        //        [[bself navigationController]pushViewController:[delegate findFollowsMainViewController] animated:YES];
+                [[bself navigationController]pushViewController:[delegate jediFindFriendsViewController] animated:YES];
         
     };
 #pragma mark header setup
@@ -116,10 +116,12 @@
     __block MGLineStyled *bheader = header;
     header.onLongPress = ^{
         LOG_UI(0, @"Long Press Header..Esc to %@ %@", [bself presentingViewController], bheader.longPresser);
-        [[self navigationController]popViewControllerAnimated:YES];
+         dispatch_async(dispatch_get_main_queue(), ^{
+        [[bself navigationController]popViewControllerAnimated:YES];
         //        [[bself presentingViewController] dismissViewControllerAnimated:YES completion:^{
         //            //
         //        }];
+         });
         
     };
     // add it to the view then lay it all out
@@ -210,7 +212,7 @@
             LOG_GENERAL(0, @"Loaded Status for %@", human);
             //NSString *human_id = [human humanid]    ;
             NSArray *status = [user_handler statusForHuman:human];
-            LOG_GENERAL(0, @"Count is %ld", [status count]);
+            LOG_GENERAL(0, @"Count is %d", [status count]);
             statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
             //NSArray *items = (NSArray *)[[user_handler statusForHuman:human] copy];
             [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];

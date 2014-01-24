@@ -9,10 +9,13 @@
 #import "HuAppDelegate.h"
 #import "LoggerClient.h"
 #import "defines.h"
+//#import <Crashlytics/Crashlytics.h>
 
 @implementation HuAppDelegate
 
 @synthesize humansAppUser;
+@synthesize jediFindFriendsViewController;
+//@synthesize findFollowsMainViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -37,11 +40,25 @@
 
     humansAppUser = [[HuUserHandler alloc]init];
     
-    
+//    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
+//                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
+//    
+//    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
+//    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
 
+[application setStatusBarHidden:YES];
     
     return YES;
 }
+
+- (HuJediFindFriends_ViewController *)jediFindFriendsViewController
+{
+    if(jediFindFriendsViewController == nil) {
+        jediFindFriendsViewController = [[HuJediFindFriends_ViewController alloc]init];
+    }
+    return jediFindFriendsViewController;
+}
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {

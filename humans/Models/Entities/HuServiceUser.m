@@ -16,8 +16,8 @@
 @synthesize imageURL = _imageURL;
 @synthesize lastUpdated = _lastUpdated;
 @synthesize onBehalfOf = _onBehalfOf;
-@synthesize service = _service;
-@synthesize serviceID = _serviceID;
+@synthesize serviceName = _serviceName;
+@synthesize serviceUserID = _serviceUserID;
 @synthesize username = _username;
 
 
@@ -64,16 +64,16 @@
 		self.onBehalfOf = [[HuOnBehalfOf alloc] initWithJSONDictionary:onBehalfOf_];
 	}
 
-	id service_ = [dic objectForKey:@"service"];
-	if([service_ isKindOfClass:[NSString class]])
+	id serviceName_ = [dic objectForKey:@"serviceName"];
+	if([serviceName_ isKindOfClass:[NSString class]])
 	{
-		self.service = service_;
+		self.serviceName = serviceName_;
 	}
 
-	id serviceID_ = [dic objectForKey:@"serviceID"];
-	if([serviceID_ isKindOfClass:[NSString class]])
+	id serviceUserID_ = [dic objectForKey:@"serviceUserID"];
+	if([serviceUserID_ isKindOfClass:[NSString class]])
 	{
-		self.serviceID = serviceID_;
+		self.serviceUserID = serviceUserID_;
 	}
 
 	id username_ = [dic objectForKey:@"username"];
@@ -95,7 +95,7 @@
 
 -(NSDictionary *)dictionary {
     return [NSDictionary dictionaryWithObjectsAndKeys:self.id,@"id",self.imageURL, @"imageURL",self.lastUpdated, @"lastUpdated",
-            self.onBehalfOf, @"onBehalfOf", self.service, @"service", self.serviceID, @"serviceID", self.username, @"username", nil];
+            self.onBehalfOf, @"onBehalfOf", self.serviceName, @"serviceName", self.serviceUserID, @"serviceUserID", self.username, @"username", nil];
 }
 
 -(NSDictionary *)proxyForJson

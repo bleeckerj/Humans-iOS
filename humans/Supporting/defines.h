@@ -223,6 +223,7 @@ typedef void(^SearchResultsHandler)(id JSON, NSError *error);
 typedef void(^FetchImageHandler)(UIImage *image, NSError *error);
 typedef void(^CompletionHandler)(void);
 typedef void(^CompletionHandlerWithResult)(BOOL success, NSError *error);
+typedef void(^CompletionHandlerWithData)(id data, BOOL success, NSError *error);
 typedef void(^StatusAwareCompletionHandler)(BOOL success, NSError *error);
 typedef void(^LongPressHandler)(UILongPressGestureRecognizer *recog);
 

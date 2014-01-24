@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HuFriendsGridViewController.h"
+
 
 @interface HuStatusCarouselViewController : UIViewController
 
 @property (nonatomic, strong) NSMutableArray *items;
-@property (nonatomic, strong) HuFriendsGridViewController *friendsViewController;
 
 @end

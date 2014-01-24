@@ -12,7 +12,7 @@
 
 
 
-@property (strong, nonatomic) NSDecimalNumber *count;
+@property (strong, nonatomic) NSNumber *count;
 @property (strong, nonatomic) NSArray *data;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;

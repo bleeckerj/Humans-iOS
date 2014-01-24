@@ -36,7 +36,6 @@
 
 @synthesize carousel;
 @synthesize items;
-@synthesize friendsViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -156,7 +155,7 @@
     if (offset >= 0)
     {
         //move back
-        transform = CATransform3DTranslate(transform, 0, 0, -50 * offset);
+        transform = CATransform3DTranslate(transform, 0, 0, -10 * offset);
     }
     else
     {

@@ -52,7 +52,7 @@
         self.serviceIcon = [UIImage imageNamed:[self.status tinyMonochromeServiceImageBadgeName]];
         if([self.status userProfileImageURL]) {
             UIImageView *profile_image_view = [[UIImageView alloc]init];
-            
+            LOG_GENERAL(0, @"profile image url %@", [self.status userProfileImageURL]);
             NSAssert([self.status userProfileImageURL] != nil, @"Why is userProfileImageURL nil for %@", status);
         
             NSURLRequest *req = [[NSURLRequest alloc]initWithURL:[self.status userProfileImageURL]];

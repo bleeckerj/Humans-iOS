@@ -5,7 +5,8 @@
 //  Created by julian on 12/17/13.
 //  Copyright (c) 2013 nearfuturelaboratory. All rights reserved.
 //
-
+//#define EXP_SHORTHAND
+#import "Expecta.h"
 #import <XCTest/XCTest.h>
 #import "XCTestCase+AsyncTesting.h"
 #import "HuUserHandler.h"
@@ -47,9 +48,105 @@ HuUserHandler *user_handler;
     [super tearDown];
 }
 
+//- (void)userAddHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+//{
+//    
+//}
+
+- (void)test_userAddHuman
+{
+    
+}
+
+
+- (void)test_foogetStatusCountForHuman
+{
+//    [Expecta setAsynchronousTestTimeout:10];
+//    EXP_expect(@"foo").to.equal(@"foo");
+//    [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+//        NSArray *humans = [[user_handler humans_user]humans];
+//        expect(humans).toNot.beEmpty();
+//
+//        if([humans count] > 0) {
+//            
+//            [user_handler getStatusCountForHuman:[humans objectAtIndex:0] withCompletionHandler:^(id data, BOOL success, NSError *error) {
+//                //
+//                expect(success).to.beTruthy();
+//                expect(error).to.beNil();
+//                
+//                LOG_TODO(0, @"status count=%@", data);
+//                
+//            }];
+//        }
+//        
+//    }];
+}
+
+
+- (void)test_getStatusCountForHumanAfterTimestamp
+{
+    ASYNC_START
+    
+    [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+        NSArray *humans = [[user_handler humans_user]humans];
+        //if([humans count] < 1) {
+        assertThat(humans, isNot(isEmpty()));
+        if([humans count] > 0) {
+            //}
+            //long timestamp;
+            NSDate *today = [NSDate date];
+            
+            NSDateComponents *sub_date = [[NSDateComponents alloc] init];
+            [sub_date setDay:-3];
+            NSDate *threeDaysAgo = [[NSCalendar currentCalendar] dateByAddingComponents:sub_date
+                                                                               toDate:today
+                                                                              options:0];
+
+            NSTimeInterval interval = [threeDaysAgo timeIntervalSince1970];
+            NSTimeInterval rounded = round(interval);
+            
+            [user_handler getStatusCountForHuman:[humans objectAtIndex:0] after:rounded withCompletionHandler:^(id data, BOOL success, NSError *error) {
+                //
+                assertThatBool(success, is(equalToBool(YES)));
+                
+                LOG_TODO(0, @"status count=%@", data);
+                ASYNC_TEST_DONE
+                
+            }];
+        }
+        
+    }];
+    ASYNC_TEST_END
+}
+
+- (void)test_getStatusCountForHuman
+{
+    ASYNC_TEST_START
+
+    [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+        NSArray *humans = [[user_handler humans_user]humans];
+        //if([humans count] < 1) {
+        assertThat(humans, isNot(isEmpty()));
+        if([humans count] > 0) {
+        //}
+        [user_handler getStatusCountForHuman:[humans objectAtIndex:0] withCompletionHandler:^(id data, BOOL success, NSError *error) {
+            //
+            assertThatBool(success, is(equalToBool(YES)));
+            
+            LOG_TODO(0, @"status count=%@", data);
+            ASYNC_TEST_DONE
+
+        }];
+        }
+
+    }];
+    ASYNC_TEST_END
+   }
+
+
 - (void)test_userGet
 {
-    [user_handler userGetWithCompletionHandler:nil];
+    [user_handler getHumansWithCompletionHandler:nil];
     [self waitForTimeout:2];
     HuUser *user = [user_handler humans_user];
     
@@ -164,17 +261,23 @@ HuUserHandler *user_handler;
     __block NSMutableArray *friends;
     ASYNC_TEST_START
     [user_handler userFriendsGet:^(NSMutableArray *results) {
-        //
-        //LOG_GENERAL(0, @"%@", results);
+        ASYNC_TEST_DONE
+        LOG_GENERAL(0, @"%@", results);
+        
         friends = [NSMutableArray arrayWithArray:results];
+        for(HuFriend *friend in friends) {
+            [friend getProfileImageWithCompletionHandler:^(UIImage *image, NSError *error) {
+                
+
+                LOG_INSTAGRAM_IMAGE(0, CGImageGetWidth([image CGImage]), CGImageGetHeight([image CGImage]), UIImageJPEGRepresentation(image, 1.0));
+                LOG_GENERAL(0, @"%@ %@ %@",[friend username], [friend serviceName], [friend profileImage]);
+
+            }];
+        }
 
     }];
+    
     ASYNC_TEST_END
-    for(HuFriend *friend in friends) {
-        UIImage *image = [friend largeProfileImage];
-        LOG_GENERAL(0, @"%@ %@",[friend username], [friend service]);
-        LOG_INSTAGRAM_IMAGE(0, CGImageGetWidth([image CGImage]), CGImageGetHeight([image CGImage]), UIImageJPEGRepresentation(image, 1.0));
-    }
 }
 
 //- (void)testExample

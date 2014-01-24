@@ -25,10 +25,25 @@
     
 }
 
+- (id)init {
+    if(self = [super init]) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit
+{
+    self.serviceUsers = [[NSMutableArray alloc]init];
+    self.humanid = @"";
+    self.name = @"";
+}
+
 - (id) initWithJSONDictionary:(NSDictionary *)dic
 {
 	if(self = [super init])
 	{
+        [self commonInit];
 		[self parseJSONDictionary:dic];
 	}
 	
@@ -37,6 +52,8 @@
 
 - (void) parseJSONDictionary:(NSDictionary *)dic
 {
+    [self commonInit];
+
 	// PARSER
 	id humanid_ = [dic objectForKey:@"humanid"];
 	if([humanid_ isKindOfClass:[NSString class]])
@@ -59,7 +76,7 @@
 			HuServiceUser *item = [[HuServiceUser alloc] initWithJSONDictionary:itemDic];
 			[array addObject:item];
 		}
-		self.serviceUsers = [NSArray arrayWithArray:array];
+		self.serviceUsers = [NSMutableArray arrayWithArray:array];
 	}
     
 	
@@ -105,7 +122,7 @@
     
             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                 //
-                LOG_ERROR(0, @"Failed to load %@ %@ %@", obj, request, error);
+                LOG_ERROR(0, @"For %@ failed to load %@ %@ %@", [self name], obj, request, error);
                 [profile_images addObject:[UIImage imageNamed:@"angry_unicorn_tiny.png"]];
                 dispatch_group_leave(group);
     
@@ -135,7 +152,9 @@
 
 -(NSDictionary *)dictionary
 {
-    return [NSDictionary dictionaryWithObjectsAndKeys:[self humanid],  @"humanid", [self name], @"name", [self serviceUsers], @"serviceUsers", nil];
+    NSDictionary *result =[NSDictionary dictionaryWithObjectsAndKeys:[self humanid],  @"humanid", [self name], @"name", [self serviceUsers], @"serviceUsers", nil];
+    
+    return result;
 }
 
 -(NSDictionary *)proxyForJson
@@ -144,11 +163,27 @@
 }
 
 
+-(NSString *)jsonString
+{
+    return [self description];
+//    NSError *writeError = nil;
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.dictionary options:(NSJSONWritingPrettyPrinted | NSJSONReadingMutableContainers) error:&writeError];
+//    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    return jsonString;
+}
+
+
 - (NSString *)description
 {
+    NSDictionary *dict = [self dictionary];
+    NSError *error;
+    
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
-    NSString *json = [writer stringWithObject:[self dictionary]];
-    return json;
+    NSString *jsonString = [writer stringWithObject:dict];
+    if ( ! jsonString ) {
+        NSLog(@"Error: %@", error);
+    }
+    return jsonString;
 }
 
 @end
