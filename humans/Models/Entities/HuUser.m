@@ -9,9 +9,9 @@
 #import "HuHuman.h"
 #import "HuServices.h"
 
-#import "NSObject+SBJson.h"
-#import "SBJsonWriter.h"
-#import "SBJsonParser.h"
+//#import "NSObject+SBJson.h"
+#import "SBJson4Writer.h"
+#import "SBJson4Parser.h"
 
 @implementation HuUser
 

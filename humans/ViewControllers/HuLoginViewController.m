@@ -10,11 +10,12 @@
 #import "defines.h"
 #import "HuAppDelegate.h"
 #import "HuUserHandler.h"
-#import "SBJsonWriter.h"
+#import "SBJson4Writer.h"
 #import "HuHumansScrollViewController.h"
 #import <BlocksKit/BlocksKit.h>
 #import <BlocksKit/NSArray+BlocksKit.h>
-
+#import "Flurry.h"
+#import <Crashlytics/Crashlytics.h>
 
 @interface HuLoginViewController ()
 {
@@ -33,24 +34,26 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        
-        // Custom initialization
-        //        CGRect rect = CGRectMake(10, 10, 200, 30);
-        //        usernameTextField  = [[UITextField alloc]initWithFrame:rect];
-        
-        
-    }
     return self;
 }
 
 - (void)viewDidLoad
 {
-    //UINavigationController *nc = [self navigationController];
-    
     [super viewDidLoad];
     
+//    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
+//    {
+//        CGRect frame = self.navigationController.view.frame;
+//        frame.origin.y += 20;
+//        frame.size.height -= 20;
+//        self.navigationController.view.frame = frame;
+//        self.navigationController.view.backgroundColor = [UIColor grayColor];
+//        
+//    }
+
     
+    //[[Crashlytics sharedInstance] crash];
+    //int *x = NULL; *x = 42;
     [self registerForKeyboardNotifications];
     [emailTextField setDelegate:self];
     [usernameTextField setDelegate:self];
@@ -62,44 +65,38 @@
     UIFont *font = [UIFont fontWithName:@"DINAlternate-Bold" size:30.0f];
     
     self.emailTextField.font=[font fontWithSize:19];
-    self.usernameTextField.font=[font fontWithSize:19];
-    self.passwordTextField.font=[font fontWithSize:19];
-    //UIStoryboard *story_board = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    //humansScrollViewController = [story_board instantiateViewControllerWithIdentifier:@"HuHumansScrollViewController"];
-    //humansScrollViewController = [[HuHumansScrollViewController alloc]init];
-    
-	// Do any additional setup after loading the view.
-    //            CGRect rect = CGRectMake(10, 10, 200, 30);
-    //            usernameTextField  = [[UITextField alloc]initWithFrame:rect];
-    //    [[self view]addSubview:usernameTextField];
+    self.usernameTextField.font=[font fontWithSize:28];
+    self.passwordTextField.font=[font fontWithSize:29];
     
 }
 
 
 - (IBAction)touchUp_signInButton:(id)sender {
+    
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+    
     LOG_UI(0, @"Touch Up Sign In Button %@", sender);
+    [Flurry logEvent:[NSString stringWithFormat:@"SIGN_IN %@" , [usernameTextField text]]];
+    
+    [MRProgressOverlayView showOverlayAddedTo:self.view title:@"Logging in" mode:MRProgressOverlayViewModeIndeterminate animated:YES stopBlock:^(MRProgressOverlayView *progressOverlayView) {
+        //
+        LOG_UI(0, @"Stopped");
+    }];
     [userHandler userRequestTokenForUsername:[usernameTextField text] forPassword:[passwordTextField text] withCompletionHandler:^(BOOL success, NSError *error) {
         //
         if(success) {
+            
             //go ahead
-            SBJsonWriter *writer = [[SBJsonWriter alloc] init];
-            NSString *user_json = [writer stringWithObject:[[userHandler humans_user] dictionary]];
-            LOG_GENERAL(0, @"User %@", user_json);
+//            SBJson4Writer *writer = [[SBJson4Writer alloc] init];
+//            NSString *user_json = [writer stringWithObject:[[userHandler humans_user] dictionary]];
+//            LOG_GENERAL(0, @"User %@", user_json);
+            [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
+            [Flurry logEvent:[NSString stringWithFormat:@"%@ logged in successfully", [usernameTextField text]]];
             
             dispatch_group_t group = dispatch_group_create();
             dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
             
             __block int i = 0;
-//            [[[userHandler humans_user]humans] bk_apply:^(id obj) {
-//                //
-//                dispatch_group_enter(group);
-//                HuHuman *human = (HuHuman*)obj;
-//                [human loadServiceUsersProfileImagesWithCompletionHandler:^{
-//                    //
-//                    LOG_GENERAL(0, @"%d loaded profile images for %@", ++i, [human name]);
-//                    dispatch_group_leave(group);
-//                }];
-//            }];
             dispatch_group_notify(group, queue, ^{
                 LOG_GENERAL(0, @"%d now going to push to humans scroll view", i);
                 //NSArray *a = [[userHandler humans_user]humans];
@@ -110,47 +107,87 @@
                     [[human profile_images]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                         //
                         
-                        UIImage *img = (UIImage *)obj;
-                        CGImageRef imageRef = [img CGImage];
-                        LOG_GENERAL(0, @"profile image=%@", img);
-                        dispatch_async(dispatch_get_main_queue(), ^{
-
-                            LOG_GENERAL_IMAGE(0, CGImageGetWidth(imageRef), CGImageGetHeight(imageRef), UIImageJPEGRepresentation(img, 1.0));
-                        });
+                        //UIImage *img = (UIImage *)obj;
                     }];
                 }];
                 
                 humansScrollViewController = [[HuHumansScrollViewController alloc]init];
                 [humansScrollViewController setArrayOfHumans:[[userHandler humans_user]humans]];
                 
-                
                 // have to do this on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[self navigationController]pushViewController:humansScrollViewController animated:YES];
-
+                    //UIViewController *topViewController        = humansScrollViewController;///[[UIViewController alloc] init];
+                    UIViewController *underLeftViewController  = [[UIViewController alloc] init];
+                    UIViewController *underRightViewController = [[UIViewController alloc] init];
+                    
+                    // configure under left view controller
+                    underLeftViewController.view.layer.borderWidth     = 20;
+                    underLeftViewController.view.layer.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0].CGColor;
+                    underLeftViewController.view.layer.borderColor     = [UIColor colorWithWhite:0.8 alpha:1.0].CGColor;
+                    underLeftViewController.edgesForExtendedLayout     = UIRectEdgeTop | UIRectEdgeBottom | UIRectEdgeLeft; // don't go under the top view
+                    
+                    // configure under right view controller
+                    underRightViewController.view.layer.borderWidth     = 20;
+                    underRightViewController.view.layer.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0].CGColor;
+                    underRightViewController.view.layer.borderColor     = [UIColor colorWithWhite:0.8 alpha:1.0].CGColor;
+                    underRightViewController.edgesForExtendedLayout     = UIRectEdgeTop | UIRectEdgeBottom | UIRectEdgeRight; // don't go under the top view
+                    
+                    // configure sliding view controller
+                    //self.slidingViewController = [ECSlidingViewController slidingWithTopViewController:humansScrollViewController];
+                    self.slidingViewController = [HuSlidingViewController slidingWithTopViewController:humansScrollViewController];
+                    [humansScrollViewController setSlidingViewController:self.slidingViewController];
+                    self.slidingViewController.underLeftViewController  = underLeftViewController;
+                    self.slidingViewController.underRightViewController = underRightViewController;
+                    
+                    // configure anchored layout
+                    self.slidingViewController.anchorRightPeekAmount  = 100.0;
+                    self.slidingViewController.anchorLeftRevealAmount = 250.0;
+                    
+                    //self.window.rootViewController = self.slidingViewController;
+                    [humansScrollViewController setSlidingViewController:self.slidingViewController];
+                    [[self navigationController]pushViewController:self.slidingViewController animated:YES];
                 });
+            
             });
             
-            
-            
-            //UIStoryboard *story_board = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            
-            //            UIStoryboardSegue *segue =  [[UIStoryboardSegue alloc] initWithIdentifier:@"ToHumansScrollView" source:self destination:humansScrollViewController];
-            //            [segue perform];
-            //[self prepareForSegue:segue sender:sender];
-            
-            // [[self navigationController]performSegueWithIdentifier:@"ToHumansScrollView" sender:sender];
-            // [self performSegueWithIdentifier:@"ToHumansScrollView" sender:sender];
-            //            [self performSegueWithIdentifier:@"ToHumansScrollView" sender:sender];
-            //            [self presentViewController:humansScrollViewController animated:YES completion:^{
-            //                //
-            //                LOG_UI(0, @"Should've pesented");
-            //            }];
+        
         } else {
+            ///[self.activityIndicatorView stopAnimating];
+            
+            [MRProgressOverlayView dismissOverlayForView:self.view animated:YES];
+            
+            MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+            progressView.mode = MRProgressOverlayViewModeCheckmark;
+            progressView.titleLabelText = @"Login Failed";
+            [self performBlock:^{
+                [progressView dismiss:YES];
+            } afterDelay:2.0];
             //shake
+            NSString *msg =[NSString stringWithFormat:@"%@ had trouble logging in with %@", [usernameTextField text], [passwordTextField text] ];
+            [Flurry logError:msg message:msg error:nil];
+
         }
     }];
 }
+
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
+}
+//- (UIPanGestureRecognizer *)recognizer
+//{
+//    UIPanGestureRecognizer *result = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(crashAndBurn:)];
+//    return result;
+//}
+
+- (void)anchorRight {
+    [self.slidingViewController anchorTopViewToRightAnimated:YES];
+}
+
+- (void)anchorLeft {
+    [self.slidingViewController anchorTopViewToLeftAnimated:YES];
+}
+
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -166,10 +203,26 @@
     
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    LOG_UI(0, @"View Did Appear");
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     LOG_UI(0, @"View Will Appear");
+    // if the view appears again (going back from a status scroller), we need to
+    // re-add this gesture recognizer, which gets removed by HuHumansScrollViewController
+    // so that the gestures in the top bar of HuHumansScrollViewController are recognized
+    
     //    [[self view]setBackgroundColor:[UIColor grayColor]];
     //    [[self usernameTextField]setText:@"HELLO??"];
 }

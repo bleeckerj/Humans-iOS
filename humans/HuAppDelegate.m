@@ -9,7 +9,9 @@
 #import "HuAppDelegate.h"
 #import "LoggerClient.h"
 #import "defines.h"
-//#import <Crashlytics/Crashlytics.h>
+#import <Crashlytics/Crashlytics.h>
+#import "Flurry.h"
+#import "TestFlight.h"
 
 @implementation HuAppDelegate
 
@@ -19,6 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //[TestFlight takeOff:@"7d627af6-7629-44dc-8103-a7a1baa81d03"];
     // Override point for customization after application launch.
     LoggerInit();
     //LoggerSetViewerHost(LoggerGetDefaultLogger(), CFSTR("10.0.0.79"), 49767);
@@ -28,15 +31,15 @@
     LOG_UI(0, @"Widescreen %d", ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON ));
     
     
-    for (NSString* family in [UIFont familyNames])
-    {
-        NSLog(@"%@", family);
-        
-        for (NSString* name in [UIFont fontNamesForFamilyName: family])
-        {
-            NSLog(@"  %@", name);
-        }
-    }
+//    for (NSString* family in [UIFont familyNames])
+//    {
+//        NSLog(@"%@", family);
+//        
+//        for (NSString* name in [UIFont fontNamesForFamilyName: family])
+//        {
+//            NSLog(@"  %@", name);
+//        }
+//    }
 
     humansAppUser = [[HuUserHandler alloc]init];
     
@@ -44,9 +47,14 @@
 //                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
 //    
 //    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
-//    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
-
-[application setStatusBarHidden:YES];
+    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
+    [Crashlytics sharedInstance].debugMode = YES;
+    
+//    
+    [Flurry setCrashReportingEnabled:YES];
+//
+[Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
+[application setStatusBarHidden:NO];
     
     return YES;
 }

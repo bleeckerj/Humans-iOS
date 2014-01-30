@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "HuHumansHTTPClient.h"
 #import "defines.h"
 #import "HuUser.h"
@@ -24,9 +25,8 @@
 #import "HuTwitterEntitiesURL.h"
 #import "HuTwitterStatusMedia.h"
 #import "HuTwitterMediaSize.h"
-
-#import "TwitterStatus.h"
-#import "TwitterUser.h"
+//#import "TwitterStatus.h"
+//#import "TwitterUser.h"
 
 #import "InstagramStatus.h"
 #import "InstagramCaption.h"
@@ -39,9 +39,22 @@
 #import "InstagramCommenter.h"
 #import "InstagramLikes.h"
 #import "InstagramLike.h"
+
+#import "HuFlickrStatus.h"
+#import "HuFlickrDescription.h"
+
 #import "HuRestStatusHeader.h"
 
 @interface HuUserHandler : NSObject <NSURLConnectionDelegate>
+
+typedef enum networkStateTypes
+{
+    NETWORK_DOWN,
+    NETWORK_OKAY,
+    NETWORK_WWAN,
+    NETWORK_UNKNOWN,
+    NETWORK_WIFI
+} HuNetworkState;
 
 @property (nonatomic, retain) HuHumansHTTPClient *client;
 @property (nonatomic, copy) NSString *access_token;
@@ -49,6 +62,7 @@
 @property (nonatomic, readonly) NSMutableDictionary *statusForHumanId;
 @property (nonatomic, retain) HuRestStatusHeader *lastStatusResultHeader;
 @property (nonatomic, retain) NSMutableArray *friends;
+@property HuNetworkState networkState;
 
 - (void)getStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 - (void)getStatusCountForHuman:(HuHuman *)human after:(NSTimeInterval)timestamp withCompletionHandler:(CompletionHandlerWithData)completionHandler;
@@ -56,6 +70,8 @@
 - (void)getHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userRequestTokenForUsername:(NSString *)username forPassword:(NSString *)password withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userAddHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+- (void)userRemoveHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+
 
 - (BOOL)usernameExists:(NSString *)username;
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;

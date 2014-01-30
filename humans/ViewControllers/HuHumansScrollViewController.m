@@ -9,9 +9,6 @@
 
 #import "HuHumansScrollViewController.h"
 
-
-
-
 #import <MGScrollView.h>
 #import <MGTableBoxStyled.h>
 #import <MGLineStyled.h>
@@ -22,62 +19,120 @@
 #import "HuStatusCarouselViewController.h"
 #import "UIControl+BlocksKit.h"
 #import <BlocksKit/UIControl+BlocksKit.h>
+#import "Flurry.h"
+#import <UIView+FLKAutoLayout.h>
+#import <MRProgress/MRActivityIndicatorView.h>
 
 @interface HuHumansScrollViewController ()
 {
     //UINavigationController *navigator;
     MGLineStyled *header;
     MGLine *add_human;
-    
+    MGTableBox *section;
+    MRProgressOverlayView *activityIndicatorView;
+    NSMutableArray *linesOfHumans;
+    MGScrollView *scroller;
+    NSTimer *timerForStatusRefresh;
 }
+
+
 @end
 
 @implementation HuHumansScrollViewController
 
 @synthesize arrayOfHumans;
 @synthesize statusCarouselViewController;
+@synthesize slidingViewController;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        [self customInit];
+        
+    }
+    return self;
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [self customInit];
     }
     return self;
 }
 
-//- (BOOL)prefersStatusBarHidden {
-//    return YES;
-//}
+- (void)customInit
+{
+    linesOfHumans = [[NSMutableArray alloc]init];
+}
+
+
+- (void)setUp:(UIViewController *)controller
+{
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    LOG_UI(0, @"View Did Appear");
+    //[self.navigationController.view addGestureRecognizer:self.slidingViewController.panGesture];
+    
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    //[self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    LOG_UI(0, @"View Will Appear");
+    [scroller layoutSubviews];
+    [self updateHumanStatusCounts];
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
+    {
+        CGRect frame = self.navigationController.view.frame;
+        if(frame.origin.y == 0) {
+            
+            frame.origin.y += 20;
+            frame.size.height -= 20;
+            self.navigationController.view.frame = frame;
+            self.navigationController.view.backgroundColor = [UIColor orangeColor];
+            
+        }
+    }
+    [self setNeedsStatusBarAppearanceUpdate];
+    
+    
     __block HuHumansScrollViewController *bself = self;
-    //navigator = [[UINavigationController alloc]initWithRootViewController:self];
-    //[window.addSubview navigator];
-    //[self.view addSubview:navigator.view];
-	// Do any additional setup after loading the view.
-    
-    //    UIButton *button = [[UIButton alloc]initWithFrame:(CGRectMake(0, 0, self.view.width/4, HEADER_HEIGHT))];
-    //    [button setBackgroundColor:[UIColor grayColor]];
-    //    [button bk_addEventHandler:^(id sender) {
-    //        [[self navigationController]popViewControllerAnimated:YES];
-    //    } forControlEvents:UIControlEventTouchUpInside];
-    //
-    //
-    //
-    //    [self.view addSubview:button];
-    
-    
     
     UIImage *settings_bar_img = [UIImage imageNamed:@"settings-bars"];
     
     MGLine *settings_bar = [MGLine lineWithLeft:settings_bar_img right:nil size:[settings_bar_img size]];
     settings_bar.onTap = ^{
         LOG_UI(0, @"Tapped Settings Box");
-        //settingsTapped = YES;
-        //settingsTapped = NO;
+        if(self.slidingViewController) {
+            [self.slidingViewController anchorTopViewToRightAnimated:YES];
+        }
     };
     
     UIImage *add_human_img = [UIImage imageNamed:@"add-human-gray"];
@@ -86,11 +141,12 @@
     //add_human.alpha = 1.0;
     add_human.onTap = ^{
         LOG_UI(0, @"Tapped Add Human Limit?");
-                HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+        HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
         //
-                [[bself navigationController]pushViewController:[delegate jediFindFriendsViewController] animated:YES];
+        [[bself navigationController]pushViewController:[delegate jediFindFriendsViewController] animated:YES];
         
     };
+    
 #pragma mark header setup
     //header
     header = [MGLineStyled lineWithLeft:settings_bar right:add_human size:(CGSize){self.view.frame.size.width,HEADER_HEIGHT}];
@@ -116,56 +172,57 @@
     __block MGLineStyled *bheader = header;
     header.onLongPress = ^{
         LOG_UI(0, @"Long Press Header..Esc to %@ %@", [bself presentingViewController], bheader.longPresser);
-         dispatch_async(dispatch_get_main_queue(), ^{
-        [[bself navigationController]popViewControllerAnimated:YES];
-        //        [[bself presentingViewController] dismissViewControllerAnimated:YES completion:^{
-        //            //
-        //        }];
-         });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[bself navigationController]popViewControllerAnimated:YES];
+        });
         
     };
     // add it to the view then lay it all out
     [self.view addSubview:header];
     [header layout];
     
-    
+    if(self.slidingViewController) {
+        [header addGestureRecognizer:self.slidingViewController.panGesture];
+    }
     
     [self.view setBackgroundColor:[UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
-    //UIScrollView *scroller = [[UIScrollView alloc]initWithFrame:self.view.frame];
     
-    
-    
-    MGScrollView *scroller = [MGScrollView scrollerWithSize:self.view.size];
-    [scroller setFrame:CGRectMake(0, HEADER_HEIGHT, self.view.width, self.view.height-HEADER_HEIGHT)];
-    [self.view addSubview:scroller];
-    
-    MGTableBox *section = MGTableBox.box;
+
+#pragma mark setup the scroller
+    scroller = [MGScrollView scrollerWithSize:self.navigationController.view.frame.size];
+    [scroller setFrame:CGRectMake(0, HEADER_HEIGHT, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height-HEADER_HEIGHT)];
+    section = MGTableBox.box;
     [scroller.boxes addObject:section];
     
+    HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+    HuUserHandler *userHandler = [delegate humansAppUser];
+    
+
+#pragma mark setup the lines of humans
     for (int i=0; i<[[self arrayOfHumans]count]; i++) {
-        __block MGLineStyled *human_mgline = [MGLineStyled new];
-        
+        //__block MGLineStyled *human_mgline = [MGLineStyled new];
         HuHuman *human = (HuHuman*)[arrayOfHumans objectAtIndex:i];
-        CGSize rowSize = (CGSize){self.view.width, 80};
         
-        human_mgline = [MGLineStyled lineWithLeft:nil right:nil size:rowSize];
-        NSMutableArray *a = [[NSMutableArray alloc]initWithArray:@[[human name]]];
-        [human_mgline setMiddleItems:a];
+        CGSize rowSize = (CGSize){self.view.width, 110};
         
-        [human_mgline setMiddleItemsAlignment:NSTextAlignmentLeft];
-        UIFont *font = [UIFont fontWithName:@"Creampuff" size:24];
-        [human_mgline setFont:font];
+        HuHumanLineStyled *line = [HuHumanLineStyled lineWithLeft:nil right:nil size:rowSize];
+        [line setUserHandler:userHandler];
+        [line setHuman:human];
+        [line setMiddleItemsAlignment:NSTextAlignmentLeft];
+        [line setMiddleFont:[UIFont fontWithName:@"Creampuff" size:18]];
+        [linesOfHumans addObject:line];
         
         [human loadServiceUsersProfileImagesWithCompletionHandler:^{
             //
             dispatch_async(dispatch_get_main_queue(), ^{
                 //
                 UIImage *profile_image = [human largestServiceUserProfileImage];
-                profile_image = [profile_image resizedImageWithContentMode:UIViewContentModeScaleAspectFill
-                                                                    bounds:CGSizeMake(rowSize.height*.8,rowSize.height*.8) interpolationQuality:kCGInterpolationHigh];
+                
+                profile_image = [profile_image resizedImageToFitInSize:CGSizeMake(110,110) scaleIfSmaller:YES];
+                
                 UIImageView *profile_iv = [[UIImageView alloc]initWithImage:profile_image];
                 CALayer *maskLayer = [CALayer layer];
-                UIImage *mask = [UIImage imageNamed:@"user-profile-image-mask-60px"];
+                UIImage *mask = [UIImage imageNamed:@"user-profile-image-mask-100px"];
                 maskLayer.contents = (id)mask.CGImage;
                 maskLayer.frame = (CGRect){CGPointZero, mask.size};
                 
@@ -173,64 +230,203 @@
                 profile_iv.layer.mask = maskLayer;
                 
                 NSMutableArray *marray = [[NSMutableArray alloc]initWithArray:@[profile_iv]];
-                [human_mgline setLeftItems:marray];
+                //[human_mgline setLeftItems:marray];
                 
-                [human_mgline layout];
-                [scroller layout];
+                [line setLeftItems:marray];
+                [line layout];
+                
             });
             
         }];
         
-        // a default row size
-        
-        
-        // a header row
-        //human_mgline = [MGLineStyled lineWithLeft:image_view right:[human name] size:rowSize];
-        human_mgline.leftPadding = human_mgline.rightPadding = 16;
-        human_mgline.topPadding = human_mgline.bottomPadding = 16;
-        human_mgline.onTap = ^{
+        line.onTap = ^{
             LOG_UI(0, @"Tapped on %@", [human name]);
+            activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+            activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
+            activityIndicatorView.tintColor = [UIColor orangeColor];
+            //[self.view addSubview:activityIndicatorView];
+            //[activityIndicatorView show:YES];
+            
             [self showHuman:human];
         };
-        [human_mgline layout];
-        [section.topLines addObject:human_mgline];
+        __block HuHumanLineStyled *bline = line;
+        __block NSMutableArray *array = linesOfHumans;
+        line.onSwipe = ^{
+            LOG_UI(0, @"Swiped on %@", [human name]);
+            bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
+            [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                //
+                HuHumanLineStyled *b = (HuHumanLineStyled*)obj;
+                if(b != bline) {
+                    [UIView animateWithDuration:0.2 animations:^{
+                        //
+                        b.x = 0;
+                    }];
+                }
+            }];
+            
+            // if the line is positioned at 0, it hasn't been slid either left or right,
+            // so let's slide it to reveal the delete button
+            if (bline.x == 0) {
+                // change the swiper's accepted direction,
+                // to allow swiping the line back to its original position
+                bline.swiper.direction = UISwipeGestureRecognizerDirectionLeft;
+                [UIView animateWithDuration:0.2 animations:^{
+                    bline.x = 100;
+                }];
+                
+            } else {
+                // change the swiper's accepted direction,
+                // to allow it to be swiped to reveal delete again
+                bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
+                [UIView animateWithDuration:0.2 animations:^{
+                    bline.x = 0;
+                }];
+            }
+        };
+        
+        
+        UIImage *garbage = [UIImage imageNamed:@"garbage-gray"];
+        MGLine *garbage_box = [MGLine lineWithSize:[garbage size]];
+        [[garbage_box leftItems]addObject:garbage];
+        
+        
+        MGLine *underneath = [MGLine lineWithSize:line.size];
+        [underneath setBackgroundColor:[UIColor yellowColor]];
+        underneath.attachedTo = line;
+        underneath.zIndex = -1;
+        [underneath.leftItems setArray:@[garbage_box]];
+        
+        UILongPressGestureRecognizer *__longpresser = [[UILongPressGestureRecognizer alloc]initWithTarget:garbage_box action:@selector(longPressed)];
+        [__longpresser setMinimumPressDuration:2.5];
+        [__longpresser setNumberOfTapsRequired:0];
+        garbage_box.longPresser = __longpresser;
+        
+        garbage_box.onLongPress = ^{
+            LOG_UI(0, @"Garbage Toss..%@ %@", human.name, __longpresser);
+            HuAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+            HuUserHandler *handler = [appDelegate humansAppUser];
+            if(__longpresser.state == UIGestureRecognizerStateBegan) {
+                [handler userRemoveHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+                    //
+                    [section.topLines removeObject:line];
+                    [section.topLines removeObject:underneath];
+                    //CGRect frame = human_mgline.frame;
+                    //CGRect scroll_frame = scroller.frame;
+                    //CGRect new_frame = CGRectMake(scroll_frame.origin.x, scroll_frame.origin.y, scroll_frame.size.width, scroll_frame.size.height - frame.size.height);
+                    [scroller layoutWithSpeed:1.5 completion:^{
+                        LOG_UI(0, @"Finished removing %@", human);
+                        [UIView animateWithDuration:0.5 animations:^{
+                            scroller.contentSize = CGSizeMake(scroller.contentSize.width, scroller.contentSize.height-line.size.height);
+                        }];
+                    }];
+                    
+                    
+                }];
+            }
+        };
+        
+        [line layout];
+        [section.topLines addObject:line];
+        [section.topLines addObject:underneath];
+        
+        timerForStatusRefresh = [NSTimer scheduledTimerWithTimeInterval:240
+                                         target:self
+                                       selector:@selector(updateHumanStatusCounts)
+                                       userInfo:nil repeats:YES];
+    
+    
     }
     
-    [scroller layoutWithSpeed:2.3 completion:nil];
-    [scroller scrollToView:section withMargin:0];
+    [scroller setContentSize:CGSizeMake(scroller.bounds.size.width, scroller.bounds.size.height+50)];
+    
+    [scroller layoutWithSpeed:1.0 completion:nil];
+    //[scroller scrollToView:section withMargin:0];
+    [self.view addSubview:scroller];
     
 }
 
 - (void)showHuman:(HuHuman *)human
 {
     LOG_GENERAL(0, @"Would present %@", human);
+    [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
+    
     HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
     HuUserHandler *user_handler = [delegate humansAppUser];
     [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
         //
         if(success) {
             LOG_GENERAL(0, @"Loaded Status for %@", human);
+            [Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+            
             //NSString *human_id = [human humanid]    ;
             NSArray *status = [user_handler statusForHuman:human];
             LOG_GENERAL(0, @"Count is %d", [status count]);
             statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-            //NSArray *items = (NSArray *)[[user_handler statusForHuman:human] copy];
+
             [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];
+            
+            [self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
+            
+            [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+            
             [[self navigationController] pushViewController:statusCarouselViewController animated:YES];
             
-            //        UIStoryboardSegue *segue = [[UIStoryboardSegue alloc] initWithIdentifier:@"" source:self destination:statusCarouselViewController];
-            //        [self prepareForSegue:segue sender:self];
-            //        [segue perform];
-            
-            
-            
-            //        [self presentViewController:statusCarouselViewController animated:YES completion:^{
-            //            LOG_UI(0, @"Presented for %d items of status", [[statusCarouselViewController items] count]);
-            //        }];
         } else {
             LOG_ERROR(0, @"Error loading status %@", error);
+            [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+            [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
+            MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+            noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+            noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+            [self performBlock:^{
+                [noticeView dismiss:YES];
+            } afterDelay:2.0];
+            
         }
     }];
+}
+
+- (void)updateHumanStatusCounts
+{
+    [linesOfHumans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //
+        
+        HuHumanLineStyled *line = (HuHumanLineStyled *)obj;
+        
+        [line refreshCounts];
+        
+        // update the box presentation on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[[[line count]stringValue]]];
+            //NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[@"WTF?"]];
+            [line setRightItems:c];
+            [line layout];
+        });
+        
+        __block HuHumanLineStyled *bline = line;
+        
+        line.asyncLayoutOnce = ^{
+            // fetch a remote image on a background thread
+            [bline refreshCounts];
+            
+            // update the box presentation on the main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[[[bline count]stringValue]]];
+                //NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[@"WTF?"]];
+                
+                [bline setRightItems:c];
+                [bline layout];
+            });
+        };
+        
+    }];
+
+}
+
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
 }
 
 - (void)largestProfileImageForHuman:(HuHuman *)human withCompletionHandler:(UIImageViewResultsHandler)completionHandler

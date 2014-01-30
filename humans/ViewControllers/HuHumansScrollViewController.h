@@ -10,12 +10,18 @@
 #import "HuHuman.h"
 #import "HuAppDelegate.h"
 #import "HuStatusCarouselViewController.h"
+#import <ECSlidingViewController.h>
+#import <MRProgress/MRProgress.h>
+#import "HuHumanLineStyled.h"
 
 @interface HuHumansScrollViewController : UIViewController
 
 @property (nonatomic, strong) NSArray *arrayOfHumans;
 @property (nonatomic, strong) HuStatusCarouselViewController *statusCarouselViewController;
 
+@property (nonatomic, strong) ECSlidingViewController *slidingViewController;
+
+- (void)setUp:(UIViewController *)controller;
 -(void)showHuman:(HuHuman *)human;
 
 @end

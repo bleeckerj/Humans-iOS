@@ -27,7 +27,7 @@ MGLineStyled *dateLine, *imageLine;
 
 
 
-- (id)initWithTwitterStatus:(TwitterStatus *)_status
+- (id)initWithTwitterStatus:(HuTwitterStatus *)_status
 {
     self = [super init];
     if(self) {
@@ -39,7 +39,7 @@ MGLineStyled *dateLine, *imageLine;
 
 
 
-- (void)setStatus:(TwitterStatus *)_twitterStatus
+- (void)setStatus:(HuTwitterStatus *)_twitterStatus
 {
     status = _twitterStatus;
     // determine whether status has an image and from where
@@ -83,7 +83,7 @@ MGLineStyled *dateLine, *imageLine;
 
 - (void)buildContentBoxes
 {
-    MGLine *statusLine = [MGLine multilineWithText:[status statusTextNoURL] font:TWITTER_FONT width:self.width
+    MGLine *statusLine = [MGLine multilineWithText:[status statusText] font:TWITTER_FONT width:self.width
                                            padding:UIEdgeInsetsMake(TEXT_TOP_PADDING, TEXT_LEFT_PADDING, TEXT_BOTTOM_PADDING, TEXT_RIGHT_PADDING)];
     
     

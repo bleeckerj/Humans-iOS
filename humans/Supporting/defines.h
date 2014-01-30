@@ -105,17 +105,18 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 //#define TWITTER_FONT            [UIFont fontWithName:@"Creampuff" size:14]
 #define TWITTER_FONT           [UIFont fontWithName:@"DINCondensed-Bold" size:18]
 
-#define TWITTER_COLOR           UIColorFromRGB(0x2AA9E0)
+#define TWITTER_COLOR           UIColorFromRGB(0x4099FF)
 #define TWITTER_STATUS_VIEW_BGCOLOR  UIColorFromRGB(0x000000)
 #define TWITTER_STATUS_VIEW_FGCOLOR  UIColorFromRGB(0xF0F0F0)
 
 #define INSTAGRAM_FONT            [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
 #define INSTAGRAM_TEXT_COLOR    [UIColor whiteColor]
-#define INSTAGRAM_COLOR         UIColorFromRGB(0xA57962)
-#define INSTAGRAM_COLOR_HEX     0xA57962
+#define INSTAGRAM_COLOR         UIColorFromRGB(0xffc03f)
+#define INSTAGRAM_COLOR_HEX     0xffc03f
 
 #define FLICKR_FONT             [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
 #define FLICKR_TEXT_COLOR       [UIColor blackColor]
+#define FLICKR_COLOR            UIColorFromRGB(0x0063DC)
 
 #define INFO_FONT_LARGE         [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:16]
 #define INFO_FONT_MEDIUM        [UIFont fontWithName:@"EuphemiaUCAS" size:14]

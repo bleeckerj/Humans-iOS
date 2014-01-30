@@ -7,7 +7,7 @@
 // Import
 #import "HuHuman.h"
 #import "HuServiceUser.h"
-#import "SBJsonWriter.h"
+#import "SBJson4Writer.h"
 #import <AFNetworking/AFNetworking.h>
 
 @implementation HuHuman
@@ -178,7 +178,7 @@
     NSDictionary *dict = [self dictionary];
     NSError *error;
     
-    SBJsonWriter *writer = [[SBJsonWriter alloc] init];
+    SBJson4Writer *writer = [[SBJson4Writer alloc] init];
     NSString *jsonString = [writer stringWithObject:dict];
     if ( ! jsonString ) {
         NSLog(@"Error: %@", error);

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MGBox.h"
-#import "TwitterStatus.h"
+#import "HuTwitterStatus.h"
 #import "MGLineStyled.h"
 #import "MGLine.h"
 #import "MGTableBoxStyled.h"
@@ -18,9 +18,9 @@
 
 @interface HuTwitterStatus_Box : MGTableBoxStyled
 
-@property (nonatomic, retain) TwitterStatus *status;
+@property (nonatomic, retain) HuTwitterStatus *status;
 
-- (id)initWithTwitterStatus:(TwitterStatus *)_status;
+- (id)initWithTwitterStatus:(HuTwitterStatus *)_status;
 - (void)buildContentBoxes;
-- (void)setStatus:(TwitterStatus *)_status;
+- (void)setStatus:(HuTwitterStatus *)_status;
 @end

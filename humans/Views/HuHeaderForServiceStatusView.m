@@ -10,7 +10,8 @@
 #import "HuFriend.h"
 #import "UILabel+withDate.h"
 #import <AFNetworking/AFNetworking.h>
-
+#import <UIView+FLKAutoLayout.h>
+#import "UIImage+ResizeToFit.h"
 //#import "HuInstagramStatus.h"
 
 @implementation HuHeaderForServiceStatusView
@@ -43,24 +44,26 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    //[self setBackgroundColor:[UIColor whiteColor]];
-    //    id<HuSocialServiceUser> serviceUser;
-    //    serviceUser = [self.status serviceUser];
     if(self.status) {
-        //[self.status tinyServiceImageBadge];
-        //self.serviceIcon = [UIImage imageNamed:[serviceUser monochromeTinyServiceImageBadge]];
+        // UIColor *bg = [self.status serviceSolidColor];
+        self.backgroundColor = [self.status serviceSolidColor];//[serviceUser serviceSolidColor];
+        
+        
         self.serviceIcon = [UIImage imageNamed:[self.status tinyMonochromeServiceImageBadgeName]];
+        
         if([self.status userProfileImageURL]) {
             UIImageView *profile_image_view = [[UIImageView alloc]init];
             LOG_GENERAL(0, @"profile image url %@", [self.status userProfileImageURL]);
             NSAssert([self.status userProfileImageURL] != nil, @"Why is userProfileImageURL nil for %@", status);
-        
+            
             NSURLRequest *req = [[NSURLRequest alloc]initWithURL:[self.status userProfileImageURL]];
             [profile_image_view setImageWithURLRequest:req placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                 self.profileImage = image;
                 [profileImageView layoutSubviews];
             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                 //
+                LOG_ERROR(0, @"Wasn't able to load the profile image %@", error);
+                self.profileImage = [UIImage imageNamed:@"angry_unicorn_tiny.png"];
             }];
             
             //self.profileImage =   //[status userProfileImageURL];
@@ -68,67 +71,76 @@
             LOG_GENERAL(2, @"Service User In Header is %@ %@", [self.status serviceUsername], status);
             self.username = [self.status serviceUsername];//[serviceUser username];
             self.statusDate = [status dateForSorting];
-            self.backgroundColor = [self.status serviceSolidColor];//[serviceUser serviceSolidColor];
         } else {
             self.profileImage = [UIImage imageNamed:@"angry_unicorn_tiny.png"];
         }
-        
-        if(serviceIconView == nil) {
-            serviceIconView = [[UIImageView alloc]initWithImage:serviceIcon];
-            serviceIconView.contentMode = UIViewContentModeScaleAspectFit | UIViewContentModeCenter;
-            [self addSubview:serviceIconView];
-        }
         if(profileImageView == nil) {
             profileImageView = [[UIImageView alloc]initWithImage:profileImage];
-            serviceIconView.contentMode = UIViewContentModeScaleAspectFit | UIViewContentModeCenter;
+           // [profileImageView constrainWidth:@"100" height:@"100"];
+            
+            profileImageView.contentMode = UIViewContentModeScaleAspectFit | UIViewContentModeCenter;
             [self addSubview:profileImageView];
         }
+        if(serviceIconView == nil) {
+            serviceIconView = [[UIImageView alloc]initWithImage:serviceIcon];
+            serviceIconView.contentMode = UIViewContentModeScaleAspectFit | UIViewContentModeLeft;
+            //serviceIconView.backgroundColor = [UIColor greenColor];
+            [self addSubview:serviceIconView];
+            
+        }
+        
         if(usernameLabel == nil) {
             usernameLabel = [[UILabel alloc]init];
-            [usernameLabel setFont:INFO_FONT_MEDIUM];
-            [usernameLabel setBackgroundColor:[UIColor clearColor]];
+            [usernameLabel setFont:HEADER_FONT_LARGE];
             [usernameLabel setTextColor:[UIColor whiteColor]];
             [usernameLabel setTextAlignment:NSTextAlignmentCenter];
-            [usernameLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
             [self addSubview:usernameLabel];
         }
         // set the name
         [usernameLabel setText:[NSString stringWithFormat:@"@%@", [self username]]];
         
-        /**
-         NSDictionary *stringAttributes = [NSDictionary dictionaryWithObject:INFO_FONT_MEDIUM forKey: NSFontAttributeName];
-         
-         
-         CGSize label_size = [usernameLabel.text boundingRectWithSize:(CGSizeMake(ceil(0.3*self.frame.size.width), HEADER_HEIGHT)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil].size;
-         **/
         
-        CGSize label_size = [usernameLabel.text sizeWithFont:usernameLabel.font constrainedToSize:(CGSizeMake(ceil(0.3*self.frame.size.width), HEADER_HEIGHT)) lineBreakMode:NSLineBreakByTruncatingMiddle];
-        //CGSize	size = [usernameLabel.text sizeWithFont:usernameLabel.font minFontSize:10 actualFontSize:&actualFontSize forWidth:200 lineBreakMode:UILineBreakModeTailTruncation];
-        usernameLabel.frame = CGRectMake(0, 0,label_size.width, HEADER_HEIGHT);
-        usernameLabel.center = (CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame)));
-        usernameLabel.backgroundColor = [UIColor grayColor];
+//        CGSize label_size = [usernameLabel.text boundingRectWithSize:(CGSizeMake(ceil(0.5*self.frame.size.width), HEADER_HEIGHT)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil].size;
         
-        [profileImageView setImage:self.profileImage];
-        profileImageView.frame = CGRectMake(0, CGRectGetMidY(self.frame), self.frame.size.height,self.frame.size.height);
-        [profileImageView setCenter:(CGPointMake(profileImageView.center.x, CGRectGetMidY(usernameLabel.frame)))];
+//        usernameLabel.frame = CGRectMake(0, 0,label_size.width, HEADER_HEIGHT);
+//        usernameLabel.center = (CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame)));
+        usernameLabel.backgroundColor = [UIColor clearColor];
+        
+        usernameLabel.numberOfLines = 1;
+        usernameLabel.minimumScaleFactor = .8;
+        usernameLabel.adjustsFontSizeToFitWidth = YES;
+        [usernameLabel alignCenterYWithView:self predicate:nil];
+        [usernameLabel alignCenterXWithView:self predicate:nil];
+        
+        [profileImageView setImage:[self.profileImage resizedImageToSize:(CGSizeMake(self.frame.size.height, self.frame.size.height))]];
+        //profileImageView.frame = CGRectMake(0, CGRectGetMidY(self.frame), self.frame.size.height,self.frame.size.height);
+        
+        [profileImageView alignTopEdgeWithView:self predicate:nil];
+        //[profileImageView setCenter:(CGPointMake(profileImageView.center.x, CGRectGetMidY(usernameLabel.frame)))];
         
         [serviceIconView setImage:self.serviceIcon];
-        serviceIconView.frame = CGRectMake(CGRectGetMinX(usernameLabel.frame)-CGImageGetWidth([serviceIcon CGImage]), CGRectGetMinY(usernameLabel.frame), CGImageGetWidth([serviceIcon CGImage]), CGImageGetHeight([serviceIcon CGImage]));
-        [serviceIconView setCenter:(CGPointMake(serviceIconView.center.x-ceil(CGImageGetWidth([serviceIcon CGImage])/3), CGRectGetMidY(self.frame)))];
-        
+        [serviceIconView alignCenterYWithView:self predicate:nil];
+        [serviceIconView constrainLeadingSpaceToView:profileImageView predicate:@"5"];
+//        serviceIconView.frame = CGRectMake(CGRectGetMinX(usernameLabel.frame)-CGImageGetWidth([serviceIcon CGImage]), CGRectGetMinY(usernameLabel.frame), CGImageGetWidth([serviceIcon CGImage]), CGImageGetHeight([serviceIcon CGImage]));
+//        [serviceIconView setCenter:(CGPointMake(serviceIconView.center.x-ceil(CGImageGetWidth([serviceIcon CGImage])/3), CGRectGetMidY(self.frame)))];
+//        
         if(dateLabel == nil) {
-            dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(200, CGRectGetMinY(usernameLabel.frame), 320-200-8, HEADER_HEIGHT)];
+            //dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(200, CGRectGetMinY(usernameLabel.frame), 320-200-8, HEADER_HEIGHT)];
+            dateLabel = [[UILabel alloc]init];
             [self addSubview:dateLabel];
         }
-        LOG_GENERAL(0, @"%@ %@ %@", [status statusText], [status serviceUsername], [status dateForSorting]);
+        
+        LOG_DEBUG(0, @"statusText=%@ serviceUsername=%@ dateForSorting=%@ created=(%@)", [status statusText], [status serviceUsername], [status dateForSorting], [status created]);
         NSAssert([status dateForSorting] != nil, @"Why is status dateForSorting nil for %@", status);
         [dateLabel setDateToShow:[status dateForSorting]];
         [dateLabel setTextColor:[UIColor whiteColor]];
         [dateLabel setBackgroundColor:[UIColor clearColor]];
-        [dateLabel setFont:INFO_FONT_SMALL];
+        [dateLabel setFont:INFO_FONT_MEDIUM];
         [dateLabel setTextAlignment:NSTextAlignmentRight];
         [dateLabel setNumberOfLines:1];
-        
+        [dateLabel alignCenterYWithView:self predicate:nil];
+        [dateLabel alignTrailingEdgeWithView:self predicate:@"-5"];
+
         [usernameLabel performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
         [dateLabel performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
         

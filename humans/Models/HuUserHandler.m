@@ -11,6 +11,8 @@
 #import "LoggerClient.h"
 #import <AFNetworking.h>
 #import <RestKit.h>
+#import "Flurry.h"
+
 #import <ConciseKit.h>
 #import "HuFriend.h"
 #import "HuUser.h"
@@ -29,6 +31,7 @@
 @synthesize statusForHumanId;
 @synthesize lastStatusResultHeader;
 @synthesize friends;
+@synthesize networkState;
 
 NSDateFormatter *twitter_formatter;
 
@@ -65,44 +68,47 @@ NSDateFormatter *twitter_formatter;
     statusForHumanId = [[NSMutableDictionary alloc]init];
     
 #pragma mark This is where you set either the sharedDevClient or the sharedProdClient
-
+    
     client = [HuHumansHTTPClient sharedProdClient];
     
     
     //LOG_GENERAL(0, @"allowss invalid ssl cert? %@", [client allowsInvalidSSLCertificate]?@"YES":@"NO");
     
-    
+    __block HuUserHandler *bself = self;
     [client setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusNotReachable) {
             // Not reachable
             LOG_NETWORK(0, @"Network is down..");
-        } else {
+            bself.networkState = NETWORK_DOWN;
+        }
+        if (status == AFNetworkReachabilityStatusReachableViaWWAN) {
             // Reachable
-            LOG_NETWORK(0, @"Network is okay..");
+            LOG_NETWORK(0, @"Network is okay..WWAN");
+            bself.networkState = NETWORK_WWAN;
             
         }
-        
+        if (status == AFNetworkReachabilityStatusUnknown) {
+            LOG_NETWORK(0, @"Network is unknown..");
+            bself.networkState = NETWORK_UNKNOWN;
+        }
         if (status == AFNetworkReachabilityStatusReachableViaWiFi) {
             // On wifi
-            LOG_NETWORK(0, @"Network is wifi..");
+            LOG_NETWORK(0, @"Network is okay..WiFi..");
+            bself.networkState = NETWORK_WIFI;
         }
     }];
 }
 
 - (void)userAddHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-     NSString *path =[NSString stringWithFormat:@"/rest/user/add/human?access_token=%@", [self access_token]];
+    NSString *path =[NSString stringWithFormat:@"/rest/user/add/human?access_token=%@", [self access_token]];
     [client setParameterEncoding:NSUTF8StringEncoding];
     
-//    NSDictionary *queryParams;
-//    queryParams = [NSDictionary dictionaryWithObjectsAndKeys:[self access_token], @"access_token", nil];
     NSMutableURLRequest *request =[client requestWithMethod:@"POST" path:path parameters:nil];
-    //[request setHTTPBody:postData];
-
+    
     request.timeoutInterval = 30.000000;
     
     // Request Operation
-    
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
     NSString *jsonRequest = [aHuman jsonString];
@@ -112,7 +118,7 @@ NSDateFormatter *twitter_formatter;
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody: requestData];
     
     [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
@@ -123,18 +129,21 @@ NSDateFormatter *twitter_formatter;
     }];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+        [Flurry logEvent:[NSString stringWithFormat:@"Added a human %@ \n%@", [aHuman name], [aHuman jsonString]]];
+        
         if(completionHandler) {
             completionHandler(true, nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+        [Flurry logEvent:[NSString stringWithFormat:@"Error adding a human %@ %@", [aHuman name], error]];
+        
         if(completionHandler) {
             completionHandler(false, error);
         }
     }];
     
     // Connection
-    
     [operation start];
 }
 
@@ -163,6 +172,9 @@ NSDateFormatter *twitter_formatter;
         //
         LOG_NETWORK(0, @"Failure %@", error);
         [self setAccess_token:nil];
+        if(completionHandler) {
+            completionHandler(NO, error);
+        }
     }];
     
     
@@ -280,11 +292,6 @@ NSDateFormatter *twitter_formatter;
     NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
     AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
     
-    
-//    [request setHTTPMethod:@"POST"];
-//    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-//    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
     }];
@@ -308,21 +315,13 @@ NSDateFormatter *twitter_formatter;
 #pragma mark /status/count/{humanid}/after/{timestamp}
 - (void)getStatusCountForHuman:(HuHuman *)human after:(NSTimeInterval)timestamp withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    
-    
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
-    
     
     NSString *path =[NSString stringWithFormat:@"/rest/human/status/count/%@/after/%@?access_token=%@", [human humanid], [numberFormatter stringFromNumber:@(timestamp*1000l) ], [self access_token]];
     [client setParameterEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
     AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
-    
-    
-    //    [request setHTTPMethod:@"POST"];
-    //    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    //    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
@@ -345,6 +344,45 @@ NSDateFormatter *twitter_formatter;
 }
 
 
+#pragma mark Delete Human By ID /user/rm/{humanid}/human
+- (void)userRemoveHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    
+    NSString *path = [NSString stringWithFormat:@"/rest/user/rm/%@/human?access_token=%@", [aHuman humanid], [self access_token] ];
+    
+    //    NSURL* URL = [NSURL URLWithString:@"https://localhost:8443/rest/user/rm/52df74850364e4bd329f50d5/human?access_token=9677da300993e1cbf4d7c15aabf3152e"];
+    [client setParameterEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
+    request.HTTPMethod = @"GET";
+    request.timeoutInterval = 30.000000;
+    
+    // Request Operation
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    // Progress & Completion blocks
+    
+    //    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+    //        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+    //    }];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+        if(completionHandler) {
+            completionHandler(YES, nil);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+        if(completionHandler) {
+            completionHandler(NO, error);
+        }
+    }];
+    
+    // Connection
+    
+    [operation start];
+}
+
 
 #pragma mark Get Friends
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler
@@ -364,9 +402,9 @@ NSDateFormatter *twitter_formatter;
     
     // onBehalfOf within serviceUsers (friends)
     [friendsMapping addPropertyMapping:[RKRelationshipMapping
-                                            relationshipMappingFromKeyPath:@"onBehalfOf"
-                                            toKeyPath:@"onBehalfOf"
-                                            withMapping:onBehalfOfMapping]];
+                                        relationshipMappingFromKeyPath:@"onBehalfOf"
+                                        toKeyPath:@"onBehalfOf"
+                                        withMapping:onBehalfOfMapping]];
     
     
     // errors
@@ -395,17 +433,9 @@ NSDateFormatter *twitter_formatter;
      {
          LOG_GENERAL(0, @"success: mappings %@", mappingResult);
          LOG_GENERAL(0, @"success: size=%d", [mappingResult count]);
-
+         
          self.friends = [[NSMutableArray alloc]init];
-//        self.friends = [[NSMutableArray alloc]initWithArray:[mappingResult array]];
-//         //NSMutableArray *results = [NSMutableArray new];
          for (HuFriend *item in [mappingResult array]) {
-             // for some reaon service isn't returned from the server // our OnBehalfOf entity is out of sync with our thinking here and there
-             //item.onBehalfOf.service = item.service;
-//             [item getProfileImageWithCompletionHandler:^(UIImage *image, NSError *error) {
-//                 LOG_INSTAGRAM_IMAGE(0, CGImageGetWidth([image CGImage]), CGImageGetHeight([image CGImage]), UIImageJPEGRepresentation(image, 1.0));
-//
-//             }];
              if([item.serviceName caseInsensitiveCompare:@"twitter"] == NSOrderedSame) {
                  [item setServiceImageBadge:@"twitter-bird-color.png"];
                  [item setTinyServiceImageBadge:@"twitter-bird-white-tiny.png"];
@@ -434,6 +464,8 @@ NSDateFormatter *twitter_formatter;
      {
          LOG_NETWORK(0, @"failure: operation: %@ \n\nerror: %@", operaton, error);
          LOG_NETWORK(0, @"errorMessage: %@", [[error userInfo] objectForKey:RKObjectMapperErrorObjectsKey]);
+         [Flurry logEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
+         
          if(completionHandler) {
              completionHandler(nil);
          }
@@ -447,15 +479,15 @@ NSDateFormatter *twitter_formatter;
     
     [self.friends enumerateObjectsUsingBlock:^(HuFriend* friend, NSUInteger idx, BOOL *stop) {
         //
-//        NSArray *follows = [obj follows];
-//        [follows enumerateObjectsUsingBlock:^(id friend, NSUInteger idx, BOOL *stop) {
-            //
-            // match username
-            // match fullname
-            if(([self numberOfMatches:[friend username] forRegex:regex]) || ([self numberOfMatches:[friend fullname] forRegex:regex])) {
-                [results addObject:friend];
-            }
-//        }];
+        //        NSArray *follows = [obj follows];
+        //        [follows enumerateObjectsUsingBlock:^(id friend, NSUInteger idx, BOOL *stop) {
+        //
+        // match username
+        // match fullname
+        if(([self numberOfMatches:[friend username] forRegex:regex]) || ([self numberOfMatches:[friend fullname] forRegex:regex])) {
+            [results addObject:friend];
+        }
+        //        }];
     }];
     
     //LOG_GENERAL(0, @"Final Results %@", results);
@@ -486,7 +518,7 @@ NSDateFormatter *twitter_formatter;
     
     [statusMapping addMatcher:[self twitterNewStatusMatcher]];
     [statusMapping addMatcher:[self instagramStatusMatcher]];
-    
+    [statusMapping addMatcher:[self flickrStatusMatcher]];
     
     // Head - The service sends this back with metadata about the status request
     RKObjectMapping *headMapping = [RKObjectMapping mappingForClass:[HuRestStatusHeader class]];
@@ -548,7 +580,7 @@ NSDateFormatter *twitter_formatter;
     
     queryParams = [NSDictionary dictionaryWithObjectsAndKeys:[self access_token], @"access_token", humanid, @"humanid", page, @"page", nil];
     
-    LOG_GENERAL(0, @"query=%@", queryParams);
+    //LOG_GENERAL(0, @"query=%@", queryParams);
     
     [objectManager getObjectsAtPath:@"/rest/human/status"
                          parameters:queryParams
@@ -598,7 +630,8 @@ NSDateFormatter *twitter_formatter;
                                                                @"favorited" : @"favorited",
                                                                @"retweeted" : @"retweeted",
                                                                @"possibly_sensitive" : @"possibly_sensitive",
-                                                               @"lang" : @"lang"
+                                                               @"lang" : @"lang",
+                                                               @"created" : @"created"
                                                                //@"user" : @"user",
                                                                //@"created_at" : @"created_at",
                                                                //@"service" : @"name"
@@ -637,7 +670,7 @@ NSDateFormatter *twitter_formatter;
     [twitterUserMapping addAttributeMappingsFromArray:@[@"id",
                                                         @"id_str",
                                                         @"lastUpdated",
-    /* @"created_at",*/
+                                                        /* @"created_at",*/
                                                         @"description",
                                                         @"favourites_count",
                                                         @"following",
@@ -670,12 +703,12 @@ NSDateFormatter *twitter_formatter;
     NSDateFormatter *userCreatedAtDateFormatter = [NSDateFormatter new];
     [userCreatedAtDateFormatter setDateFormat:@"EEE MMM d HH:mm:ss Z yyyy"];
     [[RKValueTransformer defaultValueTransformer]insertValueTransformer:userCreatedAtDateFormatter atIndex:0];
-
-//    
-//    LOG_TODO(0, @"I hate date transformations: %@",  [userCreatedAtDateFormatter stringFromDate:[[NSDate alloc]init]]);
-//    NSString *test = @"Sat Jun 28 17:19:16 +0000 2008";
-//    NSDate *test_date = [userCreatedAtDateFormatter dateFromString:test];
-//    LOG_TODO(0, @"Did this take? %@ for this %@", test_date, test);
+    
+    //
+    //    LOG_TODO(0, @"I hate date transformations: %@",  [userCreatedAtDateFormatter stringFromDate:[[NSDate alloc]init]]);
+    //    NSString *test = @"Sat Jun 28 17:19:16 +0000 2008";
+    //    NSDate *test_date = [userCreatedAtDateFormatter dateFromString:test];
+    //    LOG_TODO(0, @"Did this take? %@ for this %@", test_date, test);
     
     RKAttributeMapping *user_created_at_mapping = [RKAttributeMapping attributeMappingFromKeyPath:@"created_at" toKeyPath:@"created_at"];
     user_created_at_mapping.valueTransformer = [RKValueTransformer defaultValueTransformer];//dateTransformer;
@@ -703,14 +736,14 @@ NSDateFormatter *twitter_formatter;
     RKObjectMapping *twitterEntitiesSymbolsMapping = [RKObjectMapping mappingForClass:[HuTwitterEntitiesSymbols class]];
     [twitterEntitiesSymbolsMapping addAttributeMappingsFromArray:@[@"text", @"indices"]];
     [twitterStatusEntitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"symbols" toKeyPath:@"symbols" withMapping:twitterEntitiesSymbolsMapping]];
-
+    
     //
     // entities.urls
     //
     RKObjectMapping *twitterEntitiesURLsMapping = [RKObjectMapping mappingForClass:[HuTwitterEntitiesURL class]];
     [twitterEntitiesURLsMapping addAttributeMappingsFromArray:@[@"expanded_url", @"indices", @"display_url", @"url"]];
     [twitterStatusEntitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"urls" toKeyPath:@"urls" withMapping:twitterEntitiesURLsMapping]];
-
+    
     
     //
     // entities.user_mentions
@@ -718,22 +751,22 @@ NSDateFormatter *twitter_formatter;
     RKObjectMapping *twitterEntitiesUserMentionsMapping = [RKObjectMapping mappingForClass:[HuTwitterEntitiesUserMentions class]];
     [twitterEntitiesUserMentionsMapping addAttributeMappingsFromArray:@[@"expanded_url", @"indices", @"display_url", @"url"]];
     [twitterStatusEntitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user_mentions" toKeyPath:@"user_mentions" withMapping:twitterEntitiesUserMentionsMapping]];
-
- 
+    
+    
     //
     // entitites.media
     //
     RKObjectMapping *twitterEntitiesMediaMapping = [RKObjectMapping mappingForClass:[HuTwitterStatusMedia class]];
     [twitterEntitiesMediaMapping addAttributeMappingsFromArray:@[@"media_url", @"media_url_https", @"id", @"id_str", @"expanded_url", @"sizes", @"indices", @"display_url", @"url"]];
     
-//    RKObjectMapping *twitterEntitiesMediaSizesMapping = [RKObjectMapping mappingForClass:[HuTwitterMediaSize class]];
-//    [twitterEntitiesMediaSizesMapping addAttributeMappingsFromArray:@[@"w",@"h", @"resize"]];
-//    
-//    RKObjectMapping *sizes = [RKObjectMapping mappingForClass:[NSArray class]];
-//    [sizes addAttributeMappingsFromArray:@[@"small", @"medium", @"large", @"thumb"]];
-//    //TODO: Sort this crazy stuff out. each "small" has a w,h,resize, each "medium" has a, etc.
-//    
-//    [twitterEntitiesMediaSizesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"sizes" toKeyPath:@"sizes" withMapping:sizes]];
+    //    RKObjectMapping *twitterEntitiesMediaSizesMapping = [RKObjectMapping mappingForClass:[HuTwitterMediaSize class]];
+    //    [twitterEntitiesMediaSizesMapping addAttributeMappingsFromArray:@[@"w",@"h", @"resize"]];
+    //
+    //    RKObjectMapping *sizes = [RKObjectMapping mappingForClass:[NSArray class]];
+    //    [sizes addAttributeMappingsFromArray:@[@"small", @"medium", @"large", @"thumb"]];
+    //    //TODO: Sort this crazy stuff out. each "small" has a w,h,resize, each "medium" has a, etc.
+    //
+    //    [twitterEntitiesMediaSizesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"sizes" toKeyPath:@"sizes" withMapping:sizes]];
     
     [twitterStatusEntitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"media" toKeyPath:@"media" withMapping:twitterEntitiesMediaMapping]];
     
@@ -747,46 +780,48 @@ NSDateFormatter *twitter_formatter;
 
 
 
-// TWITTER
-- (RKObjectMappingMatcher *)twitterStatusMatcher
-{
-    RKObjectMapping *twitterStatusMapping = [RKObjectMapping mappingForClass:[TwitterStatus class]];
-    [twitterStatusMapping addAttributeMappingsFromDictionary:@{
-                                                               @"id" : @"tweet_id",
-                                                               @"text" : @"text",
-                                                               @"id_str" : @"id_str",
-                                                               @"source" : @"source"
-                                                               //@"user" : @"user",
-                                                               //@"created_at" : @"created_at",
-                                                               //@"service" : @"name"
-                                                               }];
-    
-    
-    // Transform date
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    [dateFormatter setDateFormat:@"MMM dd, yyyy hh:mm:ss a"];
-    
-    [[RKValueTransformer defaultValueTransformer]insertValueTransformer:dateFormatter atIndex:0];
-    
-    RKAttributeMapping *created_at_mapping = [RKAttributeMapping attributeMappingFromKeyPath:@"created_at" toKeyPath:@"created_at"];
-    created_at_mapping.valueTransformer = [RKValueTransformer defaultValueTransformer];//dateTransformer;
-    [twitterStatusMapping addPropertyMapping:created_at_mapping];
-    
-    
-    RKObjectMapping *twitterUserMapping = [RKObjectMapping mappingForClass:[TwitterUser class]];
-    [twitterUserMapping addAttributeMappingsFromArray:@[@"id", @"lastUpdated",/* @"created_at",*/ @"description", @"favourites_count", @"following", @"followers_count", @"friends_count", @"geo_enabled", @"location", @"name", @"screen_name", @"time_zone", @"url", @"utc_offset", @"verified", @"profile_image_url", @"protected", @"statuses_count", @"listed_count"]];
-    
-    
-    [twitterUserMapping addPropertyMapping:[created_at_mapping copy]];
-    [twitterStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user"
-                                                                                         toKeyPath:@"user"
-                                                                                       withMapping:twitterUserMapping]];
-    
-    RKObjectMappingMatcher *twitterStatusMatcher = [RKObjectMappingMatcher matcherWithKeyPath:@"service" expectedValue:@"twitter" objectMapping:twitterStatusMapping];
-    
-    
-    return twitterStatusMatcher;
-}
+// OLD TWITTER
+//
+//- (RKObjectMappingMatcher *)__oldtwitterStatusMatcher
+//{
+//    RKObjectMapping *twitterStatusMapping = [RKObjectMapping mappingForClass:[HuTwitterStatus class]];
+//    [twitterStatusMapping addAttributeMappingsFromDictionary:@{
+//                                                               @"id" : @"tweet_id",
+//                                                               @"text" : @"text",
+//                                                               @"id_str" : @"id_str",
+//                                                               @"source" : @"source",
+//                                                               @"created" : @"created"
+//                                                               //@"user" : @"user",
+//                                                               //@"created_at" : @"created_at",
+//                                                               //@"service" : @"name"
+//                                                               }];
+//
+//
+//    // Transform date
+////    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+////    [dateFormatter setDateFormat:@"MMM dd, yyyy hh:mm:ss a"];
+//
+////    [[RKValueTransformer defaultValueTransformer]insertValueTransformer:dateFormatter atIndex:0];
+//
+//    RKAttributeMapping *created_at_mapping = [RKAttributeMapping attributeMappingFromKeyPath:@"created_at" toKeyPath:@"created_at"];
+//    created_at_mapping.valueTransformer = [RKValueTransformer defaultValueTransformer];//dateTransformer;
+//    [twitterStatusMapping addPropertyMapping:created_at_mapping];
+//
+//
+//    RKObjectMapping *twitterUserMapping = [RKObjectMapping mappingForClass:[HuTwitterUser class]];
+//    [twitterUserMapping addAttributeMappingsFromArray:@[@"id", @"lastUpdated",/* @"created_at",*/ @"description", @"favourites_count", @"following", @"followers_count", @"friends_count", @"geo_enabled", @"location", @"name", @"screen_name", @"time_zone", @"url", @"utc_offset", @"verified", @"profile_image_url", @"protected", @"statuses_count", @"listed_count"]];
+//
+//
+//    [twitterUserMapping addPropertyMapping:[created_at_mapping copy]];
+//    [twitterStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user"
+//                                                                                         toKeyPath:@"user"
+//                                                                                       withMapping:twitterUserMapping]];
+//
+//    RKObjectMappingMatcher *twitterStatusMatcher = [RKObjectMappingMatcher matcherWithKeyPath:@"service" expectedValue:@"twitter" objectMapping:twitterStatusMapping];
+//
+//
+//    return twitterStatusMatcher;
+//}
 
 
 // INSTAGRAM
@@ -799,12 +834,13 @@ NSDateFormatter *twitter_formatter;
                                                                  @"service" : @"service",
                                                                  @"filter" : @"filter",
                                                                  @"link" : @"link",
-                                                                 @"type" : @"type"
+                                                                 @"type" : @"type",
+                                                                 @"created" : @"created"
                                                                  }];
     
     
-    NSNumberFormatter * twitterCreatedTime = [[NSNumberFormatter alloc] init];
-    [twitterCreatedTime setNumberStyle:NSNumberFormatterDecimalStyle];
+    //    NSNumberFormatter * twitterCreatedTime = [[NSNumberFormatter alloc] init];
+    //    [twitterCreatedTime setNumberStyle:NSNumberFormatterDecimalStyle];
     
     RKValueTransformer *createdTimeTransformer =
     [RKBlockValueTransformer
@@ -812,8 +848,8 @@ NSDateFormatter *twitter_formatter;
          return ([inputValueClass isSubclassOfClass:[NSNumber class]] &&
                  [outputValueClass isSubclassOfClass:[NSDate class]]);
      } transformationBlock:^BOOL(id inputValue, __autoreleasing id *outputValue, __unsafe_unretained Class outputClass, NSError *__autoreleasing *error) {
-                 RKValueTransformerTestInputValueIsKindOfClass(inputValue, [NSNumber class], error);
-                 RKValueTransformerTestOutputValueClassIsSubclassOfClass(outputClass, [NSDate class], error);
+         RKValueTransformerTestInputValueIsKindOfClass(inputValue, [NSNumber class], error);
+         RKValueTransformerTestOutputValueClassIsSubclassOfClass(outputClass, [NSDate class], error);
          //NSNumber *n = [twitterCreatedTime numberFromString:inputValue];
          *outputValue = [NSDate dateWithTimeIntervalSince1970:[inputValue doubleValue]];
          return YES;
@@ -901,6 +937,90 @@ NSDateFormatter *twitter_formatter;
     
     return instagramStatusMatcher;
 }
+
+- (RKObjectMappingMatcher *)flickrStatusMatcher
+{
+    RKObjectMapping *flickrStatusMapping = [RKObjectMapping mappingForClass:[HuFlickrStatus class]];
+    [flickrStatusMapping addAttributeMappingsFromDictionary:@{
+                                                              @"id": @"flickr_id",
+                                                              @"accuracy": @"accuracy",
+                                                              @"context": @"context",
+                                                              @"created": @"created",
+                                                              @"datetaken": @"datetaken",
+                                                              @"datetakengranularity": @"datetakengranularity",
+                                                              @"dateupload": @"dateupload",
+                                                              @"farm": @"farm",
+                                                              @"height_c": @"height_c",
+                                                              @"height_l": @"height_l",
+                                                              @"height_m": @"height_m",
+                                                              @"height_n": @"height_n",
+                                                              @"height_o": @"height_o",
+                                                              @"height_q": @"height_q",
+                                                              @"height_s": @"height_s",
+                                                              @"height_sq": @"height_sq",
+                                                              @"height_t": @"height_t",
+                                                              @"height_z": @"height_z",
+                                                              @"iconfarm": @"iconfarm",
+                                                              @"iconserver": @"iconserver",
+                                                              @"isfamily": @"isfamily",
+                                                              @"isfriend": @"isfriend",
+                                                              @"ispublic": @"ispublic",
+                                                              @"lastUpdated": @"lastUpdated",
+                                                              @"lastupdate": @"lastupdate",
+                                                              @"latitude": @"latitude",
+                                                              @"license": @"license",
+                                                              @"longitude": @"longitude",
+                                                              @"machine_tags": @"machine_tags",
+                                                              @"media": @"media",
+                                                              @"media_status": @"media_status",
+                                                              @"o_height": @"o_height",
+                                                              @"o_width": @"o_width",
+                                                              @"originalformat": @"originalformat",
+                                                              @"originalsecret": @"originalsecret",
+                                                              @"owner": @"owner",
+                                                              @"ownername": @"ownername",
+                                                              @"pathalias": @"pathalias",
+                                                              @"secret": @"secret",
+                                                              @"server": @"server",
+                                                              @"service": @"service",
+                                                              @"tags": @"tags",
+                                                              @"title": @"title",
+                                                              @"url_c": @"url_c",
+                                                              @"url_l": @"url_l",
+                                                              @"url_m": @"url_m",
+                                                              @"url_n": @"url_n",
+                                                              @"url_o": @"url_o",
+                                                              @"url_q": @"url_q",
+                                                              @"url_s": @"url_s",
+                                                              @"url_sq": @"url_sq",
+                                                              @"url_t": @"url_t",
+                                                              @"url_z": @"url_z",
+                                                              @"version": @"version",
+                                                              @"views": @"views",
+                                                              @"width_c": @"width_c",
+                                                              @"width_l": @"width_l",
+                                                              @"width_m": @"width_m",
+                                                              @"width_n": @"width_n",
+                                                              @"width_o": @"width_o",
+                                                              @"width_q": @"width_q",
+                                                              @"width_s": @"width_s",
+                                                              @"width_sq": @"width_sq",
+                                                              @"width_t": @"width_t",
+                                                              @"width_z": @"width_z"
+                                                              }];
+    
+    // description
+    //    RKObjectMapping *descriptionMapping = [RKObjectMapping mappingForClass:[HuFlickrDescription class]];
+    //    [descriptionMapping addAttributeMappingsFromArray:@[@"_content"]];
+    //
+    //    // connect the description to the status
+    //    [flickrStatusMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"description" toKeyPath:@"description" withMapping:descriptionMapping]];
+    
+    // we know its flickr if the service element says so..
+    RKObjectMappingMatcher *flickrStatusMatcher = [RKObjectMappingMatcher matcherWithKeyPath:@"service" expectedValue:@"flickr" objectMapping:flickrStatusMapping];
+    return flickrStatusMatcher;
+}
+
 
 - (BOOL)usernameExists:(NSString *)username
 {

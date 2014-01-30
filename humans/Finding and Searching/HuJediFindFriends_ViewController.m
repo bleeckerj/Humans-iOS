@@ -7,6 +7,7 @@
 //
 
 #import "HuJediFindFriends_ViewController.h"
+#import "Flurry.h"
 
 
 #define ROW_HEIGHT 70
@@ -261,20 +262,18 @@ UISearchBar *mSearchBar;
     }];
     
     [labelView setText:@"Done"];
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         //
         //mSearchBar.x = -1*320;
         //self.resultsView.x = -1*320;
         finalStateScroller.x = 0;
     }];
 
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.75 animations:^{
         //
         mSearchBar.x = -1*320;
       
     } completion:^(BOOL finished) {
-        //
-        LOG_TODO(0, @"===================== Here's where we'd save the new human composite");
         // save the new human
         //
         HuHuman *newHuman = [[HuHuman alloc]init];
@@ -293,6 +292,8 @@ UISearchBar *mSearchBar;
         [self.appUser userAddHuman:newHuman withCompletionHandler:^(BOOL success, NSError *error) {
             //
             LOG_NETWORK(0, @"%@ did it work?", error);
+            [Flurry logEvent:[NSString stringWithFormat:@"Add Human %@ %@" , [newHuman name], error]];
+
         }];
         
         HuJediFindFriends_ViewController *bself = self;
@@ -303,7 +304,8 @@ UISearchBar *mSearchBar;
             // which will clear everything up..
             [stateMachine nextState:bself];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[bself navigationController]popToRootViewControllerAnimated:YES];
+                //[[bself navigationController]popToRootViewControllerAnimated:YES];
+                [[bself navigationController]popViewControllerAnimated:YES];
             });
 
     
@@ -379,7 +381,7 @@ UISearchBar *mSearchBar;
             bself.checkMarkTapped = YES;
             [bself.stateMachine nextState:bself];
             bself.checkMarkTapped = NO;
-            LOG_GENERAL(0, @"%@", stateMachine.currentState.stateName);
+            LOG_GENERAL(0, @"%@", bself.stateMachine.currentState.stateName);
 
         }
     };
@@ -572,12 +574,6 @@ UISearchBar *mSearchBar;
     if([sender direction] == UISwipeGestureRecognizerDirectionRight)
     {
         [self.navigationController popViewControllerAnimated:YES];
-        //        UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//        
-//        UINavigationController *rootnav = [mainStoryboard instantiateViewControllerWithIdentifier:@"RootNavigationController"];
-//        [self presentViewController:rootnav animated:YES completion:^{
-//        
-//        }];
 
     }
 }
@@ -648,9 +644,6 @@ NSUInteger lastLength;
         LOG_UI_VERBOSE(0, @"BACKSPACE?");
         [resultsGrid.boxes removeAllObjects];
         [resultsGrid layoutWithSpeed:0.1 completion:nil];
-//        [self searchFor:[NSString stringWithFormat:@"%@%@", [aTextField text], string]];
-
-        //[grid layoutWithSpeed:0.3 completion:nil];
         
     } else
         if( ([[aTextField text]length] >= 2) && range.length != 1) {
@@ -666,14 +659,6 @@ NSUInteger lastLength;
 -(IBAction)valueChanged:(id)sender
 {
     LOG_UI(0, @"Hello");
-}
-
--(IBAction)somethingHappened:(id)sender
-{
-    //LOG_UI(0, @"%@", [textField text]);
-    //AppDelegate *appDel = [[UIApplication sharedApplication]delegate];
-    //HuAppUser *appuser = [appDel appUser];
-    
 }
 
 -(NSUInteger)countHumansInPicksGrid

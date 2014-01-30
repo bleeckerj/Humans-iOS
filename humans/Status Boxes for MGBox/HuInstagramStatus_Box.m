@@ -52,6 +52,7 @@
     // shape and colour
     self.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1];
     self.layer.cornerRadius = CORNER_RADIUS;
+
     
     // shadow
     self.layer.shadowColor = [UIColor colorWithWhite:0.12 alpha:1].CGColor;
@@ -96,38 +97,12 @@
     [self.topLines addObject:mainPhotoBox];
     [mainPhotoBox setTopParentBox:self.parentBox];
     
-//        //
-////        SwipeAwayMGLineStyled  *imageLine = [SwipeAwayMGLineStyled lineWithLeft:image right:nil size:ROW_SIZE_WITH_IMAGE];
-////
-//        LOG_INSTAGRAM_VERBOSE(0, @"Hello!");
-////        [self.topLines addObject:imageLine];
-////        [self layout];
-//    }];
-//    
-//    SwipeAwayMGLineStyled  *imageLine = [SwipeAwayMGLineStyled lineWithLeft:@"Image Here" right:nil size:ROW_SIZE_WITH_IMAGE];
-//    
-//    [self.topLines addObject:imageLine];
     
     
     statusLine = [MGLine multilineWithText:[NSString stringWithFormat:@"Instagram %@", [status statusText]] font:INSTAGRAM_FONT width:self.width padding:UIEdgeInsetsMake(TEXT_TOP_PADDING, TEXT_LEFT_PADDING, TEXT_BOTTOM_PADDING, TEXT_RIGHT_PADDING)];
     
     [self.bottomLines addObject:statusLine];
     
-//    dateLine = [MGLine lineWithLeft:[UIImage imageNamed:@"twitter-bottom-line"] right:@"10m" size:DATELINE_ROW_SIZE];
-//    [dateLine setPadding:UIEdgeInsetsMake(TEXT_TOP_PADDING, TEXT_LEFT_PADDING, TEXT_BOTTOM_PADDING, TEXT_RIGHT_PADDING)];
-//    [dateLine setFont:DATELINE_FONT];
-//    [self.bottomLines addObject:dateLine];
-
-    
-//        
-//        dateLine = [MGBoxLine lineWithLeft:@"Huh?" right:[self dateLabel]];
-//        [dateLine setHeight:25];
-//        [dateLine setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12]];
-//        
-//        [self.bottomLines addObject:dateLine];
-//    }
-//    
-//    
 }
 
 - (void)refresh:(id)sender

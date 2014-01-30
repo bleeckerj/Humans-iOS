@@ -76,9 +76,13 @@
     
 }
 
--(BOOL)prefersStatusBarHidden {
-    return YES;
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
 }
+
+//-(BOOL)prefersStatusBarHidden {
+//    return YES;
+//}
 
 - (void)viewDidLoad
 {
@@ -294,6 +298,10 @@ NSUInteger last_index, current_index;
     
     
     result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:index]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [result setNeedsDisplay];
+        
+    });
     LOG_GENERAL(0, @"For index %d out of %d showing %@", index, [items count], result);
     return result;
 
