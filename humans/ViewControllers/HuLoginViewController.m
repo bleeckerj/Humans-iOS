@@ -78,10 +78,14 @@
     LOG_UI(0, @"Touch Up Sign In Button %@", sender);
     [Flurry logEvent:[NSString stringWithFormat:@"SIGN_IN %@" , [usernameTextField text]]];
     
-    [MRProgressOverlayView showOverlayAddedTo:self.view title:@"Logging in" mode:MRProgressOverlayViewModeIndeterminate animated:YES stopBlock:^(MRProgressOverlayView *progressOverlayView) {
-        //
-        LOG_UI(0, @"Stopped");
-    }];
+    MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    progressView.mode = MRProgressOverlayViewModeIndeterminate;
+    progressView.titleLabelText = @"Logging In";
+    
+//    [MRProgressOverlayView showOverlayAddedTo:self.view title:@"Logging in" mode:MRProgressOverlayViewModeIndeterminate animated:YES stopBlock:^(MRProgressOverlayView *progressOverlayView) {
+//        //
+//        LOG_UI(0, @"Stopped");
+//    }];
     [userHandler userRequestTokenForUsername:[usernameTextField text] forPassword:[passwordTextField text] withCompletionHandler:^(BOOL success, NSError *error) {
         //
         if(success) {
@@ -90,7 +94,7 @@
 //            SBJson4Writer *writer = [[SBJson4Writer alloc] init];
 //            NSString *user_json = [writer stringWithObject:[[userHandler humans_user] dictionary]];
 //            LOG_GENERAL(0, @"User %@", user_json);
-            [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
+            [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
             [Flurry logEvent:[NSString stringWithFormat:@"%@ logged in successfully", [usernameTextField text]]];
             
             dispatch_group_t group = dispatch_group_create();
@@ -112,7 +116,7 @@
                 }];
                 
                 humansScrollViewController = [[HuHumansScrollViewController alloc]init];
-                [humansScrollViewController setArrayOfHumans:[[userHandler humans_user]humans]];
+                //[humansScrollViewController setArrayOfHumans:[[userHandler humans_user]humans]];
                 
                 // have to do this on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -158,13 +162,13 @@
             
             MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
             progressView.mode = MRProgressOverlayViewModeCheckmark;
-            progressView.titleLabelText = @"Login Failed";
+            progressView.titleLabelText = [NSString stringWithFormat:@"Login Failed %@", [error description]];
             [self performBlock:^{
                 [progressView dismiss:YES];
-            } afterDelay:2.0];
+            } afterDelay:5.0];
             //shake
-            NSString *msg =[NSString stringWithFormat:@"%@ had trouble logging in with %@", [usernameTextField text], [passwordTextField text] ];
-            [Flurry logError:msg message:msg error:nil];
+            NSString *msg =[NSString stringWithFormat:@"%@ had trouble logging in with %@ cause of %@", [usernameTextField text], [passwordTextField text], error ];
+            [Flurry logError:msg message:msg error:error];
 
         }
     }];

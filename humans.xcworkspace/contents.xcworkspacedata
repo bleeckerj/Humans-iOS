@@ -1,1 +1,16 @@
-<?xml version='1.0' encoding='UTF-8'?><Workspace version='1.0'><FileRef location='group:humans.xcodeproj'/><FileRef location='group:Pods/Pods.xcodeproj'/></Workspace>
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:humans/Views/HuHumanLineStyled.h">
+   </FileRef>
+   <FileRef
+      location = "group:humans/Views/HuHumanLineStyled.m">
+   </FileRef>
+   <FileRef
+      location = "group:humans.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
+</Workspace>

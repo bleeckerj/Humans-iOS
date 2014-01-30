@@ -186,4 +186,19 @@
     return jsonString;
 }
 
+- (BOOL)isEqual:(id)anObject
+{
+    if([anObject isKindOfClass:[HuHuman class]] == NO) {
+        return NO;
+    }
+    
+    return ([self.humanid isEqual:[(HuHuman*)anObject humanid] ]);
+    // If it's an object. Otherwise use a simple comparison like self.personId == anObject.personId
+}
+
+- (NSUInteger)hash
+{
+    return [self.humanid hash]; //Must be a unique unsigned integer
+}
+
 @end

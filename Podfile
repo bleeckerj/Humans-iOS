@@ -1,7 +1,7 @@
 platform :ios, '7.0'
 #pod 'AFNetworking', '~> 1.3.3'
 #pod 'SSToolkit'
-pod 'MRProgress', '~> 0.3.1'
+#pod 'MRProgress', '~> 0.3.1'
 pod 'ConciseKit'
 pod 'SBJson', '~> 4.0.0'
 pod 'MSWeakTimer', '~> 1.1.0'

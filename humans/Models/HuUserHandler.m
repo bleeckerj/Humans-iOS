@@ -129,14 +129,14 @@ NSDateFormatter *twitter_formatter;
     }];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
-        [Flurry logEvent:[NSString stringWithFormat:@"Added a human %@ \n%@", [aHuman name], [aHuman jsonString]]];
+        [Flurry logEvent:[NSString stringWithFormat:@"Successfully added a human %@ \n%@", [aHuman name], [aHuman jsonString]]];
         
         if(completionHandler) {
             completionHandler(true, nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-        [Flurry logEvent:[NSString stringWithFormat:@"Error adding a human %@ %@", [aHuman name], error]];
+        [Flurry logEvent:[NSString stringWithFormat:@"Failed adding a human %@ %@", [aHuman name], error]];
         
         if(completionHandler) {
             completionHandler(false, error);
@@ -260,6 +260,8 @@ NSDateFormatter *twitter_formatter;
     operation = [objectManager appropriateObjectRequestOperationWithObject:self method:RKRequestMethodGET path:@"/rest/user/get" parameters:queryParams];
     [operation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         //
+        [Flurry logEvent:[NSString stringWithFormat:@"Successful getHumansWithCompletion %@" , [humans_user username]]];
+
         LOG_NETWORK(0, @"User Get Success %@", [mappingResult firstObject]);
         humans_user = [mappingResult firstObject];
         
@@ -269,6 +271,8 @@ NSDateFormatter *twitter_formatter;
         }
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         //
+        [Flurry logEvent:[NSString stringWithFormat:@"Failed getHumansWithCompletion %@" , [humans_user username]]];
+
         RKErrorMessage *errorMessage =  [[error.userInfo objectForKey:RKObjectMapperErrorObjectsKey] firstObject];
         LOG_NETWORK(0, @"User Get Failed.. %@", error);
         LOG_NETWORK(0, @"%@", errorMessage);

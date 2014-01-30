@@ -33,6 +33,7 @@
     NSMutableArray *linesOfHumans;
     MGScrollView *scroller;
     NSTimer *timerForStatusRefresh;
+    HuUserHandler *userHandler;
 }
 
 
@@ -68,6 +69,9 @@
 - (void)customInit
 {
     linesOfHumans = [[NSMutableArray alloc]init];
+    HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+    userHandler = [delegate humansAppUser];
+    arrayOfHumans = [[NSMutableArray alloc]init];
 }
 
 
@@ -88,6 +92,9 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [timerForStatusRefresh invalidate];
+    });
     //[self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
 }
 
@@ -96,7 +103,21 @@
     [super viewWillAppear:animated];
     LOG_UI(0, @"View Will Appear");
     [scroller layoutSubviews];
+    
+    NSArray *list_of_humans = [[userHandler humans_user]humans];
+    [list_of_humans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //
+        HuHuman *human = (HuHuman*)obj;
+        if([arrayOfHumans containsObject:human] == NO) {
+            [self addHumanToView:human];
+        }
+    }];
+    
     [self updateHumanStatusCounts];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [scroller layout];
+    });
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{
@@ -107,6 +128,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+   // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        timerForStatusRefresh = [NSTimer scheduledTimerWithTimeInterval:120
+                                                                 target:self
+                                                               selector:@selector(updateHumanStatusCounts)
+                                                               userInfo:nil repeats:YES];
+        
+   // });
     
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
     {
@@ -194,146 +223,140 @@
     section = MGTableBox.box;
     [scroller.boxes addObject:section];
     
-    HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
-    HuUserHandler *userHandler = [delegate humansAppUser];
-    
+
+   
 
 #pragma mark setup the lines of humans
     for (int i=0; i<[[self arrayOfHumans]count]; i++) {
-        //__block MGLineStyled *human_mgline = [MGLineStyled new];
         HuHuman *human = (HuHuman*)[arrayOfHumans objectAtIndex:i];
-        
-        CGSize rowSize = (CGSize){self.view.width, 110};
-        
-        HuHumanLineStyled *line = [HuHumanLineStyled lineWithLeft:nil right:nil size:rowSize];
-        [line setUserHandler:userHandler];
-        [line setHuman:human];
-        [line setMiddleItemsAlignment:NSTextAlignmentLeft];
-        [line setMiddleFont:[UIFont fontWithName:@"Creampuff" size:18]];
-        [linesOfHumans addObject:line];
-        
-        [human loadServiceUsersProfileImagesWithCompletionHandler:^{
-            //
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //
-                UIImage *profile_image = [human largestServiceUserProfileImage];
-                
-                profile_image = [profile_image resizedImageToFitInSize:CGSizeMake(110,110) scaleIfSmaller:YES];
-                
-                UIImageView *profile_iv = [[UIImageView alloc]initWithImage:profile_image];
-                CALayer *maskLayer = [CALayer layer];
-                UIImage *mask = [UIImage imageNamed:@"user-profile-image-mask-100px"];
-                maskLayer.contents = (id)mask.CGImage;
-                maskLayer.frame = (CGRect){CGPointZero, mask.size};
-                
-                profile_iv.image = profile_image;
-                profile_iv.layer.mask = maskLayer;
-                
-                NSMutableArray *marray = [[NSMutableArray alloc]initWithArray:@[profile_iv]];
-                //[human_mgline setLeftItems:marray];
-                
-                [line setLeftItems:marray];
-                [line layout];
-                
-            });
-            
-        }];
-        
-        line.onTap = ^{
-            LOG_UI(0, @"Tapped on %@", [human name]);
-            activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-            activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
-            activityIndicatorView.tintColor = [UIColor orangeColor];
-            //[self.view addSubview:activityIndicatorView];
-            //[activityIndicatorView show:YES];
-            
-            [self showHuman:human];
-        };
-        __block HuHumanLineStyled *bline = line;
-        __block NSMutableArray *array = linesOfHumans;
-        line.onSwipe = ^{
-            LOG_UI(0, @"Swiped on %@", [human name]);
-            bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
-            [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                //
-                HuHumanLineStyled *b = (HuHumanLineStyled*)obj;
-                if(b != bline) {
-                    [UIView animateWithDuration:0.2 animations:^{
-                        //
-                        b.x = 0;
-                    }];
-                }
-            }];
-            
-            // if the line is positioned at 0, it hasn't been slid either left or right,
-            // so let's slide it to reveal the delete button
-            if (bline.x == 0) {
-                // change the swiper's accepted direction,
-                // to allow swiping the line back to its original position
-                bline.swiper.direction = UISwipeGestureRecognizerDirectionLeft;
-                [UIView animateWithDuration:0.2 animations:^{
-                    bline.x = 100;
-                }];
-                
-            } else {
-                // change the swiper's accepted direction,
-                // to allow it to be swiped to reveal delete again
-                bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
-                [UIView animateWithDuration:0.2 animations:^{
-                    bline.x = 0;
-                }];
-            }
-        };
-        
-        
-        UIImage *garbage = [UIImage imageNamed:@"garbage-gray"];
-        MGLine *garbage_box = [MGLine lineWithSize:[garbage size]];
-        [[garbage_box leftItems]addObject:garbage];
-        
-        
-        MGLine *underneath = [MGLine lineWithSize:line.size];
-        [underneath setBackgroundColor:[UIColor yellowColor]];
-        underneath.attachedTo = line;
-        underneath.zIndex = -1;
-        [underneath.leftItems setArray:@[garbage_box]];
-        
-        UILongPressGestureRecognizer *__longpresser = [[UILongPressGestureRecognizer alloc]initWithTarget:garbage_box action:@selector(longPressed)];
-        [__longpresser setMinimumPressDuration:2.5];
-        [__longpresser setNumberOfTapsRequired:0];
-        garbage_box.longPresser = __longpresser;
-        
-        garbage_box.onLongPress = ^{
-            LOG_UI(0, @"Garbage Toss..%@ %@", human.name, __longpresser);
-            HuAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-            HuUserHandler *handler = [appDelegate humansAppUser];
-            if(__longpresser.state == UIGestureRecognizerStateBegan) {
-                [handler userRemoveHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-                    //
-                    [section.topLines removeObject:line];
-                    [section.topLines removeObject:underneath];
-                    //CGRect frame = human_mgline.frame;
-                    //CGRect scroll_frame = scroller.frame;
-                    //CGRect new_frame = CGRectMake(scroll_frame.origin.x, scroll_frame.origin.y, scroll_frame.size.width, scroll_frame.size.height - frame.size.height);
-                    [scroller layoutWithSpeed:1.5 completion:^{
-                        LOG_UI(0, @"Finished removing %@", human);
-                        [UIView animateWithDuration:0.5 animations:^{
-                            scroller.contentSize = CGSizeMake(scroller.contentSize.width, scroller.contentSize.height-line.size.height);
-                        }];
-                    }];
-                    
-                    
-                }];
-            }
-        };
-        
-        [line layout];
-        [section.topLines addObject:line];
-        [section.topLines addObject:underneath];
-        
-        timerForStatusRefresh = [NSTimer scheduledTimerWithTimeInterval:240
-                                         target:self
-                                       selector:@selector(updateHumanStatusCounts)
-                                       userInfo:nil repeats:YES];
+        [self addHumanToView:human];
+
+//        CGSize rowSize = (CGSize){self.view.width, 110};
+//        
+//        HuHumanLineStyled *line = [HuHumanLineStyled lineWithLeft:nil right:nil size:rowSize];
+//        [line setUserHandler:userHandler];
+//        [line setHuman:human];
+//        [line setMiddleItemsAlignment:NSTextAlignmentLeft];
+//        [line setMiddleFont:[UIFont fontWithName:@"Creampuff" size:18]];
+//        [linesOfHumans addObject:line];
+//        
+//        [human loadServiceUsersProfileImagesWithCompletionHandler:^{
+//            //
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                //
+//                UIImage *profile_image = [human largestServiceUserProfileImage];
+//                
+//                profile_image = [profile_image resizedImageToFitInSize:CGSizeMake(110,110) scaleIfSmaller:YES];
+//                
+//                UIImageView *profile_iv = [[UIImageView alloc]initWithImage:profile_image];
+//                CALayer *maskLayer = [CALayer layer];
+//                UIImage *mask = [UIImage imageNamed:@"user-profile-image-mask-100px"];
+//                maskLayer.contents = (id)mask.CGImage;
+//                maskLayer.frame = (CGRect){CGPointZero, mask.size};
+//                
+//                profile_iv.image = profile_image;
+//                profile_iv.layer.mask = maskLayer;
+//                
+//                NSMutableArray *marray = [[NSMutableArray alloc]initWithArray:@[profile_iv]];
+//                //[human_mgline setLeftItems:marray];
+//                
+//                [line setLeftItems:marray];
+//                [line layout];
+//                
+//            });
+//            
+//        }];
+//        
+//        line.onTap = ^{
+//            LOG_UI(0, @"Tapped on %@", [human name]);
+//            activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+//            activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
+//            activityIndicatorView.tintColor = [UIColor orangeColor];
+//            //[self.view addSubview:activityIndicatorView];
+//            //[activityIndicatorView show:YES];
+//            
+//            [self showHuman:human];
+//        };
+//        __block HuHumanLineStyled *bline = line;
+//        __block NSMutableArray *array = linesOfHumans;
+//        line.onSwipe = ^{
+//            LOG_UI(0, @"Swiped on %@", [human name]);
+//            bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
+//            [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//                //
+//                HuHumanLineStyled *b = (HuHumanLineStyled*)obj;
+//                if(b != bline) {
+//                    [UIView animateWithDuration:0.2 animations:^{
+//                        //
+//                        b.x = 0;
+//                    }];
+//                }
+//            }];
+//            
+//            // if the line is positioned at 0, it hasn't been slid either left or right,
+//            // so let's slide it to reveal the delete button
+//            if (bline.x == 0) {
+//                // change the swiper's accepted direction,
+//                // to allow swiping the line back to its original position
+//                bline.swiper.direction = UISwipeGestureRecognizerDirectionLeft;
+//                [UIView animateWithDuration:0.2 animations:^{
+//                    bline.x = 100;
+//                }];
+//                
+//            } else {
+//                // change the swiper's accepted direction,
+//                // to allow it to be swiped to reveal delete again
+//                bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
+//                [UIView animateWithDuration:0.2 animations:^{
+//                    bline.x = 0;
+//                }];
+//            }
+//        };
+//        
+//        
+//        UIImage *garbage = [UIImage imageNamed:@"garbage-gray"];
+//        MGLine *garbage_box = [MGLine lineWithSize:[garbage size]];
+//        [[garbage_box leftItems]addObject:garbage];
+//        
+//        
+//        MGLine *underneath = [MGLine lineWithSize:line.size];
+//        [underneath setBackgroundColor:[UIColor yellowColor]];
+//        underneath.attachedTo = line;
+//        underneath.zIndex = -1;
+//        [underneath.leftItems setArray:@[garbage_box]];
+//        
+//        UILongPressGestureRecognizer *__longpresser = [[UILongPressGestureRecognizer alloc]initWithTarget:garbage_box action:@selector(longPressed)];
+//        [__longpresser setMinimumPressDuration:2.5];
+//        [__longpresser setNumberOfTapsRequired:0];
+//        garbage_box.longPresser = __longpresser;
+//        
+//        garbage_box.onLongPress = ^{
+//            LOG_UI(0, @"Garbage Toss..%@ %@", human.name, __longpresser);
+//            HuAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+//            HuUserHandler *handler = [appDelegate humansAppUser];
+//            if(__longpresser.state == UIGestureRecognizerStateBegan) {
+//                [handler userRemoveHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+//                    //
+//                    [section.topLines removeObject:line];
+//                    [section.topLines removeObject:underneath];
+//                    //CGRect frame = human_mgline.frame;
+//                    //CGRect scroll_frame = scroller.frame;
+//                    //CGRect new_frame = CGRectMake(scroll_frame.origin.x, scroll_frame.origin.y, scroll_frame.size.width, scroll_frame.size.height - frame.size.height);
+//                    [scroller layoutWithSpeed:1.5 completion:^{
+//                        LOG_UI(0, @"Finished removing %@", human);
+//                        [UIView animateWithDuration:0.5 animations:^{
+//                            scroller.contentSize = CGSizeMake(scroller.contentSize.width, scroller.contentSize.height-line.size.height);
+//                        }];
+//                    }];
+//                    
+//                    
+//                }];
+//            }
+//        };
+//        
+//        [line layout];
+//        [section.topLines addObject:line];
+//        [section.topLines addObject:underneath];
     
     
     }
@@ -344,6 +367,147 @@
     //[scroller scrollToView:section withMargin:0];
     [self.view addSubview:scroller];
     
+}
+
+
+
+- (void)addHumanToView:(HuHuman *)human
+{
+    CGSize rowSize = (CGSize){self.view.width, 110};
+    
+    HuHumanLineStyled *line = [HuHumanLineStyled lineWithLeft:nil right:nil size:rowSize];
+    [line setUserHandler:userHandler];
+    [line setHuman:human];
+    [line setMiddleItemsAlignment:NSTextAlignmentLeft];
+    [line setMiddleFont:[UIFont fontWithName:@"Creampuff" size:18]];
+    [linesOfHumans addObject:line];
+    
+    [human loadServiceUsersProfileImagesWithCompletionHandler:^{
+        //
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //
+            UIImage *profile_image = [human largestServiceUserProfileImage];
+            
+            profile_image = [profile_image resizedImageToFitInSize:CGSizeMake(110,110) scaleIfSmaller:YES];
+            
+            UIImageView *profile_iv = [[UIImageView alloc]initWithImage:profile_image];
+            CALayer *maskLayer = [CALayer layer];
+            UIImage *mask = [UIImage imageNamed:@"user-profile-image-mask-100px"];
+            maskLayer.contents = (id)mask.CGImage;
+            maskLayer.frame = (CGRect){CGPointZero, mask.size};
+            
+            profile_iv.image = profile_image;
+            profile_iv.layer.mask = maskLayer;
+            
+            NSMutableArray *marray = [[NSMutableArray alloc]initWithArray:@[profile_iv]];
+            //[human_mgline setLeftItems:marray];
+            
+            [line setLeftItems:marray];
+            [line layout];
+            
+        });
+        
+    }];
+    
+    line.onTap = ^{
+        LOG_UI(0, @"Tapped on %@", [human name]);
+        activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+        activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
+        activityIndicatorView.tintColor = [UIColor orangeColor];
+        //[self.view addSubview:activityIndicatorView];
+        //[activityIndicatorView show:YES];
+        
+        [self showHuman:human];
+    };
+    __block HuHumanLineStyled *bline = line;
+    __block NSMutableArray *array = linesOfHumans;
+    line.onSwipe = ^{
+        LOG_UI(0, @"Swiped on %@", [human name]);
+        bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
+        [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            //
+            HuHumanLineStyled *b = (HuHumanLineStyled*)obj;
+            if(b != bline) {
+                [UIView animateWithDuration:0.2 animations:^{
+                    //
+                    b.x = 0;
+                }];
+            }
+        }];
+        
+        // if the line is positioned at 0, it hasn't been slid either left or right,
+        // so let's slide it to reveal the delete button
+        if (bline.x == 0) {
+            // change the swiper's accepted direction,
+            // to allow swiping the line back to its original position
+            bline.swiper.direction = UISwipeGestureRecognizerDirectionLeft;
+            [UIView animateWithDuration:0.2 animations:^{
+                bline.x = 100;
+            }];
+            
+        } else {
+            // change the swiper's accepted direction,
+            // to allow it to be swiped to reveal delete again
+            bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
+            [UIView animateWithDuration:0.2 animations:^{
+                bline.x = 0;
+            }];
+        }
+    };
+    
+    
+    UIImage *garbage = [UIImage imageNamed:@"garbage-gray"];
+    MGLine *garbage_box = [MGLine lineWithSize:[garbage size]];
+    [[garbage_box leftItems]addObject:garbage];
+    
+    
+    MGLine *underneath = [MGLine lineWithSize:line.size];
+    [underneath setBackgroundColor:[UIColor yellowColor]];
+    underneath.attachedTo = line;
+    underneath.zIndex = -1;
+    [underneath.leftItems setArray:@[garbage_box]];
+    
+    UILongPressGestureRecognizer *__longpresser = [[UILongPressGestureRecognizer alloc]initWithTarget:garbage_box action:@selector(longPressed)];
+    [__longpresser setMinimumPressDuration:2.5];
+    [__longpresser setNumberOfTapsRequired:0];
+    garbage_box.longPresser = __longpresser;
+    
+    garbage_box.onLongPress = ^{
+        LOG_UI(0, @"Garbage Toss..%@ %@", human.name, __longpresser);
+        HuAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+        HuUserHandler *handler = [appDelegate humansAppUser];
+        if(__longpresser.state == UIGestureRecognizerStateBegan) {
+            [handler userRemoveHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+                //
+                if(success) {
+                [section.topLines removeObject:line];
+                [section.topLines removeObject:underneath];
+                //CGRect frame = human_mgline.frame;
+                //CGRect scroll_frame = scroller.frame;
+                //CGRect new_frame = CGRectMake(scroll_frame.origin.x, scroll_frame.origin.y, scroll_frame.size.width, scroll_frame.size.height - frame.size.height);
+                [scroller layoutWithSpeed:1.5 completion:^{
+                    LOG_UI(0, @"Finished removing %@", human);
+                    [UIView animateWithDuration:1.5 animations:^{
+                        scroller.contentSize = CGSizeMake(scroller.contentSize.width, scroller.contentSize.height-line.size.height);
+                    }];
+                }];
+                } else {
+                    LOG_UI(0, @"Error removing human %@ %@", [human name], [human humanid]);
+                    [Flurry logEvent:[NSString stringWithFormat:@"Error removing human %@ (%@)", [human name], [human humanid]]];
+
+                }
+                
+            }];
+        }
+    };
+    
+    [line layout];
+    [section.topLines addObject:line];
+    [section.topLines addObject:underneath];
+    
+    if([arrayOfHumans containsObject:human] == NO) {
+        [arrayOfHumans addObject:human];
+    }
 }
 
 - (void)showHuman:(HuHuman *)human
@@ -480,6 +644,10 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, nil), ^{
+        [timerForStatusRefresh invalidate];
+        
+   // });
 }
 
 @end

@@ -291,25 +291,31 @@ UISearchBar *mSearchBar;
         
         [self.appUser userAddHuman:newHuman withCompletionHandler:^(BOOL success, NSError *error) {
             //
-            LOG_NETWORK(0, @"%@ did it work?", error);
-            [Flurry logEvent:[NSString stringWithFormat:@"Add Human %@ %@" , [newHuman name], error]];
+           // LOG_NETWORK(0, @"%@ did it work?", error);
+            //[Flurry logEvent:[NSString stringWithFormat:@"Add Human %@ %@" , [newHuman name], error]];
+            if(success) {
+                [self.appUser getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+                    // reload the representation of ourself..our profile data and list of humans
+                    // so that when we go back to the main humans scroll view, the new human could
+                    // appear.
+                    // it's up to HuHumansScrollViewController to refresh the scroll view, though.
+
+                    HuJediFindFriends_ViewController *bself = self;
+                    
+                    // this'll take us back to initialState for the next time
+                    // which will clear everything up..
+                    [stateMachine nextState:bself];
+                    
+                    // now pop back
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        //[[bself navigationController]popToRootViewControllerAnimated:YES];
+                        [[bself navigationController]popViewControllerAnimated:YES];
+                    });
+                    
+                }];
+            }
 
         }];
-        
-        HuJediFindFriends_ViewController *bself = self;
-        // load profile data before we go back?
-
-            
-            // this'll take us back to initialState for the next time
-            // which will clear everything up..
-            [stateMachine nextState:bself];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //[[bself navigationController]popToRootViewControllerAnimated:YES];
-                [[bself navigationController]popViewControllerAnimated:YES];
-            });
-
-    
-    
     }];
     
     
