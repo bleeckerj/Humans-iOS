@@ -45,7 +45,7 @@
 @synthesize serviceUsername;
 @synthesize statusText;
 @synthesize statusTime;
-
+@synthesize created;
 
 - (void) dealloc
 {
@@ -256,7 +256,7 @@
 
 -(UIColor *)serviceSolidColor
 {
-    return [UIColor blueColor];
+    return TWITTER_COLOR;
 }
 
 -(NSString *)serviceUsername
@@ -274,15 +274,31 @@
     return result;
 }
 
-
 - (NSTimeInterval)statusTime
 {
-    return [[self created_at]timeIntervalSince1970];
+    return [[self created]doubleValue];
 }
+
 - (NSDate *)dateForSorting
 {
-    return [NSDate dateWithTimeIntervalSince1970:[self statusTime]];
+    
+    NSTimeInterval interval = [[self created]doubleValue];
+    interval /= 1000;
+    NSDate *result = [NSDate dateWithTimeIntervalSince1970:interval];
+    return result;
 }
+
+
+//- (NSTimeInterval)statusTime
+//{
+//    NSTimeInterval result = [[self dateForSorting]timeIntervalSince1970];
+//    return [self dateForSorting]timeIntervalSince1970;
+//}
+//- (NSDate *)dateForSorting
+//{
+//    NSDate *result = [NSDate dateWithTimeIntervalSince1970:[self created]/1000];
+//    return result;
+//}
 
 - (NSString *)serviceImageBadgeName
 {
