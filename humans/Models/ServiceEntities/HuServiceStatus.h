@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString *serviceUsername;
 @property NSTimeInterval statusTime;
 @property NSString *statusText;
+@property (strong, nonatomic) NSNumber *created;
 
 @optional
 -(NSString *)statusLowResImageURL;

@@ -7,7 +7,7 @@
 //
 
 #import "HuRestStatusHeader.h"
-#import <SBJson/SBJson.h>
+#import <SBJson4Writer.h>
 
 @implementation HuRestStatusHeader
 
@@ -20,7 +20,10 @@
 
 - (NSString *)description
 {
-    return [self.proxyForJson JSONRepresentation];
+    SBJson4Writer *writer = [SBJson4Writer alloc];
+    NSString *jsonConvertedObj = [writer stringWithObject:self];
+    return jsonConvertedObj;
+    //return [self.proxyForJson JSONRepresentation];
 }
 
 - (id) proxyForJson {
