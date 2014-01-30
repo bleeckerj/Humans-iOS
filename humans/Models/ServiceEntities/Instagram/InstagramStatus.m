@@ -13,7 +13,7 @@
 #import "TransientInstagramUser.h"
 #import "InstagramUser.h"
 #import "InstagramImage.h"
-
+#import "defines.h"
 
 @implementation InstagramStatus
 
@@ -40,6 +40,7 @@
 @synthesize statusTime;
 @synthesize statusText;
 
+@synthesize created;
 
 // HuServiceStatus protocol methods
 - (NSString *)statusImageURL
@@ -54,7 +55,7 @@
 
 - (UIColor *)serviceSolidColor
 {
-    return [UIColor greenColor];
+    return INSTAGRAM_COLOR;
 }
 
 - (NSString *)serviceUsername
