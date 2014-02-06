@@ -14,19 +14,8 @@
 #import "InstagramImages.h"
 #import "InstagramImage.h"
 
-//#define IMAGE_LINE_HEIGHT_PADDING 80
-//#define IMAGE_LINE_PADDING 0
-//#define INSTAGRAM_LOW_RESOLUTION_IMAGE_MAX_HEIGHT 306
-
-
 
 @implementation HuInstagramStatus_Box
-
-//MGLine *statusTextBox;
-//MGLine *statusLine;
-//MGLine *dateLine;
-//NSArray *imgArray;
-//int count;
 
 @synthesize status;
 
@@ -34,7 +23,6 @@
 - (void)setStatus:(InstagramStatus *)_status
 {
     status = _status;
-    //[self setDateToShow:[instagramStatus dateForSorting]];
     [self setup];
     [self buildContentBoxes];
 }
@@ -76,9 +64,6 @@
 
 - (void)showOrRefreshPhoto
 {
-//    [self.imageView setImage:[UIImage imageNamed:@"noun_project_4520"]];
-//    [self.imageView setNeedsDisplay];
-//    [mainPhotoBox setUrlStr:[imgArray objectAtIndex:count++ % 2]];
     [mainPhotoBox setUrlStr:[mainPhotoBox urlStr]]; // I guess we can change the photo URL, for fun..and profit
     [mainPhotoBox loadPhoto];
     [mainPhotoBox setNeedsDisplay];
@@ -88,17 +73,15 @@
 - (void)buildContentBoxes
 {
     InstagramImages *images = [status images];
+    
     if(IS_IPHONE && IS_IPHONE_5) {
-        mainPhotoBox = [HuStatusPhotoBox photoBoxFor:[[images low_resolution ]url] size:ROW_SIZE_WITH_IMAGE_IPHONE_5 deferLoad:YES];
+        mainPhotoBox = [HuStatusPhotoBox photoBoxFor:[[images low_resolution ]url] size:ROW_SIZE_WITH_IMAGE_IPHONE_5 deferLoad:NO];
     } else {
-        mainPhotoBox = [HuStatusPhotoBox photoBoxFor:[[images low_resolution]url] size:ROW_SIZE_WITH_IMAGE_IPHONE deferLoad:YES];
+        mainPhotoBox = [HuStatusPhotoBox photoBoxFor:[[images low_resolution]url] size:ROW_SIZE_WITH_IMAGE_IPHONE deferLoad:NO];
     }
     //[mainPhotoBox setRightMargin:10];
     [self.topLines addObject:mainPhotoBox];
     [mainPhotoBox setTopParentBox:self.parentBox];
-    
-    
-    
     statusLine = [MGLine multilineWithText:[NSString stringWithFormat:@"Instagram %@", [status statusText]] font:INSTAGRAM_FONT width:self.width padding:UIEdgeInsetsMake(TEXT_TOP_PADDING, TEXT_LEFT_PADDING, TEXT_BOTTOM_PADDING, TEXT_RIGHT_PADDING)];
     
     [self.bottomLines addObject:statusLine];
@@ -107,14 +90,6 @@
 
 - (void)refresh:(id)sender
 {
-//    if([self isReplacement]) {
-//        [self setIsReplacement:NO];
-//        
-//    }
-//    else {
-//        [self setIsReplacement:YES];
-//    }
-//    
 }
 
 - (CGRect)rectForImage:(UIImage*)_image maxSize:(CGSize)value

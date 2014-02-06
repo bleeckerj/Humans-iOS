@@ -72,29 +72,28 @@
 
 
 - (IBAction)touchUp_signInButton:(id)sender {
-    
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
-    
     LOG_UI(0, @"Touch Up Sign In Button %@", sender);
+   
     [Flurry logEvent:[NSString stringWithFormat:@"SIGN_IN %@" , [usernameTextField text]]];
-    
+
     MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     progressView.mode = MRProgressOverlayViewModeIndeterminate;
     progressView.titleLabelText = @"Logging In";
     
-//    [MRProgressOverlayView showOverlayAddedTo:self.view title:@"Logging in" mode:MRProgressOverlayViewModeIndeterminate animated:YES stopBlock:^(MRProgressOverlayView *progressOverlayView) {
-//        //
-//        LOG_UI(0, @"Stopped");
-//    }];
     [userHandler userRequestTokenForUsername:[usernameTextField text] forPassword:[passwordTextField text] withCompletionHandler:^(BOOL success, NSError *error) {
         //
         if(success) {
-            
+            NSString *userid = [[[userHandler humans_user]id]description];
+            [Crashlytics setUserName:[usernameTextField text]];
+            [Crashlytics setUserEmail:[emailTextField text]];
+            [Crashlytics setUserIdentifier: userid];
             //go ahead
 //            SBJson4Writer *writer = [[SBJson4Writer alloc] init];
 //            NSString *user_json = [writer stringWithObject:[[userHandler humans_user] dictionary]];
 //            LOG_GENERAL(0, @"User %@", user_json);
             [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+            
             [Flurry logEvent:[NSString stringWithFormat:@"%@ logged in successfully", [usernameTextField text]]];
             
             dispatch_group_t group = dispatch_group_create();
@@ -125,10 +124,14 @@
                     UIViewController *underRightViewController = [[UIViewController alloc] init];
                     
                     // configure under left view controller
-                    underLeftViewController.view.layer.borderWidth     = 20;
+                    underLeftViewController.view.layer.borderWidth     = 10;
                     underLeftViewController.view.layer.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0].CGColor;
                     underLeftViewController.view.layer.borderColor     = [UIColor colorWithWhite:0.8 alpha:1.0].CGColor;
                     underLeftViewController.edgesForExtendedLayout     = UIRectEdgeTop | UIRectEdgeBottom | UIRectEdgeLeft; // don't go under the top view
+                    
+                    
+//                    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(mySelector:)];
+
                     
                     // configure under right view controller
                     underRightViewController.view.layer.borderWidth     = 20;
@@ -146,6 +149,11 @@
                     // configure anchored layout
                     self.slidingViewController.anchorRightPeekAmount  = 100.0;
                     self.slidingViewController.anchorLeftRevealAmount = 250.0;
+                    
+                    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:humansScrollViewController action:@selector(mySelector:)];
+                    [tapGesture setNumberOfTapsRequired:2];
+                    [underLeftViewController.view addGestureRecognizer:tapGesture];
+
                     
                     //self.window.rootViewController = self.slidingViewController;
                     [humansScrollViewController setSlidingViewController:self.slidingViewController];
@@ -168,11 +176,13 @@
             } afterDelay:5.0];
             //shake
             NSString *msg =[NSString stringWithFormat:@"%@ had trouble logging in with %@ cause of %@", [usernameTextField text], [passwordTextField text], error ];
+           
             [Flurry logError:msg message:msg error:error];
 
         }
     }];
 }
+
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
@@ -222,7 +232,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    LOG_UI(0, @"View Will Appear");
+    //LOG_UI(0, @"View Will Appear");
     // if the view appears again (going back from a status scroller), we need to
     // re-add this gesture recognizer, which gets removed by HuHumansScrollViewController
     // so that the gestures in the top bar of HuHumansScrollViewController are recognized

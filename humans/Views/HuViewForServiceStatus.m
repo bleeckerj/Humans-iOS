@@ -358,10 +358,8 @@
 
 - (void)showOrRefreshPhoto
 {
-    //[photoBox setUrlStr:[photoBox urlStr]]; // I guess we can change the photo URL, for fun..and profit
     [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
         if(success) {
-            
             [self updateStatusView];
         } else {
             LOG_ERROR(0, @"Error loading flickr photo %@", error);

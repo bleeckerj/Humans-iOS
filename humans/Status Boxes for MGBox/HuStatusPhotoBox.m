@@ -53,12 +53,13 @@
     // add a loading spinner
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]
                                         initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    
     spinner.center = CGPointMake(box.width / 2, box.height / 2);
     spinner.autoresizingMask = UIViewAutoresizingFlexibleTopMargin
     | UIViewAutoresizingFlexibleRightMargin
     | UIViewAutoresizingFlexibleBottomMargin
     | UIViewAutoresizingFlexibleLeftMargin;
-    spinner.color = UIColor.lightGrayColor;
+    spinner.color = UIColor.darkGrayColor;
     [box addSubview:spinner];
     [spinner startAnimating];
     
@@ -117,13 +118,25 @@
         
         NSAssert(self.urlStr, @"No urlStr %@", self);
         
+        if(self.urlStr == nil) {
+            if(handler) {
+                //[Flurry logEvent:[NSString stringWithFormat:@"No url for photo"]];
+                handler(NO, nil);
+            }
+        }
+        
         NSURL *url = [[NSURL alloc]initWithString:self.urlStr];
         
         __weak HuStatusPhotoBox* bself = self;
         
+        
         [self.imageView setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed progress:^(NSUInteger receivedSize, long long expectedSize) {
             //
+            LOG_UI(0, @"Progress for image %d %lld", receivedSize, expectedSize);
         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            
+            LOG_UI(0, @"Was image cached? %d", cacheType);
+
             if(error == nil) {
                 bself.hasLoaded = YES;
             } else {
@@ -187,7 +200,7 @@
                 
                 
                 // fade the image in
-                [UIView animateWithDuration:0.8 animations:^{
+                [UIView animateWithDuration:0.5 animations:^{
                     bself.imageView.alpha = 1;
                 }];
                 

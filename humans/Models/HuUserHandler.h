@@ -80,4 +80,7 @@ typedef enum networkStateTypes
 - (NSArray *)statusForHuman:(HuHuman *)aHuman;
 -(void)searchFriendsWith:(NSRegularExpression *)regex withCompletionHandler:(ArrayOfResultsHandler)handler;
 
+
+- (NSURL *)urlForInstagramAuthentication;
+
 @end

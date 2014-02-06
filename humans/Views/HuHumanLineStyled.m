@@ -84,12 +84,13 @@
             UIFont *font = [UIFont fontWithName:@"Creampuff" size:10];
             [bself setRightFont:font];
             //[human_mgline setRightFont:font];
-            LOG_UI(0, @"Showing count of %@ for %@", bself.count, [human name]);
+            //LOG_UI(0, @"Showing count of %@ for %@", bself.count, [human name]);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [bself layout];
             });
         } else {
             LOG_UI(0, @"Couldn't get a count for %@", bself.human.name);
+            LOG_UI(0, @"This probably means you should log out and log back in, especially if you're debugging as the access token may have changed based on logging in from somewhere else.");
             bself.count = [[NSNumber alloc]initWithInt:65535];
             [bself layout];
         }

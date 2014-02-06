@@ -14,7 +14,7 @@
 #import <MRProgress/MRProgress.h>
 #import "HuHumanLineStyled.h"
 
-@interface HuHumansScrollViewController : UIViewController
+@interface HuHumansScrollViewController : UIViewController <UIWebViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *arrayOfHumans;
 @property (nonatomic, strong) HuStatusCarouselViewController *statusCarouselViewController;
@@ -22,6 +22,6 @@
 @property (nonatomic, strong) ECSlidingViewController *slidingViewController;
 
 - (void)setUp:(UIViewController *)controller;
--(void)showHuman:(HuHuman *)human;
+-(void)showHuman:(HuHuman *)human fromLine:(HuHumanLineStyled*)line;
 
 @end

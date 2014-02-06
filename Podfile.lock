@@ -29,6 +29,7 @@ PODS:
   - MGBoxKit/Categories (2.1.1)
   - MHTextField (0.0.3)
   - MRProgress (0.3.1)
+  - MSWeakTimer (1.1.0)
   - NSLogger (1.1)
   - OCHamcrest (3.0.1)
   - OCMock (2.2.2)
@@ -74,6 +75,7 @@ DEPENDENCIES:
   - MGBoxKit
   - MHTextField (~> 0.0.3)
   - MRProgress (~> 0.3.1)
+  - MSWeakTimer (~> 1.1.0)
   - NSLogger
   - OCHamcrest (~> 3.0.1)
   - OCMock
@@ -103,6 +105,7 @@ SPEC CHECKSUMS:
   MGBoxKit: 5de9fd5f49539c30348ef750e2b9ea5a14374b88
   MHTextField: 299b04dd7ce5354554c4bf4b968da60a04d20fdd
   MRProgress: 741d8849f3d6e71cf254b32ea8c0bc0b2a122136
+  MSWeakTimer: 2cd8d15b58e634517e83a7e433782faa8214a27f
   NSLogger: 4567fef08d0db18a89cce91b2053823fc0950738
   OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
   OCMock: ffba68873fd32cfd35d885bddad23bfa816da4a3

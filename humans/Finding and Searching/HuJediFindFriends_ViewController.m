@@ -7,7 +7,7 @@
 //
 
 #import "HuJediFindFriends_ViewController.h"
-#import "Flurry.h"
+//#import "Flurry.h"
 
 
 #define ROW_HEIGHT 70
@@ -110,7 +110,7 @@ UISearchBar *mSearchBar;
 
 -(BOOL)prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 - (void)commonInit
@@ -692,7 +692,9 @@ NSUInteger lastLength;
     }];
     
     regex = [NSRegularExpression
-             regularExpressionWithPattern:regexPattern options:NSRegularExpressionCaseInsensitive error:&error];
+             regularExpressionWithPattern:regexPattern
+             options:NSRegularExpressionCaseInsensitive | NSRegularExpressionAllowCommentsAndWhitespace
+             error:&error];
     
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
     self.appUser = [appDel humansAppUser];

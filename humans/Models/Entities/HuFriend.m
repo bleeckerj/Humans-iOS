@@ -33,21 +33,21 @@
 @synthesize monochromeTinyServiceImageBadge;
 @synthesize serviceSolidColor;
 
--(NSString *)fullname
-{
-    NSMutableString *result = [[NSMutableString alloc]init];
-    if(fullname == nil || [fullname length] < 1) {
-        
-        if(firstname != nil) {
-        [result appendString:firstname];
-        }
-        if(lastname != nil) {
-        [result appendString:firstname];
-        }
-    }
-    return (NSString *)result;
-        
-}
+//-(NSString *)fullname
+//{
+//    NSMutableString *result = [[NSMutableString alloc]init];
+//    if(fullname == nil || [fullname length] < 1) {
+//        
+//        if(firstname != nil) {
+//        [result appendString:firstname];
+//        }
+//        if(lastname != nil) {
+//        [result appendString:firstname];
+//        }
+//    }
+//    return (NSString *)result;
+//        
+//}
 
 - (void) dealloc
 {
@@ -141,7 +141,7 @@
 
 -(NSString *)description
 {
-    return [NSString stringWithFormat:@"username=%@ serviceName=%@", self.username, self.serviceName];
+    return [NSString stringWithFormat:@"username=%@ serviceName=%@ fullname=%@", self.username, self.serviceName, self.fullname];
 }
 
 - (void)getProfileImageWithCompletionHandler:(FetchImageHandler)completionHandler {

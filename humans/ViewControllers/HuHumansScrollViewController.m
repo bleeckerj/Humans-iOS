@@ -22,6 +22,7 @@
 #import "Flurry.h"
 #import <UIView+FLKAutoLayout.h>
 #import <MRProgress/MRActivityIndicatorView.h>
+#import "MSWeakTimer.h"
 
 @interface HuHumansScrollViewController ()
 {
@@ -32,14 +33,21 @@
     MRProgressOverlayView *activityIndicatorView;
     NSMutableArray *linesOfHumans;
     MGScrollView *scroller;
-    NSTimer *timerForStatusRefresh;
+    MSWeakTimer *timerForStatusRefresh;
     HuUserHandler *userHandler;
+    dispatch_queue_t privateQueue;
+    UIWebView *webView;
+    UIViewController *authenticateViewController;
+    
 }
 
 
 @end
 
 @implementation HuHumansScrollViewController
+
+static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScrollViewControllerTimerQueueContext";
+
 
 @synthesize arrayOfHumans;
 @synthesize statusCarouselViewController;
@@ -68,10 +76,24 @@
 
 - (void)customInit
 {
+    authenticateViewController = [[UIViewController alloc]init];
+    authenticateViewController.view.backgroundColor = [UIColor blueColor];
+    
     linesOfHumans = [[NSMutableArray alloc]init];
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
     userHandler = [delegate humansAppUser];
     arrayOfHumans = [[NSMutableArray alloc]init];
+    
+    privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
+    
+    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
+                                                                 target:self
+                                                               selector:@selector(updateHumanStatusCounts)
+                                                               userInfo:nil
+                                                                repeats:YES
+                                                          dispatchQueue:privateQueue];
+    
+    dispatch_queue_set_specific(privateQueue, (__bridge const void *)(self), (void *)HuHumansScrollViewControllerTimerQueueContext, NULL);
 }
 
 
@@ -80,28 +102,79 @@
     
 }
 
+- (void)resetController
+{
+    [self viewDidLoad];
+//    scroller = [[MGScrollView alloc]init];
+//    self.view = [[UIView alloc]init];
+//    [self.view setBackgroundColor:[UIColor orangeColor]];
+//    [self.view addSubview:scroller];
+}
+
+- (void)hide:(id)gesture
+{
+    LOG_UI(0, @"hide %@", gesture);
+    
+}
+
+- (void)mySelector:(id)gesture
+{
+    
+    
+    LOG_UI(0, @"mySelector %@", gesture);
+    
+    webView = [[UIWebView alloc]initWithFrame: UIEdgeInsetsInsetRect(self.slidingViewController.view.frame, UIEdgeInsetsMake(HEADER_HEIGHT, 0, 0, 0))];
+    [webView setDelegate:self];
+    [authenticateViewController.view addSubview:webView];
+    [authenticateViewController.view addGestureRecognizer:self.slidingViewController.panGesture];
+    
+    
+    //    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    //
+    // log us out of Instagram so we can log in as many accounts as we want.
+    NSURLRequest* request = [NSURLRequest requestWithURL:[userHandler urlForInstagramAuthentication] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
+    NSURLRequest *logout = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://instagram.com/accounts/logout/"]];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
+    
+    [webView loadRequest:request];
+    
+    //
+    self.slidingViewController.topViewController = authenticateViewController;
+    [self.slidingViewController resetTopViewAnimated:NO];
+    
+    //    });
+    
+}
+
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     LOG_UI(0, @"View Did Appear");
     //[self.navigationController.view addGestureRecognizer:self.slidingViewController.panGesture];
-    
-    
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [timerForStatusRefresh invalidate];
-    });
-    //[self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
+    LOG_UI(0, @"View Will Disappear");
+    [timerForStatusRefresh invalidate];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     LOG_UI(0, @"View Will Appear");
+    
+    
+    
     [scroller layoutSubviews];
     
     NSArray *list_of_humans = [[userHandler humans_user]humans];
@@ -114,9 +187,23 @@
     }];
     
     [self updateHumanStatusCounts];
-
+    
+    // restart the timer
+    if(timerForStatusRefresh == nil) {
+        timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
+                                                                     target:self
+                                                                   selector:@selector(updateHumanStatusCounts)
+                                                                   userInfo:nil
+                                                                    repeats:YES
+                                                              dispatchQueue:privateQueue];
+        
+    }
     dispatch_async(dispatch_get_main_queue(), ^{
         [scroller layout];
+        [self.view setNeedsDisplay];
+//        CALayer *layer = self.view.layer;
+//        [layer setNeedsDisplay];
+//        [layer displayIfNeeded];
     });
 }
 
@@ -129,13 +216,16 @@
 {
     [super viewDidLoad];
     
-   // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        timerForStatusRefresh = [NSTimer scheduledTimerWithTimeInterval:120
-                                                                 target:self
-                                                               selector:@selector(updateHumanStatusCounts)
-                                                               userInfo:nil repeats:YES];
-        
-   // });
+    // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    
+    
+    //
+    //        timerForStatusRefresh = [NSTimer scheduledTimerWithTimeInterval:120
+    //                                                                 target:self
+    //                                                               selector:@selector(updateHumanStatusCounts)
+    //                                                               userInfo:nil repeats:YES];
+    
+    // });
     
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
     {
@@ -210,155 +300,27 @@
     [self.view addSubview:header];
     [header layout];
     
+    // so we can slide the scroller out of the way and see the "under" views with settings and crap
     if(self.slidingViewController) {
         [header addGestureRecognizer:self.slidingViewController.panGesture];
     }
     
     [self.view setBackgroundColor:[UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
     
-
+    
 #pragma mark setup the scroller
     scroller = [MGScrollView scrollerWithSize:self.navigationController.view.frame.size];
     [scroller setFrame:CGRectMake(0, HEADER_HEIGHT, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height-HEADER_HEIGHT)];
     section = MGTableBox.box;
     [scroller.boxes addObject:section];
     
-
-   
-
+    
+    
+    
 #pragma mark setup the lines of humans
     for (int i=0; i<[[self arrayOfHumans]count]; i++) {
         HuHuman *human = (HuHuman*)[arrayOfHumans objectAtIndex:i];
         [self addHumanToView:human];
-
-//        CGSize rowSize = (CGSize){self.view.width, 110};
-//        
-//        HuHumanLineStyled *line = [HuHumanLineStyled lineWithLeft:nil right:nil size:rowSize];
-//        [line setUserHandler:userHandler];
-//        [line setHuman:human];
-//        [line setMiddleItemsAlignment:NSTextAlignmentLeft];
-//        [line setMiddleFont:[UIFont fontWithName:@"Creampuff" size:18]];
-//        [linesOfHumans addObject:line];
-//        
-//        [human loadServiceUsersProfileImagesWithCompletionHandler:^{
-//            //
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                //
-//                UIImage *profile_image = [human largestServiceUserProfileImage];
-//                
-//                profile_image = [profile_image resizedImageToFitInSize:CGSizeMake(110,110) scaleIfSmaller:YES];
-//                
-//                UIImageView *profile_iv = [[UIImageView alloc]initWithImage:profile_image];
-//                CALayer *maskLayer = [CALayer layer];
-//                UIImage *mask = [UIImage imageNamed:@"user-profile-image-mask-100px"];
-//                maskLayer.contents = (id)mask.CGImage;
-//                maskLayer.frame = (CGRect){CGPointZero, mask.size};
-//                
-//                profile_iv.image = profile_image;
-//                profile_iv.layer.mask = maskLayer;
-//                
-//                NSMutableArray *marray = [[NSMutableArray alloc]initWithArray:@[profile_iv]];
-//                //[human_mgline setLeftItems:marray];
-//                
-//                [line setLeftItems:marray];
-//                [line layout];
-//                
-//            });
-//            
-//        }];
-//        
-//        line.onTap = ^{
-//            LOG_UI(0, @"Tapped on %@", [human name]);
-//            activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-//            activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
-//            activityIndicatorView.tintColor = [UIColor orangeColor];
-//            //[self.view addSubview:activityIndicatorView];
-//            //[activityIndicatorView show:YES];
-//            
-//            [self showHuman:human];
-//        };
-//        __block HuHumanLineStyled *bline = line;
-//        __block NSMutableArray *array = linesOfHumans;
-//        line.onSwipe = ^{
-//            LOG_UI(0, @"Swiped on %@", [human name]);
-//            bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
-//            [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//                //
-//                HuHumanLineStyled *b = (HuHumanLineStyled*)obj;
-//                if(b != bline) {
-//                    [UIView animateWithDuration:0.2 animations:^{
-//                        //
-//                        b.x = 0;
-//                    }];
-//                }
-//            }];
-//            
-//            // if the line is positioned at 0, it hasn't been slid either left or right,
-//            // so let's slide it to reveal the delete button
-//            if (bline.x == 0) {
-//                // change the swiper's accepted direction,
-//                // to allow swiping the line back to its original position
-//                bline.swiper.direction = UISwipeGestureRecognizerDirectionLeft;
-//                [UIView animateWithDuration:0.2 animations:^{
-//                    bline.x = 100;
-//                }];
-//                
-//            } else {
-//                // change the swiper's accepted direction,
-//                // to allow it to be swiped to reveal delete again
-//                bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
-//                [UIView animateWithDuration:0.2 animations:^{
-//                    bline.x = 0;
-//                }];
-//            }
-//        };
-//        
-//        
-//        UIImage *garbage = [UIImage imageNamed:@"garbage-gray"];
-//        MGLine *garbage_box = [MGLine lineWithSize:[garbage size]];
-//        [[garbage_box leftItems]addObject:garbage];
-//        
-//        
-//        MGLine *underneath = [MGLine lineWithSize:line.size];
-//        [underneath setBackgroundColor:[UIColor yellowColor]];
-//        underneath.attachedTo = line;
-//        underneath.zIndex = -1;
-//        [underneath.leftItems setArray:@[garbage_box]];
-//        
-//        UILongPressGestureRecognizer *__longpresser = [[UILongPressGestureRecognizer alloc]initWithTarget:garbage_box action:@selector(longPressed)];
-//        [__longpresser setMinimumPressDuration:2.5];
-//        [__longpresser setNumberOfTapsRequired:0];
-//        garbage_box.longPresser = __longpresser;
-//        
-//        garbage_box.onLongPress = ^{
-//            LOG_UI(0, @"Garbage Toss..%@ %@", human.name, __longpresser);
-//            HuAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-//            HuUserHandler *handler = [appDelegate humansAppUser];
-//            if(__longpresser.state == UIGestureRecognizerStateBegan) {
-//                [handler userRemoveHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-//                    //
-//                    [section.topLines removeObject:line];
-//                    [section.topLines removeObject:underneath];
-//                    //CGRect frame = human_mgline.frame;
-//                    //CGRect scroll_frame = scroller.frame;
-//                    //CGRect new_frame = CGRectMake(scroll_frame.origin.x, scroll_frame.origin.y, scroll_frame.size.width, scroll_frame.size.height - frame.size.height);
-//                    [scroller layoutWithSpeed:1.5 completion:^{
-//                        LOG_UI(0, @"Finished removing %@", human);
-//                        [UIView animateWithDuration:0.5 animations:^{
-//                            scroller.contentSize = CGSizeMake(scroller.contentSize.width, scroller.contentSize.height-line.size.height);
-//                        }];
-//                    }];
-//                    
-//                    
-//                }];
-//            }
-//        };
-//        
-//        [line layout];
-//        [section.topLines addObject:line];
-//        [section.topLines addObject:underneath];
-    
-    
     }
     
     [scroller setContentSize:CGSizeMake(scroller.bounds.size.width, scroller.bounds.size.height+50)];
@@ -408,6 +370,8 @@
         });
         
     }];
+    __block HuHumanLineStyled *bline = line;
+    __block NSMutableArray *array = linesOfHumans;
     
     line.onTap = ^{
         LOG_UI(0, @"Tapped on %@", [human name]);
@@ -417,10 +381,9 @@
         //[self.view addSubview:activityIndicatorView];
         //[activityIndicatorView show:YES];
         
-        [self showHuman:human];
+        [self showHuman:human fromLine:bline];
     };
-    __block HuHumanLineStyled *bline = line;
-    __block NSMutableArray *array = linesOfHumans;
+    
     line.onSwipe = ^{
         LOG_UI(0, @"Swiped on %@", [human name]);
         bline.swiper.direction = UISwipeGestureRecognizerDirectionRight;
@@ -480,21 +443,21 @@
             [handler userRemoveHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
                 //
                 if(success) {
-                [section.topLines removeObject:line];
-                [section.topLines removeObject:underneath];
-                //CGRect frame = human_mgline.frame;
-                //CGRect scroll_frame = scroller.frame;
-                //CGRect new_frame = CGRectMake(scroll_frame.origin.x, scroll_frame.origin.y, scroll_frame.size.width, scroll_frame.size.height - frame.size.height);
-                [scroller layoutWithSpeed:1.5 completion:^{
-                    LOG_UI(0, @"Finished removing %@", human);
-                    [UIView animateWithDuration:1.5 animations:^{
-                        scroller.contentSize = CGSizeMake(scroller.contentSize.width, scroller.contentSize.height-line.size.height);
+                    [section.topLines removeObject:line];
+                    [section.topLines removeObject:underneath];
+                    //CGRect frame = human_mgline.frame;
+                    //CGRect scroll_frame = scroller.frame;
+                    //CGRect new_frame = CGRectMake(scroll_frame.origin.x, scroll_frame.origin.y, scroll_frame.size.width, scroll_frame.size.height - frame.size.height);
+                    [scroller layoutWithSpeed:1.5 completion:^{
+                        LOG_UI(0, @"Finished removing %@", human);
+                        [UIView animateWithDuration:1.5 animations:^{
+                            scroller.contentSize = CGSizeMake(scroller.contentSize.width, scroller.contentSize.height-line.size.height);
+                        }];
                     }];
-                }];
                 } else {
                     LOG_UI(0, @"Error removing human %@ %@", [human name], [human humanid]);
-                    [Flurry logEvent:[NSString stringWithFormat:@"Error removing human %@ (%@)", [human name], [human humanid]]];
-
+                    //[Flurry logEvent:[NSString stringWithFormat:@"Error removing human %@ (%@)", [human name], [human humanid]]];
+                    
                 }
                 
             }];
@@ -510,43 +473,68 @@
     }
 }
 
-- (void)showHuman:(HuHuman *)human
+- (void)showHuman:(HuHuman *)human fromLine:(HuHumanLineStyled *)line
 {
     LOG_GENERAL(0, @"Would present %@", human);
     [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
     
     HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
     HuUserHandler *user_handler = [delegate humansAppUser];
-    [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-        //
+    [userHandler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+        int count = 0;
         if(success) {
-            LOG_GENERAL(0, @"Loaded Status for %@", human);
-            [Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+            [f setNumberStyle:NSNumberFormatterDecimalStyle];
+            count = [[f numberFromString:[data description]] intValue];
             
-            //NSString *human_id = [human humanid]    ;
-            NSArray *status = [user_handler statusForHuman:human];
-            LOG_GENERAL(0, @"Count is %d", [status count]);
-            statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-
-            [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];
+        }
+        if(count <= 0) {
+            [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
             
-            [self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
-            
-            [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-            
-            [[self navigationController] pushViewController:statusCarouselViewController animated:YES];
-            
-        } else {
-            LOG_ERROR(0, @"Error loading status %@", error);
-            [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-            [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
             MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-            noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-            noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+            noticeView.mode = MRProgressOverlayViewModeCross;
+            noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
             [self performBlock:^{
                 [noticeView dismiss:YES];
-            } afterDelay:2.0];
+                [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+            } afterDelay:4.0];
             
+        }
+        
+        if(success && count > 0) {
+            [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+                //
+                if(success) {
+                    LOG_GENERAL(0, @"Loaded Status for %@", human);
+                    //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+                    
+                    //NSString *human_id = [human humanid]    ;
+                    NSArray *status = [user_handler statusForHuman:human];
+                    LOG_GENERAL(0, @"Count is %d", [status count]);
+                    statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
+                    
+                    [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];
+                    
+                    [self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
+                    
+                    [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+                    
+                    [[self navigationController] pushViewController:statusCarouselViewController animated:YES];
+                    
+                } else {
+                    LOG_ERROR(0, @"Error loading status %@", error);
+                    //[Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+                    [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
+                    MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+                    noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+                    noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+                    [self performBlock:^{
+                        [noticeView dismiss:YES];
+                    } afterDelay:2.0];
+                    
+                }
+                
+            }];
         }
     }];
 }
@@ -585,7 +573,7 @@
         };
         
     }];
-
+    
 }
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
@@ -634,20 +622,90 @@
     });
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    LOG_UI(0, @"segue=%@ sender=%@", segue, sender);
-}
 
+- (void)dealloc
+{
+    [timerForStatusRefresh invalidate];
+}
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
     //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, nil), ^{
-        [timerForStatusRefresh invalidate];
+    [timerForStatusRefresh invalidate];
+    
+    // });
+}
+
+#pragma mark UIWebViewDelegate methods
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView
+{
+    LOG_UI(0, @"Web view did finish load %@", aWebView);
+    NSString *html = [aWebView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
+    LOG_UI(0, @"HTML=%@", html);
+    NSData *data = [html dataUsingEncoding:NSUTF8StringEncoding];
+    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    LOG_UI(0, @"json=%@", json);
+    LOG_UI(0, @"username=%@", [json objectForKey:@"username"]);
+    if(json != nil && [json objectForKey:@"username"] != nil) {
+        MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:aWebView animated:YES];
+        progressView.mode = MRProgressOverlayViewModeCheckmark;
+        progressView.titleLabelText = @"Good to go.";
+        [self performBlock:^{
+            //
+            [progressView dismiss:YES];
+        } afterDelay:3];
         
-   // });
+        [self performBlock:^{
+            //
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //
+                //[self.view setNeedsDisplayInRect:self.slidingViewController.view.frame];
+                self.slidingViewController.topViewController = self;
+                [self.slidingViewController.view setNeedsDisplay];
+                //[self resetController];
+                [header addGestureRecognizer:self.slidingViewController.panGesture];
+                [self.slidingViewController anchorTopViewToRightAnimated:YES];
+            });
+            
+            //            [self.slidingViewController resetTopViewAnimated:YES onComplete:^{
+            //                dispatch_async(dispatch_get_main_queue(), ^{
+            //                    [scroller setContentOffset:CGPointMake(scroller.contentOffset.x, 0)
+            //                                      animated:YES];
+            //[scroller setNeedsLayout];
+            //[self.view setNeedsLayout];
+            //                });
+            //
+            //            }];
+            
+        } afterDelay:4];
+        
+    }
+    if(json != nil && [json objectForKey:@"result"] != nil && [[json objectForKey:@"result"] caseInsensitiveCompare:@"error"] == NSOrderedSame )
+    {
+        NSString *msg;
+        
+        msg = [NSString stringWithFormat:@"%@", [json objectForKey:@"message"]];
+        
+        MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:aWebView animated:YES];
+        progressView.mode = MRProgressOverlayViewModeCross;
+        progressView.titleLabelText = [NSString stringWithFormat:@"There was a problem authenticating. %@", msg];
+        
+        [Flurry logError:[json description] message:msg error:nil];
+        
+        [self performBlock:^{
+            [progressView dismiss:YES];
+        } afterDelay:5.0];
+        
+    }
+    //    [self performBlock:^{
+    //        //
+    //        self.slidingViewController.topViewController = self;
+    //        [self.slidingViewController resetTopViewAnimated:YES];
+    //
+    //    } afterDelay:40];
 }
 
 @end

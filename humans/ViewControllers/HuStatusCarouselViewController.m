@@ -31,7 +31,6 @@
     HuHeaderForServiceStatusView *header;
     CGRect carouselFrame;
     UIStoryboardSegue *segueToFriends;
-    //MBProgressHUD *HUD;
 }
 
 @synthesize carousel;
@@ -108,14 +107,7 @@
 	//add carousel to view
 	[self.view addSubview:carousel];
     
-    //segueToFriends = [[UIStoryboardSegue alloc]initWithIdentifier:@"CarouselToHumans" source:self destination:friendsViewController];
-    
-    //[UIApplication sharedApplication];
     LOG_UI(0, @"view (%@) header= carousel=%@", self.view, NSStringFromCGRect(carousel.frame));
-    
-    
-    
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -126,10 +118,8 @@
 
 - (void)onSwipeNameLabel:(id)gesture
 {
-    LOG_UI(0, @"Swiped gesture=%@", gesture);
+    //LOG_UI(0, @"Swiped gesture=%@", gesture);
     [[self navigationController]popViewControllerAnimated:YES];
-//    [self prepareForSegue:segueToFriends sender:header];
-//    [self performSegueWithIdentifier:@"CarouselToHumans" sender:self];
 }
 
 //- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -272,7 +262,7 @@ NSUInteger last_index, current_index;
 #pragma mark iCarouselDelegate methods
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    LOG_UI(0, @"checking number of items in carousel=%d", [items count]);
+    //LOG_UI(0, @"checking number of items in carousel=%d", [items count]);
     return [items count];
 }
 
@@ -282,20 +272,15 @@ NSUInteger last_index, current_index;
     if([aCarousel currentItemIndex] > -1) {
     HuViewForServiceStatus *view = (HuViewForServiceStatus *)[aCarousel itemViewAtIndex:[aCarousel currentItemIndex]];
 
-    LOG_GENERAL(0, @"curent index is %d", [aCarousel currentItemIndex]);
-    LOG_GENERAL(0, @"%@ %@", [items objectAtIndex:[aCarousel currentItemIndex]], view);
+//    LOG_GENERAL(0, @"curent index is %d", [aCarousel currentItemIndex]);
+//    LOG_GENERAL(0, @"%@ %@", [items objectAtIndex:[aCarousel currentItemIndex]], view);
     [view showOrRefreshPhoto];
-//        if([view isKindOfClass:[HuInstagramStatusView class]]) {
-//            
-//        }
     }
-    //if(view isKindOfClass:[Hu])
 }
 
 - (UIView *)carousel:(iCarousel *)mcarousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
     HuViewForServiceStatus *result;
-    
     
     result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:index]];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -309,51 +294,6 @@ NSUInteger last_index, current_index;
     //Make it so we don't need this "items" ivar, which is just a lousy go-between
     // We'd need to make sure the status array in friend is ordered!
     
-    
-    //    __block HuInstagramServiceUser *wtf;
-    //    LOG_UI(1, @"All Managed Status is %@", [friendToView allStatus]);
-    //    [self.friendToView.serviceUsers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    //        //
-    //        LOG_GENERAL(2, @"SERVICE_USER %@", obj);
-    //        if([obj isKindOfClass:[HuInstagramServiceUser class]]) {
-    //            wtf = (HuInstagramServiceUser*)obj;
-    //            LOG_GENERAL(2, @"AND..%@", [wtf test]);
-    //            [wtf.test enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    //                //
-    //                LOG_GENERAL(2, @"HERE: %@", obj);
-    //            }];
-    //        }
-    //    }];
-    
-    
-    
-    //    id<HuServiceStatus>status = [self.friendToView statusAtIndex:index];
-    //    CGRect frame = CGRectMake(0, 0, CGRectGetWidth(carousel.frame), CGRectGetHeight(carousel.frame));
-    //
-    //    result = [[HuViewForServiceStatus alloc]initWithFrame:frame forStatus:status];
-    //    if([result respondsToSelector:@selector(showOrRefreshPhoto)]) {
-    //        [result performSelector:@selector(showOrRefreshPhoto)];
-    //    }
-    
-    //[[UIView alloc]initWithFrame:self.carousel.frame];
-//    [result setBackgroundColor:[UIColor whiteColor]];
-//    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, result.frame.size.width-10, result.frame.size.height-10)];
-//    [result addSubview:label];
-//    
-//    NSObject *item = [items objectAtIndex:index];
-//    if([item isKindOfClass:[TwitterStatus class]])
-//    {
-//        TwitterStatus *t = (TwitterStatus*)item;
-//        [label setText:[t text]];
-//    }
-//    if([item isKindOfClass:[InstagramStatus class]])
-//    {
-//        InstagramStatus *i = (InstagramStatus*)item;
-//        InstagramCaption *c = [i caption];
-//        label.text = [c text];
-//    }
-//    return result;
-//    
     
 }
 

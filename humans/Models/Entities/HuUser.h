@@ -19,9 +19,13 @@
 @property (strong, nonatomic) NSArray *services;
 @property (strong, nonatomic) NSString *username;
 @property (strong, nonatomic) NSDecimalNumber *version;
+@property (strong, nonatomic) NSNumber *isAdmin;
+@property (strong, nonatomic) NSNumber *isSuperuser;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
 -(NSDictionary *)dictionary;
 - (NSDictionary *)proxyForJson;
+- (Boolean)amSuperuser;
+- (Boolean)amAdmin;
 @end

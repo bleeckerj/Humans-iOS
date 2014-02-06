@@ -21,7 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //[TestFlight takeOff:@"7d627af6-7629-44dc-8103-a7a1baa81d03"];
+    [TestFlight takeOff:@"7d627af6-7629-44dc-8103-a7a1baa81d03"];
     // Override point for customization after application launch.
     LoggerInit();
     //LoggerSetViewerHost(LoggerGetDefaultLogger(), CFSTR("10.0.0.79"), 49767);
@@ -29,6 +29,10 @@
     LOG_GENERAL(0, @"Are we running?");
     LOG_UI(0, @"Model %@ IS_IPHONE? %@", [ [ UIDevice currentDevice ] model ], (IS_IPHONE?@"YES":@"NO"));
     LOG_UI(0, @"Widescreen %d", ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON ));
+    
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    [manager.imageDownloader setDownloadTimeout:30.0];
+
     
     
 //    for (NSString* family in [UIFont familyNames])
@@ -46,13 +50,13 @@
 //    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
 //                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
 //    
-//    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
     [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
+//    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
     [Crashlytics sharedInstance].debugMode = YES;
     
 //    
-    [Flurry setCrashReportingEnabled:YES];
-//
+    //[Flurry setCrashReportingEnabled:YES];
+////
 [Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
 [application setStatusBarHidden:NO];
     

@@ -90,8 +90,27 @@
 	{
 		self.version = version_;
 	}
-
+	id isAdmin_ = [dic objectForKey:@"isAdmin"];
+	if([isAdmin_ isKindOfClass:[NSNumber class]])
+	{
+		self.isAdmin = isAdmin_;
+	}
+	id isSuperuser_ = [dic objectForKey:@"isSuperuser"];
+	if([isSuperuser_ isKindOfClass:[NSNumber class]])
+	{
+		self.isSuperuser = isSuperuser_;
+	}
 	
+}
+
+-(Boolean)amSuperuser
+{
+    return [self.isSuperuser boolValue];
+}
+
+-(Boolean)amAdmin
+{
+    return [self.isAdmin boolValue];
 }
 
 -(NSString *)email
@@ -108,7 +127,7 @@
 -(NSDictionary *)dictionary
 {
         return [NSDictionary dictionaryWithObjectsAndKeys:[self id],  @"id", [self email], @"email", [self humans], @"humans",
-                [self services], @"services", self.username, @"username", nil];
+                [self services], @"services", self.username, @"username", self.isAdmin, @"isAdmin", self.isSuperuser, @"isSuperuser", nil];
 }
 
 -(NSDictionary *)proxyForJson
