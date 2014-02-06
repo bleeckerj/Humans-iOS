@@ -1,6 +1,11 @@
-## 2.1.4
+## 2.2.1
 
 - Consolidate both SDK versions into one which removes all access to `ASIdentifierManager`
+
+## 2.2
+
+- Restore In App Updates
+- Automatic identification of beta testers
 
 ## 2.1.3
 
