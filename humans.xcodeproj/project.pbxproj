@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0CC189E47A6A4040B2025E7A /* libPods-humansTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88354E2550004189A5556342 /* libPods-humansTests.a */; };
 		346786609E6F470FA34D4392 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3C7AB25D83E4EFA8734A616 /* libPods.a */; };
+		B908171A18A74F610019AC23 /* HuConnectServicesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B908171918A74F610019AC23 /* HuConnectServicesViewController.m */; };
+		B908171D18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B908171C18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m */; };
 		B9161901186803050010A34F /* UIColor+UIColor_LighterDarker.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618F8186803050010A34F /* UIColor+UIColor_LighterDarker.m */; };
 		B9161902186803050010A34F /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FA186803050010A34F /* UIImage+Alpha.m */; };
 		B9161903186803050010A34F /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FC186803050010A34F /* UIImage+Resize.m */; };
@@ -80,7 +82,6 @@
 		B91BE75C18A29DDA00D6E171 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B91BE75618A29DDA00D6E171 /* libTestFlight.a */; };
 		B91BE75D18A29DDA00D6E171 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B91BE75718A29DDA00D6E171 /* README.md */; };
 		B91BE75E18A29DDA00D6E171 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = B91BE75818A29DDA00D6E171 /* release_notes.md */; };
-		B91BE76218A29EFD00D6E171 /* libFlurry_4.3.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B91BE76118A29EFD00D6E171 /* libFlurry_4.3.1.a */; };
 		B92400C0185C12FA00A10410 /* HuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B92400BE185C12FA00A10410 /* HuViewController.m */; };
 		B93024A31895B887000168E4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B93024A21895B887000168E4 /* libz.dylib */; };
 		B937464F188CCA120037A95C /* FindFollowsForService_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */; };
@@ -99,6 +100,8 @@
 		B944BB3D1896F06500015B10 /* HuFoursquareVenue.m in Sources */ = {isa = PBXBuildFile; fileRef = B944BB371896F06500015B10 /* HuFoursquareVenue.m */; };
 		B944BB421896FE5500015B10 /* HuFoursquareVenueIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = B944BB3F1896FE5500015B10 /* HuFoursquareVenueIcon.m */; };
 		B944BB431896FE5500015B10 /* HuFoursquareVenueIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = B944BB411896FE5500015B10 /* HuFoursquareVenueIcons.m */; };
+		B94FAEE718A6F80600EA4463 /* HuShowServicesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B94FAEE618A6F80600EA4463 /* HuShowServicesViewController.m */; };
+		B94FAEEA18A71B2400EA4463 /* HuServiceViewLine.m in Sources */ = {isa = PBXBuildFile; fileRef = B94FAEE918A71B2400EA4463 /* HuServiceViewLine.m */; };
 		B99657CF1867FDA800C4AB01 /* DateyMGStyledBox.m in Sources */ = {isa = PBXBuildFile; fileRef = B99657C01867FDA800C4AB01 /* DateyMGStyledBox.m */; };
 		B99657D11867FDA800C4AB01 /* HuInstagramStatus_Box.m in Sources */ = {isa = PBXBuildFile; fileRef = B99657C41867FDA800C4AB01 /* HuInstagramStatus_Box.m */; };
 		B99657D21867FDA800C4AB01 /* HuStatusPhotoBox.m in Sources */ = {isa = PBXBuildFile; fileRef = B99657C61867FDA800C4AB01 /* HuStatusPhotoBox.m */; };
@@ -112,6 +115,10 @@
 		B99E017D18604B0400E70892 /* HuUserHandlerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E017C18604B0400E70892 /* HuUserHandlerTest.m */; };
 		B99E019618619A0500E70892 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F51778185BC4930083CA36 /* CoreGraphics.framework */; };
 		B99E01991862AEEB00E70892 /* HuLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E01981862AEEB00E70892 /* HuLoginViewController.m */; };
+		B9AC5EC118A9E07900BEE77C /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AC5EC018A9E07900BEE77C /* libFlurry_4.3.2.a */; };
+		B9AC5EC518AA15FD00BEE77C /* foursquare-icon-16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */; };
+		B9AC5EC618AA15FD00BEE77C /* foursquare-icon-gray-16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */; };
+		B9AC5EC718AA15FD00BEE77C /* foursquare-icon-gray-36x36.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC418AA15FD00BEE77C /* foursquare-icon-gray-36x36.png */; };
 		B9C2C216187BB65700F1DF47 /* HuFriend.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C20B187BB65700F1DF47 /* HuFriend.m */; };
 		B9C2C217187BB65700F1DF47 /* HuHuman.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C20D187BB65700F1DF47 /* HuHuman.m */; };
 		B9C2C218187BB65700F1DF47 /* HuOnBehalfOf.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C20F187BB65700F1DF47 /* HuOnBehalfOf.m */; };
@@ -148,6 +155,7 @@
 		B9C2C281187BBA6E00F1DF47 /* HuHumanTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C27F187BBA6E00F1DF47 /* HuHumanTest.m */; };
 		B9C2C282187BBA6E00F1DF47 /* HuServiceUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */; };
 		B9C2C28B187C619A00F1DF47 /* HuTwitterStatusTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */; };
+		B9D29F9818A4D1EF000D94EA /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */; };
 		B9EC9915189A0AC800A17051 /* HuHumanLineStyled.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EC9914189A0AC800A17051 /* HuHumanLineStyled.m */; };
 		B9F51777185BC4930083CA36 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F51776185BC4930083CA36 /* Foundation.framework */; };
 		B9F51779185BC4930083CA36 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F51778185BC4930083CA36 /* CoreGraphics.framework */; };
@@ -184,6 +192,10 @@
 
 /* Begin PBXFileReference section */
 		88354E2550004189A5556342 /* libPods-humansTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-humansTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B908171818A74F610019AC23 /* HuConnectServicesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuConnectServicesViewController.h; sourceTree = "<group>"; };
+		B908171918A74F610019AC23 /* HuConnectServicesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuConnectServicesViewController.m; sourceTree = "<group>"; };
+		B908171B18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuAuthenticateServiceWebViewController.h; sourceTree = "<group>"; };
+		B908171C18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuAuthenticateServiceWebViewController.m; sourceTree = "<group>"; };
 		B91618F7186803050010A34F /* UIColor+UIColor_LighterDarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UIColor_LighterDarker.h"; sourceTree = "<group>"; };
 		B91618F8186803050010A34F /* UIColor+UIColor_LighterDarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UIColor_LighterDarker.m"; sourceTree = "<group>"; };
 		B91618F9186803050010A34F /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
@@ -266,7 +278,6 @@
 		B91BE75A18A29DDA00D6E171 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
 		B91BE75B18A29DDA00D6E171 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		B91BE76018A29EFD00D6E171 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		B91BE76118A29EFD00D6E171 /* libFlurry_4.3.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.1.a; sourceTree = "<group>"; };
 		B92400BB185C12FA00A10410 /* HuFriendsGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFriendsGridViewController.h; sourceTree = "<group>"; };
 		B92400BC185C12FA00A10410 /* HuFriendsGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFriendsGridViewController.m; sourceTree = "<group>"; };
 		B92400BD185C12FA00A10410 /* HuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuViewController.h; sourceTree = "<group>"; };
@@ -305,6 +316,10 @@
 		B944BB3F1896FE5500015B10 /* HuFoursquareVenueIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFoursquareVenueIcon.m; sourceTree = "<group>"; };
 		B944BB401896FE5500015B10 /* HuFoursquareVenueIcons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFoursquareVenueIcons.h; sourceTree = "<group>"; };
 		B944BB411896FE5500015B10 /* HuFoursquareVenueIcons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFoursquareVenueIcons.m; sourceTree = "<group>"; };
+		B94FAEE518A6F80600EA4463 /* HuShowServicesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuShowServicesViewController.h; path = humans/ViewControllers/HuShowServicesViewController.h; sourceTree = SOURCE_ROOT; };
+		B94FAEE618A6F80600EA4463 /* HuShowServicesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuShowServicesViewController.m; path = humans/ViewControllers/HuShowServicesViewController.m; sourceTree = SOURCE_ROOT; };
+		B94FAEE818A71B2400EA4463 /* HuServiceViewLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuServiceViewLine.h; path = Views/HuServiceViewLine.h; sourceTree = "<group>"; };
+		B94FAEE918A71B2400EA4463 /* HuServiceViewLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuServiceViewLine.m; path = Views/HuServiceViewLine.m; sourceTree = "<group>"; };
 		B9787924186360A900D72288 /* XCTestCase+AsyncTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "XCTestCase+AsyncTesting.h"; path = "../humans/Supporting/XCTestCase+AsyncTesting.h"; sourceTree = "<group>"; };
 		B9787925186360A900D72288 /* XCTestCase+AsyncTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "XCTestCase+AsyncTesting.m"; path = "../humans/Supporting/XCTestCase+AsyncTesting.m"; sourceTree = "<group>"; };
 		B99657BF1867FDA800C4AB01 /* DateyMGStyledBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateyMGStyledBox.h; sourceTree = "<group>"; };
@@ -329,6 +344,10 @@
 		B99E017C18604B0400E70892 /* HuUserHandlerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUserHandlerTest.m; path = ../HuUserHandlerTest.m; sourceTree = "<group>"; };
 		B99E01971862AEEB00E70892 /* HuLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuLoginViewController.h; sourceTree = "<group>"; };
 		B99E01981862AEEB00E70892 /* HuLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuLoginViewController.m; sourceTree = "<group>"; };
+		B9AC5EC018A9E07900BEE77C /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
+		B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-16x16.png"; sourceTree = "<group>"; };
+		B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-gray-16x16.png"; sourceTree = "<group>"; };
+		B9AC5EC418AA15FD00BEE77C /* foursquare-icon-gray-36x36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-gray-36x36.png"; sourceTree = "<group>"; };
 		B9C2C20A187BB65700F1DF47 /* HuFriend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFriend.h; sourceTree = "<group>"; };
 		B9C2C20B187BB65700F1DF47 /* HuFriend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFriend.m; sourceTree = "<group>"; };
 		B9C2C20C187BB65700F1DF47 /* HuHuman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuHuman.h; sourceTree = "<group>"; };
@@ -399,6 +418,7 @@
 		B9C2C27F187BBA6E00F1DF47 /* HuHumanTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuHumanTest.m; sourceTree = "<group>"; };
 		B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuServiceUserTest.m; sourceTree = "<group>"; };
 		B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuTwitterStatusTest.m; sourceTree = "<group>"; };
+		B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
 		B9EC9913189A0AC800A17051 /* HuHumanLineStyled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuHumanLineStyled.h; path = Views/HuHumanLineStyled.h; sourceTree = "<group>"; };
 		B9EC9914189A0AC800A17051 /* HuHumanLineStyled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuHumanLineStyled.m; path = Views/HuHumanLineStyled.m; sourceTree = "<group>"; };
 		B9F51773185BC4930083CA36 /* humans.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = humans.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -438,10 +458,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B91BE75C18A29DDA00D6E171 /* libTestFlight.a in Frameworks */,
+				B9AC5EC118A9E07900BEE77C /* libFlurry_4.3.2.a in Frameworks */,
 				B93024A31895B887000168E4 /* libz.dylib in Frameworks */,
 				B99E017718601B2400E70892 /* SystemConfiguration.framework in Frameworks */,
 				B91BE75418A29D1F00D6E171 /* Crashlytics.framework in Frameworks */,
-				B91BE76218A29EFD00D6E171 /* libFlurry_4.3.1.a in Frameworks */,
 				B9F51779185BC4930083CA36 /* CoreGraphics.framework in Frameworks */,
 				B9F5177B185BC4930083CA36 /* UIKit.framework in Frameworks */,
 				B9F51777185BC4930083CA36 /* Foundation.framework in Frameworks */,
@@ -504,6 +524,7 @@
 		B91BE6D718A29B9600D6E171 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */,
 				B91BE6D818A29B9600D6E171 /* CREAMPUF.TTF */,
 				B91BE6D918A29B9600D6E171 /* HelveticaLTStd-BlkObl.otf */,
 			);
@@ -513,6 +534,9 @@
 		B91BE6DA18A29B9600D6E171 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */,
+				B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */,
+				B9AC5EC418AA15FD00BEE77C /* foursquare-icon-gray-36x36.png */,
 				B91BE6DB18A29B9600D6E171 /* angry_unicorn.png */,
 				B91BE6DC18A29B9600D6E171 /* angry_unicorn_tiny.png */,
 				B91BE6DD18A29B9600D6E171 /* arrow.png */,
@@ -608,8 +632,8 @@
 		B91BE75F18A29EFD00D6E171 /* Flurry */ = {
 			isa = PBXGroup;
 			children = (
+				B9AC5EC018A9E07900BEE77C /* libFlurry_4.3.2.a */,
 				B91BE76018A29EFD00D6E171 /* Flurry.h */,
-				B91BE76118A29EFD00D6E171 /* libFlurry_4.3.1.a */,
 			);
 			name = Flurry;
 			path = ../Flurry;
@@ -619,6 +643,10 @@
 			isa = PBXGroup;
 			children = (
 				B9374648188CCA120037A95C /* Finding and Searching */,
+				B908171B18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.h */,
+				B908171C18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m */,
+				B94FAEE518A6F80600EA4463 /* HuShowServicesViewController.h */,
+				B94FAEE618A6F80600EA4463 /* HuShowServicesViewController.m */,
 				B919DC471893A7E800F86004 /* HuSlidingViewController.h */,
 				B919DC481893A7E800F86004 /* HuSlidingViewController.m */,
 				B92400BB185C12FA00A10410 /* HuFriendsGridViewController.h */,
@@ -631,6 +659,8 @@
 				B9F646A3186572FF008EB970 /* HuHumansScrollViewController.m */,
 				B9F646E11867BF6E008EB970 /* HuStatusCarouselViewController.h */,
 				B9F646E21867BF6E008EB970 /* HuStatusCarouselViewController.m */,
+				B908171818A74F610019AC23 /* HuConnectServicesViewController.h */,
+				B908171918A74F610019AC23 /* HuConnectServicesViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -968,6 +998,8 @@
 		B9F646A7186755E4008EB970 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B94FAEE818A71B2400EA4463 /* HuServiceViewLine.h */,
+				B94FAEE918A71B2400EA4463 /* HuServiceViewLine.m */,
 				B9EC9913189A0AC800A17051 /* HuHumanLineStyled.h */,
 				B9EC9914189A0AC800A17051 /* HuHumanLineStyled.m */,
 				B9374659188CD0910037A95C /* HuServiceUserProfilePhoto.h */,
@@ -1099,6 +1131,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9AC5EC518AA15FD00BEE77C /* foursquare-icon-16x16.png in Resources */,
 				B91BE72518A29B9600D6E171 /* HumanAppIcon60pt.png in Resources */,
 				B91BE74C18A29B9600D6E171 /* twitter-bird-white-tiny.png in Resources */,
 				B91BE73618A29B9600D6E171 /* checkbox-checked.png in Resources */,
@@ -1125,6 +1158,7 @@
 				B91BE72018A29B9600D6E171 /* Default@2x.png in Resources */,
 				B91BE75E18A29DDA00D6E171 /* release_notes.md in Resources */,
 				B91BE74218A29B9600D6E171 /* instagram-camera-white-tiny.png in Resources */,
+				B9AC5EC718AA15FD00BEE77C /* foursquare-icon-gray-36x36.png in Resources */,
 				B91BE71F18A29B9600D6E171 /* Default.png in Resources */,
 				B91BE73718A29B9600D6E171 /* checkbox-unchecked.png in Resources */,
 				B91BE72318A29B9600D6E171 /* HumanAppIcon29pt.png in Resources */,
@@ -1132,10 +1166,12 @@
 				B91BE71718A29B9600D6E171 /* CREAMPUF.TTF in Resources */,
 				B91BE73E18A29B9600D6E171 /* flickr-peepers.png in Resources */,
 				B91BE74B18A29B9600D6E171 /* twitter-bird-gray.png in Resources */,
+				B9D29F9818A4D1EF000D94EA /* fontawesome-webfont.ttf in Resources */,
 				B91BE74918A29B9600D6E171 /* twitter-bird-color.png in Resources */,
 				B91BE74518A29B9600D6E171 /* reload-gray.png in Resources */,
 				B9F51781185BC4930083CA36 /* InfoPlist.strings in Resources */,
 				B91BE73318A29B9600D6E171 /* add-human-gray.png in Resources */,
+				B9AC5EC618AA15FD00BEE77C /* foursquare-icon-gray-16x16.png in Resources */,
 				B91BE72618A29B9600D6E171 /* Instagram_Icon_Large.png in Resources */,
 				B91BE74818A29B9600D6E171 /* settings-bars.png in Resources */,
 				B91BE72718A29B9600D6E171 /* Instagram_Icon_Medium.png in Resources */,
@@ -1266,6 +1302,7 @@
 				B9C2C219187BB65700F1DF47 /* HuServices.m in Sources */,
 				B937464F188CCA120037A95C /* FindFollowsForService_ViewController.m in Sources */,
 				B944BB2A1896F05400015B10 /* HuFlickrStatus.m in Sources */,
+				B94FAEEA18A71B2400EA4463 /* HuServiceViewLine.m in Sources */,
 				B944BB381896F06500015B10 /* HuFoursquareCheckin.m in Sources */,
 				B916190A18680E3C0010A34F /* UILabel+withDate.m in Sources */,
 				B9F646E31867BF6E008EB970 /* HuStatusCarouselViewController.m in Sources */,
@@ -1315,6 +1352,7 @@
 				B944BB291896F05400015B10 /* HuFlickrDescription.m in Sources */,
 				B9C2C269187BB6E100F1DF47 /* InstagramStatus.m in Sources */,
 				B9C2C277187BB6E100F1DF47 /* HuTwitterStatusMedia.m in Sources */,
+				B908171A18A74F610019AC23 /* HuConnectServicesViewController.m in Sources */,
 				B9161905186803050010A34F /* UIImage+RoundedCorner.m in Sources */,
 				B9374654188CCD970037A95C /* StateMachine.m in Sources */,
 				B9EC9915189A0AC800A17051 /* HuHumanLineStyled.m in Sources */,
@@ -1322,12 +1360,14 @@
 				B9C2C274187BB6E100F1DF47 /* HuTwitterPlace.m in Sources */,
 				B9161904186803050010A34F /* UIImage+ResizeToFit.m in Sources */,
 				B92400C0185C12FA00A10410 /* HuViewController.m in Sources */,
+				B94FAEE718A6F80600EA4463 /* HuShowServicesViewController.m in Sources */,
 				B99E016F1860044400E70892 /* HuHumansHTTPClient.m in Sources */,
 				B944BB421896FE5500015B10 /* HuFoursquareVenueIcon.m in Sources */,
 				B9C2C276187BB6E100F1DF47 /* HuTwitterStatusEntities.m in Sources */,
 				B9C2C26F187BB6E100F1DF47 /* HuTwitterEntitesHashtag.m in Sources */,
 				B9C2C26A187BB6E100F1DF47 /* InstagramUser.m in Sources */,
 				B9C2C21B187BB65700F1DF47 /* HuUser.m in Sources */,
+				B908171D18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m in Sources */,
 				B9374658188CCF920037A95C /* HuProfilePhotoBlank.m in Sources */,
 				B937465B188CD0910037A95C /* HuServiceUserProfilePhoto.m in Sources */,
 				B99657D51867FDA800C4AB01 /* PhotoBox.m in Sources */,
@@ -1487,7 +1527,7 @@
 					"/Users/julian/Code/humans-ios/humans/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B3D513E7-C8EC-4261-9E8F-24DF3F4A7E1D";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1520,7 +1560,7 @@
 					"/Users/julian/Code/humans-ios/humans/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B3D513E7-C8EC-4261-9E8F-24DF3F4A7E1D";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
