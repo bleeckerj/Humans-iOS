@@ -10,11 +10,14 @@
 #import "InstagramStatus.h"
 #import "HuFlickrStatus.h"
 #import "HuTwitterStatus.h"
+#import "HuFoursquareCheckin.h"
+#import "HuFoursquareVenue.h"
 #import "HuStatusPhotoBox.h"
 #import "UIView+MGEasyFrame.h"
 #import "UIView+BlocksKit.h"
 #import "defines.h"
 #import "LoggerClient.h"
+#import <UIView+MCLayout.h>
 
 @interface HuTwitterStatusView : HuViewForServiceStatus {
     HuStatusPhotoBox *photoBox;
@@ -38,6 +41,13 @@
     UITextView *statusView;
     InstagramStatus *status;
     
+}
+
+@end
+
+@interface HuFoursquareStatusView : HuViewForServiceStatus {
+    UITextView *statusView;
+    HuFoursquareCheckin *status;
 }
 
 //-(void)loadPhoto;
@@ -65,7 +75,12 @@
         hView = [[HuFlickrStatusView alloc]initWithFrame:frame forStatus:mstatus];
     }
     
-    LOG_GENERAL(0, @"View is %@", hView);
+    
+    if([mstatus isKindOfClass:[HuFoursquareStatusView class]]) {
+        hView = [[HuFoursquareStatusView alloc]initWithFrame:frame forStatus:mstatus];
+    }
+    
+    //LOG_GENERAL(0, @"View is %@", hView);
     return hView;
 }
 
@@ -81,6 +96,42 @@
     
 }
 
+
+@end
+
+@implementation HuFoursquareStatusView
+{
+    
+}
+
+-(HuFoursquareStatusView *)initWithFrame:(CGRect)frame forStatus:(HuFoursquareCheckin*)mstatus
+{
+    self = [super initWithFrame:frame];
+    if(self) {
+        LOG_FOURSQUARE(0, @"frame for foursquare status=%@", NSStringFromCGRect(frame));
+        if([mstatus venue] != nil) {
+            status = mstatus;
+            [self setBackgroundColor:UIColorFromRGB(0xd1d4d3)];
+            statusView = [[UITextView alloc]initWithFrame:self.frame];
+            [statusView setBackgroundColor:UIColorFromRGB(0xeeebac)];
+            HuFoursquareVenue *venue = [status venue];
+            NSString *description = [NSString stringWithFormat:@"%@", [venue name]];
+            [statusView setText:description];
+            [statusView setTextColor:[UIColor blackColor]];
+            [statusView setFont:TWITTER_FONT];
+            [statusView setScrollEnabled:YES];
+            [statusView setBounces:NO];
+            [self addSubview:statusView];
+        }
+    }
+    return self;
+
+}
+
+- (void)showOrRefreshPhoto
+{
+    
+}
 
 @end
 
@@ -103,7 +154,8 @@
         [self setBackgroundColor:[UIColor whiteColor]];
         
         if([status containsMedia]) {
-            photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:YES];
+            photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, 0.5*frame.size.height) deferLoad:NO];
+            //[photoBox setFrame:CGRectMake(0, 100, frame.size.width, 0.5*frame.size.height)];
             [photoBox setBackgroundColor:[UIColor orangeColor]];
             [self addSubview:photoBox];
         }
@@ -122,6 +174,13 @@
             [statusView setScrollEnabled:YES];
             [statusView setBounces:NO];
             [self addSubview:statusView];
+        }
+        if([status statusText] != nil && [status containsMedia] == true) {
+            
+            UIView *marker = [[UIView alloc]initWithFrame:CGRectMake(0, photoBox.size.height, self.size.width, self.size.height - photoBox.size.height)];
+            [marker setBackgroundColor:[UIColor colorWithRed:0.0 green:0.5 blue:0.5 alpha:0.2]];
+            [self addSubview:marker];
+            
         }
         
     }
@@ -205,10 +264,7 @@
         
         if([status statusText] != nil) {
             statusView = [[UITextView alloc]initWithFrame:[self getStatusViewFrame]];
-            //LOG_INSTAGRAM(0, @"For HuInstagramStatusView statusView size is %@", NSStringFromCGRect([statusView frame]));
             statusView.editable = NO;
-            //statusField.lineBreakMode = UILineBreakModeTailTruncation;
-            //statusLabel.numberOfLines = 0;
             [statusView setBackgroundColor:[UIColor whiteColor]];
             NSString *description = [NSString stringWithFormat:@"%@", [status statusText]];
             [statusView setText:description];
@@ -247,7 +303,7 @@
     //        screen_height = IPHONE_PORTRAIT_SIZE_HEIGHT;
     //    }
     
-    int height = [[UIScreen mainScreen] bounds].size.height;
+    int height = self.height-10;
     
     float clear_bottom =  height - CGRectGetMaxY(photoBox.frame);
     CGRect statusview_frame = (CGRectMake(CGRectGetMinX(photoBox.frame), CGRectGetMaxY(photoBox.frame), CGRectGetWidth(photoBox.frame), clear_bottom));

@@ -114,12 +114,19 @@
                     }];
                 }];
                 
-                humansScrollViewController = [[HuHumansScrollViewController alloc]init];
-                //[humansScrollViewController setArrayOfHumans:[[userHandler humans_user]humans]];
-                
+//                humansScrollViewController = [[HuHumansScrollViewController alloc]init];
+
                 // have to do this on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    //UIViewController *topViewController        = humansScrollViewController;///[[UIViewController alloc] init];
+                    humansScrollViewController = [[HuHumansScrollViewController alloc]init];
+                    
+//                    UIViewController *x = [[UIViewController alloc]init];
+//                    [x.view setBackgroundColor:[UIColor greenColor]];
+                    HuSlidingViewController *c = [[HuSlidingViewController alloc]initWithTopViewController:humansScrollViewController];
+                    
+                    [humansScrollViewController setSlidingViewController:c];
+                    [[self navigationController]pushViewController:c animated:YES];
+                    /*
                     UIViewController *underLeftViewController  = [[UIViewController alloc] init];
                     UIViewController *underRightViewController = [[UIViewController alloc] init];
                     
@@ -142,22 +149,21 @@
                     // configure sliding view controller
                     //self.slidingViewController = [ECSlidingViewController slidingWithTopViewController:humansScrollViewController];
                     self.slidingViewController = [HuSlidingViewController slidingWithTopViewController:humansScrollViewController];
-                    [humansScrollViewController setSlidingViewController:self.slidingViewController];
                     self.slidingViewController.underLeftViewController  = underLeftViewController;
                     self.slidingViewController.underRightViewController = underRightViewController;
                     
                     // configure anchored layout
                     self.slidingViewController.anchorRightPeekAmount  = 100.0;
-                    self.slidingViewController.anchorLeftRevealAmount = 250.0;
+                    self.slidingViewController.anchorLeftRevealAmount = 200.0;
                     
                     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:humansScrollViewController action:@selector(mySelector:)];
                     [tapGesture setNumberOfTapsRequired:2];
                     [underLeftViewController.view addGestureRecognizer:tapGesture];
 
                     
-                    //self.window.rootViewController = self.slidingViewController;
                     [humansScrollViewController setSlidingViewController:self.slidingViewController];
                     [[self navigationController]pushViewController:self.slidingViewController animated:YES];
+                     */
                 });
             
             });

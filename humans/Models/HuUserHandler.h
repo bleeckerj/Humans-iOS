@@ -82,5 +82,8 @@ typedef enum networkStateTypes
 
 
 - (NSURL *)urlForInstagramAuthentication;
+- (NSURL *)urlForTwitterAuthentication;
+- (NSURL *)urlForFlickrAuthentication;
+- (NSURL *)urlForFoursquareAuthentication;
 
 @end

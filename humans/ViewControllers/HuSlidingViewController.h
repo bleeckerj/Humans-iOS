@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <ECSlidingViewController.h>
+#import "HuHumansScrollViewController.h"
 #import "defines.h"
-@interface HuSlidingViewController : ECSlidingViewController 
+
+@interface HuSlidingViewController : ECSlidingViewController
+
+//@property HuHumansScrollViewController *humansScrollViewController;
+
+
 @end

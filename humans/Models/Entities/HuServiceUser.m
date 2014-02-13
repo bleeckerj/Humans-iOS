@@ -18,7 +18,7 @@
 @synthesize onBehalfOf = _onBehalfOf;
 @synthesize serviceName = _serviceName;
 @synthesize serviceUserID = _serviceUserID;
-@synthesize username = _username;
+@synthesize serviceUsername = _serviceUsername;
 
 
 - (void) dealloc
@@ -76,10 +76,10 @@
 		self.serviceUserID = serviceUserID_;
 	}
 
-	id username_ = [dic objectForKey:@"username"];
-	if([username_ isKindOfClass:[NSString class]])
+	id serviceUsername_ = [dic objectForKey:@"serviceUsername"];
+	if([serviceUsername_ isKindOfClass:[NSString class]])
 	{
-		self.username = username_;
+		self.serviceUsername = serviceUsername_;
 	}
 
 
@@ -95,7 +95,7 @@
 
 -(NSDictionary *)dictionary {
     return [NSDictionary dictionaryWithObjectsAndKeys:self.id,@"id",self.imageURL, @"imageURL",self.lastUpdated, @"lastUpdated",
-            self.onBehalfOf, @"onBehalfOf", self.serviceName, @"serviceName", self.serviceUserID, @"serviceUserID", self.username, @"username", nil];
+            self.onBehalfOf, @"onBehalfOf", self.serviceName, @"serviceName", self.serviceUserID, @"serviceUserID", self.serviceUsername, @"serviceUsername", nil];
 }
 
 -(NSDictionary *)proxyForJson

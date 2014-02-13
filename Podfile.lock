@@ -1,5 +1,6 @@
 PODS:
   - AFNetworking (1.3.3)
+  - BButton (3.2.3)
   - BlocksKit (2.0.0):
     - BlocksKit/All
   - BlocksKit/All (2.0.0):
@@ -14,8 +15,10 @@ PODS:
     - BlocksKit/DynamicDelegate
   - BlocksKit/UIKit (2.0.0):
     - BlocksKit/DynamicDelegate
+  - Bolts (1.0.0)
   - ConciseKit (0.1.2)
-  - ECSlidingViewController (2.0.0)
+  - DropdownMenu (1.0.0)
+  - ECSlidingViewController (2.0.1)
   - Expecta (0.2.3)
   - FLKAutoLayout (0.1.1)
   - iCarousel (1.7.6)
@@ -24,15 +27,29 @@ PODS:
   - KeyboardController (1.0.0)
   - libffi (3.0.13)
   - MBProgressHUD (0.8)
+  - MCUIViewLayout (0.3.4)
   - MGBoxKit (2.1.1):
     - MGBoxKit/Categories
   - MGBoxKit/Categories (2.1.1)
   - MHTextField (0.0.3)
+  - MMDrawerController (0.5.2):
+    - MMDrawerController/Core
+    - MMDrawerController/MMDrawerBarButtonItem
+    - MMDrawerController/MMDrawerVisualStates
+    - MMDrawerController/Subclass
+  - MMDrawerController/Core (0.5.2)
+  - MMDrawerController/MMDrawerBarButtonItem (0.5.2):
+    - MMDrawerController/Core
+  - MMDrawerController/MMDrawerVisualStates (0.5.2):
+    - MMDrawerController/Core
+  - MMDrawerController/Subclass (0.5.2):
+    - MMDrawerController/Core
   - MRProgress (0.3.1)
   - MSWeakTimer (1.1.0)
+  - NHBalancedFlowLayout (0.1.2)
   - NSLogger (1.1)
   - OCHamcrest (3.0.1)
-  - OCMock (2.2.2)
+  - OCMock (2.2.3)
   - OCMockito (1.1.0):
     - OCHamcrest (~> 3.0)
   - RestKit (0.22.0):
@@ -62,20 +79,27 @@ PODS:
   - SOCKit (1.1)
   - TransitionKit (2.0.0)
   - UIImage-Categories (0.0.1)
+  - WSLObjectSwitch (1.0.0)
 
 DEPENDENCIES:
+  - BButton
   - BlocksKit (~> 2.0.0)
+  - Bolts
   - ConciseKit
-  - ECSlidingViewController (from `~/Code/ECSlidingViewController`)
+  - DropdownMenu
+  - ECSlidingViewController (~> 2.0.0-beta2)
   - Expecta (~> 0.2.3)
   - FLKAutoLayout
   - iCarousel
   - KeyboardController (~> 1.0.0)
   - MBProgressHUD (~> 0.8)
+  - MCUIViewLayout (from `https://github.com/mirego/MCUIViewLayout.git`)
   - MGBoxKit
   - MHTextField (~> 0.0.3)
+  - MMDrawerController (~> 0.5.2)
   - MRProgress (~> 0.3.1)
   - MSWeakTimer (~> 1.1.0)
+  - NHBalancedFlowLayout (~> 0.1.2)
   - NSLogger
   - OCHamcrest (~> 3.0.1)
   - OCMock
@@ -85,16 +109,22 @@ DEPENDENCIES:
   - SDWebImage
   - SKSlideViewController (~> 0.0.1)
   - UIImage-Categories (~> 0.0.1)
+  - WSLObjectSwitch (from `~/Code/WSLObjectSwitch`)
 
 EXTERNAL SOURCES:
-  ECSlidingViewController:
-    :path: ~/Code/ECSlidingViewController
+  MCUIViewLayout:
+    :git: https://github.com/mirego/MCUIViewLayout.git
+  WSLObjectSwitch:
+    :path: ~/Code/WSLObjectSwitch
 
 SPEC CHECKSUMS:
   AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
+  BButton: b405745cd7ccc9444c696b8690fb79541623766a
   BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
+  Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
-  ECSlidingViewController: 9a30cf3c446e39de70128299663fde097d8f3f88
+  DropdownMenu: 3c454205c2db1fd39dc1ebf099114c4fdb73f136
+  ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
   Expecta: dbc4a27fabb853bdd2e907e33f11ee43a9a47d0c
   FLKAutoLayout: fc04b932009174d4118ef4bda9dc8fedf1369efc
   iCarousel: e23a26d7ba722215a42144e80adb0dcb59bebc41
@@ -102,13 +132,16 @@ SPEC CHECKSUMS:
   KeyboardController: 368f5ebc3ceab64a863636db2a313648bbe1e643
   libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
+  MCUIViewLayout: db43d391388bcee6763ac3364c2109e32016f04d
   MGBoxKit: 5de9fd5f49539c30348ef750e2b9ea5a14374b88
   MHTextField: 299b04dd7ce5354554c4bf4b968da60a04d20fdd
+  MMDrawerController: 60bce0387ff42670d9a5a392e2f531be2fd39ce9
   MRProgress: 741d8849f3d6e71cf254b32ea8c0bc0b2a122136
   MSWeakTimer: 2cd8d15b58e634517e83a7e433782faa8214a27f
+  NHBalancedFlowLayout: 95f1d7bffadc73bead84b63e7e4c37aa52975f7a
   NSLogger: 4567fef08d0db18a89cce91b2053823fc0950738
   OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
-  OCMock: ffba68873fd32cfd35d885bddad23bfa816da4a3
+  OCMock: 74e4ddbcef134170dcc844f91c691f13868075d7
   OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
   RestKit: dc107a0aa4f962575ad0385bac5b3c5e4f591f4e
   RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182
@@ -118,5 +151,6 @@ SPEC CHECKSUMS:
   SOCKit: 2f3bc4d07910de12dcc202815e07db68a3802581
   TransitionKit: 433284465abacdc07852d7db6dd0cc075010059a
   UIImage-Categories: d9f10e0afb9b281b35a3c2b0c7d16d1ca251d824
+  WSLObjectSwitch: b43248112e4890014ebb2a125e05b3a8bbfb1b09
 
 COCOAPODS: 0.29.0

@@ -156,6 +156,9 @@ MGLine *check_;
     
     [foursquareLine mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:flickrLine];
     [foursquareLine layout];
+    foursquareLine.onTap = ^ {
+        [self authWithFoursquare];
+    };
 
     
     [self.view addSubview:twitterLine];
@@ -197,7 +200,7 @@ MGLine *check_;
 
     }];
     
-    [authenticateViewController.view setBackgroundColor:[UIColor yellowColor]];
+    [authenticateViewController.view setBackgroundColor:[UIColor redColor]];
     
     [self.navigationController pushViewController:authenticateViewController animated:YES];
 
@@ -205,20 +208,6 @@ MGLine *check_;
 
 - (void)authWithTwitter
 {
-//    UIWebView *webView = [[UIWebView alloc]initWithFrame:self.view.frame];
-//    [webView setDelegate:self];
-//    authenticateViewController.view = webView;
-//    //        authenticateViewController.view addGestureRecognizer
-//    
-//    NSURLRequest* request = [NSURLRequest requestWithURL:[userHandler urlForTwitterAuthentication] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-//    NSURLRequest *logout = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://twitter.com/logout‎"]];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
-//    
-//    [webView loadRequest:request];
-//    
-//    [self.navigationController pushViewController:authenticateViewController animated:YES];
     authenticateViewController = [[HuAuthenticateServiceWebViewController alloc]initWithAuthURL:[userHandler urlForTwitterAuthentication]
                                                                                       logoutURL:[NSURL URLWithString:@"https://twitter.com/logout"]
                                                                                     serviceName:@"Twitter"];
@@ -235,7 +224,7 @@ MGLine *check_;
         
     }];
     
-    [authenticateViewController.view setBackgroundColor:[UIColor yellowColor]];
+    [authenticateViewController.view setBackgroundColor:[UIColor redColor]];
     
     [self.navigationController pushViewController:authenticateViewController animated:YES];
 
@@ -243,22 +232,71 @@ MGLine *check_;
 
 - (void)authWithFlickr
 {
+    for(NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+        
+        if([[cookie domain] rangeOfString:@"flickr"].location != NSNotFound) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+            LOG_UI(0, @" DROP=%@", [cookie domain]);
+            
+        }
+        if([[cookie domain] rangeOfString:@"yahoo"].location != NSNotFound) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+            LOG_UI(0, @" DROP=%@", [cookie domain]);
+            
+        }
+
+    }
+
+    authenticateViewController = [[HuAuthenticateServiceWebViewController alloc]initWithAuthURL:[userHandler urlForFlickrAuthentication] logoutURL:[NSURL URLWithString:@"http://www.flickr.com/logout.gne"] serviceName:@"Flickr"];
+    [authenticateViewController setHandleWebViewDidFinishLoad:^(UIWebView *webView) {
+        
+        LOG_UI(0, @"webView=%@", webView);
+        NSString *html = [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
+        LOG_UI(0, @"HTML=%@", html);
+        LOG_UI(0, @"HTML=%@", [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"]);
+        NSData *data = [html dataUsingEncoding:NSUTF8StringEncoding];
+        id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        LOG_UI(0, @"json=%@", json);
+        LOG_UI(0, @"username=%@", [json objectForKey:@"username"]);
+        
+    }];
     
-//    UIWebView *webView = [[UIWebView alloc]initWithFrame:self.view.frame];
-//    [webView setDelegate:self];
-//    [authenticateViewController.view addSubview:webView];
-//    //        authenticateViewController.view addGestureRecognizer
-//    
-//    NSURLRequest* request = [NSURLRequest requestWithURL:[userHandler urlForFlickrAuthentication] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-//    NSURLRequest *logout = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://twitter.com/logout‎"]];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
-//    
-//    [webView loadRequest:request];
-//    
-//    [self.navigationController pushViewController:authenticateViewController animated:YES];
+    [authenticateViewController.view setBackgroundColor:[UIColor redColor]];
+    
+    [self.navigationController pushViewController:authenticateViewController animated:YES];
  
+}
+
+- (void)authWithFoursquare
+{
+    for(NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+
+        if([[cookie domain] rangeOfString:@"foursquare"].location != NSNotFound) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+            LOG_UI(0, @" DROP=%@", [cookie domain]);
+
+        }
+    }
+
+    
+    authenticateViewController = [[HuAuthenticateServiceWebViewController alloc]initWithAuthURL:[userHandler urlForFoursquareAuthentication] logoutURL:[NSURL URLWithString:@"https://foursquare.com/logout"] serviceName:@"Foursquare"];
+    [authenticateViewController setHandleWebViewDidFinishLoad:^(UIWebView *webView) {
+        
+        LOG_UI(0, @"webView=%@", webView);
+        NSString *html = [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
+        LOG_UI(0, @"HTML=%@", html);
+        LOG_UI(0, @"HTML=%@", [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"]);
+        NSData *data = [html dataUsingEncoding:NSUTF8StringEncoding];
+        id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        LOG_UI(0, @"json=%@", json);
+        LOG_UI(0, @"username=%@", [json objectForKey:@"username"]);
+        
+    }];
+    
+    [authenticateViewController.view setBackgroundColor:[UIColor yellowColor]];
+    
+    [self.navigationController pushViewController:authenticateViewController animated:YES];
+   
 }
 
 #pragma mark UIWebViewDelegate methods

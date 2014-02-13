@@ -28,6 +28,7 @@
 	<array>
 		<string>CREAMPUF.TTF</string>
 		<string>HelveticaLTStd-BlkObl.otf</string>
+		<string>fontawesome-webfont.ttf</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>

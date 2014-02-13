@@ -62,7 +62,7 @@ UISearchBar *mSearchBar;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [self commonInit];
+        //[self commonInit];
     }
     return self;
 }
@@ -105,6 +105,11 @@ UISearchBar *mSearchBar;
     LOG_GENERAL(0, @"HuUserHandler is now %@", self.appUser);
 
 
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 
@@ -586,13 +591,13 @@ UISearchBar *mSearchBar;
 
 -(BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
-    NSLog(@"Should begin editing");
+    LOG_UI(0, @"Should begin editing");
     return YES;
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-     NSLog(@"Search.");
+    LOG_UI(0, @"Search.");
     NSString *currentStateStr = [[stateMachine currentState]stateName];
 
     if([currentStateStr compare:@"nameFriendState" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
@@ -627,7 +632,7 @@ UISearchBar *mSearchBar;
 
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar
 {
-    NSLog(@"began");  // this executes as soon as i tap on the searchbar, so I'm guessing this is the place to put whatever solution is available
+    LOG_UI(0, @"began");  // this executes as soon as i tap on the searchbar, so I'm guessing this is the place to put whatever solution is available
 }
 -(BOOL) textFieldShouldReturn: (UITextField *) aTextField
 {
@@ -750,10 +755,7 @@ NSUInteger lastLength;
             
             [img setMask:[UIImage imageNamed:@"user-profile-image-mask-60px"]];
             
-            //[img setMask:nil];
-            //[human service]
-            
-            [img setServiceTinyTag:[UIImage imageNamed:[friend tinyServiceImageBadge ]]];    //[human tinyServiceImageBadge]]];
+            [img setServiceTinyTag:[UIImage imageNamed:[friend tinyServiceImageBadge ]]];
 
             [img setTappable:YES];
             img.onTap = ^{

@@ -36,8 +36,6 @@
     MSWeakTimer *timerForStatusRefresh;
     HuUserHandler *userHandler;
     dispatch_queue_t privateQueue;
-    UIWebView *webView;
-    UIViewController *authenticateViewController;
     
 }
 
@@ -69,15 +67,15 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [self customInit];
+        //[self customInit];
     }
     return self;
 }
 
 - (void)customInit
 {
-    authenticateViewController = [[UIViewController alloc]init];
-    authenticateViewController.view.backgroundColor = [UIColor blueColor];
+//    authenticateViewController = [[UIViewController alloc]init];
+//    authenticateViewController.view.backgroundColor = [UIColor blueColor];
     
     linesOfHumans = [[NSMutableArray alloc]init];
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
@@ -117,43 +115,51 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     
 }
 
-- (void)mySelector:(id)gesture
-{
-    
-    
-    LOG_UI(0, @"mySelector %@", gesture);
-    
-    webView = [[UIWebView alloc]initWithFrame: UIEdgeInsetsInsetRect(self.slidingViewController.view.frame, UIEdgeInsetsMake(HEADER_HEIGHT, 0, 0, 0))];
-    [webView setDelegate:self];
-    [authenticateViewController.view addSubview:webView];
-    [authenticateViewController.view addGestureRecognizer:self.slidingViewController.panGesture];
-    
-    
-    //    [[NSURLCache sharedURLCache] removeAllCachedResponses];
-    //
-    // log us out of Instagram so we can log in as many accounts as we want.
-    NSURLRequest* request = [NSURLRequest requestWithURL:[userHandler urlForInstagramAuthentication] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-    NSURLRequest *logout = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://instagram.com/accounts/logout/"]];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
-    
-    [webView loadRequest:request];
-    
-    //
-    self.slidingViewController.topViewController = authenticateViewController;
-    [self.slidingViewController resetTopViewAnimated:NO];
-    
-    //    });
-    
-}
+//- (void)mySelector:(id)gesture
+//{
+//    
+//    
+//    LOG_UI(0, @"mySelector %@", gesture);
+//    LOG_UI(0, @"top=%@", self.slidingViewController.topViewController);
+//    
+//    if([self.slidingViewController.topViewController.view isKindOfClass:[UIWebView class]]) {
+//        self.slidingViewController.topViewController = self;
+//        [self.slidingViewController resetTopViewAnimated:YES];
+//        [header addGestureRecognizer:self.slidingViewController.panGesture];
+//
+//    } else {
+//    
+//    //webView = [[UIWebView alloc]initWithFrame: UIEdgeInsetsInsetRect(self.slidingViewController.view.frame, UIEdgeInsetsMake(HEADER_HEIGHT, 0, 0, 0))];
+//        webView = [[UIWebView alloc]initWithFrame:self.slidingViewController.view.frame];
+//    [webView setDelegate:self];
+//    authenticateViewController.view = webView;
+//    [authenticateViewController.view addGestureRecognizer:self.slidingViewController.panGesture];
+//    
+//    
+//    //    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+//    //
+//    // log us out of Instagram so we can log in as many accounts as we want.
+//    NSURLRequest* request = [NSURLRequest requestWithURL:[userHandler urlForInstagramAuthentication] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
+//    NSURLRequest *logout = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://instagram.com/accounts/logout/"]];
+//    NSURLResponse * response = nil;
+//    NSError * error = nil;
+//    [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
+//    
+//    [webView loadRequest:request];
+//    
+//    //
+//    self.slidingViewController.topViewController = authenticateViewController;
+//    [self.slidingViewController resetTopViewAnimated:YES];
+//    
+//    //    });
+//    }
+//}
 
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     LOG_UI(0, @"View Did Appear");
-    //[self.navigationController.view addGestureRecognizer:self.slidingViewController.panGesture];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -173,20 +179,15 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     [super viewWillAppear:animated];
     LOG_UI(0, @"View Will Appear");
     
+    [header addGestureRecognizer:[self.slidingViewController panGesture]];
+
     
     
     [scroller layoutSubviews];
     
-    NSArray *list_of_humans = [[userHandler humans_user]humans];
-    [list_of_humans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        //
-        HuHuman *human = (HuHuman*)obj;
-        if([arrayOfHumans containsObject:human] == NO) {
-            [self addHumanToView:human];
-        }
-    }];
+    //[scroller setBackgroundColor:[UIColor orangeColor]];
     
-    [self updateHumanStatusCounts];
+    [self updateHumansForView];
     
     // restart the timer
     if(timerForStatusRefresh == nil) {
@@ -212,33 +213,39 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
 }
 
 
+- (void)updateHumansForView
+{
+    NSArray *list_of_humans = [[userHandler humans_user]humans];
+    [list_of_humans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //
+        HuHuman *human = (HuHuman*)obj;
+        if([arrayOfHumans containsObject:human] == NO) {
+            [self addHumanToView:human];
+        }
+    }];
+    
+    [self updateHumanStatusCounts];
+    
+ 
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
     
-    
-    //
-    //        timerForStatusRefresh = [NSTimer scheduledTimerWithTimeInterval:120
-    //                                                                 target:self
-    //                                                               selector:@selector(updateHumanStatusCounts)
-    //                                                               userInfo:nil repeats:YES];
-    
-    // });
-    
-    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
-    {
-        CGRect frame = self.navigationController.view.frame;
-        if(frame.origin.y == 0) {
-            
-            frame.origin.y += 20;
-            frame.size.height -= 20;
-            self.navigationController.view.frame = frame;
-            self.navigationController.view.backgroundColor = [UIColor orangeColor];
-            
-        }
-    }
+//    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
+//    {
+//        CGRect frame = self.navigationController.view.frame;
+//        if(frame.origin.y == 0) {
+//            
+//            frame.origin.y += 20;
+//            frame.size.height -= 20;
+//            self.navigationController.view.frame = frame;
+//            self.navigationController.view.backgroundColor = [UIColor orangeColor];
+//            
+//        }
+//    }
     [self setNeedsStatusBarAppearanceUpdate];
     
     
@@ -249,9 +256,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     MGLine *settings_bar = [MGLine lineWithLeft:settings_bar_img right:nil size:[settings_bar_img size]];
     settings_bar.onTap = ^{
         LOG_UI(0, @"Tapped Settings Box");
-        if(self.slidingViewController) {
-            [self.slidingViewController anchorTopViewToRightAnimated:YES];
-        }
     };
     
     UIImage *add_human_img = [UIImage imageNamed:@"add-human-gray"];
@@ -300,17 +304,15 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     [self.view addSubview:header];
     [header layout];
     
-    // so we can slide the scroller out of the way and see the "under" views with settings and crap
-    if(self.slidingViewController) {
-        [header addGestureRecognizer:self.slidingViewController.panGesture];
-    }
     
     [self.view setBackgroundColor:[UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
     
     
 #pragma mark setup the scroller
-    scroller = [MGScrollView scrollerWithSize:self.navigationController.view.frame.size];
-    [scroller setFrame:CGRectMake(0, HEADER_HEIGHT, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height-HEADER_HEIGHT)];
+    CGSize size = self.view.frame.size;//self.navigationController.view.frame.size;
+    
+    scroller = [MGScrollView scrollerWithSize:size];
+    [scroller setFrame:CGRectMake(0, HEADER_HEIGHT, size.width, size.height-HEADER_HEIGHT)];
     section = MGTableBox.box;
     [scroller.boxes addObject:section];
     
@@ -318,10 +320,10 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     
     
 #pragma mark setup the lines of humans
-    for (int i=0; i<[[self arrayOfHumans]count]; i++) {
-        HuHuman *human = (HuHuman*)[arrayOfHumans objectAtIndex:i];
-        [self addHumanToView:human];
-    }
+//    for (int i=0; i<[[self arrayOfHumans]count]; i++) {
+//        HuHuman *human = (HuHuman*)[arrayOfHumans objectAtIndex:i];
+//        [self addHumanToView:human];
+//    }
     
     [scroller setContentSize:CGSizeMake(scroller.bounds.size.width, scroller.bounds.size.height+50)];
     
@@ -515,7 +517,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
                     
                     [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];
                     
-                    [self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
+                    //[self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
                     
                     [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
                     
@@ -638,74 +640,5 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     // });
 }
 
-#pragma mark UIWebViewDelegate methods
-- (void)webViewDidFinishLoad:(UIWebView *)aWebView
-{
-    LOG_UI(0, @"Web view did finish load %@", aWebView);
-    NSString *html = [aWebView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
-    LOG_UI(0, @"HTML=%@", html);
-    NSData *data = [html dataUsingEncoding:NSUTF8StringEncoding];
-    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    LOG_UI(0, @"json=%@", json);
-    LOG_UI(0, @"username=%@", [json objectForKey:@"username"]);
-    if(json != nil && [json objectForKey:@"username"] != nil) {
-        MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:aWebView animated:YES];
-        progressView.mode = MRProgressOverlayViewModeCheckmark;
-        progressView.titleLabelText = @"Good to go.";
-        [self performBlock:^{
-            //
-            [progressView dismiss:YES];
-        } afterDelay:3];
-        
-        [self performBlock:^{
-            //
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //
-                //[self.view setNeedsDisplayInRect:self.slidingViewController.view.frame];
-                self.slidingViewController.topViewController = self;
-                [self.slidingViewController.view setNeedsDisplay];
-                //[self resetController];
-                [header addGestureRecognizer:self.slidingViewController.panGesture];
-                [self.slidingViewController anchorTopViewToRightAnimated:YES];
-            });
-            
-            //            [self.slidingViewController resetTopViewAnimated:YES onComplete:^{
-            //                dispatch_async(dispatch_get_main_queue(), ^{
-            //                    [scroller setContentOffset:CGPointMake(scroller.contentOffset.x, 0)
-            //                                      animated:YES];
-            //[scroller setNeedsLayout];
-            //[self.view setNeedsLayout];
-            //                });
-            //
-            //            }];
-            
-        } afterDelay:4];
-        
-    }
-    if(json != nil && [json objectForKey:@"result"] != nil && [[json objectForKey:@"result"] caseInsensitiveCompare:@"error"] == NSOrderedSame )
-    {
-        NSString *msg;
-        
-        msg = [NSString stringWithFormat:@"%@", [json objectForKey:@"message"]];
-        
-        MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:aWebView animated:YES];
-        progressView.mode = MRProgressOverlayViewModeCross;
-        progressView.titleLabelText = [NSString stringWithFormat:@"There was a problem authenticating. %@", msg];
-        
-        [Flurry logError:[json description] message:msg error:nil];
-        
-        [self performBlock:^{
-            [progressView dismiss:YES];
-        } afterDelay:5.0];
-        
-    }
-    //    [self performBlock:^{
-    //        //
-    //        self.slidingViewController.topViewController = self;
-    //        [self.slidingViewController resetTopViewAnimated:YES];
-    //
-    //    } afterDelay:40];
-}
 
 @end

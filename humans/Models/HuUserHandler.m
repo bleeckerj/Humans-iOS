@@ -11,7 +11,7 @@
 #import "LoggerClient.h"
 #import <AFNetworking.h>
 #import <RestKit.h>
-//#import "Flurry.h"
+#import "Flurry.h"
 
 #import <ConciseKit.h>
 #import "HuFriend.h"
@@ -69,7 +69,7 @@ NSDateFormatter *twitter_formatter;
     
 #pragma mark This is where you set either the sharedDevClient or the sharedProdClient
     
-    client = [HuHumansHTTPClient sharedDevClient];
+    client = [HuHumansHTTPClient sharedProdClient];
     
     
     //LOG_GENERAL(0, @"allowss invalid ssl cert? %@", [client allowsInvalidSSLCertificate]?@"YES":@"NO");
@@ -129,14 +129,14 @@ NSDateFormatter *twitter_formatter;
     }];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
-       // [Flurry logEvent:[NSString stringWithFormat:@"Successfully added a human %@ \n%@", [aHuman name], [aHuman jsonString]]];
+        [Flurry logEvent:[NSString stringWithFormat:@"Successfully added a human %@ \n%@", [aHuman name], [aHuman jsonString]]];
         
         if(completionHandler) {
             completionHandler(true, nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-        //[Flurry logEvent:[NSString stringWithFormat:@"Failed adding a human %@ %@", [aHuman name], error]];
+        [Flurry logEvent:[NSString stringWithFormat:@"Failed adding a human %@ %@", [aHuman name], error]];
         
         if(completionHandler) {
             completionHandler(false, error);
@@ -185,7 +185,7 @@ NSDateFormatter *twitter_formatter;
     
 }
 
-#pragma mark get the user's humans
+#pragma mark get the user's humans as well as the user's details, id, services, username, etc.
 - (void)getHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     RKObjectManager *objectManager = [[RKObjectManager alloc]initWithHTTPClient:client];
@@ -198,13 +198,13 @@ NSDateFormatter *twitter_formatter;
     [humansMappping addAttributeMappingsFromArray:@[@"humanid", @"name"]];
     
     RKObjectMapping *servicesMapping = [RKObjectMapping mappingForClass:[HuServices class]];
-    [servicesMapping addAttributeMappingsFromArray:@[@"service", @"serviceUserID", @"serviceUsername"]];
+    [servicesMapping addAttributeMappingsFromArray:@[@"serviceName", @"serviceUserID", @"serviceUsername"]];
     
     RKObjectMapping *onBehalfOfMapping = [RKObjectMapping mappingForClass:[HuOnBehalfOf class]];
     [onBehalfOfMapping addAttributeMappingsFromArray:@[@"serviceName", @"serviceUserID", @"serviceUsername"]];
     
-    RKObjectMapping *serviceUserMapping = [RKObjectMapping mappingForClass:[HuServiceUser class]];
-    [serviceUserMapping addAttributeMappingsFromArray:@[@"id", @"imageURL", @"lastUpdated", @"serviceName", @"serviceUserID", @"username"]];
+    RKObjectMapping *serviceUsersMapping = [RKObjectMapping mappingForClass:[HuServiceUser class]];
+    [serviceUsersMapping addAttributeMappingsFromArray:@[@"id", @"imageURL", @"lastUpdated", @"serviceName", @"serviceUserID", @"serviceUsername"]];
     
     // relationships
     // humans within users
@@ -223,10 +223,10 @@ NSDateFormatter *twitter_formatter;
     [humansMappping addPropertyMapping:[RKRelationshipMapping
                                         relationshipMappingFromKeyPath:@"serviceUsers"
                                         toKeyPath:@"serviceUsers"
-                                        withMapping:serviceUserMapping]];
+                                        withMapping:serviceUsersMapping]];
     
     // onBehalfOf within serviceUsers (friends)
-    [serviceUserMapping addPropertyMapping:[RKRelationshipMapping
+    [serviceUsersMapping addPropertyMapping:[RKRelationshipMapping
                                             relationshipMappingFromKeyPath:@"onBehalfOf"
                                             toKeyPath:@"onBehalfOf"
                                             withMapping:onBehalfOfMapping]];
@@ -258,7 +258,7 @@ NSDateFormatter *twitter_formatter;
     operation = [objectManager appropriateObjectRequestOperationWithObject:self method:RKRequestMethodGET path:@"/rest/user/get" parameters:queryParams];
     [operation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         //
-       // [Flurry logEvent:[NSString stringWithFormat:@"Successful getHumansWithCompletion %@" , [humans_user username]]];
+       [Flurry logEvent:[NSString stringWithFormat:@"Successful getHumansWithCompletion %@" , [humans_user username]]];
 
         LOG_NETWORK(0, @"User Get Success %@", [mappingResult firstObject]);
         humans_user = [mappingResult firstObject];
@@ -269,7 +269,7 @@ NSDateFormatter *twitter_formatter;
         }
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         //
-       // [Flurry logEvent:[NSString stringWithFormat:@"Failed getHumansWithCompletion %@" , [humans_user username]]];
+       [Flurry logEvent:[NSString stringWithFormat:@"Failed getHumansWithCompletion %@" , [humans_user username]]];
 
         RKErrorMessage *errorMessage =  [[error.userInfo objectForKey:RKObjectMapperErrorObjectsKey] firstObject];
         LOG_NETWORK(0, @"User Get Failed.. %@", error);
@@ -451,8 +451,8 @@ NSDateFormatter *twitter_formatter;
                  [item setTinyServiceImageBadge:@"flickr-peepers-white-tiny.png"];
              }
              if([item.serviceName caseInsensitiveCompare:@"foursquare"] == NSOrderedSame) {
-                 [item setServiceImageBadge:@"foursquare-icon-36x36.png"];
-                 [item setTinyServiceImageBadge:@"foursquare-icon-36x36.png"];
+                 [item setServiceImageBadge:@"foursquare-icon-16x16.png"];
+                 [item setTinyServiceImageBadge:@"foursquare-icon-gray-16x16.png"];
              }
              [self.friends addObject:item];
              
@@ -466,7 +466,7 @@ NSDateFormatter *twitter_formatter;
      {
          LOG_NETWORK(0, @"failure: operation: %@ \n\nerror: %@", operaton, error);
          LOG_NETWORK(0, @"errorMessage: %@", [[error userInfo] objectForKey:RKObjectMapperErrorObjectsKey]);
-         //[Flurry logEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
+         [Flurry logEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
          
          if(completionHandler) {
              completionHandler(nil);
@@ -480,16 +480,12 @@ NSDateFormatter *twitter_formatter;
     NSMutableArray *results = [[NSMutableArray alloc]init];
     
     [self.friends enumerateObjectsUsingBlock:^(HuFriend* friend, NSUInteger idx, BOOL *stop) {
-        //
-        //        NSArray *follows = [obj follows];
-        //        [follows enumerateObjectsUsingBlock:^(id friend, NSUInteger idx, BOOL *stop) {
-        //
         // match username
         // match fullname
         if(([self numberOfMatches:[friend username] forRegex:regex]) || ([self numberOfMatches:[friend fullname] forRegex:regex])) {
             [results addObject:friend];
         }
-        //        }];
+
     }];
     
     //LOG_GENERAL(0, @"Final Results %@", results);
@@ -1068,6 +1064,29 @@ NSDateFormatter *twitter_formatter;
     return result;
 }
 
+- (NSURL *)urlForTwitterAuthentication
+{
+    NSURL *result;
+    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/twitter?access_token=%@", [client baseURL], [self access_token]];
+    result = [NSURL URLWithString:url];
+    return result;
+}
+
+- (NSURL *)urlForFlickrAuthentication
+{
+    NSURL *result;
+    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/flickr?access_token=%@", [client baseURL], [self access_token]];
+    result = [NSURL URLWithString:url];
+    return result;
+}
+
+- (NSURL *)urlForFoursquareAuthentication
+{
+    NSURL *result;
+    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/foursquare?access_token=%@", [client baseURL], [self access_token]];
+    result = [NSURL URLWithString:url];
+    return result;
+}
 
 #pragma mark NSURLConnectionDelegate methods
 

@@ -192,9 +192,6 @@
             [bself.imageView setCenter:CGPointMake(45, 45)];
 
             if(bself.serviceTinyTag != nil) {
-                //UIImage *badge = [UIImage imageNamed:bself.serviceTinyTag];
-                //resized_image = [bself drawImage:resized_image withBadge:bself.serviceTinyTag];
-                //bself.imageView.image = [bself drawImage:bself.imageView.image withBadge:bself.serviceTinyTag];
                 UIImageView *badgeView = [[UIImageView alloc]initWithImage:bself.serviceTinyTag ];
                 int badge_width = CGImageGetWidth([bself serviceTinyTag].CGImage);
                 int badge_height = CGImageGetHeight([bself serviceTinyTag].CGImage);

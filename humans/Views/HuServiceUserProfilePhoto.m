@@ -40,8 +40,6 @@
 
 + (HuServiceUserProfilePhoto *)photoBoxForSocialServiceUser:(HuFriend*)_friend size:(CGSize)size
 {
-    //HuServiceUserProfilePhoto *result = [[HuServiceUserProfilePhoto alloc]init];
-    //[result setMFriend:_friend];
     return [HuServiceUserProfilePhoto photoBoxForSocialServiceUser:_friend size:size deferLoad:NO];
 }
 
@@ -130,17 +128,14 @@
             
             LOG_UI_VERBOSE(0, @"Got it from cache? %@ %@", (notFromCache == YES)?@"NO":@"YES", error);
 
-//            CGSize paddedSize = CGSizeMake(bself.width-bself.leftPadding - bself.rightPadding -  bself.margin.left - bself.margin.right, bself.height - bself.leftPadding - bself.rightPadding);
-            
-            
             CGSize dstSize = [image aspectMaintainedSizeToFit:[bself size]];
-            LOG_UI_VERBOSE(0, @"Profile Image Is %zu by %zu", CGImageGetWidth(image.CGImage) ,CGImageGetHeight(image.CGImage));
+            //LOG_UI_VERBOSE(0, @"Profile Image Is %zu by %zu", CGImageGetWidth(image.CGImage) ,CGImageGetHeight(image.CGImage));
             
             UIImage *resized_image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:dstSize interpolationQuality:kCGInterpolationHigh];
             bself.autoresizingMask = UIViewAutoresizingNone;
                         
             [bself.imageView setImage:resized_image];
-            LOG_UI_VERBOSE(0, @"Resized Profile Image Is %zu by %zu", CGImageGetWidth(resized_image.CGImage) ,CGImageGetHeight(resized_image.CGImage));
+            //LOG_UI_VERBOSE(0, @"Resized Profile Image Is %zu by %zu", CGImageGetWidth(resized_image.CGImage) ,CGImageGetHeight(resized_image.CGImage));
 
             if(bself.mask != nil) {
                 CALayer *mask_layer = [CALayer layer];
@@ -172,12 +167,6 @@
                     return;
                 }
                 
-                // got the photo, so lets show it
-                //UIImage *image = [UIImage imageWithData:data];
-                //UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-                
-                //            [self.imageView setBackgroundColor:[UIColor greenColor]];
-                
                 // but wait..it might already contain the UIImageView, right?
                 bself.imageView.size = resized_image.size;
                 bself.imageView.alpha = 0;
@@ -194,9 +183,6 @@
                 [bself.imageView setCenter:CGPointMake(bself.size.width/2, bself.size.height/2)];
                 
                 if(bself.serviceTinyTag != nil) {
-                    //UIImage *badge = [UIImage imageNamed:bself.serviceTinyTag];
-                    //resized_image = [bself drawImage:resized_image withBadge:bself.serviceTinyTag];
-                    //bself.imageView.image = [bself drawImage:bself.imageView.image withBadge:bself.serviceTinyTag];
                     UIImageView *badgeView = [[UIImageView alloc]initWithImage:bself.serviceTinyTag ];
                     int badge_width = CGImageGetWidth([bself serviceTinyTag].CGImage);
                     int badge_height = CGImageGetHeight([bself serviceTinyTag].CGImage);

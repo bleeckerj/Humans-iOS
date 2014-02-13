@@ -18,7 +18,7 @@
 @property (strong, nonatomic) HuOnBehalfOf *onBehalfOf;
 @property (strong, nonatomic) NSString *serviceName;
 @property (strong, nonatomic) NSString *serviceUserID;
-@property (strong, nonatomic) NSString *username;
+@property (strong, nonatomic) NSString *serviceUsername;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;

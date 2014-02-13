@@ -108,15 +108,30 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define TWITTER_COLOR           UIColorFromRGB(0x4099FF)
 #define TWITTER_STATUS_VIEW_BGCOLOR  UIColorFromRGB(0x000000)
 #define TWITTER_STATUS_VIEW_FGCOLOR  UIColorFromRGB(0xF0F0F0)
+#define TWITTER_COLOR_IMAGE     @"twitter-bird-color.png"
+#define TWITTER_GRAY_IMAGE      @"twitter-bird-gray.png"
 
 #define INSTAGRAM_FONT            [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
-#define INSTAGRAM_TEXT_COLOR    [UIColor whiteColor]
+#define INSTAGRAM_TEXT_COLOR    [UIColor blackColor]
 #define INSTAGRAM_COLOR         UIColorFromRGB(0xffc03f)
 #define INSTAGRAM_COLOR_HEX     0xffc03f
+#define INSTAGRAM_COLOR_IMAGE   @"instagram-camera-color.png"
+#define INSTAGRAM_GRAY_IMAGE    @"instagram-camera.png"
 
 #define FLICKR_FONT             [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
 #define FLICKR_TEXT_COLOR       [UIColor blackColor]
 #define FLICKR_COLOR            UIColorFromRGB(0x0063DC)
+#define FLICKR_COLOR_IMAGE      @"flickr-peepers-color.png"
+#define FLICKR_GRAY_IMAGE       @"flickr-peepers.png"
+
+#define FOURSQUARE_FONT         [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
+#define FOURSQUARE_TEXT_COLOR   [UIColor blackColor]
+#define FOURSQUARE_COLOR        UIColorFromRGB(0xcbadf)
+#define FOURSQUARE_COLOR_IMAGE @"foursquare-icon-36x36.png"
+#define FOURSQUARE_GRAY_IMAGE @"foursquare-icon-gray-36x36.png"
+
+#define TUMBLR_COLOR_IMAGE @"angry_unicorn_tiny.png"
+#define FACEBOOK_COLOR_IMAGE @"angry_unicorn_tiny.png"
 
 #define INFO_FONT_LARGE         [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:16]
 #define INFO_FONT_MEDIUM        [UIFont fontWithName:@"EuphemiaUCAS" size:14]
@@ -161,10 +176,10 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define PROFILE_IMAGE_CORNER_RADIUS 20
 #define PROFILE_IMAGE_SIZE_FACTOR 0.8
 
-#define HEADER_HEIGHT 44
+#define HEADER_HEIGHT 55
 #define HEADER_SIZE (CGSize){320, HEADER_HEIGHT}
 
-#define TOOLBAR_HEIGHT 44
+#define TOOLBAR_HEIGHT 55
 
 #define LARGE_HEADER_HEIGHT 80
 #define LARGE_HEADER_SIZE (CGSize){320, LARGE_HEADER_HEIGHT}
@@ -227,5 +242,7 @@ typedef void(^CompletionHandlerWithResult)(BOOL success, NSError *error);
 typedef void(^CompletionHandlerWithData)(id data, BOOL success, NSError *error);
 typedef void(^StatusAwareCompletionHandler)(BOOL success, NSError *error);
 typedef void(^LongPressHandler)(UILongPressGestureRecognizer *recog);
-
+typedef void(^Handler)();
+typedef void(^WebViewHandler)(UIWebView *webView);
+typedef void(^WebViewHandlerWithError)(UIWebView *webView, NSError *error);
 typedef void(^BlockCallback)();

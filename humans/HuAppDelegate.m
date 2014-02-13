@@ -32,33 +32,33 @@
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     [manager.imageDownloader setDownloadTimeout:30.0];
-
     
     
-//    for (NSString* family in [UIFont familyNames])
-//    {
-//        NSLog(@"%@", family);
-//        
-//        for (NSString* name in [UIFont fontNamesForFamilyName: family])
-//        {
-//            NSLog(@"  %@", name);
-//        }
-//    }
-
+    
+    //    for (NSString* family in [UIFont familyNames])
+    //    {
+    //        NSLog(@"%@", family);
+    //
+    //        for (NSString* name in [UIFont fontNamesForFamilyName: family])
+    //        {
+    //            NSLog(@"  %@", name);
+    //        }
+    //    }
+    
     humansAppUser = [[HuUserHandler alloc]init];
     
-//    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
-//                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
-//    
+    //    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
+    //                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
+    //
     [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
-//    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
+    //    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
     [Crashlytics sharedInstance].debugMode = YES;
     
-//    
+    //
     //[Flurry setCrashReportingEnabled:YES];
-////
-[Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
-[application setStatusBarHidden:NO];
+    ////
+    [Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
+    [application setStatusBarHidden:NO];
     
     return YES;
 }
@@ -71,7 +71,7 @@
     return jediFindFriendsViewController;
 }
 
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -80,7 +80,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
