@@ -16,6 +16,7 @@
 #import <BlocksKit/NSArray+BlocksKit.h>
 #import "Flurry.h"
 #import <Crashlytics/Crashlytics.h>
+#import "HuHumansProfileCarouselViewController.h"
 
 @interface HuLoginViewController ()
 {
@@ -125,7 +126,10 @@
                     HuSlidingViewController *c = [[HuSlidingViewController alloc]initWithTopViewController:humansScrollViewController];
                     
                     [humansScrollViewController setSlidingViewController:c];
-                    [[self navigationController]pushViewController:c animated:YES];
+                    
+                    HuHumansProfileCarouselViewController *x = [[HuHumansProfileCarouselViewController alloc]initWithUserHandler:userHandler];
+                    
+                    [[self navigationController]pushViewController:x animated:YES];
                     /*
                     UIViewController *underLeftViewController  = [[UIViewController alloc] init];
                     UIViewController *underRightViewController = [[UIViewController alloc] init];
