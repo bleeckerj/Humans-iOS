@@ -52,6 +52,7 @@ PODS:
   - OCMock (2.2.3)
   - OCMockito (1.1.0):
     - OCHamcrest (~> 3.0)
+  - REMenu (1.8)
   - RestKit (0.22.0):
     - RestKit/Core
   - RestKit/Core (0.22.0):
@@ -79,6 +80,7 @@ PODS:
   - SOCKit (1.1)
   - TransitionKit (2.0.0)
   - UIImage-Categories (0.0.1)
+  - ViewUtils (1.1.2)
   - WSLObjectSwitch (1.0.0)
 
 DEPENDENCIES:
@@ -104,11 +106,13 @@ DEPENDENCIES:
   - OCHamcrest (~> 3.0.1)
   - OCMock
   - OCMockito (~> 1.0)
+  - REMenu (~> 1.8)
   - RestKit
   - SBJson (~> 4.0.0)
   - SDWebImage
   - SKSlideViewController (~> 0.0.1)
   - UIImage-Categories (~> 0.0.1)
+  - ViewUtils (~> 1.1.2)
   - WSLObjectSwitch (from `~/Code/WSLObjectSwitch`)
 
 EXTERNAL SOURCES:
@@ -143,6 +147,7 @@ SPEC CHECKSUMS:
   OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
   OCMock: 74e4ddbcef134170dcc844f91c691f13868075d7
   OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
+  REMenu: 40bb965c968b298c3f36d36067a15dd3f2c52473
   RestKit: dc107a0aa4f962575ad0385bac5b3c5e4f591f4e
   RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182
   SBJson: f3c686806e8e36ab89e020189ac582ba26ec4220
@@ -151,6 +156,7 @@ SPEC CHECKSUMS:
   SOCKit: 2f3bc4d07910de12dcc202815e07db68a3802581
   TransitionKit: 433284465abacdc07852d7db6dd0cc075010059a
   UIImage-Categories: d9f10e0afb9b281b35a3c2b0c7d16d1ca251d824
+  ViewUtils: e0b147bd0b2acfbf6b030f6a32b0c2bdd959df68
   WSLObjectSwitch: b43248112e4890014ebb2a125e05b3a8bbfb1b09
 
 COCOAPODS: 0.29.0
