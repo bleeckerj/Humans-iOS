@@ -10,7 +10,7 @@
 #import "HuTwitterCoordinates.h"
 #import "HuTwitterPlace.h"
 #import "HuTwitterStatusEntities.h"
-
+#import <UIColor+FPBrandColor.h>
 
 @implementation HuTwitterStatus
 
@@ -256,7 +256,7 @@
 
 -(UIColor *)serviceSolidColor
 {
-    return TWITTER_COLOR;
+    return [UIColor Twitter];
 }
 
 -(NSString *)serviceUsername

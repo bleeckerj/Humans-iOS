@@ -83,6 +83,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define LOG_FOURSQUARE_VERBOSE(level, ...) do{}while(0)
 #define LOG_FOURSQUARE_IMAGE(level, ...) do{}while(0)
 
+
 #endif
 
 #define LOG_ERROR(level, ...) LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"error",level,__VA_ARGS__)
@@ -99,13 +100,19 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define HEADLINE_FONT_LIGHT     [UIFont fontWithName:@"EuphemiaUCAS" size:16]
 #define HEADLINE_FONT_SMALL     [UIFont fontWithName:@"EuphemiaUCAS" size:14]
 #define HEADLINE_FONT_SMALL_BOLD [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
-#define HEADER_FONT             [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
-#define HEADER_FONT_LARGE       [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:18]
+
+#define HEADER_FONT             [UIFont fontWithName:@"AvenirNext-Medium" size:14]
+#define HEADER_FONT_LARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:20]
+
+#define PROFILE_VIEW_FONT_LARGE  [UIFont fontWithName:@"AvenirNext-Medium" size:24]
+#define PROFILE_VIEW_FONT_SMALL  [UIFont fontWithName:@"AvenirNext-Medium" size:20]
+#define PROFILE_VIEW_FONT_COLOR  [UIColor whiteColor]
+#define PROFILE_HALF_HEIGHT_VIEW_BORDER_COLOR [UIColor lightGrayColor]
 
 //#define TWITTER_FONT            [UIFont fontWithName:@"Creampuff" size:14]
-#define TWITTER_FONT           [UIFont fontWithName:@"DINCondensed-Bold" size:18]
+#define TWITTER_FONT           [UIFont fontWithName:@"AvenirNext-Medium" size:18]
 
-#define TWITTER_COLOR           UIColorFromRGB(0x4099FF)
+#define TWITTER_COLOR           [UIColor Twitter]
 #define TWITTER_STATUS_VIEW_BGCOLOR  UIColorFromRGB(0x000000)
 #define TWITTER_STATUS_VIEW_FGCOLOR  UIColorFromRGB(0xF0F0F0)
 #define TWITTER_COLOR_IMAGE     @"twitter-bird-color.png"
@@ -178,6 +185,8 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 #define HEADER_HEIGHT 55
 #define HEADER_SIZE (CGSize){320, HEADER_HEIGHT}
+
+
 
 #define TOOLBAR_HEIGHT 55
 

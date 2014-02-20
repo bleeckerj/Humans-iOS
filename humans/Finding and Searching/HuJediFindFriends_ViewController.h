@@ -21,6 +21,10 @@
 #import "HuServiceUserProfilePhoto.h"
 #import "StateMachine.h"
 #import "MBProgressHUD.h"
+#import <UIView+MCLayout.h>
+#import <ViewUtils.h>
+#import "Flurry.h"
+#import <MRProgress/MRProgress.h>
 
 @interface HuJediFindFriends_ViewController : UIViewController <UINavigationControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate, UISearchBarDelegate, MBProgressHUDDelegate>
 typedef enum {
@@ -41,7 +45,6 @@ typedef enum {
 //+(HuProfilePhotoBlank *)blank;
 -(void)clearResults;
 -(void)clearPicks;
--(IBAction)somethingHappened:(id)sender;
 -(IBAction)valueChanged:(id)sender;
 -(void)keyboardDidShowNotification:(NSNotification *)notifcation;
 -(void)keyboardDidHideNotification:(NSNotification *)notification;

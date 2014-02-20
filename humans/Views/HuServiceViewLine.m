@@ -9,10 +9,12 @@
 #import "HuServiceViewLine.h"
 #import <WSLObjectSwitch.h>
 #import "Flurry.h"
+#import <FontAwesome-iOS/NSString+FontAwesome.h>
 
 @implementation HuServiceViewLine
 UIImage *serviceImage;
-@synthesize services = _services;
+@synthesize service = _service;
+@synthesize delegate;
 
 - (id)init
 {
@@ -37,7 +39,7 @@ UIImage *serviceImage;
 {
     self = [super init];
     if(self) {
-        [self setServices:aServices];
+        [self setService:aServices];
     }
     return self;
 }
@@ -47,14 +49,14 @@ UIImage *serviceImage;
     self.topBorderColor = [UIColor orangeColor];
 }
 
-- (HuServices *)services
+- (HuServices *)service
 {
-    return self.services;
+    return _service;
 }
 
-- (void)setServices:(HuServices *)aService
+- (void)setService:(HuServices *)aService
 {
-    _services = aService;
+    _service = aService;
     
     [WSLObjectSwitch switchOn:[aService serviceName] defaultBlock:^{
         LOG_UI(0, @"Default?");
@@ -91,8 +93,53 @@ UIImage *serviceImage;
      }
      ,nil
      ];
-    LOG_UI(0, @"%@ %@", aService, [aService serviceUsername]);
-    self.leftItems = [NSMutableArray arrayWithObjects:serviceImage, @"  ", [NSString stringWithFormat:@"@%@", [aService serviceUsername]], nil];
+    //LOG_UI(0, @"%@ %@", aService, [aService serviceUsername]);
+    NSString *trunc;
+    if([[aService serviceUsername]length] > 20) {
+        trunc = [[[NSString stringWithFormat:@"@%@", [aService serviceUsername]] substringToIndex:20] stringByAppendingString:@".."];
+    } else {
+        trunc = [NSString stringWithFormat:@"@%@", [aService serviceUsername]];
+    }
+    
+//    UILabel *test = [[UILabel alloc]init];
+//    [test setFont:[UIFont fontWithName:@"FontAwesome" size:28]];
+//    test.text = [NSString awesomeIcon:FaTrashO];
+   // NSString *left = [NSString awesomeIcon:FaFlickr];
+    self.font = PROFILE_VIEW_FONT_LARGE;//[UIFont fontWithName:@"FontAwesome" size:28];
+//    self.middleFont = PROFILE_VIEW_FONT_LARGE;
+//    self.rightFont = PROFILE_VIEW_FONT_LARGE;
+    self.leftItems = [NSMutableArray arrayWithObjects:serviceImage, @"  ", trunc, nil];
+    
+    UIImage *garbage = [UIImage imageNamed:@"garbage-gray"];
+    __block MGLine *garbage_box = [MGLine lineWithSize:[garbage size]];
+    __block HuServiceViewLine *bself = self;
+    [[garbage_box leftItems]addObject:garbage];
+    
+    //
+    //
+    self.rightItems = [NSMutableArray arrayWithObject:garbage_box];
+    
+    UILongPressGestureRecognizer *__longpresser = [[UILongPressGestureRecognizer alloc]initWithTarget:garbage_box action:@selector(longPressed)];
+    [__longpresser setMinimumPressDuration:2.0];
+    [__longpresser setNumberOfTapsRequired:0];
+    garbage_box.longPresser = __longpresser;
+    garbage_box.onLongPress = ^{
+        if (__longpresser.state == UIGestureRecognizerStateEnded) {
+            LOG_UI(0, @"Deleting %@", bself.service);
+            HuAppDelegate *app_delegate = [[UIApplication sharedApplication]delegate];
+            HuUserHandler *userHandler = [app_delegate humansAppUser];
+            [userHandler userRemoveService:self.service withCompletionHandler:^(BOOL success, NSError *error) {
+                if(success && error == nil) {
+                    LOG_UI(0, @"Successfully deleted service %@", self.service);
+                    [bself.delegate lineDidDelete: bself];
+                }
+            }];
+        }
+    };
+    
+    
+    
+    //[self layout];
     
 }
 

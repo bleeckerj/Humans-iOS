@@ -14,6 +14,7 @@
 #import "InstagramUser.h"
 #import "InstagramImage.h"
 #import "defines.h"
+#import <UIColor+FPBrandColor.h>
 
 @implementation InstagramStatus
 
@@ -55,7 +56,7 @@
 
 - (UIColor *)serviceSolidColor
 {
-    return INSTAGRAM_COLOR;
+    return [UIColor Instagram];
 }
 
 - (NSString *)serviceUsername

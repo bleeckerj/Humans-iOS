@@ -7,6 +7,7 @@
 // Import
 #import "HuFlickrStatus.h"
 #import "HuFlickrDescription.h"
+#import <UIColor+FPBrandColor.h>
 
 
 @implementation HuFlickrStatus
@@ -559,7 +560,7 @@
 
 - (UIColor *)serviceSolidColor
 {
-    return FLICKR_COLOR;
+    return [UIColor FlickrBlue];
 }
 
 - (NSString *)serviceUsername

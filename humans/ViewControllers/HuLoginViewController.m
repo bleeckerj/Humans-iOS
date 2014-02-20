@@ -41,6 +41,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+//    [[UINavigationBar appearance] setTitleTextAttributes:
+//     [NSDictionary dictionaryWithObjectsAndKeys:
+//      [UIColor blackColor], NSForegroundColorAttributeName,
+//      [UIFont fontWithName:@"Futura-CondensedExtraBold" size:22.0], NSFontAttributeName,nil]];
+//    
+//    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont
+//                                                                          fontWithName:@"ArialMT" size:22], NSFontAttributeName,
+//                               [UIColor whiteColor], NSForegroundColorAttributeName, nil];
+//    
+//    [[UINavigationBar appearance] setTitleTextAttributes:attributes];
     
 //    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
 //    {
@@ -103,7 +113,6 @@
             __block int i = 0;
             dispatch_group_notify(group, queue, ^{
                 LOG_GENERAL(0, @"%d now going to push to humans scroll view", i);
-                //NSArray *a = [[userHandler humans_user]humans];
                 
                 [[[userHandler humans_user]humans]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     //
@@ -123,9 +132,9 @@
                     
 //                    UIViewController *x = [[UIViewController alloc]init];
 //                    [x.view setBackgroundColor:[UIColor greenColor]];
-                    HuSlidingViewController *c = [[HuSlidingViewController alloc]initWithTopViewController:humansScrollViewController];
+//                    HuSlidingViewController *c = [[HuSlidingViewController alloc]initWithTopViewController:humansScrollViewController];
                     
-                    [humansScrollViewController setSlidingViewController:c];
+//                    [humansScrollViewController setSlidingViewController:c];
                     
                     HuHumansProfileCarouselViewController *x = [[HuHumansProfileCarouselViewController alloc]initWithUserHandler:userHandler];
                     

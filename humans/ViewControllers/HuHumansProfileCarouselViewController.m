@@ -10,6 +10,7 @@
 #import <UIView+MCLayout.h>
 #import "Flurry.h"
 #import <BlocksKit+UIKit.h>
+#import "MSWeakTimer.h"
 
 @interface HuHumanProfileView : UIView
 {
@@ -18,6 +19,7 @@
 @property HuHuman *human;
 @property HuUserHandler *userHandler;
 @property UILabel *nameLabel;
+@property UILabel *countLabel;
 @property NSNumber *count;
 
 @end
@@ -26,10 +28,12 @@
 @synthesize human;
 @synthesize userHandler;
 @synthesize nameLabel;
+@synthesize countLabel;
 @synthesize count;
 
 HuStatusCarouselViewController *statusCarouselViewController;
 HuHumansProfileCarouselViewController *parentViewController;
+MRProgressOverlayView *activityIndicatorView;
 
 - (id)initWithFrame:(CGRect)frame human:(HuHuman *)aHuman parent:(HuHumansProfileCarouselViewController *)aParent
 {
@@ -47,10 +51,11 @@ HuHumansProfileCarouselViewController *parentViewController;
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
     userHandler = [delegate humansAppUser];
     
+    self.count = [NSNumber numberWithInt:0];
+
     
-    CGFloat width = self.frame.size.width/5;
+    CGFloat width = self.frame.size.width/6;
     NSArray *s = [human serviceUsers];
-    
     
     
     UIView *container = [[UIView alloc]initWithFrame:self.frame];
@@ -72,14 +77,28 @@ HuHumansProfileCarouselViewController *parentViewController;
     nameLabel = [[UILabel alloc]initWithFrame:[overlay frame]];
     [overlay addSubview:nameLabel];
     [nameLabel setText:[human name]];
-    [nameLabel setFont:INSTAGRAM_FONT];
-    [nameLabel setTextColor:[UIColor lightGrayColor]];
+    [nameLabel setFont:PROFILE_VIEW_FONT_LARGE];
+    [nameLabel setTextColor:PROFILE_VIEW_FONT_COLOR];
     [nameLabel setTextAlignment:NSTextAlignmentCenter];
     [nameLabel mc_setRelativePosition:MCViewPositionCenters toView:overlay];
+    
+    countLabel = [[UILabel alloc]init];
+    [countLabel setSize:CGSizeMake(overlay.size.height, overlay.size.height)];
+    [container addSubview:countLabel];
+    [countLabel setFont:INSTAGRAM_FONT];
+    [countLabel setTextColor:[UIColor darkGrayColor]];
+    [countLabel setBackgroundColor:[UIColor whiteColor]];
+    [countLabel setTextAlignment:NSTextAlignmentCenter];
+    [countLabel mc_setRelativePosition:MCViewPositionRight toView:overlay];
+    [countLabel.layer setCornerRadius:overlay.size.height/2];
     
     [self bk_whenTapped:^{
         //
         LOG_UI(0, @"Tapped");
+        activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
+        activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
+        activityIndicatorView.tintColor = [UIColor orangeColor];
+
         [self showHuman];
     }];
     
@@ -99,7 +118,7 @@ HuHumansProfileCarouselViewController *parentViewController;
     [profile_image_container mc_setRelativePosition:MCViewRelativePositionUnderAlignedLeft toView:overlay];
     
     container.layer.cornerRadius = 0;
-    container.layer.borderColor = [UIColor redColor].CGColor;
+    container.layer.borderColor = [UIColor lightGrayColor].CGColor;
     container.layer.borderWidth = 1.0f;
 
 }
@@ -148,10 +167,11 @@ HuHumansProfileCarouselViewController *parentViewController;
                     NSArray *status = [user_handler statusForHuman:human];
                     LOG_GENERAL(0, @"Count is %d", [status count]);
                     statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
+                    [statusCarouselViewController setHuman:human];
                     
-                    [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];
+                    NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
                     
-                    //[self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
+                    [statusCarouselViewController setItems:items];
                     
                     [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
                     
@@ -160,7 +180,7 @@ HuHumansProfileCarouselViewController *parentViewController;
                     
                 } else {
                     LOG_ERROR(0, @"Error loading status %@", error);
-                    //[Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+                    [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
                     [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:NO];
                     MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
                     noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
@@ -179,22 +199,14 @@ HuHumansProfileCarouselViewController *parentViewController;
 - (void)refreshCounts
 {
     __block HuHumanProfileView *bself = self;
-    
     [userHandler getStatusCountForHuman:self.human withCompletionHandler:^(id data, BOOL success, NSError *error) {
         //
         if(success) {
             NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
             [f setNumberStyle:NSNumberFormatterDecimalStyle];
             bself.count = [f numberFromString:[data description]];
-            NSString *str_count = [bself.count stringValue];
-            NSMutableArray *count = [[NSMutableArray alloc]initWithArray:@[str_count]];
-            //[bself setRightItems:count];
-            
-            UIFont *font = [UIFont fontWithName:@"Creampuff" size:24];
-            //[bself setRightFont:font];
-            //[human_mgline setRightFont:font];
-            //LOG_UI(0, @"Showing count of %@ for %@", bself.count, [human name]);
-            dispatch_async(dispatch_get_main_queue(), ^{
+            [self.countLabel setText:[bself.count stringValue]];
+             dispatch_async(dispatch_get_main_queue(), ^{
                 [bself setNeedsDisplay];
             });
         } else {
@@ -218,19 +230,27 @@ HuHumansProfileCarouselViewController *parentViewController;
 @end
 
 @interface HuHumansProfileCarouselViewController () <iCarouselDataSource, iCarouselDelegate>
-
+{
+    
+    HuUserHandler *userHandler;
+    iCarousel *carousel;
+    NSMutableArray *arrayOfHumans;
+    NSMutableArray *humans_views;
+    MGLineStyled *header;
+    MGLine *add_human;
+    HuShowServicesViewController *showServicesViewController;
+    MSWeakTimer *timerForStatusRefresh;
+    dispatch_queue_t privateQueue;
+    CGRect full_sized, half_sized;
+}
 @end
 
 @implementation HuHumansProfileCarouselViewController
 @synthesize mainMenu;
 
-HuUserHandler *userHandler;
-iCarousel *carousel;
-NSMutableArray *humans;
-NSMutableArray *humans_views;
-MGLineStyled *header;
-MGLine *add_human;
-HuShowServicesViewController *showServicesViewController;
+static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProfileCarouselViewControllerTimerQueueContext";
+
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -254,12 +274,19 @@ HuShowServicesViewController *showServicesViewController;
 
 - (void)commonInit
 {
-    humans = [NSMutableArray arrayWithArray:[[userHandler humans_user]humans]];
+    arrayOfHumans = [NSMutableArray arrayWithArray:[[userHandler humans_user]humans]];
     humans_views = [[NSMutableArray alloc]init];
-    //    [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
-    //        //
-    //
-    //    }];
+    privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
+    
+    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
+                                                                 target:self
+                                                               selector:@selector(updateHumanStatusCounts)
+                                                               userInfo:nil
+                                                                repeats:YES
+                                                          dispatchQueue:privateQueue];
+    
+    dispatch_queue_set_specific(privateQueue, (__bridge const void *)(self), (void *)HuHumansScrollViewControllerTimerQueueContext, NULL);
+
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -272,9 +299,71 @@ HuShowServicesViewController *showServicesViewController;
     return UIStatusBarStyleLightContent;
 }
 
+
+- (void)addHumanToView:(HuHuman *)human
+{
+    if([arrayOfHumans containsObject:human] == NO) {
+        [arrayOfHumans addObject:human];
+        [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:half_sized human:human parent:self]];
+        [carousel insertItemAtIndex:[carousel numberOfItems] animated:YES];
+    }
+    
+}
+
+- (void)updateHumansForView
+{
+    NSArray *list_of_humans = [[userHandler humans_user]humans];
+    [list_of_humans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //
+        HuHuman *human = (HuHuman*)obj;
+        if([arrayOfHumans containsObject:human] == NO) {
+            [self addHumanToView:human];
+        }
+    }];
+    
+    [self updateHumanStatusCounts];
+    
+    
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [timerForStatusRefresh invalidate];
+
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self updateHumansForView];
+    LOG_UI(0, @"Here we have %d humans", [arrayOfHumans count]);
+    [super viewWillAppear:animated];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //
+        [[[self.navigationController navigationBar]topItem] setTitle:@"Profile Carousel"];
+
+    });
+
+    
+    if(timerForStatusRefresh == nil) {
+        timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
+                                                                     target:self
+                                                                   selector:@selector(updateHumanStatusCounts)
+                                                                   userInfo:nil
+                                                                    repeats:YES
+                                                              dispatchQueue:privateQueue];
+        
+    }
+
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[[self.navigationController navigationBar]topItem] setTitle:@"Profile Carousel"];
+
     
     //[self.view setFrame:self.parentViewController.view.frame];
     CGFloat status_bar_height = [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -305,7 +394,6 @@ HuShowServicesViewController *showServicesViewController;
         
         // [bself.mainMenu showFromNavigationController:self.navigationController];
         [bself.mainMenu showInView:carousel];
-        CGFloat x = header.bottom;
         
         [bself.mainMenu showFromRect:(CGRectMake(0, header.bottom, carousel.size.width, carousel.size.height - header.height)) inView:carousel];
     };
@@ -320,8 +408,12 @@ HuShowServicesViewController *showServicesViewController;
         LOG_UI(0, @"Tapped Add Human Limit?");
         HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
         //
-        [[bself navigationController]pushViewController:[delegate jediFindFriendsViewController] animated:YES];
-        
+        HuJediFindFriends_ViewController *jedi = [delegate jediFindFriendsViewController];
+       [[bself navigationController]pushViewController:jedi animated:NO];
+//        UIViewController *screwy = [[UIViewController alloc]init];
+//        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
+//        [view setBackgroundColor:[UIColor Amazon]];
+//        [[bself navigationController]pushViewController:screwy animated:YES];
     };
     
     
@@ -369,7 +461,7 @@ HuShowServicesViewController *showServicesViewController;
                                                               [showServicesViewController setTitle:@"Foo"];
                                                               showServicesViewController.tapOnEx = ^{
                                                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                                                      [bnav popToViewController:self animated:YES];
+                                                                      [bnav popToViewController:bself animated:YES];
                                                                   });
                                                                   
                                                               };
@@ -397,17 +489,18 @@ HuShowServicesViewController *showServicesViewController;
     
     
 	// Do any additional setup after loading the view.
-    CGRect full = CGRectMake(0, header.bottom, self.view.frame.size.width, self.view.frame.size.height-header.height-status_bar_height-10);
-    CGRect half = CGRectMake(0, header.bottom, self.view.frame.size.width,  (self.view.frame.size.height-header.height-status_bar_height)/2);
+    full_sized = CGRectMake(0, header.bottom, self.view.frame.size.width, self.view.frame.size.height-header.height-status_bar_height-10);
+    half_sized = CGRectMake(0, header.bottom, self.view.frame.size.width,  (self.view.frame.size.height-header.height-status_bar_height)/2);
     
-    [humans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    
+    [arrayOfHumans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         //
-        [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:half human:obj parent:self]];
+        [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:half_sized human:obj parent:self]];
     }];
     
     
-    carousel = [[iCarousel alloc]initWithFrame:full];
-    [carousel setBackgroundColor:[UIColor orangeColor]];
+    carousel = [[iCarousel alloc]initWithFrame:full_sized];
+    [carousel setBackgroundColor:[UIColor Amazon]];
     [carousel setType:iCarouselTypeCustom];
     [carousel setDataSource:self];
     [carousel setDelegate:self];
@@ -423,12 +516,6 @@ HuShowServicesViewController *showServicesViewController;
     
     
     //[self.mainMenu showFromNavigationController:self.navigationController];
-    
-}
-
-- (void)addHumanToView:(HuHuman *)human
-{
-    // [carousel insertItemAtIndex:idx animated:YES];
     
 }
 
@@ -612,7 +699,7 @@ HuShowServicesViewController *showServicesViewController;
 #pragma mark iCarouselDataSource delegate methods
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    NSUInteger result = [[[userHandler humans_user]humans]count];
+    NSUInteger result = [arrayOfHumans count];//[[[userHandler humans_user]humans]count];
     return result;
 }
 

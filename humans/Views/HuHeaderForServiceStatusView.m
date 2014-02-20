@@ -13,6 +13,8 @@
 #import <UIView+FLKAutoLayout.h>
 #import "UIImage+ResizeToFit.h"
 //#import "HuInstagramStatus.h"
+#import <MKFoundationKit.h>
+#import <UIColor+FPBrandColor.h>
 
 @implementation HuHeaderForServiceStatusView
 {
@@ -44,7 +46,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    if(self.status) {
+    if(self.status && ([self.status isKindOfClass:[UIView class]] == NO)) {
         // UIColor *bg = [self.status serviceSolidColor];
         self.backgroundColor = [self.status serviceSolidColor];//[serviceUser serviceSolidColor];
         
@@ -53,21 +55,23 @@
         
         if([self.status userProfileImageURL]) {
             UIImageView *profile_image_view = [[UIImageView alloc]init];
-            LOG_GENERAL(0, @"profile image url %@", [self.status userProfileImageURL]);
             NSAssert([self.status userProfileImageURL] != nil, @"Why is userProfileImageURL nil for %@", status);
             
             NSURLRequest *req = [[NSURLRequest alloc]initWithURL:[self.status userProfileImageURL]];
-            [profile_image_view setImageWithURLRequest:req placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                self.profileImage = image;
-                [profileImageView layoutSubviews];
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                //
-                LOG_ERROR(0, @"Wasn't able to load the profile image %@", error);
-                self.profileImage = [UIImage imageNamed:@"angry_unicorn_tiny.png"];
-            }];
             
-            //self.profileImage =   //[status userProfileImageURL];
-            //self.profileImage = [UIImage imageNamed:@"angry_unicorn_tiny.png"];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [profile_image_view setImageWithURLRequest:req placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    self.profileImage = image;
+                    [profileImageView setImage:[self.profileImage resizedImageToSize:(CGSizeMake(self.frame.size.height, self.frame.size.height))]];
+                    [profileImageView layoutSubviews];
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                    //
+                    LOG_ERROR(0, @"Wasn't able to load the profile image %@", error);
+                    self.profileImage = [UIImage imageNamed:@"angry_unicorn_tiny.png"];
+                }];
+
+            });
+            
             LOG_GENERAL(2, @"Service User In Header is %@ %@", [self.status serviceUsername], status);
             self.username = [self.status serviceUsername];//[serviceUser username];
             self.statusDate = [status dateForSorting];
@@ -76,7 +80,6 @@
         }
         if(profileImageView == nil) {
             profileImageView = [[UIImageView alloc]initWithImage:profileImage];
-           // [profileImageView constrainWidth:@"100" height:@"100"];
             
             profileImageView.contentMode = UIViewContentModeScaleAspectFit | UIViewContentModeCenter;
             [self addSubview:profileImageView];
@@ -99,11 +102,6 @@
         // set the name
         [usernameLabel setText:[NSString stringWithFormat:@"@%@", [self username]]];
         
-        
-//        CGSize label_size = [usernameLabel.text boundingRectWithSize:(CGSizeMake(ceil(0.5*self.frame.size.width), HEADER_HEIGHT)) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil].size;
-        
-//        usernameLabel.frame = CGRectMake(0, 0,label_size.width, HEADER_HEIGHT);
-//        usernameLabel.center = (CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame)));
         usernameLabel.backgroundColor = [UIColor clearColor];
         
         usernameLabel.numberOfLines = 1;
@@ -121,9 +119,7 @@
         [serviceIconView setImage:self.serviceIcon];
         [serviceIconView alignCenterYWithView:self predicate:nil];
         [serviceIconView constrainLeadingSpaceToView:profileImageView predicate:@"5"];
-//        serviceIconView.frame = CGRectMake(CGRectGetMinX(usernameLabel.frame)-CGImageGetWidth([serviceIcon CGImage]), CGRectGetMinY(usernameLabel.frame), CGImageGetWidth([serviceIcon CGImage]), CGImageGetHeight([serviceIcon CGImage]));
-//        [serviceIconView setCenter:(CGPointMake(serviceIconView.center.x-ceil(CGImageGetWidth([serviceIcon CGImage])/3), CGRectGetMidY(self.frame)))];
-//        
+
         if(dateLabel == nil) {
             //dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(200, CGRectGetMinY(usernameLabel.frame), 320-200-8, HEADER_HEIGHT)];
             dateLabel = [[UILabel alloc]init];
@@ -148,15 +144,28 @@
         //    //reco.delegate = self;
         //    [self setUserInteractionEnabled:YES];
         //    [self addGestureRecognizer:reco];
-        
     }
+//    } else {
+//        [self setBackgroundColor:[UIColor Amazon]];
+//        dateLabel = nil;
+//        profileImageView = nil;
+//        serviceIconView = nil;
+//        usernameLabel = nil;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self setNeedsDisplay];
+//        });
+//
+//        [[self subviews]mk_each:^(id item) {
+//            //if(item != usernameLabel) {
+//            [item removeFromSuperview];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                //
+//                [item needsDisplay];
+//            });
+//            //}
+//        }];
+//    }
 }
-//-(void)swipeAway:(id)gesture
-//{
-//    LOG_UI(0, @"Swipe Away from %@", gesture);
-//}
-
-//id<HuSocialServiceUser>lastServiceUser;
 
 -(void)setStatus:(id<HuServiceStatus>)mstatus
 {

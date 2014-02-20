@@ -74,8 +74,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
 
 - (void)customInit
 {
-//    authenticateViewController = [[UIViewController alloc]init];
-//    authenticateViewController.view.backgroundColor = [UIColor blueColor];
     
     linesOfHumans = [[NSMutableArray alloc]init];
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
@@ -115,45 +113,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     
 }
 
-//- (void)mySelector:(id)gesture
-//{
-//    
-//    
-//    LOG_UI(0, @"mySelector %@", gesture);
-//    LOG_UI(0, @"top=%@", self.slidingViewController.topViewController);
-//    
-//    if([self.slidingViewController.topViewController.view isKindOfClass:[UIWebView class]]) {
-//        self.slidingViewController.topViewController = self;
-//        [self.slidingViewController resetTopViewAnimated:YES];
-//        [header addGestureRecognizer:self.slidingViewController.panGesture];
-//
-//    } else {
-//    
-//    //webView = [[UIWebView alloc]initWithFrame: UIEdgeInsetsInsetRect(self.slidingViewController.view.frame, UIEdgeInsetsMake(HEADER_HEIGHT, 0, 0, 0))];
-//        webView = [[UIWebView alloc]initWithFrame:self.slidingViewController.view.frame];
-//    [webView setDelegate:self];
-//    authenticateViewController.view = webView;
-//    [authenticateViewController.view addGestureRecognizer:self.slidingViewController.panGesture];
-//    
-//    
-//    //    [[NSURLCache sharedURLCache] removeAllCachedResponses];
-//    //
-//    // log us out of Instagram so we can log in as many accounts as we want.
-//    NSURLRequest* request = [NSURLRequest requestWithURL:[userHandler urlForInstagramAuthentication] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-//    NSURLRequest *logout = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://instagram.com/accounts/logout/"]];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
-//    
-//    [webView loadRequest:request];
-//    
-//    //
-//    self.slidingViewController.topViewController = authenticateViewController;
-//    [self.slidingViewController resetTopViewAnimated:YES];
-//    
-//    //    });
-//    }
-//}
 
 
 - (void)viewDidAppear:(BOOL)animated
@@ -180,12 +139,8 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     LOG_UI(0, @"View Will Appear");
     
     [header addGestureRecognizer:[self.slidingViewController panGesture]];
-
-    
     
     [scroller layoutSubviews];
-    
-    //[scroller setBackgroundColor:[UIColor orangeColor]];
     
     [self updateHumansForView];
     
@@ -320,11 +275,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     
     
 #pragma mark setup the lines of humans
-//    for (int i=0; i<[[self arrayOfHumans]count]; i++) {
-//        HuHuman *human = (HuHuman*)[arrayOfHumans objectAtIndex:i];
-//        [self addHumanToView:human];
-//    }
-    
     [scroller setContentSize:CGSizeMake(scroller.bounds.size.width, scroller.bounds.size.height+50)];
     
     [scroller layoutWithSpeed:1.0 completion:nil];

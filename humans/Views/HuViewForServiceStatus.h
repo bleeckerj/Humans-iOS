@@ -10,6 +10,7 @@
 #import "HuServiceStatus.h"
 
 @interface HuViewForServiceStatus : UIView
+//@property (nonatomic, strong) id<HuServiceStatus> status;
 
 - (HuViewForServiceStatus *)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus;
 + (HuViewForServiceStatus *)viewForStatus:(id<HuServiceStatus>)mstatus withFrame:(CGRect)frame;

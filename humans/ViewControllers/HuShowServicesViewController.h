@@ -20,9 +20,10 @@
 #import "HuTextFieldLine.h"
 #import "HuServiceUserProfilePhoto.h"
 #import "StateMachine.h"
+#import "HuServiceViewLine.h"
 
 
-@interface HuShowServicesViewController : UIViewController
+@interface HuShowServicesViewController : UIViewController <HuServiceViewLineDelegate>
 @property BOOL checkMarkTapped, exTapped;
 @property (nonatomic, retain) HuUserHandler *appUser;
 @property (nonatomic, retain) MGLineStyled *header;

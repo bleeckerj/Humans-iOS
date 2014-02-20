@@ -10,5 +10,4 @@
 #import <UIKit/UIKit.h>
 
 @interface HuTextFieldLine : MGLine
-
 @end

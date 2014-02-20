@@ -20,6 +20,7 @@
 #import <MGLineStyled.h>
 #import "ViewUtils.h"
 #import "HuShowServicesViewController.h"
+#import <UIColor+FPBrandColor.h>
 
 @interface HuHumansProfileCarouselViewController : UIViewController
 @property (nonatomic, strong) REMenu *mainMenu;

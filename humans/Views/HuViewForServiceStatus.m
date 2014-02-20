@@ -91,6 +91,7 @@
     return[[HuViewForServiceStatus alloc]initWithFrame:frame forStatus:mstatus];
 }
 
+
 - (void)showOrRefreshPhoto
 {
     
@@ -166,7 +167,7 @@
             //statusField.lineBreakMode = UILineBreakModeTailTruncation;
             //statusLabel.numberOfLines = 0;
             [statusView setBackgroundColor:[UIColor whiteColor]];
-            NSString *description = [NSString stringWithFormat:@"%@", [status statusText]];
+            NSString *description = [NSString stringWithFormat:@"%@\ncontributors %@\nin reply to: %@\nfrom %@\nentities %@", [status statusText], [status contributors], [status in_reply_to_status_id_str], [status in_reply_to_screen_name], [status entities]];
             [statusView setText:description];
             [statusView setTextColor:[UIColor blackColor]];
             LOG_TWITTER_VERBOSE(0, @"Status: %@ %@", [status statusText], statusView);
@@ -255,7 +256,7 @@
         [self setBackgroundColor:[UIColor whiteColor]];
         
         status = mstatus;
-        LOG_UI(0, @"Status Image URL %@", [status statusImageURL]);
+        //LOG_UI(0, @"Status Image URL %@", [status statusImageURL]);
         
         photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:YES];
         [photoBox setBackgroundColor:[UIColor grayColor]];
@@ -266,7 +267,13 @@
             statusView = [[UITextView alloc]initWithFrame:[self getStatusViewFrame]];
             statusView.editable = NO;
             [statusView setBackgroundColor:[UIColor whiteColor]];
-            NSString *description = [NSString stringWithFormat:@"%@", [status statusText]];
+            NSString *description;
+            if([[status type] isEqualToString:@"video"]) {
+            description = [NSString stringWithFormat:@"(video) %@", [status statusText]];
+            } else {
+                description = [NSString stringWithFormat:@"%@",[status statusText]];
+
+            }
             [statusView setText:description];
             [statusView setTextColor:[UIColor blackColor]];
             [statusView setFont:[UIFont fontWithName:@"EuphemiaUCAS-Bold" size:18]];

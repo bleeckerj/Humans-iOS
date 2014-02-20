@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "HuHuman.h"
 
 @interface HuStatusCarouselViewController : UIViewController
 
 @property (nonatomic, strong) NSMutableArray *items;
-
+@property (nonatomic, strong) HuHuman *human;
 @end

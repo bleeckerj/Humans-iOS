@@ -12,6 +12,7 @@
 #import "defines.h"
 #import "HuUser.h"
 #import "HuHuman.h"
+#import "HuServices.h"
 
 // new twitter
 #import "HuTwitterStatus.h"
@@ -71,6 +72,8 @@ typedef enum networkStateTypes
 - (void)userRequestTokenForUsername:(NSString *)username forPassword:(NSString *)password withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userAddHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userRemoveHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+
+- (void)userRemoveService:(HuServices *)aService withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 
 
 - (BOOL)usernameExists:(NSString *)username;

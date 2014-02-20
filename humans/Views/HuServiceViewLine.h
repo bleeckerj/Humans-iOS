@@ -9,10 +9,23 @@
 #import "MGLine.h"
 #import "defines.h"
 #import "HuServices.h"
+#import "HuAppDelegate.h"
+#import "HuUserHandler.h"
+
+@class HuServiceViewLine;
+
+@protocol HuServiceViewLineDelegate <NSObject>
+@required
+- (void)lineDidDelete:(HuServiceViewLine *)line;
+
+@end
 
 @interface HuServiceViewLine : MGLine
-@property HuServices *services;
+@property HuServices *service;
+@property UIViewController <HuServiceViewLineDelegate> *delegate;
 
 - (id)initWithService:(HuServices *)aServices;
 
 @end
+
+

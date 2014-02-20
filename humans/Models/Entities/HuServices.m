@@ -73,6 +73,18 @@
     return [self dictionary];
 }
 
+-(id)json
+{
+    NSError *err = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self dictionary] options:NSJSONWritingPrettyPrinted error:&err];
+    return jsonData;
+}
 
+-(NSString *)description
+{
+    //NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self dictionary] options:NSJSONWritingPrettyPrinted error:&err];
+    return [[NSString alloc] initWithData:[self json] encoding:NSUTF8StringEncoding];
+   
+}
 
 @end

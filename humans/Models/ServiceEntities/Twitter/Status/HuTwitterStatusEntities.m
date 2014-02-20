@@ -29,6 +29,15 @@
 
 }
 
+- (NSString *)description
+{
+    return [self.user_mentions description];
+//    NSError *error = [[NSError alloc]init];
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.user_mentions options:NSJSONWritingPrettyPrinted error:&error];
+//    NSString *jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    return jsonString;
+}
+
 - (id) initWithJSONDictionary:(NSDictionary *)dic
 {
 	if(self = [super init])

@@ -25,10 +25,10 @@
     self.backgroundColor = [UIColor whiteColor];
     
     // shadow
-//    self.layer.shadowColor = [UIColor colorWithWhite:0.12 alpha:1].CGColor;
-//    self.layer.shadowOffset = CGSizeMake(0, 0.5);
-//    self.layer.shadowRadius = 1;
-//    self.layer.shadowOpacity = 1;
+    //    self.layer.shadowColor = [UIColor colorWithWhite:0.12 alpha:1].CGColor;
+    //    self.layer.shadowOffset = CGSizeMake(0, 0.5);
+    //    self.layer.shadowRadius = 1;
+    //    self.layer.shadowOpacity = 1;
 }
 
 #pragma mark - Factories
@@ -136,7 +136,7 @@
         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             
             LOG_UI(0, @"Was image cached? %d", cacheType);
-
+            
             if(error == nil) {
                 bself.hasLoaded = YES;
             } else {
@@ -152,11 +152,11 @@
             //                [self.imageView setImage:[UIImage imageNamed:@"angry_unicorn"]];
             //                //});
             //                //return;
-
+            
             CGSize paddedSize = CGSizeMake(bself.width-bself.leftPadding - bself.rightPadding, bself.height - bself.topPadding - bself.bottomPadding);
             
             CGSize dstSize = [image aspectMaintainedSizeToFit:paddedSize];
-        
+            
             UIImage *resized_image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:dstSize interpolationQuality:kCGInterpolationHigh];
             
             [bself.imageView setImage:resized_image];
@@ -172,11 +172,12 @@
             // do UI stuff back in UI land
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                // ditch the spinner
-                UIActivityIndicatorView *spinner = [bself.subviews objectAtIndex:0];
-                [spinner stopAnimating];
-                [spinner removeFromSuperview];
-                
+                if([bself.subviews count] > 0) {
+                    // ditch the spinner
+                    UIActivityIndicatorView *spinner = [bself.subviews objectAtIndex:0];
+                    [spinner stopAnimating];
+                    [spinner removeFromSuperview];
+                }
                 [bself.imageView removeFromSuperview];
                 
                 // but wait..it might already contain the UIImageView, right?
@@ -207,7 +208,7 @@
                 if(handler) {
                     handler(YES, nil);
                 }
-
+                
                 
             });
         }];

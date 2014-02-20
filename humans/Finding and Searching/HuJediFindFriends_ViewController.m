@@ -21,23 +21,23 @@
 @end
 
 @implementation HuJediFindFriends_ViewController {
-MGBox *photosGrid;
-MGScrollView *resultsScroller;
-MGBox *picksGrid;
-MGScrollView *picksScroller;
-MGLine *check_;
-MGLineStyled *header;
-MGLineStyled *statusUserHeader;
-MGBox *resultsGrid;
-UISearchBar *namingTextField;
-
-MGScrollView *finalStateScroller; // this'll have a scroll view of all the services.
-
-
-//UIView *namingTextFieldView;
-MBProgressHUD *HUD;
-//HuAppUser *appUser;
-
+    MGBox *photosGrid;
+    MGScrollView *resultsScroller;
+    MGBox *picksGrid;
+    MGScrollView *picksScroller;
+    MGLine *check_;
+    MGLineStyled *header;
+    MGLineStyled *statusUserHeader;
+    MGBox *resultsGrid;
+    UISearchBar *namingTextField;
+    
+    //MGScrollView *finalStateScroller; // this'll have a scroll view of all the services.
+    UIView *finalStateView;
+    
+    //UIView *namingTextFieldView;
+    MBProgressHUD *HUD;
+    //HuAppUser *appUser;
+    
 }
 @synthesize stateMachine;
 @synthesize checkMarkTapped;
@@ -71,7 +71,7 @@ UISearchBar *mSearchBar;
 {
     self = [super initWithCoder:aDecoder];
     if(self) {
-        [self commonInit ];
+        //[self commonInit ];
     }
     return self;
 }
@@ -90,20 +90,15 @@ UISearchBar *mSearchBar;
     [picksGrid.boxes removeAllObjects];
     [self buildBlankPicksGrid];
     check_.alpha = 0.3;
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     // this'll stock us with the follows for all the appusers's "serviceuser" accounts
     [self loadAppUserServiceFollows];
-    
-    [super viewWillAppear:animated];
-    [stateMachine nextState:self];
-    HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
-    self.appUser = [appDel humansAppUser];
-    LOG_GENERAL(0, @"HuUserHandler is now %@", self.appUser);
-
 
 }
 
@@ -123,7 +118,7 @@ UISearchBar *mSearchBar;
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
     self.appUser = [appDel humansAppUser];
     LOG_GENERAL(0, @"HuUserHandler is now %@", self.appUser);
-
+    
     StateInfo* initialState = [[StateInfo alloc] initWithStateName:@"initialState"];
     initialState.selector = @selector(initialState);
     stateMachine = [[StateMachine alloc] initWithInitialState:initialState];
@@ -163,22 +158,22 @@ UISearchBar *mSearchBar;
     [self clearResults];
     [picksGrid layout];
     [resultsGrid layout];
-    finalStateScroller.x = 320;
-
+    finalStateView.x = self.view.width;
+    
     [UIView animateWithDuration:0.5 animations:^{
         //
-        mSearchBar.x = 0;
-        namingTextField.x = 1*320;
-        self.resultsView.x = 0;
+        mSearchBar.left = 0;
+        namingTextField.left = 1*self.view.width;
+        self.resultsView.left = 0;
     }];
     [stateMachine nextState:self];
-
+    
 }
 
 - (void)searchResultsState
 {
     LOG_GENERAL(0, @"Search Results State");
-
+    
     __block UILabel *labelView;
     [[header middleItems]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         // get the views..it's only one
@@ -187,18 +182,18 @@ UISearchBar *mSearchBar;
             labelView = obj;
         }
     }];
-
+    
     [UIView animateWithDuration:0.2 animations:^{
         //
-        mSearchBar.x = 0;
-        namingTextField.x = 1*320;
-        self.resultsView.x = 0;
+        mSearchBar.left = 0;
+        namingTextField.left = 1*self.view.width;
+        self.resultsView.left = 0;
     }];
     
     [UIView animateWithDuration:0.3 animations:^{
         //
         [labelView setAlpha:0.0];
-
+        
     } completion:^(BOOL finished) {
         //
         [labelView setText:@"Search"];
@@ -224,17 +219,18 @@ UISearchBar *mSearchBar;
             labelView = obj;
         }
     }];
-
+    
     
     if([self countHumansInPicksGrid] > 0) {
         // slide the searcher out, slide in the namer
         namingTextField.text = @"";
         [UIView animateWithDuration:0.2 animations:^{
             //
-            mSearchBar.x = -1*320;
-            namingTextField.x = 0;
-            self.resultsView.x = -1*320;
-    
+            mSearchBar.left = -1*mSearchBar.size.width;
+            //mSearchBar.x = -1*320;
+            namingTextField.left = 0;
+            //self.resultsView.x = -1*320;
+            self.resultsView.left = -1*self.resultsView.size.width;
             
         }];
         [UIView animateWithDuration:0.3 animations:^{
@@ -267,17 +263,18 @@ UISearchBar *mSearchBar;
     }];
     
     [labelView setText:@"Done"];
+    
     [UIView animateWithDuration:0.5 animations:^{
         //
         //mSearchBar.x = -1*320;
         //self.resultsView.x = -1*320;
-        finalStateScroller.x = 0;
+        finalStateView.left = 0;
     }];
-
+    
     [UIView animateWithDuration:0.75 animations:^{
         //
-        mSearchBar.x = -1*320;
-      
+        mSearchBar.left = -1*mSearchBar.size.width;
+        
     } completion:^(BOOL finished) {
         // save the new human
         //
@@ -289,22 +286,22 @@ UISearchBar *mSearchBar;
                 [[newHuman serviceUsers]addObject:[pobj mFriend]];
             }
         }];
-
+        
         
         
         LOG_GENERAL(0, @"%@", [newHuman description]);
         
         [self.appUser userAddHuman:newHuman withCompletionHandler:^(BOOL success, NSError *error) {
             //
-           // LOG_NETWORK(0, @"%@ did it work?", error);
-            //[Flurry logEvent:[NSString stringWithFormat:@"Add Human %@ %@" , [newHuman name], error]];
+            // LOG_NETWORK(0, @"%@ did it work?", error);
+            [Flurry logEvent:[NSString stringWithFormat:@"Add Human? %@ %@ %@" , (success ? @"YES":@"NO"), [newHuman name], error]];
             if(success) {
                 [self.appUser getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
                     // reload the representation of ourself..our profile data and list of humans
                     // so that when we go back to the main humans scroll view, the new human could
                     // appear.
                     // it's up to HuHumansScrollViewController to refresh the scroll view, though.
-
+                    LOG_UI(0, @"Now we have %d humans", [[[self.appUser humans_user]humans]count]);
                     HuJediFindFriends_ViewController *bself = self;
                     
                     // this'll take us back to initialState for the next time
@@ -319,7 +316,7 @@ UISearchBar *mSearchBar;
                     
                 }];
             }
-
+            
         }];
     }];
     
@@ -336,9 +333,9 @@ UISearchBar *mSearchBar;
 
 -(void)keyboardDidShowNotification:(NSNotification *)notifcation
 {
-//    NSDictionary* keyboardInfo = [notifcation userInfo];
-//    NSValue* keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameBeginUserInfoKey];
-//    CGRect keyboardFrameBeginRect = [keyboardFrameBegin CGRectValue];
+    //    NSDictionary* keyboardInfo = [notifcation userInfo];
+    //    NSValue* keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameBeginUserInfoKey];
+    //    CGRect keyboardFrameBeginRect = [keyboardFrameBegin CGRectValue];
     
 }
 
@@ -359,13 +356,21 @@ UISearchBar *mSearchBar;
     for(int i=0; i<MAX_USERS_PER_FRIEND; i++) {
         [picksGrid.boxes addObject:[HuJediFindFriends_ViewController blank]];
     }
-
+    
 }
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor orangeColor]];
+    
+    
+    [stateMachine nextState:self];
+    HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
+    self.appUser = [appDel humansAppUser];
+    LOG_GENERAL(0, @"HuUserHandler is now %@", self.appUser);
+    
     __block HuJediFindFriends_ViewController *bself = self;
     
     // Do any additional setup after loading the view.
@@ -380,7 +385,7 @@ UISearchBar *mSearchBar;
         bself.exTapped = NO;
         LOG_GENERAL(0, @"%@", stateMachine.currentState.stateName);
     };
-
+    
     UIImage *small_checkbox_img = [UIImage imageNamed:@"checkmark-gray"];
     
     check_ = [MGLine lineWithLeft:small_checkbox_img right:nil size:[small_checkbox_img size]];
@@ -393,20 +398,20 @@ UISearchBar *mSearchBar;
             [bself.stateMachine nextState:bself];
             bself.checkMarkTapped = NO;
             LOG_GENERAL(0, @"%@", bself.stateMachine.currentState.stateName);
-
+            
         }
     };
 #pragma mark header setup
     //header
     header = [MGLineStyled lineWithLeft:ex_ right:check_ size:(CGSize){320,HEADER_HEIGHT}];
-    [header setMiddleFont:HEADER_FONT];
+    [header setMiddleFont:HEADER_FONT_LARGE];
     [header setMiddleTextColor:[UIColor darkGrayColor]];
-    [header setMiddleItems:[NSMutableArray arrayWithObject:@"Connect To Services"]];
+    [header setMiddleItems:[NSMutableArray arrayWithObject:@"Find Friends"]];
     [header setMiddleItemsAlignment:NSTextAlignmentCenter];
     header.sidePrecedence = MGSidePrecedenceMiddle;
     header.padding = UIEdgeInsetsMake(4, 8, 4, 8);
     header.fixedPosition = (CGPoint){0,0};
-    header.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:0.9];
+    header.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
     header.zIndex = 1;
     header.layer.cornerRadius = 0;
     header.layer.shadowOffset = CGSizeZero;
@@ -418,11 +423,11 @@ UISearchBar *mSearchBar;
     // add it to the view then lay it all out
     [self.view addSubview:header];
     [header layout];
-
+    
 #pragma mark statusUserHeader setup
     // status user header..this'll slide in when you long press on someone
     statusUserHeader = [MGLineStyled lineWithSize:(CGSize){320,HEADER_HEIGHT}];//[MGLineStyled lineWithLeft:nil right:check_ size:(CGSize){320,HEADER_HEIGHT}];
-    [statusUserHeader setMiddleFont:HEADER_FONT];
+    [statusUserHeader setMiddleFont:HEADER_FONT_LARGE];
     [statusUserHeader setMiddleTextColor:[UIColor darkGrayColor]];
     //[header setMiddleItems:[NSMutableArray arrayWithObject:@"Connect To Services"]];
     [statusUserHeader setMiddleItemsAlignment:NSTextAlignmentCenter];
@@ -431,7 +436,7 @@ UISearchBar *mSearchBar;
     statusUserHeader.fixedPosition = (CGPoint){321,0};
     statusUserHeader.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
     statusUserHeader.zIndex = 1;
-    [statusUserHeader setFrame:(CGRectMake(320, 0, 320, HEADER_HEIGHT))];
+    [statusUserHeader setFrame:(CGRectMake(self.view.width, 0, self.view.width, HEADER_HEIGHT))];
     //[self.view addSubview:header];
     statusUserHeader.onTap = ^{
         LOG_UI(0, @"Tapped Service UserHeader");
@@ -442,7 +447,7 @@ UISearchBar *mSearchBar;
 #pragma mark first Search Bar
     // search bar
     mSearchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, HEADER_HEIGHT, 320, HEADER_HEIGHT)];
-
+    
     [mSearchBar setShowsSearchResultsButton:YES];
     [mSearchBar setDelegate:self];
     for(int i =0; i<[mSearchBar.subviews count]; i++) {
@@ -460,6 +465,7 @@ UISearchBar *mSearchBar;
     }
     
     [mSearchBar setBackgroundColor:UIColorFromRGB(0xCCCCCC)];
+    // [mSearchBar mc_setPosition:MCViewPositionCenters withMargins:UIEdgeInsetsZero size:mSearchBar.size];
     [self.view addSubview:mSearchBar];
     
     
@@ -474,7 +480,7 @@ UISearchBar *mSearchBar;
             [(UITextField*)[namingTextField.subviews objectAtIndex:i] setFont:HEADLINE_FONT];
     }
     [namingTextField setDelegate:self];
-    [namingTextField setPlaceholder:@"What's this friend's name?"];
+    [namingTextField setPlaceholder:@"What's this Human's name?"];
     
     // yank out subviews in order ot make the search bar background custom
     for (UIView *subview in namingTextField.subviews) {
@@ -501,7 +507,7 @@ UISearchBar *mSearchBar;
     }
     
     [namingTextField setBackgroundColor:UIColorFromRGB(0xCCCCCC)];
-
+    
     [self.view addSubview:namingTextField];
     
     // top, horizontally scrolling thing that holds your "picks"
@@ -513,12 +519,12 @@ UISearchBar *mSearchBar;
     
     [picksScroller setPagingEnabled:YES];
     [picksScroller setShowsHorizontalScrollIndicator:NO];
-
+    
     picksGrid = [MGBox boxWithSize:CGSizeMake(MAX_USERS_PER_FRIEND*90, PICTURE_ROW_HEIGHT)];
     picksGrid.contentLayoutMode = MGLayoutGridStyle;
     picksGrid.backgroundColor = UIColorFromRGB(0x252525);
     picksGrid.padding = UIEdgeInsetsZero;
-
+    
     // build picksGrid
     [self buildBlankPicksGrid];
     
@@ -526,38 +532,41 @@ UISearchBar *mSearchBar;
     [picksScroller setFrame:CGRectMake(0, HEADER_HEIGHT+mSearchBar.bounds.size.height, 320, picksGrid.size.height+10)];
     [picksScroller addSubview:picksGrid];
     [picksGrid layout];
-
+    
     [self.view addSubview:picksScroller];
     
     // the view that contains the results of your search as profile images
     self.resultsView = [[UIView alloc]init];
     
-    if(IS_IPHONE && IS_IPHONE_5) {
-        [self.resultsView setFrame:CGRectMake(0, HEADER_HEIGHT, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height)];
-        //[self.resultsView setSize:(CGSizeMake(320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
-        [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
-
-    } else
-    {
-        [self.resultsView setFrame:CGRectMake(0, HEADER_HEIGHT, 320, IPHONE_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height)];
-        //[self.resultsView setSize:(CGSizeMake(320, IPHONE_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
-        [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
-
-    }
-
-    
-//    [self.resultsView setSize:(CGSizeMake(320, 480-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
-//    [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, 480-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
-    [self.resultsView setBackgroundColor:[UIColor greenColor]];
-    [self.view addSubview:self.resultsView];
+    //    if(IS_IPHONE && IS_IPHONE_5) {
+    //        [self.resultsView setFrame:CGRectMake(0, HEADER_HEIGHT, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height)];
+    //        //[self.resultsView setSize:(CGSizeMake(320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
+    //        [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
+    //
+    //    } else
+    //    {
+    //        [self.resultsView setFrame:CGRectMake(0, HEADER_HEIGHT, 320, IPHONE_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height)];
+    //        //[self.resultsView setSize:(CGSizeMake(320, IPHONE_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
+    //        [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
+    //
+    //    }
     
     
-    resultsScroller = [MGScrollView scrollerWithSize:CGSizeMake(self.resultsView.size.width, self.resultsView.size.height-18)];
+    //    [self.resultsView setSize:(CGSizeMake(320, 480-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
+    //    [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, 480-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
+    CGFloat x = picksGrid.bottom;
+    [self.resultsView setSize:CGSizeMake(self.view.width, self.view.height - x)];
+    [self.resultsView setBackgroundColor:[UIColor blueColor]];
+    [self.resultsView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
+    
+    
+    
+    resultsScroller = [MGScrollView scrollerWithSize:self.resultsView.size];
     [resultsScroller setContentSize:self.resultsView.size];
     [resultsScroller setBackgroundColor:UIColorFromRGB(0xFFFFFF)];
-    [resultsScroller setBounces:NO];
+    [resultsScroller setBounces:YES];
     [self.resultsView addSubview:resultsScroller];
-
+    
     resultsGrid = [MGBox boxWithSize:[resultsScroller size]];
     resultsGrid.contentLayoutMode = MGLayoutGridStyle;
     [resultsScroller.boxes addObject:resultsGrid];
@@ -570,13 +579,26 @@ UISearchBar *mSearchBar;
     [resultsScroller layoutWithSpeed:0.3 completion:nil];
     
     
-    finalStateScroller = [MGScrollView scrollerWithSize:[resultsScroller size]];
-    [finalStateScroller setContentSize:self.resultsView.size];
-    [finalStateScroller setBackgroundColor:UIColorFromRGB(0xE0E0E0)];
-    [finalStateScroller setBounces:NO];
-    [finalStateScroller setFrame:[self.resultsView frame]];
-    [finalStateScroller setX:320];
-    [self.view addSubview:finalStateScroller];
+    finalStateView = [[UIView alloc]init];
+    [finalStateView setSize:[resultsScroller size]];
+    [finalStateView setBackgroundColor:UIColorFromRGB(0xF000F0)];
+    [finalStateView mc_setRelativePosition:MCViewPositionToTheRight toView:self.resultsView];
+    [finalStateView setTop:namingTextField.bottom];
+    [finalStateView setLeft:[self resultsView].right];
+    //[finalStateView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
+    [self.view addSubview:finalStateView];
+//    finalStateScroller = [MGScrollView scrollerWithSize:[resultsScroller size]];
+//    [finalStateScroller setContentSize:self.resultsView.size];
+//    [finalStateScroller setBackgroundColor:UIColorFromRGB(0xFF0000)];
+//    [finalStateScroller setBounces:NO];
+//    [finalStateScroller mc_setRelativePosition:MCViewPositionToTheRight toView:self.resultsView];
+//    [finalStateScroller mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
+//    //[finalStateScroller setFrame:[self.resultsView frame]];
+//    //[finalStateScroller setX:self.view.width];
+//    [self.view addSubview:finalStateScroller];
+    
+    
+    
     
 }
 
@@ -585,7 +607,7 @@ UISearchBar *mSearchBar;
     if([sender direction] == UISwipeGestureRecognizerDirectionRight)
     {
         [self.navigationController popViewControllerAnimated:YES];
-
+        
     }
 }
 
@@ -599,7 +621,7 @@ UISearchBar *mSearchBar;
 {
     LOG_UI(0, @"Search.");
     NSString *currentStateStr = [[stateMachine currentState]stateName];
-
+    
     if([currentStateStr compare:@"nameFriendState" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
         LOG_UI(0, @"Name Friend Done");
         if([[searchBar text]length] > 2) {
@@ -609,10 +631,10 @@ UISearchBar *mSearchBar;
     }
     
     if([currentStateStr compare:@"searchResultsState" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-    if([searchBar text].length > 2) {
-        [searchBar resignFirstResponder];
-        [self searchFor:[NSString stringWithFormat:@"%@", [searchBar text]]];
-    }
+        if([searchBar text].length > 2) {
+            [searchBar resignFirstResponder];
+            [self searchFor:[NSString stringWithFormat:@"%@", [searchBar text]]];
+        }
     }
 }
 
@@ -647,7 +669,7 @@ UISearchBar *mSearchBar;
 NSUInteger lastLength;
 
 - (BOOL)textField:(UITextField *)aTextField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{    
+{
     lastLength = [[aTextField text]length]+1;
     // if we're backspacing, don't do anything.
     
@@ -703,15 +725,15 @@ NSUInteger lastLength;
     
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
     self.appUser = [appDel humansAppUser];
-
+    
     
     LOG_GENERAL(0, @"Search Via %@ For %@ across %@", self.appUser, string, [self.appUser friends]);
     
     [appUser searchFriendsWith:regex withCompletionHandler:^(NSMutableArray *results) {
         [resultsGrid.boxes removeAllObjects];
-        [resultsGrid layoutWithSpeed:0.5 completion:nil];
-        [resultsScroller layoutWithSpeed:0.5 completion:nil];
-
+        [resultsGrid layoutWithSpeed:0.3 completion:nil];
+        [resultsScroller layoutWithSpeed:0.3 completion:nil];
+        
         NSMutableArray* uniqueValues = [[NSMutableArray alloc] init];
         for(id e in results)
         {
@@ -723,24 +745,22 @@ NSUInteger lastLength;
         
         //sort
         [uniqueValues sortUsingDescriptors:[NSArray arrayWithObjects:
-                                       [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES],
+                                            [NSSortDescriptor sortDescriptorWithKey:@"username" ascending:YES],
                                             [NSSortDescriptor sortDescriptorWithKey:@"serviceName" ascending:YES],
-                                       [NSSortDescriptor sortDescriptorWithKey:@"fullname" ascending:YES ], nil]];
+                                            [NSSortDescriptor sortDescriptorWithKey:@"fullname" ascending:YES ], nil]];
         
         // see if they're already in picksGrid.boxes
-        
-        
         [uniqueValues enumerateObjectsUsingBlock:^(HuFriend *friend, NSUInteger idx, BOOL *stop) {
             //
             CGSize profilePhotoSize = (CGSizeMake(PICTURE_WIDTH, PICTURE_HEIGHT));
-                        
+            
             HuServiceUserProfilePhoto *img = [HuServiceUserProfilePhoto photoBoxForSocialServiceUser:friend size:profilePhotoSize];
             
             // skip it if it's already in the picksGrid
             if([picksGrid.boxes containsObject:img]) {
                 return;
             }
-    
+            
             __block HuServiceUserProfilePhoto *bimg = img;
             
             //[img setMargin:(UIEdgeInsetsZero)];
@@ -756,7 +776,7 @@ NSUInteger lastLength;
             [img setMask:[UIImage imageNamed:@"user-profile-image-mask-60px"]];
             
             [img setServiceTinyTag:[UIImage imageNamed:[friend tinyServiceImageBadge ]]];
-
+            
             [img setTappable:YES];
             img.onTap = ^{
                 LOG_UI_VERBOSE(0, @"TAPPED ON %@ for %@",[friend username], [friend serviceName]);
@@ -811,36 +831,38 @@ NSUInteger lastLength;
                 if(recog == nil) {
                     LOG_UI_VERBOSE(0, @"WTF? %@", [friend username]);
                 } else {
-                LOG_UI_VERBOSE(0, @"LONG PRESS %@\nFor %@", recog, friend);
+                    LOG_UI_VERBOSE(0, @"LONG PRESS %@\nFor %@", recog, friend);
                     NSString *string = [NSString stringWithFormat:@"%@", [friend username]];
                     statusUserHeader.middleItems = [NSMutableArray arrayWithObject:string];//[NSArray arrayWithObject:string];
                     [statusUserHeader layout];
                     if(recog.state == UIGestureRecognizerStateBegan) {
-                    [UIView animateWithDuration:0.3 animations:^{
-                        header.x = header.size.width * -1; // should vary based on orientation & screen size
-                        statusUserHeader.x = 0;
-                    }];
+                        [UIView animateWithDuration:0.3 animations:^{
+                            header.left = header.size.width * -1; // should vary based on orientation & screen size
+                            statusUserHeader.left = 0;
+                        }];
                     }
                     if(recog.state == UIGestureRecognizerStateEnded) {
                         [UIView animateWithDuration:0.3 animations:^{
                             //
-                            header.x = 0.0;
-                            statusUserHeader.x = statusUserHeader.width;
+                            header.left = 0.0;
+                            statusUserHeader.left = statusUserHeader.width;
                         }];
                     }
                 }
             };
             [resultsGrid.boxes addObject:img];
-            
-            
+            int count = [resultsGrid.boxes count];
+            int mod = 1+count/4;
+            LOG_UI(0, @"%d %d", count, mod);
+            [resultsScroller setContentSize:CGSizeMake(resultsGrid.size.width, (1+(4+count - 1)/4) * (22 + profilePhotoSize.height))];
             [resultsGrid layoutWithSpeed:0.3 completion:nil];
             [resultsScroller layoutWithSpeed:0.3 completion:nil];
             
         }];
     }];
     
-
-
+    
+    
 }
 
 
@@ -848,22 +870,27 @@ NSUInteger lastLength;
 - (void)loadAppUserServiceFollows
 {
     
-//    dispatch_group_t group = dispatch_group_create();
-//    dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
+    //    dispatch_group_t group = dispatch_group_create();
+    //    dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
     
-    
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [HUD show:YES];
-    HUD.center = CGPointMake(160, 120);
-    HUD.mode = MBProgressHUDModeIndeterminate;
-    [HUD setDetailsLabelFont:INFO_FONT_SMALL];
+    MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+    progressView.mode = MRProgressOverlayViewModeIndeterminate;
+    progressView.titleLabelText = @"Finding Friends";
 
-    HUD.delegate = self;
-    [HUD setAnimationType:MBProgressHUDAnimationZoom];
-    [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
     
-    HUD.labelText = @"Finding Friends..";
-    HUD.graceTime = 0.3;
+    
+//    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [HUD show:YES];
+//    HUD.center = CGPointMake(160, 120);
+//    HUD.mode = MBProgressHUDModeIndeterminate;
+//    [HUD setDetailsLabelFont:INFO_FONT_SMALL];
+//    
+//    HUD.delegate = self;
+//    [HUD setAnimationType:MBProgressHUDAnimationZoom];
+//    [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
+//    
+//    HUD.labelText = @"Finding Friends..";
+//    HUD.graceTime = 0.3;
     
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
     appUser = [appDel humansAppUser];//[[HuAppUser alloc]init];
@@ -871,52 +898,68 @@ NSUInteger lastLength;
     [appUser userFriendsGet:^(NSMutableArray *results) {
         // now appUser has all my friends..
         LOG_GENERAL(0, @"Load Follows of %@ found %d follows/friends.", [[appUser humans_user]username], [[appUser friends] count]);
-        [HUD setLabelText:[NSString stringWithFormat:@"%d on %@",  [[appUser friends] count], [[appUser humans_user]username]]];
-        [HUD setDetailsLabelText:[NSString stringWithFormat:@"@%@", [[appUser humans_user]username]]];
-        [HUD setGraceTime:1.5];
-        [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
-         [self performSelectorOnMainThread:@selector(hideHUD) withObject:nil waitUntilDone:YES];
+        
+        [MRProgressOverlayView dismissOverlayForView:self.view animated:YES];
+
+        MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+        progressView.mode = MRProgressOverlayViewModeCheckmark;
+        progressView.titleLabelText = [NSString stringWithFormat:@"Found %d Friends",  [[appUser friends] count]];
+        [self performBlock:^{
+            [progressView dismiss:YES];
+        } afterDelay:5.0];
+
+        
+//        [HUD setLabelText:[NSString stringWithFormat:@"%d on %@",  [[appUser friends] count], [[appUser humans_user]username]]];
+//        [HUD setDetailsLabelText:[NSString stringWithFormat:@"@%@", [[appUser humans_user]username]]];
+//        [HUD setGraceTime:1.5];
+//        [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
+//        [self performSelectorOnMainThread:@selector(hideHUD) withObject:nil waitUntilDone:YES];
         
     }];
     
     LOG_GENERAL(0, @"App User is %@", appUser);
     
-//    dispatch_group_enter(group);
+    //    dispatch_group_enter(group);
     
-//    [appUser loadServiceUsersProfileDataFromServiceWithCompletionHandler:^{
-//        [[appUser serviceUsers]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//            //
-//            id<HuSocialServiceUser>serviceUser = (id<HuSocialServiceUser>)obj;
-//            //LOG_GENERAL(0, @"Load Follows for %@ via %@ hasLoadedFollows? %@", appUser, serviceUser, [serviceUser hasLoadedFollows]?@"YES":@"NO");
-//            LOG_GENERAL(0, @"Load Follows for %@", serviceUser);
-//            // load follows/friends if we are auth'd and we either haven't loaded follows *or the follows count is zero, which is suspcious..
-//            if([serviceUser canAuth] && ( ([serviceUser hasLoadedFollows] == NO) || [[serviceUser follows]count] == 0  ) ) {
-//                dispatch_group_enter(group);
-//                [serviceUser loadFollowsWithCompletionHandler:^{
-//                    //
-//                    LOG_GENERAL(0, @"Load Follows of %@ for %@ user %@ found %d follows/friends.", appUser, [serviceUser serviceName], [serviceUser username], [[serviceUser follows] count]);
-//                    [HUD setLabelText:[NSString stringWithFormat:@"%d on %@", [serviceUser.follows count], [serviceUser serviceName]]];
-//                    [HUD setDetailsLabelText:[NSString stringWithFormat:@"@%@", [serviceUser username]]];
-//                    [HUD setGraceTime:0.7];
-//                    [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
-//                    LOG_GENERAL(0, @"%@ Success? %d", serviceUser, [serviceUser.follows count]);
-//                    dispatch_group_leave(group);
-//                }];
-//            }
-//        }];
-//        dispatch_group_leave(group);
-//    }];
-//    dispatch_group_notify(group, queue, ^{
-//        [self performSelectorOnMainThread:@selector(hideHUD) withObject:nil waitUntilDone:YES];
-//    });
+    //    [appUser loadServiceUsersProfileDataFromServiceWithCompletionHandler:^{
+    //        [[appUser serviceUsers]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    //            //
+    //            id<HuSocialServiceUser>serviceUser = (id<HuSocialServiceUser>)obj;
+    //            //LOG_GENERAL(0, @"Load Follows for %@ via %@ hasLoadedFollows? %@", appUser, serviceUser, [serviceUser hasLoadedFollows]?@"YES":@"NO");
+    //            LOG_GENERAL(0, @"Load Follows for %@", serviceUser);
+    //            // load follows/friends if we are auth'd and we either haven't loaded follows *or the follows count is zero, which is suspcious..
+    //            if([serviceUser canAuth] && ( ([serviceUser hasLoadedFollows] == NO) || [[serviceUser follows]count] == 0  ) ) {
+    //                dispatch_group_enter(group);
+    //                [serviceUser loadFollowsWithCompletionHandler:^{
+    //                    //
+    //                    LOG_GENERAL(0, @"Load Follows of %@ for %@ user %@ found %d follows/friends.", appUser, [serviceUser serviceName], [serviceUser username], [[serviceUser follows] count]);
+    //                    [HUD setLabelText:[NSString stringWithFormat:@"%d on %@", [serviceUser.follows count], [serviceUser serviceName]]];
+    //                    [HUD setDetailsLabelText:[NSString stringWithFormat:@"@%@", [serviceUser username]]];
+    //                    [HUD setGraceTime:0.7];
+    //                    [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
+    //                    LOG_GENERAL(0, @"%@ Success? %d", serviceUser, [serviceUser.follows count]);
+    //                    dispatch_group_leave(group);
+    //                }];
+    //            }
+    //        }];
+    //        dispatch_group_leave(group);
+    //    }];
+    //    dispatch_group_notify(group, queue, ^{
+    //        [self performSelectorOnMainThread:@selector(hideHUD) withObject:nil waitUntilDone:YES];
+    //    });
     
-
+    
 }
 
-- (void)hideHUD
-{
-    [HUD hide:YES afterDelay:1];
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
 }
+
+//- (void)hideHUD
+//{
+//    [HUD hide:YES afterDelay:1];
+//}
 
 
 - (void)didReceiveMemoryWarning

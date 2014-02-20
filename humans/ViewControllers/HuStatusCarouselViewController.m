@@ -15,6 +15,9 @@
 #import "HuHeaderForServiceStatusView.h"
 #import "HuViewForServiceStatus.h"
 #import "HuServiceStatus.h"
+#import <UIColor+FPBrandColor.h>
+#import <UIView+MCLayout.h>
+#import <ViewUtils.h>
 
 #define VISIBLE_ITEMS_IN_CAROUSEL 3
 
@@ -35,6 +38,7 @@
 
 @synthesize carousel;
 @synthesize items;
+@synthesize human;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -51,7 +55,6 @@
     if(self) {
         [self commonInit];
     }
-    LOG_GENERAL(0, @"WHOA %@", self);
     return self;
 }
 
@@ -73,6 +76,7 @@
     carousel.scrollSpeed = 0.3;
     carousel.vertical = NO;
     
+    
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{
@@ -89,23 +93,34 @@
     //self.view.frame = CGRectMake(0, 0, 320, 560);
     self.view.frame = [self.navigationController.view bounds];
 	// Do any additional setup after loading the view.
-    [self.view setBackgroundColor:[UIColor blueColor]];
+    [self.view setBackgroundColor:[UIColor Amazon]];
     
     // header?
     header.frame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
-    [header setBackgroundColor:[UIColor orangeColor]];
+    [header setBackgroundColor:[UIColor Amazon]];
     NSAssert((items != nil), @"Why is items nil?");
     NSAssert(([items count] > 0), @"Why are there no status items?");
-    [header setStatus:[items objectAtIndex:0]];
+    
+    
+    //[header setStatus:[items objectAtIndex:[carousel currentItemIndex]]];
     [self.view addSubview:header];
     
     [carousel setBackgroundColor:[UIColor grayColor]];
     carouselFrame =
-        CGRectMake(0, HEADER_HEIGHT, 320, CGRectGetHeight(self.view.frame) - CGRectGetHeight(header.frame));
+    CGRectMake(0, HEADER_HEIGHT, 320, CGRectGetHeight(self.view.frame) - CGRectGetHeight(header.frame));
     [carousel setFrame:carouselFrame];
 	carousel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	//add carousel to view
 	[self.view addSubview:carousel];
+    
+    UIView *topCard = [[UIView alloc]init];
+    [topCard mc_setSize:self.carousel.frame.size];
+     [topCard setBackgroundColor:[UIColor Amazon]];
+    UILabel *label = [[UILabel alloc]initWithFrame:(CGRectMake(0, 0, topCard.frame.size.width, 50))];
+    [topCard addSubview:label];
+    
+    [items insertObject:topCard atIndex:0];
+    
     
     LOG_UI(0, @"view (%@) header= carousel=%@", self.view, NSStringFromCGRect(carousel.frame));
 }
@@ -122,13 +137,6 @@
     [[self navigationController]popViewControllerAnimated:YES];
 }
 
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-//{
-//    if ([[segue identifier] isEqualToString:@"CarouselToHumans"])
-//    {
-//        LOG_UI(0, @"sender=%@", sender);
-//    }
-//}
 
 #pragma mark iCarouselDelegate methods
 
@@ -179,9 +187,23 @@ NSUInteger last_index, current_index;
 
 - (void)carouselCurrentItemIndexDidChange:(iCarousel *)mcarousel
 {
-   // HuServiceStatus *status = (HuServiceStatus*)[items objectAtIndex:current_index];
+    // HuServiceStatus *status = (HuServiceStatus*)[items objectAtIndex:current_index];
     current_index = [mcarousel currentItemIndex];
+   
+    if([[items objectAtIndex:current_index] isKindOfClass:[UIView class]] == YES) {
+        [header setAlpha:0];
+    } else {
+        if(header.alpha == 0.0) {
+            [UIView animateWithDuration:0.75f animations:^{
+                //
+                header.alpha = 1.0;
+            }];
+        }
+    
     [header setStatus:[items objectAtIndex:current_index]];
+    
+    }
+    
     //[header setProfileImage:[status userProfileImageURL]];
     
     //    NSUInteger distance_to_end =  [[friendToView allStatus]count] -[mcarousel currentItemIndex];
@@ -208,31 +230,9 @@ NSUInteger last_index, current_index;
     //
     //        });
     // }
-    //FIXME: below the HUD hide is unnecessary if distance_to_end was 0
-    //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-    //            //
-    //            [friendToView loadOlderStatusWithCompletionHandler:^(BOOL success, NSError *error) {
-    //                //
-    //                LOG_UI(1, @"Data Update! Success=[%@]", success?@"YES":@"NO");
-    //                if(success) {
-    //                    NSMutableArray *x = [friendToView allStatus];
-    //
-    //                    LOG_UI(1, @"friend status=%@\n\ncarousel data=%@", x, items);
-    //                    // this should only load unique status, but a better completion handler would send back *only the increment
-    //                    [self orderedInsertDataSourceItems:x];
-    //                    LoggerFlush(LoggerGetDefaultLogger(), NO);
-    //                } else {
-    //                    dispatch_async(dispatch_get_main_queue(), ^{
-    //
-    //                        [HUD hide:YES];
-    //                        [HUD removeFromSuperview];
-    //                    });
-    //                }
-    //            }];
-    //
-    //        });
-    //
-    //    }
+    
+    
+    
     last_index = [mcarousel currentItemIndex];
 }
 
@@ -262,7 +262,6 @@ NSUInteger last_index, current_index;
 #pragma mark iCarouselDelegate methods
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    //LOG_UI(0, @"checking number of items in carousel=%d", [items count]);
     return [items count];
 }
 
@@ -270,26 +269,37 @@ NSUInteger last_index, current_index;
 - (void)carouselWillBeginScrollingAnimation:(iCarousel *)aCarousel
 {
     if([aCarousel currentItemIndex] > -1) {
-    HuViewForServiceStatus *view = (HuViewForServiceStatus *)[aCarousel itemViewAtIndex:[aCarousel currentItemIndex]];
-
-//    LOG_GENERAL(0, @"curent index is %d", [aCarousel currentItemIndex]);
-//    LOG_GENERAL(0, @"%@ %@", [items objectAtIndex:[aCarousel currentItemIndex]], view);
-    [view showOrRefreshPhoto];
+        
+        if([[aCarousel itemViewAtIndex:[aCarousel currentItemIndex]] isKindOfClass:[HuViewForServiceStatus class]] == YES) {
+            HuViewForServiceStatus *view = (HuViewForServiceStatus *)[aCarousel itemViewAtIndex:[aCarousel currentItemIndex]];
+            [view showOrRefreshPhoto];
+        }
     }
 }
 
 - (UIView *)carousel:(iCarousel *)mcarousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
-    HuViewForServiceStatus *result;
+    //UIView *result;
     
-    result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:index]];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [result setNeedsDisplay];
+    if(view != nil) {
+        //result = (HuViewForServiceStatus*)view;
+        LOG_UI(0, @"How do you reuse a view? %@", view);
+    }
+    
+    if([[items objectAtIndex:index] isKindOfClass:[UIView class]] == NO) {
+        HuViewForServiceStatus *result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:index]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [result setNeedsDisplay];
+            
+        });
+        return result;
+    } else {
+        // we're probably at a special item
+        return [items objectAtIndex:index];
         
-    });
-    LOG_GENERAL(0, @"For index %d out of %d showing %@", index, [items count], result);
-    return result;
-
+    }
+    //return result;
+    
     //TODO: tie the friendToView status more delegate-y to the view controller..can refactor to
     //Make it so we don't need this "items" ivar, which is just a lousy go-between
     // We'd need to make sure the status array in friend is ordered!
