@@ -85,7 +85,7 @@ MRProgressOverlayView *activityIndicatorView;
     countLabel = [[UILabel alloc]init];
     [countLabel setSize:CGSizeMake(overlay.size.height, overlay.size.height)];
     [container addSubview:countLabel];
-    [countLabel setFont:INSTAGRAM_FONT];
+    [countLabel setFont:COUNT_LABEL_FONT];
     [countLabel setTextColor:[UIColor darkGrayColor]];
     [countLabel setBackgroundColor:[UIColor whiteColor]];
     [countLabel setTextAlignment:NSTextAlignmentCenter];

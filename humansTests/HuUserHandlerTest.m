@@ -14,7 +14,7 @@
 #import "defines.h"
 #import "HuServiceUser.h"
 #import "HuHuman.h"
-#import <SBJson/SBJson.h>
+#import <SBJson4.h>
 #import "OCMock/OCMock.h"
 #import "XCTest+Async.h"
 #define HC_SHORTHAND
@@ -58,6 +58,17 @@ HuUserHandler *user_handler;
     
 }
 
+- (void)test_doSomething
+{
+    ASYNC_START
+    [user_handler doSomething:^(id data, BOOL success, NSError *error) {
+        //
+        LOG_GENERAL(0, @"%@", data);
+        
+        ASYNC_TEST_DONE
+    }];
+    ASYNC_TEST_END_LONG_TIMEOUT
+}
 
 - (void)test_foogetStatusCountForHuman
 {
@@ -150,7 +161,7 @@ HuUserHandler *user_handler;
     [self waitForTimeout:2];
     HuUser *user = [user_handler humans_user];
     
-    SBJsonWriter *writer = [[SBJsonWriter alloc] init];
+    SBJson4Writer *writer = [[SBJson4Writer alloc] init];
     NSString *user_json = [writer stringWithObject:[user dictionary]];
     LOG_GENERAL(0, @"%@", user_json);
     NSArray *humans = [user humans];

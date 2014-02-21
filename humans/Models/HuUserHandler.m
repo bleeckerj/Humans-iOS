@@ -21,7 +21,7 @@
 #import "HuServiceUser.h"
 #import "HuAppDelegate.h"
 #import "RKValueTransformers.h"
-
+#import <RNDecryptor.h>
 
 @implementation HuUserHandler
 
@@ -1128,16 +1128,40 @@ NSDateFormatter *twitter_formatter;
 }
 
 #pragma mark access token crap
-- (void)doSomething
+- (void)getAuthFor:(HuServices *)service with:(CompletionHandlerWithData)completionHandler
 {
-    NSURL *twitterURL = [NSURL URLWithString:@"twitter.whatever"];
-    AFHTTPClient *twitterClient = [[AFHTTPClient alloc] initWithBaseURL:twitterURL];
-    [twitterClient setAuthorizationHeaderWithToken:@""];
-    [twitterClient getPath:@"" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    
+    [client  setParameterEncoding:AFJSONParameterEncoding];
+    NSString *path = [NSString stringWithFormat:@"/rest/user/get/auth/%@/%@?access_token=%@", [service serviceName], [service serviceUserID], [self access_token]];
+    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
+    [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Accept"];
+    [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Content-Type"];
+    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         //
+        LOG_GENERAL(0, @"Success %@", responseObject);
+        NSError *err;
+        //id obj = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:&err];
+        NSString *encryptedDataStr = [responseObject valueForKey:@"ck"];
+        NSData *data = [[NSData alloc] initWithBase64EncodedString:encryptedDataStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        NSData *decryptedData = [RNDecryptor decryptData:data
+                                            withPassword:@"INSTAGRAM_API_KEY"
+                                                   error:&err];
+        NSString *result = [[NSString alloc]initWithData:decryptedData encoding:NSUTF8StringEncoding];
+        LOG_GENERAL(0, @"What we got..%@", result);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
+        LOG_GENERAL(0, @"Failure %@", error);
     }];
+    [operation start];
+    [operation waitUntilFinished];
+//    NSURL *twitterURL = [NSURL URLWithString:@"twitter.whatever"];
+//    AFHTTPClient *twitterClient = [[AFHTTPClient alloc] initWithBaseURL:twitterURL];
+//    [twitterClient setAuthorizationHeaderWithToken:@""];
+//    [twitterClient getPath:@"" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        //
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        //
+//    }];
 }
 
 #pragma mark stuff for authenticating with service through server side stuff

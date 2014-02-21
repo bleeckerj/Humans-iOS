@@ -21,6 +21,8 @@ PODS:
   - ECSlidingViewController (2.0.1)
   - Expecta (0.2.3)
   - FLKAutoLayout (0.1.1)
+  - FontAwesome-iOS (0.0.4)
+  - FPBrandColors (0.1.3)
   - iCarousel (1.7.6)
   - ISO8601DateFormatterValueTransformer (0.5.0):
     - RKValueTransformers (~> 1.0.0)
@@ -32,6 +34,31 @@ PODS:
     - MGBoxKit/Categories
   - MGBoxKit/Categories (2.1.1)
   - MHTextField (0.0.3)
+  - MKFoundationKit (1.1.0):
+    - MKFoundationKit/AutoDescribe
+    - MKFoundationKit/Base64
+    - MKFoundationKit/Block
+    - MKFoundationKit/NSArray
+    - MKFoundationKit/NSDate
+    - MKFoundationKit/NSDictionary
+    - MKFoundationKit/NSNumber
+    - MKFoundationKit/NSSet
+    - MKFoundationKit/NSString
+    - MKFoundationKit/Queue
+    - MKFoundationKit/Stack
+  - MKFoundationKit/AutoDescribe (1.1.0)
+  - MKFoundationKit/Base64 (1.1.0)
+  - MKFoundationKit/Block (1.1.0)
+  - MKFoundationKit/NSArray (1.1.0)
+  - MKFoundationKit/NSDate (1.1.0)
+  - MKFoundationKit/NSDictionary (1.1.0)
+  - MKFoundationKit/NSNumber (1.1.0)
+  - MKFoundationKit/NSSet (1.1.0):
+    - MKFoundationKit/Block
+  - MKFoundationKit/NSString (1.1.0):
+    - MKFoundationKit/Base64
+  - MKFoundationKit/Queue (1.1.0)
+  - MKFoundationKit/Stack (1.1.0)
   - MMDrawerController (0.5.2):
     - MMDrawerController/Core
     - MMDrawerController/MMDrawerBarButtonItem
@@ -72,6 +99,7 @@ PODS:
   - RestKit/Support (0.22.0):
     - TransitionKit (= 2.0.0)
   - RKValueTransformers (1.0.1)
+  - RNCryptor (2.2)
   - SBJson (4.0.0)
   - SDWebImage (3.5.2):
     - SDWebImage/Core
@@ -92,12 +120,15 @@ DEPENDENCIES:
   - ECSlidingViewController (~> 2.0.0-beta2)
   - Expecta (~> 0.2.3)
   - FLKAutoLayout
+  - FontAwesome-iOS (~> 0.0.4)
+  - FPBrandColors (~> 0.1.3)
   - iCarousel
   - KeyboardController (~> 1.0.0)
   - MBProgressHUD (~> 0.8)
   - MCUIViewLayout (from `https://github.com/mirego/MCUIViewLayout.git`)
   - MGBoxKit
   - MHTextField (~> 0.0.3)
+  - MKFoundationKit (~> 1.1.0)
   - MMDrawerController (~> 0.5.2)
   - MRProgress (~> 0.3.1)
   - MSWeakTimer (~> 1.1.0)
@@ -108,6 +139,7 @@ DEPENDENCIES:
   - OCMockito (~> 1.0)
   - REMenu (~> 1.8)
   - RestKit
+  - RNCryptor (~> 2.2)
   - SBJson (~> 4.0.0)
   - SDWebImage
   - SKSlideViewController (~> 0.0.1)
@@ -131,6 +163,8 @@ SPEC CHECKSUMS:
   ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
   Expecta: dbc4a27fabb853bdd2e907e33f11ee43a9a47d0c
   FLKAutoLayout: fc04b932009174d4118ef4bda9dc8fedf1369efc
+  FontAwesome-iOS: 5e33a7bbabacdc8a177cb9d3d81876f0c7a272c1
+  FPBrandColors: e0df3950b283d1a6d6c42d6b97f04a031ccf9e12
   iCarousel: e23a26d7ba722215a42144e80adb0dcb59bebc41
   ISO8601DateFormatterValueTransformer: d0af1f50a9df42db72d7418db31938b8473e0af8
   KeyboardController: 368f5ebc3ceab64a863636db2a313648bbe1e643
@@ -139,6 +173,7 @@ SPEC CHECKSUMS:
   MCUIViewLayout: db43d391388bcee6763ac3364c2109e32016f04d
   MGBoxKit: 5de9fd5f49539c30348ef750e2b9ea5a14374b88
   MHTextField: 299b04dd7ce5354554c4bf4b968da60a04d20fdd
+  MKFoundationKit: db5b09c3d266b6476e605b6060096a62fd542b61
   MMDrawerController: 60bce0387ff42670d9a5a392e2f531be2fd39ce9
   MRProgress: 741d8849f3d6e71cf254b32ea8c0bc0b2a122136
   MSWeakTimer: 2cd8d15b58e634517e83a7e433782faa8214a27f
@@ -150,6 +185,7 @@ SPEC CHECKSUMS:
   REMenu: 40bb965c968b298c3f36d36067a15dd3f2c52473
   RestKit: dc107a0aa4f962575ad0385bac5b3c5e4f591f4e
   RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182
+  RNCryptor: 1420380792b33758d2414cf37af160ea2495e15c
   SBJson: f3c686806e8e36ab89e020189ac582ba26ec4220
   SDWebImage: fe7ce01ae4e0a884d168f59c9dd82d35baf8429e
   SKSlideViewController: 98e4cee58146aaf8b24d300b9a32bc7c45cc5b25

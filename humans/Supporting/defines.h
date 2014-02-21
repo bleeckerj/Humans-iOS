@@ -110,7 +110,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define PROFILE_HALF_HEIGHT_VIEW_BORDER_COLOR [UIColor lightGrayColor]
 
 //#define TWITTER_FONT            [UIFont fontWithName:@"Creampuff" size:14]
-#define TWITTER_FONT           [UIFont fontWithName:@"AvenirNext-Medium" size:18]
+#define TWITTER_FONT           [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 
 #define TWITTER_COLOR           [UIColor Twitter]
 #define TWITTER_STATUS_VIEW_BGCOLOR  UIColorFromRGB(0x000000)
@@ -118,20 +118,20 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define TWITTER_COLOR_IMAGE     @"twitter-bird-color.png"
 #define TWITTER_GRAY_IMAGE      @"twitter-bird-gray.png"
 
-#define INSTAGRAM_FONT            [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
+#define INSTAGRAM_STATUS_TEXT_FONT            [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 #define INSTAGRAM_TEXT_COLOR    [UIColor blackColor]
 #define INSTAGRAM_COLOR         UIColorFromRGB(0xffc03f)
 #define INSTAGRAM_COLOR_HEX     0xffc03f
 #define INSTAGRAM_COLOR_IMAGE   @"instagram-camera-color.png"
 #define INSTAGRAM_GRAY_IMAGE    @"instagram-camera.png"
 
-#define FLICKR_FONT             [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
+#define FLICKR_FONT             [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 #define FLICKR_TEXT_COLOR       [UIColor blackColor]
 #define FLICKR_COLOR            UIColorFromRGB(0x0063DC)
 #define FLICKR_COLOR_IMAGE      @"flickr-peepers-color.png"
 #define FLICKR_GRAY_IMAGE       @"flickr-peepers.png"
 
-#define FOURSQUARE_FONT         [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
+#define FOURSQUARE_FONT         [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 #define FOURSQUARE_TEXT_COLOR   [UIColor blackColor]
 #define FOURSQUARE_COLOR        UIColorFromRGB(0xcbadf)
 #define FOURSQUARE_COLOR_IMAGE @"foursquare-icon-36x36.png"
@@ -140,9 +140,11 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define TUMBLR_COLOR_IMAGE @"angry_unicorn_tiny.png"
 #define FACEBOOK_COLOR_IMAGE @"angry_unicorn_tiny.png"
 
-#define INFO_FONT_LARGE         [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:16]
-#define INFO_FONT_MEDIUM        [UIFont fontWithName:@"EuphemiaUCAS" size:14]
-#define INFO_FONT_SMALL         [UIFont fontWithName:@"EuphemiaUCAS" size:12]
+#define COUNT_LABEL_FONT        [UIFont fontWithName:@"AvenirNext-Regular" size:12]
+
+#define INFO_FONT_LARGE         [UIFont fontWithName:@"AvenirNext-Medium" size:16]
+#define INFO_FONT_MEDIUM        [UIFont fontWithName:@"AvenirNext-Regular" size:14]
+#define INFO_FONT_SMALL         [UIFont fontWithName:@"AvenirNext-Regular" size:12]
 
 #define SEARCH_AVATAR_SIZE      (CGSize){80,80}
 

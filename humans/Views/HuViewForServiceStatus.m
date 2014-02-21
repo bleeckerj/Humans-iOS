@@ -276,7 +276,7 @@
             }
             [statusView setText:description];
             [statusView setTextColor:[UIColor blackColor]];
-            [statusView setFont:[UIFont fontWithName:@"EuphemiaUCAS-Bold" size:18]];
+            [statusView setFont:INSTAGRAM_STATUS_TEXT_FONT];
             [statusView setScrollEnabled:YES];
             [statusView setBounces:NO];
             

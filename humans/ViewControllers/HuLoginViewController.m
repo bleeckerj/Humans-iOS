@@ -107,13 +107,14 @@
             
             [Flurry logEvent:[NSString stringWithFormat:@"%@ logged in successfully", [usernameTextField text]]];
             
-            dispatch_group_t group = dispatch_group_create();
-            dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
             
-            __block int i = 0;
-            dispatch_group_notify(group, queue, ^{
-                LOG_GENERAL(0, @"%d now going to push to humans scroll view", i);
-                
+            
+//            dispatch_group_t group = dispatch_group_create();
+//            dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
+//            
+//            //__block int i = 0;
+//            dispatch_group_notify(group, queue, ^{
+            
                 [[[userHandler humans_user]humans]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     //
                     HuHuman *human = (HuHuman*)obj;
@@ -179,7 +180,7 @@
                      */
                 });
             
-            });
+//            });
             
         
         } else {

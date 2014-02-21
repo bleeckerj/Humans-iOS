@@ -102,7 +102,7 @@
     NSAssert(([items count] > 0), @"Why are there no status items?");
     
     
-    //[header setStatus:[items objectAtIndex:[carousel currentItemIndex]]];
+    [header setStatus:[items objectAtIndex:0]];  //[carousel currentItemIndex]]];
     [self.view addSubview:header];
     
     [carousel setBackgroundColor:[UIColor grayColor]];
@@ -113,13 +113,13 @@
 	//add carousel to view
 	[self.view addSubview:carousel];
     
-    UIView *topCard = [[UIView alloc]init];
-    [topCard mc_setSize:self.carousel.frame.size];
-     [topCard setBackgroundColor:[UIColor Amazon]];
-    UILabel *label = [[UILabel alloc]initWithFrame:(CGRectMake(0, 0, topCard.frame.size.width, 50))];
-    [topCard addSubview:label];
-    
-    [items insertObject:topCard atIndex:0];
+//    UIView *topCard = [[UIView alloc]init];
+//    [topCard mc_setSize:self.carousel.frame.size];
+//     [topCard setBackgroundColor:[UIColor Amazon]];
+//    UILabel *label = [[UILabel alloc]initWithFrame:(CGRectMake(0, 0, topCard.frame.size.width, 50))];
+//    [topCard addSubview:label];
+//    
+//    [items insertObject:topCard atIndex:0];
     
     
     LOG_UI(0, @"view (%@) header= carousel=%@", self.view, NSStringFromCGRect(carousel.frame));
