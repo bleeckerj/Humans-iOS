@@ -262,18 +262,29 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     return self;
 }
 
-- (id)initWithUserHandler:(HuUserHandler *)aUserHandler
+- (id)init
 {
     self = [super init];
     if(self) {
-        userHandler = aUserHandler;
         [self commonInit];
     }
     return self;
 }
 
+//- (id)initWithUserHandler:(HuUserHandler *)aUserHandler
+//{
+//    self = [super init];
+//    if(self) {
+//        userHandler = aUserHandler;
+//        [self commonInit];
+//    }
+//    return self;
+//}
+
 - (void)commonInit
 {
+    HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+    userHandler = [delegate humansAppUser];
     arrayOfHumans = [NSMutableArray arrayWithArray:[[userHandler humans_user]humans]];
     humans_views = [[NSMutableArray alloc]init];
     privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
@@ -444,6 +455,8 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         LOG_UI(0, @"Long Press Header..Esc to %@ %@", [bself presentingViewController], bheader.longPresser);
         dispatch_async(dispatch_get_main_queue(), ^{
             [[bself navigationController]popViewControllerAnimated:YES];
+            HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+            [[bself navigationController]setViewControllers:[delegate freshNavigationStack] animated:YES];
         });
         
     };
@@ -489,23 +502,25 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     
     
 	// Do any additional setup after loading the view.
-    full_sized = CGRectMake(0, header.bottom, self.view.frame.size.width, self.view.frame.size.height-header.height-status_bar_height-10);
-    half_sized = CGRectMake(0, header.bottom, self.view.frame.size.width,  (self.view.frame.size.height-header.height-status_bar_height)/2);
+    full_sized = CGRectMake(0, header.bottom, self.view.frame.size.width, self.view.frame.size.height-header.height/*-status_bar_height*/);
+    half_sized = CGRectMake(0, header.bottom, self.view.frame.size.width,  full_sized.size.height/2);
     
     
     [arrayOfHumans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         //
         [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:half_sized human:obj parent:self]];
+      //  [humans_views addObject:[[UIView alloc]initWithFrame:half_sized]];
     }];
     
     
     carousel = [[iCarousel alloc]initWithFrame:full_sized];
-    [carousel setBackgroundColor:[UIColor Amazon]];
+    [carousel setBackgroundColor:[UIColor cloudsColor]];
     [carousel setType:iCarouselTypeCustom];
     [carousel setDataSource:self];
     [carousel setDelegate:self];
     [carousel setVertical:YES];
     [carousel setCenterItemWhenSelected:NO];
+    
     [self.view addSubview:carousel];
     
     [self setNeedsStatusBarAppearanceUpdate];
@@ -662,14 +677,18 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     return NO;
 }
 
-- (CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value
+- (CGFloat)carousel:(iCarousel *)aCarousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value
 {
     switch (option)
     {
         case iCarouselOptionWrap:
         {
             //normally you would hard-code this to YES or NO
+            if([self numberOfItemsInCarousel:aCarousel] < 3) {
+                return NO;
+            } else {
             return YES;
+            }
         }
         case iCarouselOptionSpacing:
         {
@@ -688,6 +707,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         case iCarouselOptionVisibleItems:
         {
             return 6;
+            
         }
         default:
         {
@@ -702,6 +722,26 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     NSUInteger result = [arrayOfHumans count];//[[[userHandler humans_user]humans]count];
     return result;
 }
+
+- (NSUInteger)numberOfPlaceholdersInCarousel:(iCarousel *)aCarousel
+{
+    if ([self numberOfItemsInCarousel:aCarousel] < 4) {
+        return 3;
+    } else {
+        return 0;
+    }
+}
+
+- (UIView *)carousel:(iCarousel *)carousel placeholderViewAtIndex:(NSUInteger)index reusingView:(UIView *)view
+{
+    UIView *result;
+    if(view == nil) {
+        result = [[UIView alloc]initWithFrame:half_sized];
+        [result setBackgroundColor:[UIColor crayolaBittersweetColor]];
+    }
+    return result;
+}
+
 
 -(UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {

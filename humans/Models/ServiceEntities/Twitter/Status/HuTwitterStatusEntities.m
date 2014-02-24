@@ -31,7 +31,7 @@
 
 - (NSString *)description
 {
-    return [self.user_mentions description];
+    return [NSString stringWithFormat:@"%@ %@ %@ %@ %@", [self.user_mentions description], [self.symbols description], [self.urls description], [self.media description], [self.hashtags description]];
 //    NSError *error = [[NSError alloc]init];
 //    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.user_mentions options:NSJSONWritingPrettyPrinted error:&error];
 //    NSString *jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];

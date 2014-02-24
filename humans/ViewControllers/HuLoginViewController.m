@@ -17,6 +17,22 @@
 #import "Flurry.h"
 #import <Crashlytics/Crashlytics.h>
 #import "HuHumansProfileCarouselViewController.h"
+#import <Parse/Parse.h>
+#import <SSKeychain.h>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
+@implementation UITextField (custom)
+- (CGRect)textRectForBounds:(CGRect)bounds {
+    return CGRectMake(bounds.origin.x + 10, bounds.origin.y + 8,
+                      bounds.size.width - 20, bounds.size.height - 16);
+}
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+    return [self textRectForBounds:bounds];
+}
+@end
+
+#pragma clang diagnostic pop
 
 @interface HuLoginViewController ()
 {
@@ -27,10 +43,20 @@
 
 @implementation HuLoginViewController
 
-@synthesize emailTextField;
 @synthesize usernameTextField;
 @synthesize passwordTextField;
-@synthesize signInButton;
+@synthesize loginButton;
+@synthesize signUpButton;
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if(self) {
+        //[self loginViaKeychain];
+    }
+    return self;
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,79 +67,83 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    [[UINavigationBar appearance] setTitleTextAttributes:
-//     [NSDictionary dictionaryWithObjectsAndKeys:
-//      [UIColor blackColor], NSForegroundColorAttributeName,
-//      [UIFont fontWithName:@"Futura-CondensedExtraBold" size:22.0], NSFontAttributeName,nil]];
-//    
-//    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont
-//                                                                          fontWithName:@"ArialMT" size:22], NSFontAttributeName,
-//                               [UIColor whiteColor], NSForegroundColorAttributeName, nil];
-//    
-//    [[UINavigationBar appearance] setTitleTextAttributes:attributes];
     
-//    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
-//    {
-//        CGRect frame = self.navigationController.view.frame;
-//        frame.origin.y += 20;
-//        frame.size.height -= 20;
-//        self.navigationController.view.frame = frame;
-//        self.navigationController.view.backgroundColor = [UIColor grayColor];
-//        
-//    }
-
+    loginButton.buttonColor = [UIColor crayolaTealBlueColor];
+    loginButton.shadowColor = loginButton.buttonColor;
+    loginButton.shadowHeight = 0.0f;
+    loginButton.cornerRadius = 0.0f;
+    loginButton.titleLabel.font = BUTTON_FONT_LARGE;
+    [loginButton setHighlightedColor:[UIColor crayolaTealBlueColor]];
+    [loginButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
-    //[[Crashlytics sharedInstance] crash];
-    //int *x = NULL; *x = 42;
+    signUpButton.buttonColor = [UIColor carrotColor];
+    signUpButton.shadowColor = signUpButton.buttonColor;
+    signUpButton.shadowHeight = 0.0f;
+    signUpButton.cornerRadius = 0.0f;
+    signUpButton.titleLabel.font = BUTTON_FONT_LARGE;
+    [signUpButton setHighlightedColor:[UIColor carrotColor]];
+    [signUpButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
     [self registerForKeyboardNotifications];
-    [emailTextField setDelegate:self];
     [usernameTextField setDelegate:self];
     [passwordTextField setDelegate:self];
     
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
     userHandler = [delegate humansAppUser];
     
-    UIFont *font = [UIFont fontWithName:@"DINAlternate-Bold" size:30.0f];
+    UIFont *font = LOGIN_VIEW_FONT_LARGE;
     
-    self.emailTextField.font=[font fontWithSize:19];
-    self.usernameTextField.font=[font fontWithSize:28];
-    self.passwordTextField.font=[font fontWithSize:29];
+    self.usernameTextField.font=font;
+    self.passwordTextField.font=font;
     
+    [self.usernameTextField setBackgroundColor:[UIColor crayolaTealBlueColor]];
+    [self.usernameTextField setTextColor:[UIColor whiteColor]];
+    
+    
+    [self.passwordTextField setBackgroundColor:[UIColor crayolaTealBlueColor]];
+    [self.passwordTextField setTextColor:[UIColor whiteColor]];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.usernameTextField.text = @"";
+    self.passwordTextField.text = @"";
+}
+
+- (IBAction)touchUp_signUpButton:(id)sender
+{
+    
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+    HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+    
+    HuSignUpViewController *signUpViewController = [delegate signUpViewController];
+    [[self navigationController]setViewControllers:@[signUpViewController] animated:YES];
 }
 
 
-- (IBAction)touchUp_signInButton:(id)sender {
+- (IBAction)touchUp_logInButton:(id)sender {
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
-    LOG_UI(0, @"Touch Up Sign In Button %@", sender);
-   
-    [Flurry logEvent:[NSString stringWithFormat:@"SIGN_IN %@" , [usernameTextField text]]];
-
+    
     MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     progressView.mode = MRProgressOverlayViewModeIndeterminate;
     progressView.titleLabelText = @"Logging In";
     
     [userHandler userRequestTokenForUsername:[usernameTextField text] forPassword:[passwordTextField text] withCompletionHandler:^(BOOL success, NSError *error) {
         //
+        NSDictionary *dimensions = @{@"user": [usernameTextField text], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+        [PFAnalytics trackEvent:@"service-login" dimensions:dimensions];
+        [Flurry logEvent:@"service-login" withParameters:dimensions];
+
         if(success) {
             NSString *userid = [[[userHandler humans_user]id]description];
             [Crashlytics setUserName:[usernameTextField text]];
-            [Crashlytics setUserEmail:[emailTextField text]];
             [Crashlytics setUserIdentifier: userid];
-            //go ahead
-//            SBJson4Writer *writer = [[SBJson4Writer alloc] init];
-//            NSString *user_json = [writer stringWithObject:[[userHandler humans_user] dictionary]];
-//            LOG_GENERAL(0, @"User %@", user_json);
+            
+            [SSKeychain deletePasswordForService:UNIQUE_APP_KEYCHAIN_SERVICE_NAME account:[usernameTextField text]];
+            [SSKeychain setPassword:[passwordTextField text] forService:UNIQUE_APP_KEYCHAIN_SERVICE_NAME account:[usernameTextField text]];
+            
             [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-            
-            [Flurry logEvent:[NSString stringWithFormat:@"%@ logged in successfully", [usernameTextField text]]];
-            
-            
-            
-//            dispatch_group_t group = dispatch_group_create();
-//            dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
-//            
-//            //__block int i = 0;
-//            dispatch_group_notify(group, queue, ^{
             
                 [[[userHandler humans_user]humans]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                     //
@@ -124,20 +154,12 @@
                         //UIImage *img = (UIImage *)obj;
                     }];
                 }];
-                
-//                humansScrollViewController = [[HuHumansScrollViewController alloc]init];
 
                 // have to do this on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
                     humansScrollViewController = [[HuHumansScrollViewController alloc]init];
-                    
-//                    UIViewController *x = [[UIViewController alloc]init];
-//                    [x.view setBackgroundColor:[UIColor greenColor]];
-//                    HuSlidingViewController *c = [[HuSlidingViewController alloc]initWithTopViewController:humansScrollViewController];
-                    
-//                    [humansScrollViewController setSlidingViewController:c];
-                    
-                    HuHumansProfileCarouselViewController *x = [[HuHumansProfileCarouselViewController alloc]initWithUserHandler:userHandler];
+                   
+                    HuHumansProfileCarouselViewController *x = [[HuHumansProfileCarouselViewController alloc]init];
                     
                     [[self navigationController]pushViewController:x animated:YES];
                     /*
@@ -180,8 +202,6 @@
                      */
                 });
             
-//            });
-            
         
         } else {
             ///[self.activityIndicatorView stopAnimating];
@@ -189,7 +209,7 @@
             [MRProgressOverlayView dismissOverlayForView:self.view animated:YES];
             
             MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-            progressView.mode = MRProgressOverlayViewModeCheckmark;
+            progressView.mode = MRProgressOverlayViewModeCross;
             progressView.titleLabelText = [NSString stringWithFormat:@"Login Failed %@", [error description]];
             [self performBlock:^{
                 [progressView dismiss:YES];
@@ -214,13 +234,13 @@
 //    return result;
 //}
 
-- (void)anchorRight {
-    [self.slidingViewController anchorTopViewToRightAnimated:YES];
-}
-
-- (void)anchorLeft {
-    [self.slidingViewController anchorTopViewToLeftAnimated:YES];
-}
+//- (void)anchorRight {
+//    [self.slidingViewController anchorTopViewToRightAnimated:YES];
+//}
+//
+//- (void)anchorLeft {
+//    [self.slidingViewController anchorTopViewToLeftAnimated:YES];
+//}
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -249,22 +269,6 @@
     [super viewWillDisappear:animated];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    //LOG_UI(0, @"View Will Appear");
-    // if the view appears again (going back from a status scroller), we need to
-    // re-add this gesture recognizer, which gets removed by HuHumansScrollViewController
-    // so that the gestures in the top bar of HuHumansScrollViewController are recognized
-    
-    //    [[self view]setBackgroundColor:[UIColor grayColor]];
-    //    [[self usernameTextField]setText:@"HELLO??"];
-}
-
-//- (void)textFieldDidEndEditing:(UITextField *)textField
-//{
-//    LOG_UI(0, @"%@", [textField text]);
-//}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
@@ -291,7 +295,6 @@
 
 - (void)keyboardWillBeHidden:(id)sender
 {
-    LOG_UI(0, @"Hello %@ %@ %@", [usernameTextField text], [passwordTextField text], [emailTextField text]);
 }
 
 - (void)didReceiveMemoryWarning

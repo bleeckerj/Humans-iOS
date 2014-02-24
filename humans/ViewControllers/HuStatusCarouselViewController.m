@@ -131,6 +131,12 @@
     [carousel reloadData];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [items removeAllObjects];
+}
+
 - (void)onSwipeNameLabel:(id)gesture
 {
     //LOG_UI(0, @"Swiped gesture=%@", gesture);

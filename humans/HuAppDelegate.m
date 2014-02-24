@@ -12,28 +12,36 @@
 #import <Crashlytics/Crashlytics.h>
 #import "Flurry.h"
 #import "TestFlight.h"
+#import <Parse/Parse.h>
+#import <SSKeychain.h>
+#import "HuHumansProfileCarouselViewController.h"
 
 @implementation HuAppDelegate
-
+{
+    HuLoginViewController *loginViewController;
+    HuSignUpViewController *signUpViewController;
+}
 @synthesize humansAppUser;
 @synthesize jediFindFriendsViewController;
+
 //@synthesize findFollowsMainViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     [TestFlight takeOff:@"7d627af6-7629-44dc-8103-a7a1baa81d03"];
     // Override point for customization after application launch.
     LoggerInit();
-    //LoggerSetViewerHost(LoggerGetDefaultLogger(), CFSTR("10.0.0.79"), 49767);
+    
+    
     LoggerStart(LoggerGetDefaultLogger());
+    
     LOG_GENERAL(0, @"Are we running?");
     LOG_UI(0, @"Model %@ IS_IPHONE? %@", [ [ UIDevice currentDevice ] model ], (IS_IPHONE?@"YES":@"NO"));
     LOG_UI(0, @"Widescreen %d", ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON ));
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     [manager.imageDownloader setDownloadTimeout:30.0];
-    
-    
     
         for (NSString* family in [UIFont familyNames])
         {
@@ -47,21 +55,112 @@
     
     humansAppUser = [[HuUserHandler alloc]init];
     
-    //    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
-    //                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
-    //
+    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
+                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
     [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
-    //    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
     [Crashlytics sharedInstance].debugMode = YES;
     
-    //
-    //[Flurry setCrashReportingEnabled:YES];
-    ////
     [Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
     [application setStatusBarHidden:NO];
     
+    [self loginViaKeychain];
+    
+    
     return YES;
 }
+
+- (void)loginViaKeychain
+{
+    NSArray *accounts = [SSKeychain accountsForService:UNIQUE_APP_KEYCHAIN_SERVICE_NAME];
+    if([accounts count] > 0) {
+        // only one really
+        NSDictionary *humansAccount = [accounts objectAtIndex:0];
+        NSString *username = [humansAccount objectForKey:kSSKeychainAccountKey];
+        NSString *password = [SSKeychain passwordForService:UNIQUE_APP_KEYCHAIN_SERVICE_NAME account:username];
+        [self loginWithUsername:username password:password completionHandler:^(BOOL success, NSError *error) {
+            //
+            if(success) {
+            NSDictionary *dimensions = @{@"user": username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+            [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
+            } else {
+                UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                UIViewController *test = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];
+                UINavigationController *root = (UINavigationController*)self.window.rootViewController;
+                [root pushViewController:test animated:YES];
+ 
+            }
+        }];
+    } else {
+        
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *test = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginOrSignUpViewController"];
+        UINavigationController *root = (UINavigationController*)self.window.rootViewController;
+
+        [root pushViewController:test animated:YES];
+    }
+    
+    
+}
+
+- (HuSignUpViewController *)signUpViewController
+{
+    if(signUpViewController == nil) {
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        signUpViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuSignUpViewController"];
+    }
+    [[signUpViewController usernameTextField]setText:@""];
+    [[signUpViewController passwordTextField]setText:@""];
+    [[signUpViewController emailTextField]setText:@""];
+    return signUpViewController;
+}
+
+
+- (HuLoginViewController *)loginViewController
+{
+    if(loginViewController == nil) {
+    UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    loginViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];
+    }
+    [[loginViewController usernameTextField]setText:@""];
+    [[loginViewController passwordTextField]setText:@""];
+    return loginViewController;
+}
+
+- (NSArray *)freshNavigationStack
+{
+    return  @[[self loginViewController]];
+}
+
+- (void)loginWithUsername:(NSString *)username password:(NSString *)password completionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    HuUserHandler *userHandler = [self humansAppUser];
+    UINavigationController *root = (UINavigationController*)self.window.rootViewController;
+    
+    [userHandler userRequestTokenForUsername:username forPassword:password withCompletionHandler:^(BOOL success, NSError *error) {
+        //
+        if(success) {
+            HuHumansProfileCarouselViewController *x = [[HuHumansProfileCarouselViewController alloc]init];
+           [root pushViewController:x animated:YES];
+            if(completionHandler) {
+                completionHandler(YES, nil);
+            }
+        } else {
+            
+            
+            [root pushViewController:[self loginViewController] animated:YES];
+
+            if(completionHandler) {
+                completionHandler(NO, error);
+            }
+        }
+    }];
+    
+    
+}
+
+
 
 - (HuJediFindFriends_ViewController *)jediFindFriendsViewController
 {

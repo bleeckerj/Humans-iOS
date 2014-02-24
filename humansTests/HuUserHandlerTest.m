@@ -58,17 +58,24 @@ HuUserHandler *user_handler;
     
 }
 
-- (void)test_doSomething
+- (void)test_parseCreateNewUser
 {
     ASYNC_START
-    [user_handler doSomething:^(id data, BOOL success, NSError *error) {
+    HuUser *newUser = [[HuUser alloc]init];
+    [newUser setUsername:@"julian"];
+    [newUser setEmail:@"julian@nearfuturelaboratory.com"];
+    NSString *password = @"forbidden";
+    NSString *business = [newUser jsonString];
+    LOG_DEBUG(0, @"%@", [newUser jsonString]);
+    [user_handler parseCreateNewUser:newUser password:password withCompletionHandler:^(id data, BOOL success, NSError *error) {
         //
-        LOG_GENERAL(0, @"%@", data);
-        
+        LOG_DEBUG(0, @"%@ %d %@", data, success, error);
         ASYNC_TEST_DONE
     }];
     ASYNC_TEST_END_LONG_TIMEOUT
 }
+
+
 
 - (void)test_foogetStatusCountForHuman
 {

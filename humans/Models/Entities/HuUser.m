@@ -24,6 +24,20 @@
 @synthesize version = _version;
 
 
+- (id) init
+{
+    self = [super init];
+    if(self) {
+    _id = @"";
+        _humans = [NSMutableArray array];
+    _services = [NSMutableArray array];
+    _username = @"";
+        _version = [NSDecimalNumber zero];
+    _email = @"";
+    }
+    return self;
+}
+
 - (void) dealloc
 {
 	
@@ -123,12 +137,33 @@
 }
 
 
+-(NSString *)jsonString
+{
+    return [self description];
+}
+
+- (NSString *)description
+{
+    NSDictionary *dict = [self dictionary];
+    NSError *error;
+    
+    SBJson4Writer *writer = [[SBJson4Writer alloc] init];
+    NSString *jsonString = [writer stringWithObject:self];
+    if ( ! jsonString ) {
+        LOG_ERROR(0, @"Error: %@", error);
+    }
+    return jsonString;
+}
+
 
 -(NSDictionary *)dictionary
 {
-        return [NSDictionary dictionaryWithObjectsAndKeys:[self id],  @"id", [self email], @"email", [self humans], @"humans",
+    NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:[self id],  @"id", [self email], @"email", [self humans], @"humans",
                 [self services], @"services", self.username, @"username", self.isAdmin, @"isAdmin", self.isSuperuser, @"isSuperuser", nil];
+    return result;
 }
+
+
 
 -(NSDictionary *)proxyForJson
 {

@@ -25,6 +25,9 @@
 #import <ViewUtils.h>
 #import "Flurry.h"
 #import <MRProgress/MRProgress.h>
+#import <UIColor+Crayola.h>
+#import <UIColor+FlatUI.h>
+
 
 @interface HuJediFindFriends_ViewController : UIViewController <UINavigationControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate, UISearchBarDelegate, MBProgressHUDDelegate>
 typedef enum {

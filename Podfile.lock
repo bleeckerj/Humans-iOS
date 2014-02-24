@@ -1,6 +1,5 @@
 PODS:
   - AFNetworking (1.3.3)
-  - BButton (3.2.3)
   - BlocksKit (2.0.0):
     - BlocksKit/All
   - BlocksKit/All (2.0.0):
@@ -19,7 +18,10 @@ PODS:
   - ConciseKit (0.1.2)
   - DropdownMenu (1.0.0)
   - ECSlidingViewController (2.0.1)
+  - EKKeyboardAvoiding (2.0)
   - Expecta (0.2.3)
+  - Facebook-iOS-SDK (3.12.0)
+  - FlatUIKit (1.3)
   - FLKAutoLayout (0.1.1)
   - FontAwesome-iOS (0.0.4)
   - FPBrandColors (0.1.3)
@@ -79,6 +81,7 @@ PODS:
   - OCMock (2.2.3)
   - OCMockito (1.1.0):
     - OCHamcrest (~> 3.0)
+  - RDVKeyboardAvoiding (1.1.0)
   - REMenu (1.8)
   - RestKit (0.22.0):
     - RestKit/Core
@@ -98,7 +101,9 @@ PODS:
     - RKValueTransformers (~> 1.0.1)
   - RestKit/Support (0.22.0):
     - TransitionKit (= 2.0.0)
+  - RFRotate (1.0.0)
   - RKValueTransformers (1.0.1)
+  - RNBlurModalView (0.1.0)
   - RNCryptor (2.2)
   - SBJson (4.0.0)
   - SDWebImage (3.5.2):
@@ -106,19 +111,24 @@ PODS:
   - SDWebImage/Core (3.5.2)
   - SKSlideViewController (0.0.1)
   - SOCKit (1.1)
+  - SSKeychain (1.2.1)
+  - TPKeyboardAvoiding (1.2.3)
   - TransitionKit (2.0.0)
+  - UIColor-Crayola (1.0)
   - UIImage-Categories (0.0.1)
   - ViewUtils (1.1.2)
   - WSLObjectSwitch (1.0.0)
 
 DEPENDENCIES:
-  - BButton
   - BlocksKit (~> 2.0.0)
   - Bolts
   - ConciseKit
   - DropdownMenu
   - ECSlidingViewController (~> 2.0.0-beta2)
+  - EKKeyboardAvoiding
   - Expecta (~> 0.2.3)
+  - Facebook-iOS-SDK
+  - FlatUIKit
   - FLKAutoLayout
   - FontAwesome-iOS (~> 0.0.4)
   - FPBrandColors (~> 0.1.3)
@@ -137,12 +147,18 @@ DEPENDENCIES:
   - OCHamcrest (~> 3.0.1)
   - OCMock
   - OCMockito (~> 1.0)
+  - RDVKeyboardAvoiding
   - REMenu (~> 1.8)
   - RestKit
+  - RFRotate (from `~/Code/RFRotate`)
+  - RNBlurModalView (~> 0.1.0)
   - RNCryptor (~> 2.2)
   - SBJson (~> 4.0.0)
   - SDWebImage
   - SKSlideViewController (~> 0.0.1)
+  - SSKeychain
+  - TPKeyboardAvoiding
+  - UIColor-Crayola
   - UIImage-Categories (~> 0.0.1)
   - ViewUtils (~> 1.1.2)
   - WSLObjectSwitch (from `~/Code/WSLObjectSwitch`)
@@ -150,18 +166,22 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   MCUIViewLayout:
     :git: https://github.com/mirego/MCUIViewLayout.git
+  RFRotate:
+    :path: ~/Code/RFRotate
   WSLObjectSwitch:
     :path: ~/Code/WSLObjectSwitch
 
 SPEC CHECKSUMS:
   AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
-  BButton: b405745cd7ccc9444c696b8690fb79541623766a
   BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
   Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
   DropdownMenu: 3c454205c2db1fd39dc1ebf099114c4fdb73f136
   ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
+  EKKeyboardAvoiding: b589dcaa5ff765818f69e69f03a1efab618d6953
   Expecta: dbc4a27fabb853bdd2e907e33f11ee43a9a47d0c
+  Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
+  FlatUIKit: 3b32b52bb3c266477709cfe4812ab2c877ae942b
   FLKAutoLayout: fc04b932009174d4118ef4bda9dc8fedf1369efc
   FontAwesome-iOS: 5e33a7bbabacdc8a177cb9d3d81876f0c7a272c1
   FPBrandColors: e0df3950b283d1a6d6c42d6b97f04a031ccf9e12
@@ -182,15 +202,21 @@ SPEC CHECKSUMS:
   OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
   OCMock: 74e4ddbcef134170dcc844f91c691f13868075d7
   OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
+  RDVKeyboardAvoiding: d624b80508c45e9e14a9c7e2f23b2318887b110e
   REMenu: 40bb965c968b298c3f36d36067a15dd3f2c52473
   RestKit: dc107a0aa4f962575ad0385bac5b3c5e4f591f4e
+  RFRotate: 32613810b400f04cce8b6e532f52fe9f59effb68
   RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182
+  RNBlurModalView: ab3855ced43749cb0fb4d370160bd2908476c8b6
   RNCryptor: 1420380792b33758d2414cf37af160ea2495e15c
   SBJson: f3c686806e8e36ab89e020189ac582ba26ec4220
   SDWebImage: fe7ce01ae4e0a884d168f59c9dd82d35baf8429e
   SKSlideViewController: 98e4cee58146aaf8b24d300b9a32bc7c45cc5b25
   SOCKit: 2f3bc4d07910de12dcc202815e07db68a3802581
+  SSKeychain: d18926838c2e7cd342e2a49e9f869858e49f035a
+  TPKeyboardAvoiding: 17995aaa6db26ac2a9fa8714a86509c5888f0392
   TransitionKit: 433284465abacdc07852d7db6dd0cc075010059a
+  UIColor-Crayola: 20eacda0777fd487efba6831e2b34625e8ce3ceb
   UIImage-Categories: d9f10e0afb9b281b35a3c2b0c7d16d1ca251d824
   ViewUtils: e0b147bd0b2acfbf6b030f6a32b0c2bdd959df68
   WSLObjectSwitch: b43248112e4890014ebb2a125e05b3a8bbfb1b09

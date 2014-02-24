@@ -45,6 +45,7 @@
 #import "HuFlickrDescription.h"
 
 #import "HuRestStatusHeader.h"
+#import <Parse/Parse.h>
 
 @interface HuUserHandler : NSObject <NSURLConnectionDelegate>
 
@@ -65,6 +66,8 @@ typedef enum networkStateTypes
 @property (nonatomic, retain) NSMutableArray *friends;
 @property HuNetworkState networkState;
 
+- (void)parseCreateNewUser:(HuUser *)aUser password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler;
+//- (void)createNewUser:(HuUser *)user password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 - (void)getStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 - (void)getStatusCountForHuman:(HuHuman *)human after:(NSTimeInterval)timestamp withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 
@@ -76,7 +79,7 @@ typedef enum networkStateTypes
 - (void)userRemoveService:(HuServices *)aService withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 
 
-- (BOOL)usernameExists:(NSString *)username;
+- (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionhandler;
 - (void)getAuthFor:(HuServices *)service with:(CompletionHandlerWithData)completionHandler;
 
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;

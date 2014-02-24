@@ -24,8 +24,10 @@
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
--(NSDictionary *)dictionary;
+- (NSDictionary *)dictionary;
 - (NSDictionary *)proxyForJson;
 - (Boolean)amSuperuser;
 - (Boolean)amAdmin;
+- (NSString *)jsonString;
+
 @end

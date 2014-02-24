@@ -10,12 +10,17 @@
 #import <ECSlidingViewController.h>
 #import "HuSlidingViewController.h"
 #import <MRProgress/MRProgress.h>
+#import <FUIButton.h>
+#import "UIColor+UIColor_LighterDarker.h"
+#import <UIColor+FPBrandColor.h>
+#import <UIColor+Crayola.h>
+#import <Parse/Parse.h>
 
 @interface HuLoginViewController : UIViewController <UITextFieldDelegate>
-@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
-@property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
-@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (weak, nonatomic) IBOutlet UIButton *signInButton;
-@property (nonatomic, strong) HuSlidingViewController *slidingViewController;
+@property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
+@property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (strong, nonatomic) IBOutlet FUIButton *loginButton;
+@property (strong, nonatomic) IBOutlet FUIButton *signUpButton;
+//@property (nonatomic, strong) ECSlidingViewController *slidingViewController;
 //@property (strong, nonatomic) MRActivityIndicatorView *activityIndicatorView;
 @end

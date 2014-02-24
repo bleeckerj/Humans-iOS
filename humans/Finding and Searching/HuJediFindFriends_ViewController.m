@@ -96,10 +96,18 @@ UISearchBar *mSearchBar;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self initialState];
     // this'll stock us with the follows for all the appusers's "serviceuser" accounts
     [self loadAppUserServiceFollows];
 
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self initialState];
+    
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle
@@ -158,7 +166,8 @@ UISearchBar *mSearchBar;
     [self clearResults];
     [picksGrid layout];
     [resultsGrid layout];
-    finalStateView.x = self.view.width;
+    finalStateView.left = self.view.width;
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
     
     [UIView animateWithDuration:0.5 animations:^{
         //
@@ -261,7 +270,7 @@ UISearchBar *mSearchBar;
             labelView = obj;
         }
     }];
-    
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
     [labelView setText:@"Done"];
     
     [UIView animateWithDuration:0.5 animations:^{
@@ -522,7 +531,7 @@ UISearchBar *mSearchBar;
     
     picksGrid = [MGBox boxWithSize:CGSizeMake(MAX_USERS_PER_FRIEND*90, PICTURE_ROW_HEIGHT)];
     picksGrid.contentLayoutMode = MGLayoutGridStyle;
-    picksGrid.backgroundColor = UIColorFromRGB(0x252525);
+    picksGrid.backgroundColor =[UIColor crayolaLicoriceColor];
     picksGrid.padding = UIEdgeInsetsZero;
     
     // build picksGrid
@@ -557,8 +566,8 @@ UISearchBar *mSearchBar;
     CGFloat x = picksGrid.bottom;
     [self.resultsView setSize:CGSizeMake(self.view.width, self.view.height - x)];
     [self.resultsView setBackgroundColor:[UIColor blueColor]];
-    [self.resultsView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
-    
+//    [self.resultsView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
+    [self.resultsView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller withMargins:UIEdgeInsetsMake(-2, 0, 0, 0)];
     
     
     resultsScroller = [MGScrollView scrollerWithSize:self.resultsView.size];
@@ -585,8 +594,10 @@ UISearchBar *mSearchBar;
     [finalStateView mc_setRelativePosition:MCViewPositionToTheRight toView:self.resultsView];
     [finalStateView setTop:namingTextField.bottom];
     [finalStateView setLeft:[self resultsView].right];
+
     //[finalStateView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
     [self.view addSubview:finalStateView];
+
 //    finalStateScroller = [MGScrollView scrollerWithSize:[resultsScroller size]];
 //    [finalStateScroller setContentSize:self.resultsView.size];
 //    [finalStateScroller setBackgroundColor:UIColorFromRGB(0xFF0000)];

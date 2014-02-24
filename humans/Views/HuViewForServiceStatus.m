@@ -144,8 +144,7 @@
 {
     self = [super initWithFrame:frame];
     if(self) {
-        LOG_TWITTER(0, @"frame for twitter status=%@", NSStringFromCGRect(frame));
-        
+        LOG_TWITTER(0, @"status entities %@", [mstatus entities]);
         status = mstatus;
         // header isn't part of the actual status view, which gets pasted into the carousel, so we need
         // the header to be separate..it's managed by HuStatusCarousel_ViewController

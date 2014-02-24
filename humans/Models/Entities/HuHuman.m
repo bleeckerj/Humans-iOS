@@ -166,10 +166,6 @@
 -(NSString *)jsonString
 {
     return [self description];
-//    NSError *writeError = nil;
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.dictionary options:(NSJSONWritingPrettyPrinted | NSJSONReadingMutableContainers) error:&writeError];
-//    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//    return jsonString;
 }
 
 

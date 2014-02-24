@@ -92,17 +92,25 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
+#define UNIQUE_APP_KEYCHAIN_SERVICE_NAME  @"humans-ios"
+
 #define UICOLOR_FRONT           [UIColor whiteColor];
 #define UICOLOR_SHADOW          [UIColor lightGrayColor];
 #define UICOLOR_BACK            [UIColor darkGrayColor];
 
-#define HEADLINE_FONT           [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:18]
-#define HEADLINE_FONT_LIGHT     [UIFont fontWithName:@"EuphemiaUCAS" size:16]
-#define HEADLINE_FONT_SMALL     [UIFont fontWithName:@"EuphemiaUCAS" size:14]
-#define HEADLINE_FONT_SMALL_BOLD [UIFont fontWithName:@"EuphemiaUCAS-Bold" size:14]
+#define BUTTON_FONT_LARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:26]
+#define TEXTFIELD_FONT_LARGE    [UIFont fontWithName:@"AvenirNext-Medium" size:26]
+#define ALERT_FONT_LIGHT     [UIFont fontWithName:@"AvenirNext-Regular" size:16]
+
+#define HEADLINE_FONT           [UIFont fontWithName:@"AvenirNext-Medium" size:18]
+#define HEADLINE_FONT_LIGHT     [UIFont fontWithName:@"AvenirNext-Regular" size:16]
+#define HEADLINE_FONT_SMALL     [UIFont fontWithName:@"AvenirNext-Regular" size:14]
+#define HEADLINE_FONT_SMALL_BOLD [UIFont fontWithName:@"AvenirNext-Medium" size:14]
 
 #define HEADER_FONT             [UIFont fontWithName:@"AvenirNext-Medium" size:14]
 #define HEADER_FONT_LARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:20]
+
+#define LOGIN_VIEW_FONT_LARGE    [UIFont fontWithName:@"AvenirNext-Medium" size:32]
 
 #define PROFILE_VIEW_FONT_LARGE  [UIFont fontWithName:@"AvenirNext-Medium" size:24]
 #define PROFILE_VIEW_FONT_SMALL  [UIFont fontWithName:@"AvenirNext-Medium" size:20]

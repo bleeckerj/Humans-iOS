@@ -8,7 +8,7 @@
 
 #import "HuSlidingViewController.h"
 #import <UIControl+BlocksKit.h>
-#import <BButton.h>
+#import <FUIButton.h>
 #import <UIView+MCLayout.h>
 #import "HuShowServicesViewController.h"
 
@@ -130,39 +130,39 @@
         
     } forControlEvents:UIControlEventTouchUpInside];
     
-    BButton *button = [[BButton alloc]init];
-    [button setType:BButtonTypePrimary];
-    [button setStyle:BButtonStyleBootstrapV3];
+    UIButton *button = [[UIButton alloc]init];
+//    [button setType:BButtonTypePrimary];
+//    [button setStyle:BButtonStyleBootstrapV3];
     [button setSize:settingsButton.size];
     
     [button bk_addEventHandler:^(id sender) {
         //
         LOG_UI(0, @"Hey! You touched bbuton %@", sender);
     } forControlEvents:UIControlEventTouchUpInside];
-    [[BButton appearance] setButtonCornerRadius:[NSNumber numberWithFloat:10.0f]];
+//    [[UIButton appearance] setButtonCornerRadius:[NSNumber numberWithFloat:10.0f]];
     [button setTitle:@"Settings" forState:UIControlStateNormal];
     //[button mc_setPosition:MCViewRelativePositionUnderCentered ]
     [button mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:settingsButton withMargins:UIEdgeInsetsMake(10, 0, 0, 0)];
     [underLeftViewController.view addSubview:settingsButton];
     [underLeftViewController.view addSubview:button];
     
-    BButton *b2 = [[BButton alloc]initWithFrame:CGRectMake(10, 10, 100, 80) color:[UIColor orangeColor] style:BButtonStyleBootstrapV3 icon:FAIconCogs fontSize:32];
-    
-    //[BButton awesomeButtonWithOnlyIcon:FAIconCogs color:[UIColor orangeColor] style:BButtonStyleBootstrapV3];
-    [b2 setSize:CGSizeMake(100, 100)];
-    
-    [b2 mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:button withMargins:UIEdgeInsetsMake(10, 0, 0, 0)];
-    //[b2 setTitle:@"Settings" forState:UIControlStateNormal];
-    [underLeftViewController.view addSubview:b2];
-    [b2 bk_addEventHandler:^(id sender) {
-        //
-        LOG_UI(0, @"Oooh! You touched bbuton %@", sender);
-        // switch Top
-        
-        
-        
-    } forControlEvents:UIControlEventTouchUpInside];
-    
+//    BButton *b2 = [[BButton alloc]initWithFrame:CGRectMake(10, 10, 100, 80) color:[UIColor orangeColor] style:BButtonStyleBootstrapV3 icon:FAIconCogs fontSize:32];
+//    
+//    //[BButton awesomeButtonWithOnlyIcon:FAIconCogs color:[UIColor orangeColor] style:BButtonStyleBootstrapV3];
+//    [b2 setSize:CGSizeMake(100, 100)];
+//    
+//    [b2 mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:button withMargins:UIEdgeInsetsMake(10, 0, 0, 0)];
+//    //[b2 setTitle:@"Settings" forState:UIControlStateNormal];
+//    [underLeftViewController.view addSubview:b2];
+//    [b2 bk_addEventHandler:^(id sender) {
+//        //
+//        LOG_UI(0, @"Oooh! You touched bbuton %@", sender);
+//        // switch Top
+//        
+//        
+//        
+//    } forControlEvents:UIControlEventTouchUpInside];
+//    
 }
 
 - (void)doubleTapTop:(id)gesture

@@ -21,11 +21,12 @@
 #import "ViewUtils.h"
 #import "HuShowServicesViewController.h"
 #import <UIColor+FPBrandColor.h>
+#import <UIColor+Crayola.h>
 
 @interface HuHumansProfileCarouselViewController : UIViewController
 @property (nonatomic, strong) REMenu *mainMenu;
 
 - (void)setHumansUserHandler:(HuUserHandler *)aUserHandler;
-- (id)initWithUserHandler:(HuUserHandler *)aUserHandler;
+//- (id)initWithUserHandler:(HuUserHandler *)aUserHandler;
 
 @end
