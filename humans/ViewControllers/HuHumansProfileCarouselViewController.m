@@ -52,7 +52,7 @@ MRProgressOverlayView *activityIndicatorView;
     userHandler = [delegate humansAppUser];
     
     self.count = [NSNumber numberWithInt:0];
-
+    
     
     CGFloat width = self.frame.size.width/6;
     NSArray *s = [human serviceUsers];
@@ -60,8 +60,6 @@ MRProgressOverlayView *activityIndicatorView;
     
     UIView *container = [[UIView alloc]initWithFrame:self.frame];
     [container setBackgroundColor:[UIColor whiteColor]];
-    
-    
     
     [self addSubview:container];
     
@@ -72,7 +70,7 @@ MRProgressOverlayView *activityIndicatorView;
     //[overlay mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:container];
     //[overlay mc_setPosition:MCViewPositionCenters inView:container];
     [overlay mc_setPosition:MCViewPositionTopHCenter inView:container withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
-    [overlay setBackgroundColor:[UIColor colorWithWhite:0.3 alpha:0.2]];
+    [overlay setBackgroundColor:[UIColor Garmin]];
     
     nameLabel = [[UILabel alloc]initWithFrame:[overlay frame]];
     [overlay addSubview:nameLabel];
@@ -82,15 +80,17 @@ MRProgressOverlayView *activityIndicatorView;
     [nameLabel setTextAlignment:NSTextAlignmentCenter];
     [nameLabel mc_setRelativePosition:MCViewPositionCenters toView:overlay];
     
+    CGFloat diam = overlay.size.height -8;
+    
     countLabel = [[UILabel alloc]init];
-    [countLabel setSize:CGSizeMake(overlay.size.height, overlay.size.height)];
+    [countLabel setSize:CGSizeMake(diam, diam)];
     [container addSubview:countLabel];
     [countLabel setFont:COUNT_LABEL_FONT];
     [countLabel setTextColor:[UIColor darkGrayColor]];
     [countLabel setBackgroundColor:[UIColor whiteColor]];
     [countLabel setTextAlignment:NSTextAlignmentCenter];
     [countLabel mc_setRelativePosition:MCViewPositionRight toView:overlay];
-    [countLabel.layer setCornerRadius:overlay.size.height/2];
+    [countLabel.layer setCornerRadius:diam/2];
     
     [self bk_whenTapped:^{
         //
@@ -98,7 +98,7 @@ MRProgressOverlayView *activityIndicatorView;
         activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
         activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
         activityIndicatorView.tintColor = [UIColor orangeColor];
-
+        
         [self showHuman];
     }];
     
@@ -111,16 +111,24 @@ MRProgressOverlayView *activityIndicatorView;
         UIImageView *profile_imgview = [[UIImageView alloc]initWithFrame:(CGRectMake((idx/2)*width, (idx%2)*width, width, width))];
         profile_imgview.layer.borderWidth = 0.5;
         profile_imgview.layer.borderColor = [[UIColor lightGrayColor]CGColor];
-        [profile_imgview setImageWithURL:[NSURL URLWithString:[user imageURL]] placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"]];
+        //        [profile_imgview setImageWithURL:[NSURL URLWithString:[user imageURL]] placeholderImage:];
+        //
+        //        [profile_imgview setImageWithURL:[NSURL URLWithString:[user imageURL]] placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"]];
+        //
+        [profile_imgview setImageWithURL:[NSURL URLWithString:[user imageURL]] placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] options:SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            //
+        }];
+        
+        
         [profile_image_container addSubview:profile_imgview];
     }];
     [container addSubview:profile_image_container];
     [profile_image_container mc_setRelativePosition:MCViewRelativePositionUnderAlignedLeft toView:overlay];
     
     container.layer.cornerRadius = 0;
-    container.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    container.layer.borderWidth = 1.0f;
-
+    //container.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    //container.layer.borderWidth = 1.0f;
+    
 }
 
 - (void)layoutSubviews
@@ -206,7 +214,7 @@ MRProgressOverlayView *activityIndicatorView;
             [f setNumberStyle:NSNumberFormatterDecimalStyle];
             bself.count = [f numberFromString:[data description]];
             [self.countLabel setText:[bself.count stringValue]];
-             dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [bself setNeedsDisplay];
             });
         } else {
@@ -242,11 +250,22 @@ MRProgressOverlayView *activityIndicatorView;
     MSWeakTimer *timerForStatusRefresh;
     dispatch_queue_t privateQueue;
     CGRect full_sized, half_sized;
+    
+    
 }
 @end
 
 @implementation HuHumansProfileCarouselViewController
-@synthesize mainMenu;
+
+
+typedef enum {
+    kListGridView = 0,
+    kHalfHeightScrollView,
+    kFullHeightScrollView
+} tViewType;
+
+tViewType viewType;
+
 
 static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProfileCarouselViewControllerTimerQueueContext";
 
@@ -271,16 +290,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     return self;
 }
 
-//- (id)initWithUserHandler:(HuUserHandler *)aUserHandler
-//{
-//    self = [super init];
-//    if(self) {
-//        userHandler = aUserHandler;
-//        [self commonInit];
-//    }
-//    return self;
-//}
-
 - (void)commonInit
 {
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
@@ -296,13 +305,15 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
                                                                 repeats:YES
                                                           dispatchQueue:privateQueue];
     
+    viewType = kFullHeightScrollView;
+    
     dispatch_queue_set_specific(privateQueue, (__bridge const void *)(self), (void *)HuHumansScrollViewControllerTimerQueueContext, NULL);
-
+    
 }
 
 - (BOOL)prefersStatusBarHidden
 {
-    return NO;
+    return YES;
 }
 
 - (UIStatusBarStyle )preferredStatusBarStyle
@@ -315,7 +326,13 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
 {
     if([arrayOfHumans containsObject:human] == NO) {
         [arrayOfHumans addObject:human];
-        [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:half_sized human:human parent:self]];
+        if(viewType == kHalfHeightScrollView) {
+            [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:half_sized human:human parent:self]];
+            
+        } else {
+            [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:full_sized human:human parent:self]];
+            
+        }
         [carousel insertItemAtIndex:[carousel numberOfItems] animated:YES];
     }
     
@@ -342,7 +359,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
 {
     [super viewWillDisappear:animated];
     [timerForStatusRefresh invalidate];
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -350,13 +367,13 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     [self updateHumansForView];
     LOG_UI(0, @"Here we have %d humans", [arrayOfHumans count]);
     [super viewWillAppear:animated];
-
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         //
         [[[self.navigationController navigationBar]topItem] setTitle:@"Profile Carousel"];
-
+        
     });
-
+    
     
     if(timerForStatusRefresh == nil) {
         timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
@@ -367,18 +384,18 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
                                                               dispatchQueue:privateQueue];
         
     }
-
+    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [[[self.navigationController navigationBar]topItem] setTitle:@"Profile Carousel"];
-
+    
     
     //[self.view setFrame:self.parentViewController.view.frame];
     CGFloat status_bar_height = [UIApplication sharedApplication].statusBarFrame.size.height;
-
+    
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
     {
         CGRect frame = self.navigationController.view.frame;
@@ -386,12 +403,11 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
             frame.origin.y += status_bar_height;
             frame.size.height -= status_bar_height;
             self.navigationController.view.frame = frame;
-            self.navigationController.view.backgroundColor = [UIColor greenColor];
+            self.navigationController.view.backgroundColor = [UIColor whiteColor];
             //[self.navigationController.view setNeedsDisplay];
             
         }
     }
-
     
     HuHumansProfileCarouselViewController *bself = self;
     
@@ -400,15 +416,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     MGLine *settings_bar = [MGLine lineWithLeft:settings_bar_img right:nil size:[settings_bar_img size]];
     settings_bar.onTap = ^{
         LOG_UI(0, @"Tapped Settings Box");
-        if (bself.mainMenu.isOpen)
-            return [bself.mainMenu close];
-        
-        // [bself.mainMenu showFromNavigationController:self.navigationController];
-        [bself.mainMenu showInView:carousel];
-        
-        [bself.mainMenu showFromRect:(CGRectMake(0, header.bottom, carousel.size.width, carousel.size.height - header.height)) inView:carousel];
     };
-    
     
     
     UIImage *add_human_img = [UIImage imageNamed:@"add-human-gray"];
@@ -420,32 +428,27 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
         //
         HuJediFindFriends_ViewController *jedi = [delegate jediFindFriendsViewController];
-       [[bself navigationController]pushViewController:jedi animated:NO];
-//        UIViewController *screwy = [[UIViewController alloc]init];
-//        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 300, 300)];
-//        [view setBackgroundColor:[UIColor Amazon]];
-//        [[bself navigationController]pushViewController:screwy animated:YES];
+        [[bself navigationController]pushViewController:jedi animated:NO];
+        
     };
     
     
 #pragma mark header setup
     //header
     header = [MGLineStyled lineWithLeft:settings_bar right:add_human size:(CGSize){self.view.frame.size.width,HEADER_HEIGHT}];
-    UIColor *color = UIColorFromRGB(0xF5F5F5);
+    UIColor *color = [UIColor whiteColor];
     [header setBackgroundColor:color];
     
     [header setMiddleFont:HEADLINE_FONT];
     [header setMiddleTextColor:[UIColor darkGrayColor]];
-    [header setMiddleItems:[NSMutableArray arrayWithObject:@"humans"]];
+    [header setMiddleItems:[NSMutableArray arrayWithObject:@"Humans"]];
     [header setMiddleItemsAlignment:NSTextAlignmentCenter];
     header.sidePrecedence = MGSidePrecedenceMiddle;
     header.padding = UIEdgeInsetsMake(4, 8, 4, 8);
     header.fixedPosition = (CGPoint){0,0};
-    header.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
     header.zIndex = 1;
     header.layer.cornerRadius = 0;
     header.layer.shadowOffset = CGSizeZero;
-    [header setFrame:(CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT))];
     header.onTap = ^{
         LOG_UI(0, @"Tapped Header");
         //nextState++;
@@ -461,59 +464,75 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         
     };
     
-    __block UINavigationController *bnav = [self navigationController];
-    REMenuItem *settingsItem = [[REMenuItem alloc] initWithTitle:@"Settings"
-                                                           image:[UIImage imageNamed:@"Icon_Profile"]
-                                                highlightedImage:nil
-                                                          action:^(REMenuItem *item) {
-                                                              LOG_UI(0, @"Item: %@", item);
-                                                              if(showServicesViewController == nil) {
-                                                                  showServicesViewController = [[HuShowServicesViewController alloc]init];
-                                                                  
-                                                              }
-                                                              [showServicesViewController setTitle:@"Foo"];
-                                                              showServicesViewController.tapOnEx = ^{
-                                                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                                                      [bnav popToViewController:bself animated:YES];
-                                                                  });
-                                                                  
-                                                              };
-                                                              
-                                                              
-                                                              [bnav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
-                                                          }];
     
+    //    __block UINavigationController *bnav = [self navigationController];
+    //    REMenuItem *settingsItem = [[REMenuItem alloc] initWithTitle:@"Settings"
+    //                                                           image:[UIImage imageNamed:@"Icon_Profile"]
+    //                                                highlightedImage:nil
+    //                                                          action:^(REMenuItem *item) {
+    //                                                              LOG_UI(0, @"Item: %@", item);
+    //                                                              if(showServicesViewController == nil) {
+    //                                                                  showServicesViewController = [[HuShowServicesViewController alloc]init];
+    //
+    //                                                              }
+    //                                                              [showServicesViewController setTitle:@"Foo"];
+    //                                                              showServicesViewController.tapOnEx = ^{
+    //                                                                  dispatch_async(dispatch_get_main_queue(), ^{
+    //                                                                      [bnav popToViewController:bself animated:YES];
+    //                                                                  });
+    //
+    //                                                              };
+    //
+    //
+    //                                                              [bnav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
+    //                                                          }];
+    //
+    //
+    //    self.mainMenu.imageOffset = CGSizeMake(5, -1);
+    //    self.mainMenu.waitUntilAnimationIsComplete = NO;
+    //    self.mainMenu.badgeLabelConfigurationBlock = ^(UILabel *badgeLabel, REMenuItem *item) {
+    //        badgeLabel.backgroundColor = [UIColor Garmin];
+    //        badgeLabel.layer.borderColor = [UIColor colorWithRed:0.000 green:0.648 blue:0.507 alpha:1.000].CGColor;
+    //    };
+    //
+    //    settingsItem.badge = @"15";
+    //    settingsItem.textColor = [UIColor whiteColor];
+    //    mainMenu = [[REMenu alloc]initWithItems:@[settingsItem]];
+    //    [mainMenu setLiveBlur:YES];
+    //
+    //
+    //    [self.mainMenu setCloseCompletionHandler:^{
+    //        LOG_UI(0, @"Menu did close");
+    //    }];
     
-    self.mainMenu.imageOffset = CGSizeMake(5, -1);
-    self.mainMenu.waitUntilAnimationIsComplete = NO;
-    self.mainMenu.badgeLabelConfigurationBlock = ^(UILabel *badgeLabel, REMenuItem *item) {
-        badgeLabel.backgroundColor = [UIColor colorWithRed:0 green:179/255.0 blue:134/255.0 alpha:1];
-        badgeLabel.layer.borderColor = [UIColor colorWithRed:0.000 green:0.648 blue:0.507 alpha:1.000].CGColor;
-    };
-    
-    settingsItem.badge = @"15";
-    mainMenu = [[REMenu alloc]initWithItems:@[settingsItem]];
-    [mainMenu setLiveBlur:YES];
-    
-    
-    [self.mainMenu setCloseCompletionHandler:^{
-        LOG_UI(0, @"Menu did close");
-    }];
-    
-    
+#pragma mark size the individual humans views based on the type of view we want
 	// Do any additional setup after loading the view.
-    full_sized = CGRectMake(0, header.bottom, self.view.frame.size.width, self.view.frame.size.height-header.height/*-status_bar_height*/);
-    half_sized = CGRectMake(0, header.bottom, self.view.frame.size.width,  full_sized.size.height/2);
+    full_sized = CGRectMake(0, header.bottom, self.view.frame.size.width, self.view.frame.size.height-header.bottom/*-status_bar_height*/);
+    half_sized = CGRectMake(0, header.bottom, self.view.frame.size.width,  (full_sized.size.height+10)/2);
+    
+    
+    //        full_sized = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    //        half_sized = CGRectMake(0, 0, self.view.frame.size.width,  self.view.frame.size.height/2);
     
     
     [arrayOfHumans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        //
-        [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:half_sized human:obj parent:self]];
-      //  [humans_views addObject:[[UIView alloc]initWithFrame:half_sized]];
+        
+        CGRect sizeBasedOnType;
+        
+        if(viewType == kHalfHeightScrollView) {
+            sizeBasedOnType = half_sized;
+        } else {
+            sizeBasedOnType = full_sized;
+        }
+        
+        [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:sizeBasedOnType human:obj parent:self]];
+        
     }];
     
     
-    carousel = [[iCarousel alloc]initWithFrame:full_sized];
+    carousel = [[iCarousel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, full_sized.size.height)];
+    //carousel = [[iCarousel alloc]initWithFrame:full_sized];
+    
     [carousel setBackgroundColor:[UIColor cloudsColor]];
     [carousel setType:iCarouselTypeCustom];
     [carousel setDataSource:self];
@@ -521,13 +540,16 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     [carousel setVertical:YES];
     [carousel setCenterItemWhenSelected:NO];
     
+    
     [self.view addSubview:carousel];
+    
+    [self.view addSubview:header];
+    [header layout];
     
     [self setNeedsStatusBarAppearanceUpdate];
     
-    // add it to the view then lay it all out
-    [self.view addSubview:header];
-    [header layout];
+    
+    //[self.view addSubview:transparentForMenu];
     
     
     //[self.mainMenu showFromNavigationController:self.navigationController];
@@ -541,7 +563,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
 
 - (void)showHuman:(HuHuman *)human fromLine:(HuHumanProfileView *)line
 {
-    LOG_GENERAL(0, @"Would present %@", human);
     [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
     
     HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
@@ -653,8 +674,27 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
 
 - (CATransform3D)carousel:(iCarousel *)mcarousel itemTransformForOffset:(CGFloat)offset baseTransform:(CATransform3D)transform
 {
-    CGFloat spacing = [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:1.01];
-    return CATransform3DTranslate(transform, 0.0f, (offset - .71) * (carousel.bounds.size.height)/2 * spacing, 0.0f);
+    // 1.01 for full sized
+    // .51 for half sized
+    CGFloat spacing;
+    
+    
+    //= [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:.51];
+    CATransform3D result;
+    //return CATransform3DTranslate(transform, 0.0f, (offset - .49) * (carousel.bounds.size.height) * spacing, 0.0f);
+    //CATransform3D result = CATransform3DTranslate(transform, 0.0f, (offset - 0) * (carousel.bounds.size.height) * spacing, 0.0f);
+//    CATransform3D result =CATransform3DTranslate(transform, 0.0f, (offset - .24) * (carousel.bounds.size.height) * spacing, 0.0f);
+    
+    if(viewType == kHalfHeightScrollView) {
+        spacing = [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:.51];
+        result = CATransform3DTranslate(transform, 0.0f, (offset - .49) * (carousel.bounds.size.height) * spacing, 0.0f);
+    } else {
+        spacing = [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:1.01];
+        result = CATransform3DTranslate(transform, 0.0f, (offset - 0) * (carousel.bounds.size.height) * spacing, 0.0f);
+    }
+    
+    return result;
+    
 }
 
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index {
@@ -687,7 +727,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
             if([self numberOfItemsInCarousel:aCarousel] < 3) {
                 return NO;
             } else {
-            return YES;
+                return YES;
             }
         }
         case iCarouselOptionSpacing:
@@ -745,6 +785,15 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
 
 -(UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
+    //    UIView *foo = [[UIView alloc]initWithFrame:full_sized];
+    //
+    //    if(index % 2 == 0) {
+    //    [foo setBackgroundColor:[UIColor tangerineColor]];
+    //    } else {
+    //        [foo setBackgroundColor:[UIColor Technorati]];
+    //    }
+    //    return foo;
+    
     return [humans_views objectAtIndex:index];
     
     //    CGRect half = CGRectMake(0, 0, carousel.bounds.size.width, carousel.bounds.size.height/2);

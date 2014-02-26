@@ -16,7 +16,6 @@
 #import "HuAppDelegate.h"
 #import <MRProgressOverlayView.h>
 #import "HuStatusCarouselViewController.h"
-#import <REMenu.h>
 #import <MGLineStyled.h>
 #import "ViewUtils.h"
 #import "HuShowServicesViewController.h"
@@ -24,7 +23,7 @@
 #import <UIColor+Crayola.h>
 
 @interface HuHumansProfileCarouselViewController : UIViewController
-@property (nonatomic, strong) REMenu *mainMenu;
+
 
 - (void)setHumansUserHandler:(HuUserHandler *)aUserHandler;
 //- (id)initWithUserHandler:(HuUserHandler *)aUserHandler;
