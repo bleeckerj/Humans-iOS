@@ -10,6 +10,8 @@
 #import <WSLObjectSwitch.h>
 #import "Flurry.h"
 #import <FontAwesome-iOS/NSString+FontAwesome.h>
+#import <UIImage+Resize.h>
+
 
 @implementation HuServiceViewLine
 UIImage *serviceImage;
@@ -30,6 +32,7 @@ UIImage *serviceImage;
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+
     }
     return self;
 }
@@ -46,7 +49,7 @@ UIImage *serviceImage;
 
 - (void)commonInit
 {
-    self.topBorderColor = [UIColor orangeColor];
+    self.topBorderColor = [UIColor whiteColor];
 }
 
 - (HuServices *)service
@@ -64,8 +67,8 @@ UIImage *serviceImage;
         [Flurry logError:error message:error error:nil];
     } cases:
      @"twitter", ^{
-         serviceImage = [UIImage imageNamed:TWITTER_COLOR_IMAGE];
          
+         serviceImage = [UIImage imageNamed:TWITTER_COLOR_IMAGE];
      },
      @"flickr", ^{
          serviceImage = [UIImage imageNamed:FLICKR_COLOR_IMAGE];
@@ -79,38 +82,33 @@ UIImage *serviceImage;
      @"foursquare", ^{
          serviceImage = [UIImage imageNamed:FOURSQUARE_COLOR_IMAGE];
          
-         
      },
      @"tumblr", ^{
          serviceImage = [UIImage imageNamed:TUMBLR_COLOR_IMAGE];
-         
          
      },
      @"facebook", ^{
          serviceImage = [UIImage imageNamed:FACEBOOK_COLOR_IMAGE];
          
-         
      }
      ,nil
      ];
-    //LOG_UI(0, @"%@ %@", aService, [aService serviceUsername]);
+    
+    serviceImage = [serviceImage resizedImageToSize:CGSizeMake(35, 35)];
+
+
     NSString *trunc;
     if([[aService serviceUsername]length] > 20) {
         trunc = [[[NSString stringWithFormat:@"@%@", [aService serviceUsername]] substringToIndex:20] stringByAppendingString:@".."];
     } else {
         trunc = [NSString stringWithFormat:@"@%@", [aService serviceUsername]];
     }
-    
-//    UILabel *test = [[UILabel alloc]init];
-//    [test setFont:[UIFont fontWithName:@"FontAwesome" size:28]];
-//    test.text = [NSString awesomeIcon:FaTrashO];
-   // NSString *left = [NSString awesomeIcon:FaFlickr];
-    self.font = PROFILE_VIEW_FONT_LARGE;//[UIFont fontWithName:@"FontAwesome" size:28];
-//    self.middleFont = PROFILE_VIEW_FONT_LARGE;
-//    self.rightFont = PROFILE_VIEW_FONT_LARGE;
+
+    self.font = PROFILE_VIEW_FONT_SMALL;
     self.leftItems = [NSMutableArray arrayWithObjects:serviceImage, @"  ", trunc, nil];
     
     UIImage *garbage = [UIImage imageNamed:@"garbage-gray"];
+    garbage = [garbage resizedImageToSize:CGSizeMake(35, 35)];
     __block MGLine *garbage_box = [MGLine lineWithSize:[garbage size]];
     __block HuServiceViewLine *bself = self;
     [[garbage_box leftItems]addObject:garbage];
