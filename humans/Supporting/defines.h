@@ -113,7 +113,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define LOGIN_VIEW_FONT_LARGE    [UIFont fontWithName:@"AvenirNext-Medium" size:32]
 
 #define PROFILE_VIEW_FONT_LARGE  [UIFont fontWithName:@"AvenirNext-Medium" size:24]
-#define PROFILE_VIEW_FONT_SMALL  [UIFont fontWithName:@"AvenirNext-Medium" size:20]
+#define PROFILE_VIEW_FONT_SMALL  [UIFont fontWithName:@"AvenirNext-Medium" size:16]
 #define PROFILE_VIEW_FONT_COLOR  [UIColor whiteColor]
 #define PROFILE_HALF_HEIGHT_VIEW_BORDER_COLOR [UIColor lightGrayColor]
 
@@ -193,7 +193,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define PROFILE_IMAGE_CORNER_RADIUS 20
 #define PROFILE_IMAGE_SIZE_FACTOR 0.8
 
-#define HEADER_HEIGHT 55
+#define HEADER_HEIGHT 40
 #define HEADER_SIZE (CGSize){320, HEADER_HEIGHT}
 
 

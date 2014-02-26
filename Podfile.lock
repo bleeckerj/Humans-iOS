@@ -15,6 +15,7 @@ PODS:
   - BlocksKit/UIKit (2.0.0):
     - BlocksKit/DynamicDelegate
   - Bolts (1.0.0)
+  - CoconutKit (2.0.2)
   - ConciseKit (0.1.2)
   - DropdownMenu (1.0.0)
   - ECSlidingViewController (2.0.1)
@@ -82,7 +83,12 @@ PODS:
   - OCMockito (1.1.0):
     - OCHamcrest (~> 3.0)
   - RDVKeyboardAvoiding (1.1.0)
-  - REMenu (1.8)
+  - ReactiveCocoa (2.2.4):
+    - ReactiveCocoa/Core
+    - ReactiveCocoa/no-arc
+  - ReactiveCocoa/Core (2.2.4):
+    - ReactiveCocoa/no-arc
+  - ReactiveCocoa/no-arc (2.2.4)
   - RestKit (0.22.0):
     - RestKit/Core
   - RestKit/Core (0.22.0):
@@ -122,6 +128,7 @@ PODS:
 DEPENDENCIES:
   - BlocksKit (~> 2.0.0)
   - Bolts
+  - CoconutKit (~> 2.0.2)
   - ConciseKit
   - DropdownMenu
   - ECSlidingViewController (~> 2.0.0-beta2)
@@ -148,7 +155,7 @@ DEPENDENCIES:
   - OCMock
   - OCMockito (~> 1.0)
   - RDVKeyboardAvoiding
-  - REMenu (~> 1.8)
+  - ReactiveCocoa
   - RestKit
   - RFRotate (from `~/Code/RFRotate`)
   - RNBlurModalView (~> 0.1.0)
@@ -175,6 +182,7 @@ SPEC CHECKSUMS:
   AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
   BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
   Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
+  CoconutKit: f37b6f0890344e36988b807865266fe1174d0c8f
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
   DropdownMenu: 3c454205c2db1fd39dc1ebf099114c4fdb73f136
   ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
@@ -203,7 +211,7 @@ SPEC CHECKSUMS:
   OCMock: 74e4ddbcef134170dcc844f91c691f13868075d7
   OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
   RDVKeyboardAvoiding: d624b80508c45e9e14a9c7e2f23b2318887b110e
-  REMenu: 40bb965c968b298c3f36d36067a15dd3f2c52473
+  ReactiveCocoa: 953a45dda30674fe704d1d9c77cc874141742f47
   RestKit: dc107a0aa4f962575ad0385bac5b3c5e4f591f4e
   RFRotate: 32613810b400f04cce8b6e532f52fe9f59effb68
   RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182
