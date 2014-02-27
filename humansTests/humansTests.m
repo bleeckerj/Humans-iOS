@@ -30,9 +30,12 @@
 - (void)testExample
 {
     HuUserHandler *handler = [[HuUserHandler alloc]init];
-    BOOL result = [handler usernameExists:@"fabien"];
+
+    [handler usernameExists:@"fabien" withCompletionHandler:^(BOOL success, NSError *error) {
+        LOG_GENERAL(0, @"Hello %@", (success ? @"Exists" : @"Doesn't Exist"));
+
+    }];
     
-    LOG_GENERAL(0, @"Hello %@", (result ? @"Exists" : @"Doesn't Exist"));
     [self waitForTimeout:30];
 
     //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);

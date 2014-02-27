@@ -19,6 +19,7 @@
 #import "HuUserHandler.h"
 #import <MRProgress.h>
 #import <BlocksKit+UIKit.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 @interface HuSignUpViewController : UIViewController <UITextFieldDelegate>
 

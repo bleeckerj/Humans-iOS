@@ -81,7 +81,7 @@
             NSMutableArray *count = [[NSMutableArray alloc]initWithArray:@[str_count]];
             [bself setRightItems:count];
 
-            UIFont *font = [UIFont fontWithName:@"Creampuff" size:10];
+            UIFont *font = HEADLINE_FONT_SMALL;
             [bself setRightFont:font];
             //[human_mgline setRightFont:font];
             //LOG_UI(0, @"Showing count of %@ for %@", bself.count, [human name]);

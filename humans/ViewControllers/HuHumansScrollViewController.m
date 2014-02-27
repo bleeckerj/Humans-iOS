@@ -293,7 +293,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     [line setUserHandler:userHandler];
     [line setHuman:human];
     [line setMiddleItemsAlignment:NSTextAlignmentLeft];
-    [line setMiddleFont:[UIFont fontWithName:@"Creampuff" size:18]];
+    [line setMiddleFont:HEADLINE_FONT];
     [linesOfHumans addObject:line];
     
     [human loadServiceUsersProfileImagesWithCompletionHandler:^{

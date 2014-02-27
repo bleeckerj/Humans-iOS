@@ -20,6 +20,8 @@
 #define HC_SHORTHAND
 #import <OCHamcrest/OCHamcrest.h>
 #import "HuServiceStatus.h"
+#import <AFOAuth1Client.h>
+#import <AFNetworking.h>
 
 @interface HuUserHandlerTest : XCTestCase
 
@@ -296,6 +298,47 @@ HuUserHandler *user_handler;
     }];
     
     ASYNC_TEST_END
+}
+
+- (void)test_getAuthForService
+{
+    ASYNC_TEST_START
+
+    NSArray *services = [[user_handler humans_user]services];
+    
+    HuServices *service = [services objectAtIndex:5];
+
+    [user_handler getAuthForService:service with:^(id data, BOOL success, NSError *error) {
+        //
+
+        LOG_GENERAL(0, @"%@ %@ %@ %@ %@ %@", [service serviceName], [data objectForKey:@"consumer_key"], [data objectForKey:@"oauth_token"], [data objectForKey:@"secret"], success?@"YES":@"NO", error);
+        //[self test_doSomethingWithTwitter:[data objectForKey:@"oauth_token"] secret:[data objectForKey:@"secret"]];
+        
+    }];
+    ASYNC_TEST_END
+
+    
+}
+
+- (void)test_doSomethingWithTwitter:(NSString *)key secret:(NSString*)secret
+{
+    
+    
+    AFOAuth1Client *client = [[AFOAuth1Client alloc]initWithBaseURL:[NSURL URLWithString:@"https://api.twitter.com/1.1/"] key:key secret:secret];
+                              
+                              //[NSURL URLWithString:@"https://api.twitter.com/1.1/"]];
+    [client registerHTTPOperationClass:[AFJSONRequestOperation class]];
+
+    [client getPath:@"statuses/user_timeline.json" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //
+        
+        LOG_GENERAL(0, @"%@", responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        LOG_ERROR(0, @"%@", error);
+    }];
+    
+    
 }
 
 //- (void)testExample

@@ -1,5 +1,7 @@
 PODS:
   - AFNetworking (1.3.3)
+  - AFOAuth1Client (0.3.3):
+    - AFNetworking (~> 1.3)
   - BlocksKit (2.0.0):
     - BlocksKit/All
   - BlocksKit/All (2.0.0):
@@ -27,6 +29,7 @@ PODS:
   - FontAwesome-iOS (0.0.4)
   - FPBrandColors (0.1.3)
   - iCarousel (1.7.6)
+  - ionicons (1.1)
   - ISO8601DateFormatterValueTransformer (0.5.0):
     - RKValueTransformers (~> 1.0.0)
   - KeyboardController (1.0.0)
@@ -62,22 +65,23 @@ PODS:
     - MKFoundationKit/Base64
   - MKFoundationKit/Queue (1.1.0)
   - MKFoundationKit/Stack (1.1.0)
-  - MMDrawerController (0.5.2):
+  - MMDrawerController (0.5.3):
     - MMDrawerController/Core
     - MMDrawerController/MMDrawerBarButtonItem
     - MMDrawerController/MMDrawerVisualStates
     - MMDrawerController/Subclass
-  - MMDrawerController/Core (0.5.2)
-  - MMDrawerController/MMDrawerBarButtonItem (0.5.2):
+  - MMDrawerController/Core (0.5.3)
+  - MMDrawerController/MMDrawerBarButtonItem (0.5.3):
     - MMDrawerController/Core
-  - MMDrawerController/MMDrawerVisualStates (0.5.2):
+  - MMDrawerController/MMDrawerVisualStates (0.5.3):
     - MMDrawerController/Core
-  - MMDrawerController/Subclass (0.5.2):
+  - MMDrawerController/Subclass (0.5.3):
     - MMDrawerController/Core
   - MRProgress (0.3.1)
   - MSWeakTimer (1.1.0)
   - NHBalancedFlowLayout (0.1.2)
   - NSLogger (1.1)
+  - oauthconsumer (1.0.0)
   - OCHamcrest (3.0.1)
   - OCMock (2.2.3)
   - OCMockito (1.1.0):
@@ -89,6 +93,7 @@ PODS:
   - ReactiveCocoa/Core (2.2.4):
     - ReactiveCocoa/no-arc
   - ReactiveCocoa/no-arc (2.2.4)
+  - REMenu (1.8.1)
   - RestKit (0.22.0):
     - RestKit/Core
   - RestKit/Core (0.22.0):
@@ -126,6 +131,7 @@ PODS:
   - WSLObjectSwitch (1.0.0)
 
 DEPENDENCIES:
+  - AFOAuth1Client (~> 0.3.3)
   - BlocksKit (~> 2.0.0)
   - Bolts
   - CoconutKit (~> 2.0.2)
@@ -140,6 +146,7 @@ DEPENDENCIES:
   - FontAwesome-iOS (~> 0.0.4)
   - FPBrandColors (~> 0.1.3)
   - iCarousel
+  - ionicons
   - KeyboardController (~> 1.0.0)
   - MBProgressHUD (~> 0.8)
   - MCUIViewLayout (from `https://github.com/mirego/MCUIViewLayout.git`)
@@ -151,11 +158,13 @@ DEPENDENCIES:
   - MSWeakTimer (~> 1.1.0)
   - NHBalancedFlowLayout (~> 0.1.2)
   - NSLogger
+  - oauthconsumer (from `~/Code/oauthconsumer/`)
   - OCHamcrest (~> 3.0.1)
   - OCMock
   - OCMockito (~> 1.0)
   - RDVKeyboardAvoiding
   - ReactiveCocoa
+  - REMenu (~> 1.8)
   - RestKit
   - RFRotate (from `~/Code/RFRotate`)
   - RNBlurModalView (~> 0.1.0)
@@ -173,6 +182,8 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   MCUIViewLayout:
     :git: https://github.com/mirego/MCUIViewLayout.git
+  oauthconsumer:
+    :path: ~/Code/oauthconsumer/
   RFRotate:
     :path: ~/Code/RFRotate
   WSLObjectSwitch:
@@ -180,6 +191,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
+  AFOAuth1Client: 8b06e54087732068e19c4efcd7bed5d74bc9538a
   BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
   Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
   CoconutKit: f37b6f0890344e36988b807865266fe1174d0c8f
@@ -194,6 +206,7 @@ SPEC CHECKSUMS:
   FontAwesome-iOS: 5e33a7bbabacdc8a177cb9d3d81876f0c7a272c1
   FPBrandColors: e0df3950b283d1a6d6c42d6b97f04a031ccf9e12
   iCarousel: e23a26d7ba722215a42144e80adb0dcb59bebc41
+  ionicons: 50c5368bc6e4dbd1a26559aff0b67f2ed8640c48
   ISO8601DateFormatterValueTransformer: d0af1f50a9df42db72d7418db31938b8473e0af8
   KeyboardController: 368f5ebc3ceab64a863636db2a313648bbe1e643
   libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
@@ -202,16 +215,18 @@ SPEC CHECKSUMS:
   MGBoxKit: 5de9fd5f49539c30348ef750e2b9ea5a14374b88
   MHTextField: 299b04dd7ce5354554c4bf4b968da60a04d20fdd
   MKFoundationKit: db5b09c3d266b6476e605b6060096a62fd542b61
-  MMDrawerController: 60bce0387ff42670d9a5a392e2f531be2fd39ce9
+  MMDrawerController: 4445e1927e8947b7e2382136c9b7109840efbfb9
   MRProgress: 741d8849f3d6e71cf254b32ea8c0bc0b2a122136
   MSWeakTimer: 2cd8d15b58e634517e83a7e433782faa8214a27f
   NHBalancedFlowLayout: 95f1d7bffadc73bead84b63e7e4c37aa52975f7a
   NSLogger: 4567fef08d0db18a89cce91b2053823fc0950738
+  oauthconsumer: 96e97f21400a93ab501a0a98920e33766f8d6178
   OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
   OCMock: 74e4ddbcef134170dcc844f91c691f13868075d7
   OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
   RDVKeyboardAvoiding: d624b80508c45e9e14a9c7e2f23b2318887b110e
   ReactiveCocoa: 953a45dda30674fe704d1d9c77cc874141742f47
+  REMenu: e8ba5e8592c07e35d6ba43180acb20090f0bc5c9
   RestKit: dc107a0aa4f962575ad0385bac5b3c5e4f591f4e
   RFRotate: 32613810b400f04cce8b6e532f52fe9f59effb68
   RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182

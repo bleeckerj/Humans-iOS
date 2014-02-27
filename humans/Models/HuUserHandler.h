@@ -80,7 +80,7 @@ typedef enum networkStateTypes
 
 
 - (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionhandler;
-- (void)getAuthFor:(HuServices *)service with:(CompletionHandlerWithData)completionHandler;
+- (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler;
 
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;
 - (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler;

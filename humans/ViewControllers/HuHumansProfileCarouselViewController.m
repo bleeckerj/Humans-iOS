@@ -11,6 +11,8 @@
 #import "Flurry.h"
 #import <BlocksKit+UIKit.h>
 #import "MSWeakTimer.h"
+#import <REMenu.h>
+#import <IonIcons.h>
 
 @interface HuHumanProfileView : UIView
 {
@@ -250,7 +252,7 @@ MRProgressOverlayView *activityIndicatorView;
     MSWeakTimer *timerForStatusRefresh;
     dispatch_queue_t privateQueue;
     CGRect full_sized, half_sized;
-    
+    REMenu *mainMenu;
     
 }
 @end
@@ -416,6 +418,12 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     MGLine *settings_bar = [MGLine lineWithLeft:settings_bar_img right:nil size:[settings_bar_img size]];
     settings_bar.onTap = ^{
         LOG_UI(0, @"Tapped Settings Box");
+        //[mainMenu showInView:carousel];
+        if(mainMenu.isOpen == NO) {
+        [mainMenu showFromRect:(CGRectMake(0, header.height, header.width, 400)) inView:carousel];
+        } else {
+            [mainMenu close];
+        }
     };
     
     
@@ -465,54 +473,92 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     };
     
     
-    //    __block UINavigationController *bnav = [self navigationController];
-    //    REMenuItem *settingsItem = [[REMenuItem alloc] initWithTitle:@"Settings"
-    //                                                           image:[UIImage imageNamed:@"Icon_Profile"]
-    //                                                highlightedImage:nil
-    //                                                          action:^(REMenuItem *item) {
-    //                                                              LOG_UI(0, @"Item: %@", item);
-    //                                                              if(showServicesViewController == nil) {
-    //                                                                  showServicesViewController = [[HuShowServicesViewController alloc]init];
-    //
-    //                                                              }
-    //                                                              [showServicesViewController setTitle:@"Foo"];
-    //                                                              showServicesViewController.tapOnEx = ^{
-    //                                                                  dispatch_async(dispatch_get_main_queue(), ^{
-    //                                                                      [bnav popToViewController:bself animated:YES];
-    //                                                                  });
-    //
-    //                                                              };
-    //
-    //
-    //                                                              [bnav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
-    //                                                          }];
-    //
-    //
-    //    self.mainMenu.imageOffset = CGSizeMake(5, -1);
-    //    self.mainMenu.waitUntilAnimationIsComplete = NO;
-    //    self.mainMenu.badgeLabelConfigurationBlock = ^(UILabel *badgeLabel, REMenuItem *item) {
-    //        badgeLabel.backgroundColor = [UIColor Garmin];
-    //        badgeLabel.layer.borderColor = [UIColor colorWithRed:0.000 green:0.648 blue:0.507 alpha:1.000].CGColor;
-    //    };
-    //
-    //    settingsItem.badge = @"15";
-    //    settingsItem.textColor = [UIColor whiteColor];
-    //    mainMenu = [[REMenu alloc]initWithItems:@[settingsItem]];
-    //    [mainMenu setLiveBlur:YES];
-    //
-    //
-    //    [self.mainMenu setCloseCompletionHandler:^{
-    //        LOG_UI(0, @"Menu did close");
-    //    }];
+    __block UINavigationController *bnav = [self navigationController];
+    REMenuItem *settingsItem = [[REMenuItem alloc] initWithTitle:@"Settings"
+                                                           image:[UIImage imageNamed:@"add-cloud-gray"]
+                                                highlightedImage:nil
+                                                          action:^(REMenuItem *item) {
+                                                              LOG_UI(0, @"Item: %@", item);
+                                                              if(showServicesViewController == nil) {
+                                                                  showServicesViewController = [[HuShowServicesViewController alloc]init];
+
+                                                              }
+                                                              [showServicesViewController setTitle:@"Foo"];
+                                                              showServicesViewController.tapOnEx = ^{
+                                                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                                                      [bnav popToViewController:bself animated:YES];
+                                                                  });
+
+                                                              };
+
+
+                                                              [bnav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
+                                                          }];
+
+    
+    UIImage *beakerImage = [IonIcons imageWithIcon:@"ion_beaker"
+                                         iconColor:[UIColor blackColor]
+                                          iconSize:30.0f
+                                         imageSize:CGSizeMake(30.0f, 30.0f)];
+    
+    REMenuItem *stuffsItem = [[REMenuItem alloc] initWithTitle:@"Stuff"
+                                                           image:[UIImage imageNamed:@"Icon_Home"]
+                                                highlightedImage:nil
+                                                          action:^(REMenuItem *item) {
+                                                              LOG_UI(0, @"Item: %@", item);
+                                                              
+                                                          }];
+
+    REMenuItem *beakerItem = [[REMenuItem alloc] initWithTitle:@"Things"
+                                                         image:beakerImage
+                                              highlightedImage:nil
+                                                        action:^(REMenuItem *item) {
+                                                            LOG_UI(0, @"Item: %@", item);
+                                                            
+                                                        }];
+
+    
+    UIView *customView = [[UIView alloc] init];
+    customView.backgroundColor = [UIColor blueColor];
+    customView.alpha = 0.4;
+    REMenuItem *customViewItem = [[REMenuItem alloc] initWithCustomView:customView action:^(REMenuItem *item) {
+        NSLog(@"Tap on customView");
+    }];
+    
+
+    //mainMenu.imageOffset = CGSizeMake(5, -1);
+    mainMenu.waitUntilAnimationIsComplete = NO;
+    mainMenu.badgeLabelConfigurationBlock = ^(UILabel *badgeLabel, REMenuItem *item) {
+        badgeLabel.backgroundColor = [UIColor Garmin];
+        badgeLabel.layer.borderColor = [UIColor colorWithRed:0.000 green:0.648 blue:0.507 alpha:1.000].CGColor;
+    };
+
+    settingsItem.badge = @"15";
+    settingsItem.textColor = [UIColor blackColor];
+    settingsItem.backgroundColor = [UIColor crayolaOuterSpaceColor];
+    
+    stuffsItem.badge = @"Yes";
+    stuffsItem.textColor = [UIColor blackColor];
+    stuffsItem.backgroundColor = [UIColor crayolaOuterSpaceColor];
+    
+    beakerItem.badge = @"No";
+    beakerItem.textColor = [UIColor asbestosColor];
+    beakerItem.backgroundColor = [UIColor crayolaOuterSpaceColor];
+    
+    mainMenu = [[REMenu alloc]initWithItems:@[settingsItem, stuffsItem, customViewItem, beakerItem]];
+    [mainMenu setLiveBlur:YES];
+    UIColor *d = [[UIColor crayolaOuterSpaceColor]darkerColor];
+    [mainMenu setHighlightedBackgroundColor:d];
+    mainMenu.borderWidth = 0.0;
+
+    [mainMenu setCloseCompletionHandler:^{
+        LOG_UI(0, @"Menu did close");
+    }];
     
 #pragma mark size the individual humans views based on the type of view we want
 	// Do any additional setup after loading the view.
     full_sized = CGRectMake(0, header.bottom, self.view.frame.size.width, self.view.frame.size.height-header.bottom/*-status_bar_height*/);
     half_sized = CGRectMake(0, header.bottom, self.view.frame.size.width,  (full_sized.size.height+10)/2);
-    
-    
-    //        full_sized = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    //        half_sized = CGRectMake(0, 0, self.view.frame.size.width,  self.view.frame.size.height/2);
     
     
     [arrayOfHumans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {

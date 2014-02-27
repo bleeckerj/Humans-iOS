@@ -59,10 +59,7 @@ NSDateFormatter *twitter_formatter;
     
 #pragma mark This is where you set either the sharedDevClient or the sharedProdClient
     
-    client = [HuHumansHTTPClient sharedDevClient];
-    
-    
-    //LOG_GENERAL(0, @"allowss invalid ssl cert? %@", [client allowsInvalidSSLCertificate]?@"YES":@"NO");
+    client = [HuHumansHTTPClient sharedProdClient];
     
     __block HuUserHandler *bself = self;
     [client setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
@@ -278,6 +275,8 @@ NSDateFormatter *twitter_formatter;
     [operation waitUntilFinished];
     
 }
+
+
 
 #pragma mark get the user's humans as well as the user's details, id, services, username, etc.
 - (void)getHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
@@ -1240,7 +1239,7 @@ NSDateFormatter *twitter_formatter;
 
 #pragma mark access token crap for a specific service
 // given a HuService this will try and get the access token particulars for that service + user
-- (void)getAuthFor:(HuServices *)service with:(CompletionHandlerWithData)completionHandler
+- (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler
 {
     
     [client  setParameterEncoding:AFJSONParameterEncoding];
@@ -1252,31 +1251,79 @@ NSDateFormatter *twitter_formatter;
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         //
         LOG_GENERAL(0, @"Success %@", responseObject);
-        [@"Foo" uppercaseString];
-        
         NSString *serviceNameCap = [[service serviceName]uppercaseString];
+        NSString *general =[NSString stringWithFormat:@"humans-%@_CF_PV", serviceNameCap];
+        NSString *parcel_key = [NSString stringWithFormat:@"client-%@_CF_PV", serviceNameCap];
+        
         
         NSError *err;
-        NSString *encryptedDataStr = [responseObject valueForKey:@"ck"];
-        NSData *data = [[NSData alloc] initWithBase64EncodedString:encryptedDataStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
-        NSData *decryptedData = [RNDecryptor decryptData:data
-                                            withPassword:[NSString stringWithFormat:@"humans-%@_CF_PV", serviceNameCap]
+        NSString *encryptedParcelStr = [responseObject valueForKey:@"parcel"];
+        NSData *parcelData = [[NSData alloc]initWithBase64EncodedString:encryptedParcelStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        NSData *decryptedParcelData =[RNDecryptor decryptData:parcelData
+                                           withPassword:parcel_key
+                                                  error:&err];
+        NSString *foo = [[NSString alloc]initWithData:decryptedParcelData encoding:NSUTF8StringEncoding];
+        id decryptedParselJson = [NSJSONSerialization JSONObjectWithData:[foo dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&err];
+        
+
+        
+        NSString *encryptedCK_DataStr = [decryptedParselJson valueForKey:@"ck"];
+        
+        
+        NSData *data = [[NSData alloc] initWithBase64EncodedString:encryptedCK_DataStr
+                                                           options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        NSData *decryptedCK_Data = [RNDecryptor decryptData:data
+                                            withPassword:general
                                                    error:&err];
-        NSString *result = [[NSString alloc]initWithData:decryptedData encoding:NSUTF8StringEncoding];
+        NSString *consumer_key = [[NSString alloc]initWithData:decryptedCK_Data encoding:NSUTF8StringEncoding];
+        
+        
+        NSString *encryptedCS_DataStr = [decryptedParselJson valueForKey:@"cs"];
+        
+        
+        data = [[NSData alloc] initWithBase64EncodedString:encryptedCS_DataStr
+                                                           options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        NSData *decryptedCS_Data = [RNDecryptor decryptData:data
+                                               withPassword:general
+                                                      error:&err];
+        NSString *consumer_secret = [[NSString alloc]initWithData:decryptedCS_Data encoding:NSUTF8StringEncoding];
+
+        
+        
+        NSString *encryptedTK_DataStr = [decryptedParselJson valueForKey:@"tk"];
+        data = [[NSData alloc]initWithBase64EncodedString:encryptedTK_DataStr
+                                                  options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        NSData *decryptedTK_Data = [RNDecryptor decryptData:data
+                                    withPassword:general
+                                           error:&err];
+        
+        NSString *token_key = [[NSString alloc]initWithData:decryptedTK_Data encoding:NSUTF8StringEncoding];
+
+
+        NSString *encryptedSK_DataStr = [decryptedParselJson valueForKey:@"ts"];
+        data = [[NSData alloc]initWithBase64EncodedString:encryptedSK_DataStr
+                                                  options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        NSData *decryptedSK_Data = [RNDecryptor decryptData:data
+                                               withPassword:general
+                                                      error:&err];
+        NSString *token_secret = [[NSString alloc]initWithData:decryptedSK_Data encoding:NSUTF8StringEncoding];
+        
+        
+        NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:consumer_key, @"consumer_key", consumer_secret, @"consumer_secret", token_key, @"token_key", token_secret, @"token_secret", nil];
+
+        if(completionHandler) {
+            completionHandler(result, YES, nil);
+        }
         LOG_GENERAL(0, @"What we got..%@", result);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         LOG_GENERAL(0, @"Failure %@", error);
+        if (completionHandler) {
+            completionHandler(nil, NO, error);
+        }
     }];
     [operation start];
     [operation waitUntilFinished];
-    //    NSURL *twitterURL = [NSURL URLWithString:@"twitter.whatever"];
-    //    AFHTTPClient *twitterClient = [[AFHTTPClient alloc] initWithBaseURL:twitterURL];
-    //    [twitterClient setAuthorizationHeaderWithToken:@""];
-    //    [twitterClient getPath:@"" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-    //        //
-    //    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    //        //
-    //    }];
+    
 }
 
 #pragma mark stuff for authenticating with service through server side stuff

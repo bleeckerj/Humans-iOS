@@ -9,7 +9,6 @@
 #import "HuStatusCarouselViewController.h"
 #import "defines.h"
 #import "iCarousel.h"
-//#import "HuTwitterStatus.h"
 #import "InstagramStatus.h"
 #import "InstagramCaption.h"
 #import "HuHeaderForServiceStatusView.h"
@@ -83,9 +82,9 @@
     return UIStatusBarStyleLightContent;
 }
 
-//-(BOOL)prefersStatusBarHidden {
-//    return YES;
-//}
+-(BOOL)prefersStatusBarHidden {
+    return YES;
+}
 
 - (void)viewDidLoad
 {

@@ -87,7 +87,7 @@ HuConnectServicesViewController *connectServicesViewController;
     self.header.sidePrecedence = MGSidePrecedenceMiddle;
     self.header.padding = UIEdgeInsetsMake(4, 8, 4, 8);
     self.header.fixedPosition = (CGPoint){0,0};
-    self.header.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:0.9];
+    self.header.backgroundColor = [UIColor asbestosColor];
     self.header.zIndex = 1;
     self.header.layer.cornerRadius = 0;
     self.header.layer.shadowOffset = CGSizeZero;
@@ -139,7 +139,7 @@ HuConnectServicesViewController *connectServicesViewController;
     servicesScroller.contentSize = contentRect.size;
     [servicesScroller layoutWithSpeed:0.3 completion:^{
         //
-        LOG_UI(0, @"Done laying out.");
+        //LOG_UI(0, @"Done laying out.");
     }];
     
     [self.view addSubview:servicesScroller];
@@ -181,7 +181,7 @@ HuConnectServicesViewController *connectServicesViewController;
 
 -(BOOL)prefersStatusBarHidden
 {
-    return NO;
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning

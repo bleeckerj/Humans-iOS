@@ -21,6 +21,7 @@
 #import "HuShowServicesViewController.h"
 #import <UIColor+FPBrandColor.h>
 #import <UIColor+Crayola.h>
+#import "UIColor+UIColor_LighterDarker.h"
 
 @interface HuHumansProfileCarouselViewController : UIViewController
 

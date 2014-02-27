@@ -26,9 +26,9 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>CREAMPUF.TTF</string>
 		<string>HelveticaLTStd-BlkObl.otf</string>
 		<string>fontawesome-webfont.ttf</string>
+		<string>ionicons.ttf</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>

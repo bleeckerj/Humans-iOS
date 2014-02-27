@@ -117,7 +117,6 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define PROFILE_VIEW_FONT_COLOR  [UIColor whiteColor]
 #define PROFILE_HALF_HEIGHT_VIEW_BORDER_COLOR [UIColor lightGrayColor]
 
-//#define TWITTER_FONT            [UIFont fontWithName:@"Creampuff" size:14]
 #define TWITTER_FONT           [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 
 #define TWITTER_COLOR           [UIColor Twitter]
@@ -193,7 +192,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define PROFILE_IMAGE_CORNER_RADIUS 20
 #define PROFILE_IMAGE_SIZE_FACTOR 0.8
 
-#define HEADER_HEIGHT 40
+#define HEADER_HEIGHT 65
 #define HEADER_SIZE (CGSize){320, HEADER_HEIGHT}
 
 

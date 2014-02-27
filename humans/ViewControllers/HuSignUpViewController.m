@@ -182,7 +182,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    CGFloat status_bar_height = [UIApplication sharedApplication].statusBarFrame.size.height;
+    //CGFloat status_bar_height = [UIApplication sharedApplication].statusBarFrame.size.height;
+
     
 //    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
 //    {
