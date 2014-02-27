@@ -90,6 +90,8 @@
 		B9374654188CCD970037A95C /* StateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = B9374653188CCD970037A95C /* StateMachine.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B9374658188CCF920037A95C /* HuProfilePhotoBlank.m in Sources */ = {isa = PBXBuildFile; fileRef = B9374657188CCF920037A95C /* HuProfilePhotoBlank.m */; };
 		B937465B188CD0910037A95C /* HuServiceUserProfilePhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = B937465A188CD0910037A95C /* HuServiceUserProfilePhoto.m */; };
+		B93FFD4118BF0EB7000219D0 /* 1393303417_78-instagram.png in Resources */ = {isa = PBXBuildFile; fileRef = B93FFD3F18BF0EB7000219D0 /* 1393303417_78-instagram.png */; };
+		B93FFD4218BF0EB7000219D0 /* Icon_Home.png in Resources */ = {isa = PBXBuildFile; fileRef = B93FFD4018BF0EB7000219D0 /* Icon_Home.png */; };
 		B944BB291896F05400015B10 /* HuFlickrDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = B944BB261896F05400015B10 /* HuFlickrDescription.m */; };
 		B944BB2A1896F05400015B10 /* HuFlickrStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = B944BB281896F05400015B10 /* HuFlickrStatus.m */; };
 		B944BB381896F06500015B10 /* HuFoursquareCheckin.m in Sources */ = {isa = PBXBuildFile; fileRef = B944BB2D1896F06500015B10 /* HuFoursquareCheckin.m */; };
@@ -102,6 +104,16 @@
 		B944BB431896FE5500015B10 /* HuFoursquareVenueIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = B944BB411896FE5500015B10 /* HuFoursquareVenueIcons.m */; };
 		B94FAEE718A6F80600EA4463 /* HuShowServicesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B94FAEE618A6F80600EA4463 /* HuShowServicesViewController.m */; };
 		B94FAEEA18A71B2400EA4463 /* HuServiceViewLine.m in Sources */ = {isa = PBXBuildFile; fileRef = B94FAEE918A71B2400EA4463 /* HuServiceViewLine.m */; };
+		B9578B4D18BE9A73002E6BD9 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6618B7FD1800A9E918 /* Parse.framework */; };
+		B9578B4E18BE9F05002E6BD9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B99E017618601B2400E70892 /* SystemConfiguration.framework */; };
+		B9578B4F18BE9F0A002E6BD9 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A7218B7FD9100A9E918 /* Security.framework */; };
+		B9578B5018BE9F68002E6BD9 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */; };
+		B9578B5118BE9F71002E6BD9 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6A18B7FD5500A9E918 /* CFNetwork.framework */; };
+		B9578B5218BE9F7C002E6BD9 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6C18B7FD6400A9E918 /* CoreLocation.framework */; };
+		B9578B5318BE9F84002E6BD9 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B93024A21895B887000168E4 /* libz.dylib */; };
+		B9578B5418BE9F8A002E6BD9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6E18B7FD7100A9E918 /* MobileCoreServices.framework */; };
+		B9578B5518BE9F8F002E6BD9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A7018B7FD8700A9E918 /* QuartzCore.framework */; };
+		B9578B5618BE9F95002E6BD9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F517AB185BC4E20083CA36 /* StoreKit.framework */; };
 		B9910A6718B7FD1800A9E918 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6618B7FD1800A9E918 /* Parse.framework */; };
 		B9910A6918B7FD4C00A9E918 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */; };
 		B9910A6B18B7FD5500A9E918 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6A18B7FD5500A9E918 /* CFNetwork.framework */; };
@@ -306,6 +318,8 @@
 		B9374657188CCF920037A95C /* HuProfilePhotoBlank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuProfilePhotoBlank.m; path = Views/HuProfilePhotoBlank.m; sourceTree = "<group>"; };
 		B9374659188CD0910037A95C /* HuServiceUserProfilePhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuServiceUserProfilePhoto.h; path = Views/HuServiceUserProfilePhoto.h; sourceTree = "<group>"; };
 		B937465A188CD0910037A95C /* HuServiceUserProfilePhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuServiceUserProfilePhoto.m; path = Views/HuServiceUserProfilePhoto.m; sourceTree = "<group>"; };
+		B93FFD3F18BF0EB7000219D0 /* 1393303417_78-instagram.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "1393303417_78-instagram.png"; path = "Resources/Graphics/UI Elements/1393303417_78-instagram.png"; sourceTree = "<group>"; };
+		B93FFD4018BF0EB7000219D0 /* Icon_Home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_Home.png; path = "Resources/Graphics/UI Elements/Icon_Home.png"; sourceTree = "<group>"; };
 		B944BB251896F05400015B10 /* HuFlickrDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFlickrDescription.h; sourceTree = "<group>"; };
 		B944BB261896F05400015B10 /* HuFlickrDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFlickrDescription.m; sourceTree = "<group>"; };
 		B944BB271896F05400015B10 /* HuFlickrStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFlickrStatus.h; sourceTree = "<group>"; };
@@ -505,6 +519,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9578B5618BE9F95002E6BD9 /* StoreKit.framework in Frameworks */,
+				B9578B5518BE9F8F002E6BD9 /* QuartzCore.framework in Frameworks */,
+				B9578B5418BE9F8A002E6BD9 /* MobileCoreServices.framework in Frameworks */,
+				B9578B5318BE9F84002E6BD9 /* libz.dylib in Frameworks */,
+				B9578B5218BE9F7C002E6BD9 /* CoreLocation.framework in Frameworks */,
+				B9578B5118BE9F71002E6BD9 /* CFNetwork.framework in Frameworks */,
+				B9578B5018BE9F68002E6BD9 /* AudioToolbox.framework in Frameworks */,
+				B9578B4F18BE9F0A002E6BD9 /* Security.framework in Frameworks */,
+				B9578B4E18BE9F05002E6BD9 /* SystemConfiguration.framework in Frameworks */,
+				B9578B4D18BE9A73002E6BD9 /* Parse.framework in Frameworks */,
 				B99E019618619A0500E70892 /* CoreGraphics.framework in Frameworks */,
 				B9F51796185BC4930083CA36 /* XCTest.framework in Frameworks */,
 				B9F51798185BC4930083CA36 /* UIKit.framework in Frameworks */,
@@ -1010,6 +1034,8 @@
 				B91618F6186803050010A34F /* UIImage-categories */,
 				B92400C1185C158600A10410 /* defines.h */,
 				B9F5177E185BC4930083CA36 /* humans-Info.plist */,
+				B93FFD3F18BF0EB7000219D0 /* 1393303417_78-instagram.png */,
+				B93FFD4018BF0EB7000219D0 /* Icon_Home.png */,
 				B9F5177F185BC4930083CA36 /* InfoPlist.strings */,
 				B9F51782185BC4930083CA36 /* main.m */,
 				B9F51784185BC4930083CA36 /* humans-Prefix.pch */,
@@ -1196,7 +1222,9 @@
 				B91BE73F18A29B9600D6E171 /* garbage-gray.png in Resources */,
 				B91BE74618A29B9600D6E171 /* right-arrow-gray.png in Resources */,
 				B91BE73A18A29B9600D6E171 /* delete-x.png in Resources */,
+				B93FFD4218BF0EB7000219D0 /* Icon_Home.png in Resources */,
 				B91BE73918A29B9600D6E171 /* delete-x-22sq.png in Resources */,
+				B93FFD4118BF0EB7000219D0 /* 1393303417_78-instagram.png in Resources */,
 				B91BE72818A29B9600D6E171 /* Instagram_Icon_Small.png in Resources */,
 				B91BE73118A29B9600D6E171 /* twitter-bottom-line.png in Resources */,
 				B91BE72B18A29B9600D6E171 /* Instagram_Logo_Small.png in Resources */,
@@ -1690,6 +1718,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/humansTests",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"/Users/julian/Code/humans-tmp/Humans-iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
@@ -1719,6 +1748,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"/Users/julian/Code/humans-tmp/Humans-iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
