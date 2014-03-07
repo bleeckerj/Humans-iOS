@@ -125,6 +125,7 @@ PODS:
   - SDWebImage (3.5.2):
     - SDWebImage/Core
   - SDWebImage/Core (3.5.2)
+  - Sequencer (1.0.1)
   - SKSlideViewController (0.0.1)
   - SOCKit (1.1)
   - TPKeyboardAvoiding (1.2.3)
@@ -178,6 +179,7 @@ DEPENDENCIES:
   - RNCryptor (~> 2.2)
   - SBJson (~> 4.0.0)
   - SDWebImage
+  - Sequencer
   - SKSlideViewController (~> 0.0.1)
   - TPKeyboardAvoiding
   - UIColor-Crayola
@@ -244,6 +246,7 @@ SPEC CHECKSUMS:
   RNCryptor: 1420380792b33758d2414cf37af160ea2495e15c
   SBJson: f3c686806e8e36ab89e020189ac582ba26ec4220
   SDWebImage: fe7ce01ae4e0a884d168f59c9dd82d35baf8429e
+  Sequencer: ac64fdd704f83883536b73c7e5adc974fa285223
   SKSlideViewController: 98e4cee58146aaf8b24d300b9a32bc7c45cc5b25
   SOCKit: 2f3bc4d07910de12dcc202815e07db68a3802581
   TPKeyboardAvoiding: 17995aaa6db26ac2a9fa8714a86509c5888f0392
