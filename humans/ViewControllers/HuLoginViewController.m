@@ -18,7 +18,6 @@
 #import <Crashlytics/Crashlytics.h>
 #import "HuHumansProfileCarouselViewController.h"
 #import <Parse/Parse.h>
-#import <SSKeychain.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
@@ -140,8 +139,8 @@
             [Crashlytics setUserName:[usernameTextField text]];
             [Crashlytics setUserIdentifier: userid];
             
-            [SSKeychain deletePasswordForService:UNIQUE_APP_KEYCHAIN_SERVICE_NAME account:[usernameTextField text]];
-            [SSKeychain setPassword:[passwordTextField text] forService:UNIQUE_APP_KEYCHAIN_SERVICE_NAME account:[usernameTextField text]];
+            [[FXKeychain defaultKeychain]setObject:[usernameTextField text] forKey:@"username"];
+            [[FXKeychain defaultKeychain]setObject:[passwordTextField text] forKey:@"password"];
             
             [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
             
@@ -205,7 +204,8 @@
         
         } else {
             ///[self.activityIndicatorView stopAnimating];
-            
+            [[FXKeychain defaultKeychain]removeObjectForKey:@"username"];
+            [[FXKeychain defaultKeychain]removeObjectForKey:@"password"];
             [MRProgressOverlayView dismissOverlayForView:self.view animated:YES];
             
             MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
@@ -222,6 +222,7 @@
         }
     }];
 }
+
 
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {

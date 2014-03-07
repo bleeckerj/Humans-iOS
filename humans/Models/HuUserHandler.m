@@ -236,7 +236,7 @@ NSDateFormatter *twitter_formatter;
     [operation start];
 }
 
-
+#pragma mark Basically login /oauth2/token?grant_typ
 - (void)userRequestTokenForUsername:(NSString *)username forPassword:(NSString *)password withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     NSString *path =[NSString stringWithFormat:@"/oauth2/token?grant_type=password&client_id=ioshumans&username=%@&password=%@",username,password];
@@ -297,7 +297,7 @@ NSDateFormatter *twitter_formatter;
     [onBehalfOfMapping addAttributeMappingsFromArray:@[@"serviceName", @"serviceUserID", @"serviceUsername"]];
     
     RKObjectMapping *serviceUsersMapping = [RKObjectMapping mappingForClass:[HuServiceUser class]];
-    [serviceUsersMapping addAttributeMappingsFromArray:@[@"id", @"imageURL", @"lastUpdated", @"serviceName", @"serviceUserID", @"serviceUsername"]];
+    [serviceUsersMapping addAttributeMappingsFromArray:@[@"id", @"imageURL", @"lastUpdated", @"serviceName", @"serviceUserID", @"username"]];
     
     // relationships
     // humans within users
@@ -378,6 +378,31 @@ NSDateFormatter *twitter_formatter;
     
     
 }
+#pragma mark /status/count
+-(void)getStatusCountsWithCompletionHandler:(CompletionHandlerWithData)completionHandler
+{
+    NSString *path =[NSString stringWithFormat:@"/rest/human/status/count?access_token=%@", [self access_token]];
+    [client setParameterEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
+    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+        if(completionHandler) {
+            completionHandler(responseObject, true, nil);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+        [Flurry logError:error.localizedDescription message:@"" error:error];
+        
+        if(completionHandler) {
+            completionHandler(nil, false, error);
+        }
+    }];
+    [operation start];
+
+}
+
 
 #pragma mark /status/count/{humanid}
 - (void)getStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler
@@ -387,9 +412,6 @@ NSDateFormatter *twitter_formatter;
     NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
     AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
     
-    //    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-    //        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
-    //    }];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         //LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
         if(completionHandler) {
@@ -403,9 +425,6 @@ NSDateFormatter *twitter_formatter;
             completionHandler(nil, false, error);
         }
     }];
-    
-    // Connection
-    
     [operation start];
 }
 
@@ -467,7 +486,7 @@ NSDateFormatter *twitter_formatter;
         [Flurry logEvent:[NSString stringWithFormat:@"Success for %@ response=%@", [aService description], responseObject]];
         NSError *readError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:&readError];
-        BOOL valid = [NSJSONSerialization isValidJSONObject:json];
+       // BOOL valid = [NSJSONSerialization isValidJSONObject:json];
         if(completionHandler) {
             
             id result = [json objectForKey:@"result"];
@@ -503,6 +522,121 @@ NSDateFormatter *twitter_formatter;
     
 }
 
+- (void)userAddServiceUsers:(NSMutableArray *)arrayOfServiceUsers forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
+{
+    
+}
+
+#pragma mark add a service user {humanid}/add/serviceuser/ with JSON for the service user
+- (void)userAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
+{
+    NSString *path =[NSString stringWithFormat:@"/rest/human/%@/add/serviceuser?access_token=%@", [aHuman humanid], [self access_token]];
+    [client setParameterEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request =[client requestWithMethod:@"POST" path:path parameters:nil];
+    
+    request.timeoutInterval = 30.000000;
+    
+    // Request Operation
+    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
+    
+    NSData *requestData = [[aServiceUser jsonString] dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody: requestData];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //
+        LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+        
+        
+        // success in the request, not necessarily creating a user successfully
+        NSDictionary *message = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedDescriptionKey, [responseObject valueForKey:@"message"], nil];
+        NSError *err = [[NSError alloc]initWithDomain:@"humans" code:100 userInfo:message];
+        
+        NSString *result = [responseObject valueForKey:@"result"];
+        
+        NSDictionary *dimensions = @{@"human-id": [aHuman jsonString], @"service-user" : [aServiceUser jsonString], @"result": result};
+        [PFAnalytics trackEvent:@"add-service-user" dimensions:dimensions];
+        
+        [Flurry logEvent:@"add-service-user" withParameters:dimensions];
+        
+        [WSLObjectSwitch switchOn:result
+                     defaultBlock:^{
+                         //
+                         if(completionHandler) {
+                             completionHandler(responseObject, YES, nil);
+                         }
+                         
+                     } cases:
+         @"fail", ^{
+             LOG_ERROR(0, @"%@", [responseObject valueForKey:@"message"] );
+             
+             if(completionHandler) {
+                 completionHandler(responseObject, NO, err);
+             }
+         },
+         @"success", ^{
+             if(completionHandler) {
+                 completionHandler(responseObject, YES, nil);
+             }
+         }];
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if(completionHandler) {
+            completionHandler(nil ,NO, error);
+        }
+    }];
+    
+    // connection
+    [operation start];
+    
+}
+
+#pragma mark remove a service user (someone as part of a human composite) by ID /rest/rm/{serviceuserid}/serviceuser
+- (void)userRemoveServiceUser:(HuServiceUser *)aServiceUser withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    
+    NSString *path = [NSString stringWithFormat:@"/rest/user/rm/%@/serviceuser?access_token=%@", [aServiceUser id], [self access_token] ];
+    
+    [client setParameterEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
+    request.HTTPMethod = @"GET";
+    request.timeoutInterval = 30.000000;
+    
+    // Request Operation
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    // Progress & Completion blocks
+    
+    //    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+    //        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+    //    }];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+        if(completionHandler) {
+            completionHandler(YES, nil);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+        [Flurry logError:error.localizedDescription message:@"" error:error];
+        
+        if(completionHandler) {
+            completionHandler(NO, error);
+        }
+    }];
+    
+    // Connection
+    
+    [operation start];
+ 
+}
 
 #pragma mark Delete Human By ID /user/rm/{humanid}/human
 - (void)userRemoveHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler

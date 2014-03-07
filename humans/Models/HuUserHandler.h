@@ -13,6 +13,7 @@
 #import "HuUser.h"
 #import "HuHuman.h"
 #import "HuServices.h"
+#import "HuServiceUser.h"
 
 // new twitter
 #import "HuTwitterStatus.h"
@@ -70,13 +71,18 @@ typedef enum networkStateTypes
 //- (void)createNewUser:(HuUser *)user password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 - (void)getStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 - (void)getStatusCountForHuman:(HuHuman *)human after:(NSTimeInterval)timestamp withCompletionHandler:(CompletionHandlerWithData)completionHandler;
+-(void)getStatusCountsWithCompletionHandler:(CompletionHandlerWithData)completionHandler;
 
 - (void)getHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userRequestTokenForUsername:(NSString *)username forPassword:(NSString *)password withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userAddHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userRemoveHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 
+
 - (void)userRemoveService:(HuServices *)aService withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+
+- (void)userAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler;
+- (void)userRemoveServiceUser:(HuServiceUser *)aServiceUser withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 
 
 - (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionhandler;

@@ -15,9 +15,9 @@
 #import <IonIcons.h>
 
 @interface HuHumanProfileView : UIView
-{
-    
-}
+
+- (void)editHuman;
+
 @property HuHuman *human;
 @property HuUserHandler *userHandler;
 @property UILabel *nameLabel;
@@ -100,9 +100,14 @@ MRProgressOverlayView *activityIndicatorView;
         activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
         activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
         activityIndicatorView.tintColor = [UIColor orangeColor];
+        [self performBlock:^{
+            //[noticeView dismiss:YES];
+            
+            [self showHuman];
+        } afterDelay:0.25];
         
-        [self showHuman];
     }];
+    
     
     UIView *profile_image_container = [[UIView alloc]init];
     
@@ -119,8 +124,11 @@ MRProgressOverlayView *activityIndicatorView;
         //
         [profile_imgview setImageWithURL:[NSURL URLWithString:[user imageURL]] placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] options:SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             //
+            if(image == nil) {
+                LOG_ERROR(0, @"Couldn't download image %@", [user username]);
+                LOG_ERROR(0, @"May mean that the user has changed their image and we don't have a fresh URL. We could initiate a refresh of the local user data, which only rarely gets updated serverside");
+            }
         }];
-        
         
         [profile_image_container addSubview:profile_imgview];
     }];
@@ -128,8 +136,6 @@ MRProgressOverlayView *activityIndicatorView;
     [profile_image_container mc_setRelativePosition:MCViewRelativePositionUnderAlignedLeft toView:overlay];
     
     container.layer.cornerRadius = 0;
-    //container.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    //container.layer.borderWidth = 1.0f;
     
 }
 
@@ -138,97 +144,160 @@ MRProgressOverlayView *activityIndicatorView;
     [super layoutSubviews];
 }
 
-- (void)showHuman
+- (void)editHuman
 {
     LOG_GENERAL(0, @"Would present %@", human);
     [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
     
-    HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
-    HuUserHandler *user_handler = [delegate humansAppUser];
-    [userHandler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
-        int lcount = 0;
-        if(success) {
-            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-            [f setNumberStyle:NSNumberFormatterDecimalStyle];
-            lcount = [[f numberFromString:[data description]] intValue];
-            
-        }
-        if(lcount <= 0) {
-            [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
-            
-            MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
-            noticeView.mode = MRProgressOverlayViewModeCross;
-            noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
-            [self performBlock:^{
-                [noticeView dismiss:YES];
-                [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
-            } afterDelay:4.0];
-            
-        }
-        
-        if(success && lcount > 0) {
-            [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-                //
-                if(success) {
-                    LOG_GENERAL(0, @"Loaded Status for %@", human);
-                    //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
-                    
-                    //NSString *human_id = [human humanid]    ;
-                    NSArray *status = [user_handler statusForHuman:human];
-                    LOG_GENERAL(0, @"Count is %d", [status count]);
-                    statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-                    [statusCarouselViewController setHuman:human];
-                    
-                    NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
-                    
-                    [statusCarouselViewController setItems:items];
-                    
-                    [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
-                    
-                    UINavigationController *nav = [parentViewController navigationController];
-                    [nav pushViewController:statusCarouselViewController animated:YES];
-                    
-                } else {
-                    LOG_ERROR(0, @"Error loading status %@", error);
-                    [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-                    [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:NO];
-                    MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
-                    noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-                    noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
-                    [self performBlock:^{
-                        [noticeView dismiss:YES];
-                    } afterDelay:2.0];
-                    
-                }
-                
-            }];
-        }
-    }];
+//    UINavigationController *nav = [parentViewController navigationController];
+//    [nav pushViewController:statusCarouselViewController animated:YES];
+    
+    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    HuHumanProfileViewController *profileViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuHumanProfileViewController"];
+    [profileViewController setHuman:human];
+    
+    UINavigationController *root = (UINavigationController*)self.window.rootViewController;
+    [root pushViewController:profileViewController animated:YES];
+    
 }
 
-- (void)refreshCounts
+- (void)showHuman
 {
-    __block HuHumanProfileView *bself = self;
-    [userHandler getStatusCountForHuman:self.human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+    [parentViewController invalidateStatusRefreshTimer];
+    
+    HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
+    HuUserHandler *user_handler = [delegate humansAppUser];
+    
+    [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
         //
+        [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
+        
         if(success) {
-            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-            [f setNumberStyle:NSNumberFormatterDecimalStyle];
-            bself.count = [f numberFromString:[data description]];
-            [self.countLabel setText:[bself.count stringValue]];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [bself setNeedsDisplay];
-            });
+            LOG_GENERAL(0, @"Loaded Status for %@", human);
+            //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+            
+            //NSString *human_id = [human humanid]    ;
+            NSArray *status = [user_handler statusForHuman:human];
+            LOG_GENERAL(0, @"Count is %d", [status count]);
+            statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
+            [statusCarouselViewController setHuman:human];
+            
+            NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
+            
+            [statusCarouselViewController setItems:items];
+            
+            [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
+            
+            UINavigationController *nav = [parentViewController navigationController];
+            [nav pushViewController:statusCarouselViewController animated:YES];
+            
         } else {
-            LOG_UI(0, @"Couldn't get a count for %@", bself.human.name);
-            LOG_UI(0, @"This probably means you should log out and log back in, especially if you're debugging as the access token may have changed based on logging in from somewhere else.");
-            bself.count = [[NSNumber alloc]initWithInt:65535];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [bself setNeedsLayout];
-            });
+            LOG_ERROR(0, @"Error loading status %@", error);
+            [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+            [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:NO];
+            MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
+            noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+            noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+            [self performBlock:^{
+                [noticeView dismiss:YES];
+            } afterDelay:2.0];
+            
         }
         
     }];
+    
+    /*
+     [userHandler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+     int lcount = 0;
+     if(success) {
+     NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+     [f setNumberStyle:NSNumberFormatterDecimalStyle];
+     lcount = [[f numberFromString:[data description]] intValue];
+     
+     }
+     if(lcount <= 0) {
+     [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
+     
+     MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
+     noticeView.mode = MRProgressOverlayViewModeCross;
+     noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
+     [self performBlock:^{
+     [noticeView dismiss:YES];
+     [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
+     } afterDelay:4.0];
+     
+     }
+     
+     if(success && lcount > 0) {
+     [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+     //
+     if(success) {
+     LOG_GENERAL(0, @"Loaded Status for %@", human);
+     //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+     
+     //NSString *human_id = [human humanid]    ;
+     NSArray *status = [user_handler statusForHuman:human];
+     LOG_GENERAL(0, @"Count is %d", [status count]);
+     statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
+     [statusCarouselViewController setHuman:human];
+     
+     NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
+     
+     [statusCarouselViewController setItems:items];
+     
+     [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
+     
+     UINavigationController *nav = [parentViewController navigationController];
+     [nav pushViewController:statusCarouselViewController animated:YES];
+     
+     } else {
+     LOG_ERROR(0, @"Error loading status %@", error);
+     [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+     [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:NO];
+     MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
+     noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+     noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+     [self performBlock:^{
+     [noticeView dismiss:YES];
+     } afterDelay:2.0];
+     
+     }
+     
+     }];
+     }
+     }];
+     */
+}
+
+- (void)refreshCounts:(NSString *)countAsStr
+{
+    NSNumberFormatter *f = [[NSNumberFormatter alloc]init];
+    [f setNumberStyle:NSNumberFormatterDecimalStyle];
+    self.count = [f numberFromString:countAsStr];
+    [self.countLabel setText:[self.count stringValue]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setNeedsDisplay];
+    });
+    //    [userHandler getStatusCountForHuman:self.human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+    //        //
+    //        if(success) {
+    //            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+    //            [f setNumberStyle:NSNumberFormatterDecimalStyle];
+    //            bself.count = [f numberFromString:[data description]];
+    //            [self.countLabel setText:[bself.count stringValue]];
+    //            dispatch_async(dispatch_get_main_queue(), ^{
+    //                [bself setNeedsDisplay];
+    //            });
+    //        } else {
+    //            LOG_UI(0, @"Couldn't get a count for %@", bself.human.name);
+    //            LOG_UI(0, @"This probably means you should log out and log back in, especially if you're debugging as the access token may have changed based on logging in from somewhere else.");
+    //            bself.count = [[NSNumber alloc]initWithInt:65535];
+    //            dispatch_async(dispatch_get_main_queue(), ^{
+    //                [bself setNeedsLayout];
+    //            });
+    //        }
+    //
+    //    }];
     
 }
 
@@ -259,6 +328,8 @@ MRProgressOverlayView *activityIndicatorView;
 
 @implementation HuHumansProfileCarouselViewController
 
+@synthesize indexToShow;
+@synthesize humanHasEdited;
 
 typedef enum {
     kListGridView = 0,
@@ -298,20 +369,71 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     userHandler = [delegate humansAppUser];
     arrayOfHumans = [NSMutableArray arrayWithArray:[[userHandler humans_user]humans]];
     humans_views = [[NSMutableArray alloc]init];
-    privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
     
-    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
-                                                                 target:self
-                                                               selector:@selector(updateHumanStatusCounts)
-                                                               userInfo:nil
-                                                                repeats:YES
-                                                          dispatchQueue:privateQueue];
+    viewType = kHalfHeightScrollView;
     
-    viewType = kFullHeightScrollView;
+    // do it once now
+    [self updateHumanStatusCounts];
+    //and queue to do it every 2 minutes as well..
+     privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
     
-    dispatch_queue_set_specific(privateQueue, (__bridge const void *)(self), (void *)HuHumansScrollViewControllerTimerQueueContext, NULL);
+     timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
+     target:self
+     selector:@selector(updateHumanStatusCounts)
+     userInfo:nil
+     repeats:YES
+     dispatchQueue:privateQueue];
+    
+    indexToShow = 0;
+     
+     dispatch_queue_set_specific(privateQueue, (__bridge const void *)(self), (void *)HuHumansScrollViewControllerTimerQueueContext, NULL);
     
 }
+
+- (void)updateHumanStatusCounts
+{
+    //__block HuHumanProfileView *bself = self;
+    [userHandler getStatusCountsWithCompletionHandler:^(id data, BOOL success, NSError *error) {
+        if(success) {
+            // handle counts
+            
+            
+            [humans_views enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                HuHumanProfileView *humanProfileView = (HuHumanProfileView *)obj;
+                HuHuman *human = [humanProfileView human];
+                [humanProfileView refreshCounts:[data objectForKey:[human humanid]]];
+                
+                // update the box presentation on the main thread
+                //                dispatch_async(dispatch_get_main_queue(), ^{
+                //                    NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[[[humanProfileView count]stringValue]]];
+                //                    //NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[@"WTF?"]];
+                //                    //[line setRightItems:c];
+                //                    //[line layout];
+                //                });
+                
+                //        __block HuHumanLineStyled *bline = line;
+                //
+                //        line.asyncLayoutOnce = ^{
+                //            // fetch a remote image on a background thread
+                //            [bline refreshCounts];
+                //
+                //            // update the box presentation on the main thread
+                //            dispatch_async(dispatch_get_main_queue(), ^{
+                //                NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[[[bline count]stringValue]]];
+                //                //NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[@"WTF?"]];
+                //
+                //                [bline setRightItems:c];
+                //                [bline layout];
+                //            });
+                //        };
+                
+            }];
+        }
+    }];
+    
+    
+}
+
 
 - (BOOL)prefersStatusBarHidden
 {
@@ -323,6 +445,10 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     return UIStatusBarStyleLightContent;
 }
 
+- (void)invalidateStatusRefreshTimer
+{
+    [timerForStatusRefresh invalidate];
+}
 
 - (void)addHumanToView:(HuHuman *)human
 {
@@ -350,8 +476,8 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
             [self addHumanToView:human];
         }
     }];
-    
-    [self updateHumanStatusCounts];
+    [carousel reloadData];
+    //[self updateHumanStatusCounts];
     
     
 }
@@ -361,12 +487,17 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
 {
     [super viewWillDisappear:animated];
     [timerForStatusRefresh invalidate];
+    indexToShow = [carousel currentItemIndex];
+    
     
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [self updateHumansForView];
+    
+    [carousel setCurrentItemIndex:indexToShow];
+    
     LOG_UI(0, @"Here we have %d humans", [arrayOfHumans count]);
     [super viewWillAppear:animated];
     
@@ -377,15 +508,15 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     });
     
     
-    if(timerForStatusRefresh == nil) {
-        timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
-                                                                     target:self
-                                                                   selector:@selector(updateHumanStatusCounts)
-                                                                   userInfo:nil
-                                                                    repeats:YES
-                                                              dispatchQueue:privateQueue];
-        
-    }
+     if(timerForStatusRefresh == nil) {
+     timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
+     target:self
+     selector:@selector(updateHumanStatusCounts)
+     userInfo:nil
+     repeats:YES
+     dispatchQueue:privateQueue];
+     
+     }
     
 }
 
@@ -420,7 +551,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         LOG_UI(0, @"Tapped Settings Box");
         //[mainMenu showInView:carousel];
         if(mainMenu.isOpen == NO) {
-        [mainMenu showFromRect:(CGRectMake(0, header.height, header.width, 400)) inView:carousel];
+            [mainMenu showFromRect:(CGRectMake(0, header.height, header.width, 400)) inView:carousel];
         } else {
             [mainMenu close];
         }
@@ -430,7 +561,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     UIImage *add_human_img = [UIImage imageNamed:@"add-human-gray"];
     
     add_human = [MGLine lineWithLeft:add_human_img right:nil size:[add_human_img size]];
-    //add_human.alpha = 1.0;
     add_human.onTap = ^{
         LOG_UI(0, @"Tapped Add Human Limit?");
         HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
@@ -481,42 +611,53 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
                                                               LOG_UI(0, @"Item: %@", item);
                                                               if(showServicesViewController == nil) {
                                                                   showServicesViewController = [[HuShowServicesViewController alloc]init];
-
+                                                                  
                                                               }
                                                               [showServicesViewController setTitle:@"Foo"];
                                                               showServicesViewController.tapOnEx = ^{
                                                                   dispatch_async(dispatch_get_main_queue(), ^{
                                                                       [bnav popToViewController:bself animated:YES];
                                                                   });
-
+                                                                  
                                                               };
-
-
+                                                              
+                                                              
                                                               [bnav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
                                                           }];
-
     
-    UIImage *beakerImage = [IonIcons imageWithIcon:@"ion_beaker"
-                                         iconColor:[UIColor blackColor]
-                                          iconSize:30.0f
-                                         imageSize:CGSizeMake(30.0f, 30.0f)];
+    
+    
+    
+    //UIImage *beakerImage = [IonIcons imageWithIcon:@"icon_array_right_a" size:30.0f color:[UIColor blackColor]];
+    
     
     REMenuItem *stuffsItem = [[REMenuItem alloc] initWithTitle:@"Stuff"
-                                                           image:[UIImage imageNamed:@"Icon_Home"]
-                                                highlightedImage:nil
-                                                          action:^(REMenuItem *item) {
-                                                              LOG_UI(0, @"Item: %@", item);
-                                                              
-                                                          }];
-
-    REMenuItem *beakerItem = [[REMenuItem alloc] initWithTitle:@"Things"
-                                                         image:beakerImage
+                                                         image:[UIImage imageNamed:@"Icon_Home"]
                                               highlightedImage:nil
                                                         action:^(REMenuItem *item) {
                                                             LOG_UI(0, @"Item: %@", item);
+                                                            NSInteger index = [carousel currentItemIndex];
+                                                            HuHumanProfileView *current = (HuHumanProfileView*)[carousel currentItemView];
+                                                            [current editHuman];
+                                                        }];
+    
+    REMenuItem *beakerItem = [[REMenuItem alloc] initWithTitle:@"Height"
+                                                         image:[UIImage imageNamed:@"Icon_Home"]
+                                              highlightedImage:nil
+                                                        action:^(REMenuItem *item) {
+                                                            LOG_UI(0, @"Item: %@", item);
+                                                            if(viewType == kFullHeightScrollView) {
+                                                                viewType = kHalfHeightScrollView;
+                                                            } else {
+                                                                viewType = kFullHeightScrollView;
+                                                            }
+                                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                                //
+                                                                [[self view]setNeedsLayout];
+                                                            });
                                                             
                                                         }];
-
+    
     
     UIView *customView = [[UIView alloc] init];
     customView.backgroundColor = [UIColor blueColor];
@@ -525,14 +666,14 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         NSLog(@"Tap on customView");
     }];
     
-
+    
     //mainMenu.imageOffset = CGSizeMake(5, -1);
     mainMenu.waitUntilAnimationIsComplete = NO;
     mainMenu.badgeLabelConfigurationBlock = ^(UILabel *badgeLabel, REMenuItem *item) {
         badgeLabel.backgroundColor = [UIColor Garmin];
         badgeLabel.layer.borderColor = [UIColor colorWithRed:0.000 green:0.648 blue:0.507 alpha:1.000].CGColor;
     };
-
+    
     settingsItem.badge = @"15";
     settingsItem.textColor = [UIColor blackColor];
     settingsItem.backgroundColor = [UIColor crayolaOuterSpaceColor];
@@ -550,7 +691,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     UIColor *d = [[UIColor crayolaOuterSpaceColor]darkerColor];
     [mainMenu setHighlightedBackgroundColor:d];
     mainMenu.borderWidth = 0.0;
-
+    
     [mainMenu setCloseCompletionHandler:^{
         LOG_UI(0, @"Menu did close");
     }];
@@ -607,7 +748,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     userHandler = aUserHandler;
 }
 
-- (void)showHuman:(HuHuman *)human fromLine:(HuHumanProfileView *)line
+- (void)__showHuman:(HuHuman *)human fromLine:(HuHumanProfileView *)line
 {
     [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
     
@@ -672,42 +813,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     }];
 }
 
-- (void)updateHumanStatusCounts
-{
-    [humans_views enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        //
-        
-        HuHumanProfileView *humanProfileView = (HuHumanProfileView *)obj;
-        
-        [humanProfileView refreshCounts];
-        
-        // update the box presentation on the main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[[[humanProfileView count]stringValue]]];
-            //NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[@"WTF?"]];
-            //[line setRightItems:c];
-            //[line layout];
-        });
-        
-        //        __block HuHumanLineStyled *bline = line;
-        //
-        //        line.asyncLayoutOnce = ^{
-        //            // fetch a remote image on a background thread
-        //            [bline refreshCounts];
-        //
-        //            // update the box presentation on the main thread
-        //            dispatch_async(dispatch_get_main_queue(), ^{
-        //                NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[[[bline count]stringValue]]];
-        //                //NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[@"WTF?"]];
-        //
-        //                [bline setRightItems:c];
-        //                [bline layout];
-        //            });
-        //        };
-        
-    }];
-    
-}
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
@@ -729,7 +834,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     CATransform3D result;
     //return CATransform3DTranslate(transform, 0.0f, (offset - .49) * (carousel.bounds.size.height) * spacing, 0.0f);
     //CATransform3D result = CATransform3DTranslate(transform, 0.0f, (offset - 0) * (carousel.bounds.size.height) * spacing, 0.0f);
-//    CATransform3D result =CATransform3DTranslate(transform, 0.0f, (offset - .24) * (carousel.bounds.size.height) * spacing, 0.0f);
+    //    CATransform3D result =CATransform3DTranslate(transform, 0.0f, (offset - .24) * (carousel.bounds.size.height) * spacing, 0.0f);
     
     if(viewType == kHalfHeightScrollView) {
         spacing = [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:.51];

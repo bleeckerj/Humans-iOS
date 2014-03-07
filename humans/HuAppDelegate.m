@@ -13,7 +13,6 @@
 #import "Flurry.h"
 #import "TestFlight.h"
 #import <Parse/Parse.h>
-#import <SSKeychain.h>
 #import "HuHumansProfileCarouselViewController.h"
 
 @implementation HuAppDelegate
@@ -73,17 +72,20 @@
 
 - (void)loginViaKeychain
 {
-    NSArray *accounts = [SSKeychain accountsForService:UNIQUE_APP_KEYCHAIN_SERVICE_NAME];
-    if([accounts count] > 0) {
+    [[FXKeychain defaultKeychain]objectForKey:@"username"];
+    
+    
+    if([[FXKeychain defaultKeychain]objectForKey:@"username"] != nil) {
         // only one really
-        NSDictionary *humansAccount = [accounts objectAtIndex:0];
-        NSString *username = [humansAccount objectForKey:kSSKeychainAccountKey];
-        NSString *password = [SSKeychain passwordForService:UNIQUE_APP_KEYCHAIN_SERVICE_NAME account:username];
+        NSString *username = [[FXKeychain defaultKeychain] objectForKey:@"username"];
+        NSString *password = [[FXKeychain defaultKeychain] objectForKey:@"password"];
         [self loginWithUsername:username password:password completionHandler:^(BOOL success, NSError *error) {
             //
             if(success) {
             NSDictionary *dimensions = @{@"user": username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
             [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
+                [Flurry logEvent:@"keychain-login" withParameters:dimensions];
+        
             } else {
                 UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
                 UIViewController *test = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];

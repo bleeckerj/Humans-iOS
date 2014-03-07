@@ -8,7 +8,6 @@
 #import "HuServiceUser.h"
 #import "HuOnBehalfOf.h"
 
-
 @implementation HuServiceUser
 
 
@@ -18,13 +17,21 @@
 @synthesize onBehalfOf = _onBehalfOf;
 @synthesize serviceName = _serviceName;
 @synthesize serviceUserID = _serviceUserID;
-@synthesize serviceUsername = _serviceUsername;
+@synthesize username = _username;
 
 
 - (void) dealloc
 {
 	
 
+}
+
+- (id) initWithFriend:(HuFriend *)aFriend
+{
+    NSDictionary *dic = @{@"id" : @"", @"lastUpdated" : @"", @"imageURL": [aFriend imageURL], @"onBehalfOf": [[aFriend onBehalfOf] dictionary], @"serviceName" : [aFriend serviceName], @"serviceUserID" : [aFriend serviceUserID], @"username": [aFriend username]};
+    
+    
+    return [self initWithJSONDictionary:dic];
 }
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic
@@ -41,11 +48,12 @@
 {
 	// PARSER
 	id id_ = [dic objectForKey:@"id"];
+    //if(id_ != nil) {
 	if([id_ isKindOfClass:[NSString class]])
 	{
 		self.id = id_;
 	}
-
+   // }
 	id imageURL_ = [dic objectForKey:@"imageURL"];
 	if([imageURL_ isKindOfClass:[NSString class]])
 	{
@@ -62,8 +70,10 @@
 	if([onBehalfOf_ isKindOfClass:[NSDictionary class]])
 	{
 		self.onBehalfOf = [[HuOnBehalfOf alloc] initWithJSONDictionary:onBehalfOf_];
-	}
-
+	} else
+    if([onBehalfOf_ isKindOfClass:[HuOnBehalfOf class]]) {
+        self.onBehalfOf = onBehalfOf_;
+    }
 	id serviceName_ = [dic objectForKey:@"serviceName"];
 	if([serviceName_ isKindOfClass:[NSString class]])
 	{
@@ -76,11 +86,16 @@
 		self.serviceUserID = serviceUserID_;
 	}
 
-	id serviceUsername_ = [dic objectForKey:@"serviceUsername"];
-	if([serviceUsername_ isKindOfClass:[NSString class]])
-	{
-		self.serviceUsername = serviceUsername_;
-	}
+//	id serviceUsername_ = [dic objectForKey:@"serviceUsername"];
+//	if([serviceUsername_ isKindOfClass:[NSString class]])
+//	{
+//		self.serviceUsername = serviceUsername_;
+//	}
+    	id username_ = [dic objectForKey:@"username"];
+    	if([username_ isKindOfClass:[NSString class]])
+    	{
+    		self.username = username_;
+    	}
 
 
 }
@@ -94,8 +109,13 @@
 }
 
 -(NSDictionary *)dictionary {
-    return [NSDictionary dictionaryWithObjectsAndKeys:self.id,@"id",self.imageURL, @"imageURL",self.lastUpdated, @"lastUpdated",
-            self.onBehalfOf, @"onBehalfOf", self.serviceName, @"serviceName", self.serviceUserID, @"serviceUserID", self.serviceUsername, @"serviceUsername", nil];
+    if(self.id == nil) {
+    return [NSDictionary dictionaryWithObjectsAndKeys:self.imageURL, @"imageURL",self.lastUpdated, @"lastUpdated",
+            [self.onBehalfOf dictionary], @"onBehalfOf", self.serviceName, @"serviceName", self.serviceUserID, @"serviceUserID", self.username, @"username", nil];
+    } else {
+        return [NSDictionary dictionaryWithObjectsAndKeys:self.id,@"id",self.imageURL, @"imageURL",self.lastUpdated, @"lastUpdated",
+                [self.onBehalfOf dictionary], @"onBehalfOf", self.serviceName, @"serviceName", self.serviceUserID, @"serviceUserID", self.username, @"username", nil];
+    }
 }
 
 -(NSDictionary *)proxyForJson

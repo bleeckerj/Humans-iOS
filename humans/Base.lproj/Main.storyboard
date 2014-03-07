@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B3116" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ey5-C7-zvx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ey5-C7-zvx">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
@@ -9,8 +9,8 @@
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="HuViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Q1R-UB-sf6"/>
-                        <viewControllerLayoutGuide type="bottom" id="9cR-yw-1d3"/>
+                        <viewControllerLayoutGuide type="top" id="eAa-Eh-mDk"/>
+                        <viewControllerLayoutGuide type="bottom" id="0CD-g6-arB"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
@@ -27,8 +27,8 @@
             <objects>
                 <viewController id="zcc-6a-ocP" customClass="HuFriendsGridViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="6YM-Yb-d7W"/>
-                        <viewControllerLayoutGuide type="bottom" id="Suc-hy-Vxm"/>
+                        <viewControllerLayoutGuide type="top" id="shP-X5-69G"/>
+                        <viewControllerLayoutGuide type="bottom" id="LT4-OP-AwC"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="2kI-QJ-RlZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
@@ -40,23 +40,127 @@
             </objects>
             <point key="canvasLocation" x="188" y="-582"/>
         </scene>
-        <!--View Controller-->
+        <!--Hu Human Profile View Controller-->
         <scene sceneID="kS4-la-gRf">
             <objects>
-                <viewController id="iIn-AL-u72" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HuHumanProfileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iIn-AL-u72" customClass="HuHumanProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="nOM-kg-z23"/>
-                        <viewControllerLayoutGuide type="bottom" id="fra-oV-apL"/>
+                        <viewControllerLayoutGuide type="top" id="5EJ-na-t5v"/>
+                        <viewControllerLayoutGuide type="bottom" id="6Ug-O6-d6t"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="SeT-BA-TP7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ARw-nS-U9g" customClass="FUIButton">
+                                <rect key="frame" x="20" y="470" width="130" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="nt2-KA-D0X"/>
+                                    <constraint firstAttribute="width" constant="130" id="ulZ-uq-5Ty"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
+                                <state key="normal" title="Edit">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0pc-dh-PvK" customClass="FUIButton">
+                                <rect key="frame" x="170" y="470" width="130" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="3xm-mi-n1W"/>
+                                    <constraint firstAttribute="width" constant="130" id="A7A-Ed-XnL"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
+                                <state key="normal" title="View">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Human" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KyY-QD-rjN">
+                                <rect key="frame" x="20" y="71" width="280" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="280" id="b3U-7Z-M8l"/>
+                                    <constraint firstAttribute="height" constant="55" id="n4M-RU-dAL"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="800" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Placeholder" textAlignment="center" minimumFontSize="21" translatesAutoresizingMaskIntoConstraints="NO" id="Gt4-Z3-Gac">
+                                <rect key="frame" x="20" y="74" width="280" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="W4M-UV-MHM"/>
+                                    <constraint firstAttribute="width" constant="280" id="rxt-ZU-Yb3"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
+                                <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="0pc-dh-PvK" secondAttribute="bottom" constant="43" id="45X-BS-V5a"/>
+                            <constraint firstAttribute="bottom" secondItem="ARw-nS-U9g" secondAttribute="bottom" constant="43" id="8CR-Ok-pzH"/>
+                            <constraint firstItem="KyY-QD-rjN" firstAttribute="leading" secondItem="Gt4-Z3-Gac" secondAttribute="leading" id="8Rx-nl-xi6"/>
+                            <constraint firstItem="KyY-QD-rjN" firstAttribute="leading" secondItem="ARw-nS-U9g" secondAttribute="leading" id="Da4-NQ-zN3"/>
+                            <constraint firstAttribute="bottom" secondItem="Gt4-Z3-Gac" secondAttribute="bottom" constant="350" id="XKj-t4-qfT"/>
+                            <constraint firstItem="KyY-QD-rjN" firstAttribute="trailing" secondItem="0pc-dh-PvK" secondAttribute="trailing" id="XXe-wD-eSl"/>
+                            <constraint firstItem="KyY-QD-rjN" firstAttribute="leading" secondItem="SeT-BA-TP7" secondAttribute="leading" constant="20" symbolic="YES" id="bln-Y5-uHh"/>
+                            <constraint firstAttribute="bottom" secondItem="KyY-QD-rjN" secondAttribute="bottom" constant="350" id="dSg-x3-pcR"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="editButton" destination="ARw-nS-U9g" id="s6v-GO-y50"/>
+                        <outlet property="nameLabel" destination="KyY-QD-rjN" id="NIG-Sf-AHd"/>
+                        <outlet property="nameTextField" destination="Gt4-Z3-Gac" id="vgB-Zk-Q5x"/>
+                        <outlet property="viewButton" destination="0pc-dh-PvK" id="QrZ-1i-8L4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yZF-fW-CHx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1092" y="-2066"/>
+        </scene>
+        <!--Hu Delete Service User Carousel View Controller-->
+        <scene sceneID="pPr-KO-qd3">
+            <objects>
+                <viewController storyboardIdentifier="HuAddDelHumansViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="B70-5h-ubZ" customClass="HuDeleteServiceUserCarouselViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kGy-bV-1Vv"/>
+                        <viewControllerLayoutGuide type="bottom" id="hg0-d1-iLO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleAspectFill" id="F6p-jb-Kku">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQm-h1-MDd">
+                                <rect key="frame" x="92" y="361" width="151" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="34"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleAspectFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mc3-UK-3D0" customClass="iCarousel">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="B70-5h-ubZ" id="9XJ-gk-2wE"/>
+                                    <outlet property="delegate" destination="B70-5h-ubZ" id="Hg3-21-XzL"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Hjn-of-apO"/>
+                    <connections>
+                        <outlet property="carousel" destination="Mc3-UK-3D0" id="1RL-QU-04X"/>
+                        <outlet property="label" destination="TQm-h1-MDd" id="OJ4-ef-LPm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oK6-uT-NpI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="410" y="-2103"/>
         </scene>
         <!--Hu Sign Up View Controller-->
         <scene sceneID="kSx-ZJ-zi6">
@@ -73,8 +177,8 @@
             <objects>
                 <viewController storyboardIdentifier="HuLoginOrSignUpViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ipj-PH-2e9" customClass="HuLoginOrSignUpViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="vVA-IS-Zpu"/>
-                        <viewControllerLayoutGuide type="bottom" id="hz8-cP-gSK"/>
+                        <viewControllerLayoutGuide type="top" id="jrC-86-bkn"/>
+                        <viewControllerLayoutGuide type="bottom" id="0mt-um-jUK"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Qfv-cu-eGT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
@@ -145,30 +249,38 @@
             <objects>
                 <viewController storyboardIdentifier="HuLoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="DI2-bc-a2Y" customClass="HuLoginViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="MlT-1a-p8c"/>
-                        <viewControllerLayoutGuide type="bottom" id="ksm-sp-G8L"/>
+                        <viewControllerLayoutGuide type="top" id="ePu-At-j89"/>
+                        <viewControllerLayoutGuide type="bottom" id="JhC-wl-hoA"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="rvG-Vu-hGk">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="j8V-fN-bGF">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="j8V-fN-bGF">
                                 <rect key="frame" x="20" y="98" width="280" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.80000007149999997" green="0.79607850309999995" blue="0.79607850309999995" alpha="1" colorSpace="deviceRGB"/>
                                 <accessibility key="accessibilityConfiguration" hint="Username" label="Username">
                                     <accessibilityTraits key="traits" none="YES" selected="YES"/>
                                 </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="UPC-tm-ih7"/>
+                                    <constraint firstAttribute="width" constant="280" id="s9z-fX-RCJ"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
                                 <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5zf-iB-3gk">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5zf-iB-3gk">
                                 <rect key="frame" x="20" y="177" width="280" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.80000007149999997" green="0.79607850309999995" blue="0.79607850309999995" alpha="1" colorSpace="deviceRGB"/>
                                 <accessibility key="accessibilityConfiguration" hint="Password" label="Password">
                                     <accessibilityTraits key="traits" none="YES" selected="YES"/>
                                 </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="280" id="ugx-SV-kp9"/>
+                                    <constraint firstAttribute="height" constant="45" id="wKl-X9-5mx"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
                                 <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
                                 <connections>
@@ -176,17 +288,25 @@
                                     <action selector="textEditingDidEnd:" destination="DI2-bc-a2Y" eventType="editingDidEnd" id="oHw-4t-NRs"/>
                                 </connections>
                             </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Login" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lGL-21-Cx6" propertyAccessControl="none">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lGL-21-Cx6" propertyAccessControl="none">
                                 <rect key="frame" x="105" y="20" width="110" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" label=""/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="110" id="2c9-Nh-4BT"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="30"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hFh-kN-o0k" customClass="FUIButton">
-                                <rect key="frame" x="198" y="250" width="104" height="45"/>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hFh-kN-o0k" customClass="FUIButton">
+                                <rect key="frame" x="198" y="284" width="104" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.96470594409999999" green="0.96470594409999999" blue="0.96470594409999999" alpha="1" colorSpace="deviceRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="104" id="Zbc-3F-lYY"/>
+                                    <constraint firstAttribute="height" constant="45" id="ZsC-GV-vrz"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
                                 <state key="normal" title="Login">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -195,9 +315,14 @@
                                     <action selector="touchUp_logInButton:" destination="DI2-bc-a2Y" eventType="touchUpInside" id="CQ0-3D-Pvq"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J14-aZ-oiy" customClass="FUIButton">
-                                <rect key="frame" x="20" y="250" width="104" height="45"/>
+                            <button opaque="NO" tag="4" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J14-aZ-oiy" customClass="FUIButton">
+                                <rect key="frame" x="20" y="284" width="104" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.96470594409999999" green="0.96470594409999999" blue="0.96470594409999999" alpha="1" colorSpace="deviceRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="1y1-kS-cz3"/>
+                                    <constraint firstAttribute="width" constant="104" id="jBE-uB-Wt4"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
                                 <state key="normal" title="Sign Up">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -208,6 +333,21 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="5zf-iB-3gk" firstAttribute="top" secondItem="j8V-fN-bGF" secondAttribute="bottom" constant="34" id="1pe-vj-gBu"/>
+                            <constraint firstItem="lGL-21-Cx6" firstAttribute="top" secondItem="rvG-Vu-hGk" secondAttribute="top" constant="20" id="3jU-U6-VAj"/>
+                            <constraint firstItem="5zf-iB-3gk" firstAttribute="top" secondItem="rvG-Vu-hGk" secondAttribute="top" constant="177" id="5H7-n2-YIW"/>
+                            <constraint firstItem="lGL-21-Cx6" firstAttribute="centerX" secondItem="j8V-fN-bGF" secondAttribute="centerX" id="62K-ND-pw3"/>
+                            <constraint firstItem="j8V-fN-bGF" firstAttribute="top" secondItem="lGL-21-Cx6" secondAttribute="bottom" constant="37" id="PnA-Pw-TUa"/>
+                            <constraint firstItem="hFh-kN-o0k" firstAttribute="top" secondItem="J14-aZ-oiy" secondAttribute="top" id="Vri-k6-e0s"/>
+                            <constraint firstItem="hFh-kN-o0k" firstAttribute="top" secondItem="5zf-iB-3gk" secondAttribute="bottom" constant="62" id="dWF-Jy-MnK"/>
+                            <constraint firstItem="hFh-kN-o0k" firstAttribute="bottom" secondItem="J14-aZ-oiy" secondAttribute="bottom" id="gew-8N-M1q"/>
+                            <constraint firstItem="lGL-21-Cx6" firstAttribute="centerX" secondItem="5zf-iB-3gk" secondAttribute="centerX" id="jH1-23-j0J"/>
+                            <constraint firstItem="JhC-wl-hoA" firstAttribute="top" secondItem="hFh-kN-o0k" secondAttribute="bottom" constant="239" id="oz0-CR-Otp"/>
+                            <constraint firstAttribute="trailing" secondItem="hFh-kN-o0k" secondAttribute="trailing" constant="18" id="qHB-ii-Hae"/>
+                            <constraint firstItem="lGL-21-Cx6" firstAttribute="centerX" secondItem="rvG-Vu-hGk" secondAttribute="centerX" id="uzt-sV-Xzo"/>
+                            <constraint firstItem="hFh-kN-o0k" firstAttribute="leading" secondItem="J14-aZ-oiy" secondAttribute="trailing" constant="74" id="wJx-tJ-Y9m"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="PvW-OL-EW7"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
@@ -228,8 +368,8 @@
             <objects>
                 <viewController storyboardIdentifier="HuHumansScrollViewController" id="R0s-41-7jJ" customClass="HuHumansScrollViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="lCp-Of-sFs"/>
-                        <viewControllerLayoutGuide type="bottom" id="hkc-kL-Po0"/>
+                        <viewControllerLayoutGuide type="top" id="Gvc-mg-1H8"/>
+                        <viewControllerLayoutGuide type="bottom" id="L5f-Cz-cjV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kZC-Qg-yke">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
@@ -252,8 +392,8 @@
             <objects>
                 <viewController id="yiX-ib-oeS" customClass="HuStatusCarouselViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Lwu-Z7-Cn8"/>
-                        <viewControllerLayoutGuide type="bottom" id="yvj-wm-MZT"/>
+                        <viewControllerLayoutGuide type="top" id="fG9-Dl-7PW"/>
+                        <viewControllerLayoutGuide type="bottom" id="E98-QO-R2p"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="GhL-Kb-zmG">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
@@ -293,8 +433,8 @@
             <objects>
                 <viewController id="UQg-Hf-O6m" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="fRk-Ky-OEe"/>
-                        <viewControllerLayoutGuide type="bottom" id="C2j-mV-8Zy"/>
+                        <viewControllerLayoutGuide type="top" id="JcZ-3P-0s2"/>
+                        <viewControllerLayoutGuide type="bottom" id="jph-Hr-Vic"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ryz-8A-aAR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>

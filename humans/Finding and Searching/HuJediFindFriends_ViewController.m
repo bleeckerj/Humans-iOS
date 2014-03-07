@@ -378,7 +378,6 @@ UISearchBar *mSearchBar;
     [stateMachine nextState:self];
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
     self.appUser = [appDel humansAppUser];
-    LOG_GENERAL(0, @"HuUserHandler is now %@", self.appUser);
     
     __block HuJediFindFriends_ViewController *bself = self;
     
@@ -547,26 +546,9 @@ UISearchBar *mSearchBar;
     // the view that contains the results of your search as profile images
     self.resultsView = [[UIView alloc]init];
     
-    //    if(IS_IPHONE && IS_IPHONE_5) {
-    //        [self.resultsView setFrame:CGRectMake(0, HEADER_HEIGHT, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height)];
-    //        //[self.resultsView setSize:(CGSizeMake(320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
-    //        [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
-    //
-    //    } else
-    //    {
-    //        [self.resultsView setFrame:CGRectMake(0, HEADER_HEIGHT, 320, IPHONE_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height)];
-    //        //[self.resultsView setSize:(CGSizeMake(320, IPHONE_PORTRAIT_SIZE_HEIGHT-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
-    //        [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, IPHONE_5_PORTRAIT_SIZE_HEIGHT-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
-    //
-    //    }
-    
-    
-    //    [self.resultsView setSize:(CGSizeMake(320, 480-picksScroller.size.height-mSearchBar.size.height-header.size.height))];
-    //    [self.resultsView setFrame:(CGRectMake(0, header.bounds.size.height+mSearchBar.bounds.size.height+picksScroller.bounds.size.height-2, 320, 480-mSearchBar.size.height-picksScroller.size.height-header.size.height))];
     CGFloat x = picksGrid.bottom;
     [self.resultsView setSize:CGSizeMake(self.view.width, self.view.height - x)];
     [self.resultsView setBackgroundColor:[UIColor blueColor]];
-//    [self.resultsView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
     [self.resultsView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller withMargins:UIEdgeInsetsMake(-2, 0, 0, 0)];
     
     
@@ -598,19 +580,6 @@ UISearchBar *mSearchBar;
     //[finalStateView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
     [self.view addSubview:finalStateView];
 
-//    finalStateScroller = [MGScrollView scrollerWithSize:[resultsScroller size]];
-//    [finalStateScroller setContentSize:self.resultsView.size];
-//    [finalStateScroller setBackgroundColor:UIColorFromRGB(0xFF0000)];
-//    [finalStateScroller setBounces:NO];
-//    [finalStateScroller mc_setRelativePosition:MCViewPositionToTheRight toView:self.resultsView];
-//    [finalStateScroller mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
-//    //[finalStateScroller setFrame:[self.resultsView frame]];
-//    //[finalStateScroller setX:self.view.width];
-//    [self.view addSubview:finalStateScroller];
-    
-    
-    
-    
 }
 
 -(void)swipe:(UISwipeGestureRecognizer *)sender
@@ -920,45 +889,7 @@ NSUInteger lastLength;
         } afterDelay:5.0];
 
         
-//        [HUD setLabelText:[NSString stringWithFormat:@"%d on %@",  [[appUser friends] count], [[appUser humans_user]username]]];
-//        [HUD setDetailsLabelText:[NSString stringWithFormat:@"@%@", [[appUser humans_user]username]]];
-//        [HUD setGraceTime:1.5];
-//        [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
-//        [self performSelectorOnMainThread:@selector(hideHUD) withObject:nil waitUntilDone:YES];
-        
     }];
-    
-    LOG_GENERAL(0, @"App User is %@", appUser);
-    
-    //    dispatch_group_enter(group);
-    
-    //    [appUser loadServiceUsersProfileDataFromServiceWithCompletionHandler:^{
-    //        [[appUser serviceUsers]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    //            //
-    //            id<HuSocialServiceUser>serviceUser = (id<HuSocialServiceUser>)obj;
-    //            //LOG_GENERAL(0, @"Load Follows for %@ via %@ hasLoadedFollows? %@", appUser, serviceUser, [serviceUser hasLoadedFollows]?@"YES":@"NO");
-    //            LOG_GENERAL(0, @"Load Follows for %@", serviceUser);
-    //            // load follows/friends if we are auth'd and we either haven't loaded follows *or the follows count is zero, which is suspcious..
-    //            if([serviceUser canAuth] && ( ([serviceUser hasLoadedFollows] == NO) || [[serviceUser follows]count] == 0  ) ) {
-    //                dispatch_group_enter(group);
-    //                [serviceUser loadFollowsWithCompletionHandler:^{
-    //                    //
-    //                    LOG_GENERAL(0, @"Load Follows of %@ for %@ user %@ found %d follows/friends.", appUser, [serviceUser serviceName], [serviceUser username], [[serviceUser follows] count]);
-    //                    [HUD setLabelText:[NSString stringWithFormat:@"%d on %@", [serviceUser.follows count], [serviceUser serviceName]]];
-    //                    [HUD setDetailsLabelText:[NSString stringWithFormat:@"@%@", [serviceUser username]]];
-    //                    [HUD setGraceTime:0.7];
-    //                    [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
-    //                    LOG_GENERAL(0, @"%@ Success? %d", serviceUser, [serviceUser.follows count]);
-    //                    dispatch_group_leave(group);
-    //                }];
-    //            }
-    //        }];
-    //        dispatch_group_leave(group);
-    //    }];
-    //    dispatch_group_notify(group, queue, ^{
-    //        [self performSelectorOnMainThread:@selector(hideHUD) withObject:nil waitUntilDone:YES];
-    //    });
-    
     
 }
 

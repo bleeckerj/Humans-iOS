@@ -157,9 +157,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     dispatch_async(dispatch_get_main_queue(), ^{
         [scroller layout];
         [self.view setNeedsDisplay];
-//        CALayer *layer = self.view.layer;
-//        [layer setNeedsDisplay];
-//        [layer displayIfNeeded];
     });
 }
 
@@ -178,6 +175,8 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
             [self addHumanToView:human];
         }
     }];
+    
+
     
     [self updateHumanStatusCounts];
     

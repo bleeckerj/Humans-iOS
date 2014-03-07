@@ -5,10 +5,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HuFriend.h"
 
+@class HuFriend;
 @class HuOnBehalfOf;
 
 @interface HuServiceUser : NSObject
+- (id) initWithFriend:(HuFriend *)aFriend;
 
 
 
@@ -18,7 +21,7 @@
 @property (strong, nonatomic) HuOnBehalfOf *onBehalfOf;
 @property (strong, nonatomic) NSString *serviceName;
 @property (strong, nonatomic) NSString *serviceUserID;
-@property (strong, nonatomic) NSString *serviceUsername;
+@property (strong, nonatomic) NSString *username;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;

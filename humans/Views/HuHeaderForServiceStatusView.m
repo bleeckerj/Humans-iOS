@@ -174,7 +174,6 @@
     [self layoutSubviews];
 }
 
-#warning this method is so fucked up. this sets the new views in the header..then it calls layoutSubviews which does it all again. WTF?
 -(void)transitionTo:(id<HuServiceStatus>)newStatus
 {
     LOG_UI(0, @"Transition To: %@", [newStatus serviceUsername]);

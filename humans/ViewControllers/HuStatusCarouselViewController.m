@@ -8,7 +8,6 @@
 
 #import "HuStatusCarouselViewController.h"
 #import "defines.h"
-#import "iCarousel.h"
 #import "InstagramStatus.h"
 #import "InstagramCaption.h"
 #import "HuHeaderForServiceStatusView.h"

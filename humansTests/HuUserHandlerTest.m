@@ -163,6 +163,17 @@ HuUserHandler *user_handler;
     ASYNC_TEST_END
    }
 
+- (void)test_getStatusCountsForUsersHumans
+{
+    ASYNC_TEST_START
+    [user_handler getStatusCountsWithCompletionHandler:^(id data, BOOL success, NSError *error) {
+        //
+        assertThatBool(success, is(equalToBool(YES)));
+        ASYNC_TEST_DONE
+    }];
+    ASYNC_TEST_END
+}
+
 
 - (void)test_userGet
 {
@@ -286,13 +297,13 @@ HuUserHandler *user_handler;
         
         friends = [NSMutableArray arrayWithArray:results];
         for(HuFriend *friend in friends) {
-            [friend getProfileImageWithCompletionHandler:^(UIImage *image, NSError *error) {
-                
-
-                LOG_INSTAGRAM_IMAGE(0, CGImageGetWidth([image CGImage]), CGImageGetHeight([image CGImage]), UIImageJPEGRepresentation(image, 1.0));
-                LOG_GENERAL(0, @"%@ %@ %@",[friend username], [friend serviceName], [friend profileImage]);
-
-            }];
+//            [friend getProfileImageWithCompletionHandler:^(UIImage *image, NSError *error) {
+//                
+//
+//                LOG_INSTAGRAM_IMAGE(0, CGImageGetWidth([image CGImage]), CGImageGetHeight([image CGImage]), UIImageJPEGRepresentation(image, 1.0));
+//                LOG_GENERAL(0, @"%@ %@ %@",[friend username], [friend serviceName], [friend profileImage]);
+//
+//            }];
         }
 
     }];

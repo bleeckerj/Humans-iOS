@@ -16,5 +16,5 @@
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
-
+-(NSDictionary *)dictionary;
 @end

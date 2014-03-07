@@ -28,7 +28,7 @@
 	<array>
 		<string>HelveticaLTStd-BlkObl.otf</string>
 		<string>fontawesome-webfont.ttf</string>
-		<string>ionicons.ttf</string>
+		<string>&apos;ionicons.ttf&apos;. [Info.plist modification]()</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>

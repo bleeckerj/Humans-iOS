@@ -37,6 +37,6 @@
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
-- (void)getProfileImageWithCompletionHandler:(FetchImageHandler)completionHandler;
+//- (void)getProfileImageWithCompletionHandler:(FetchImageHandler)completionHandler;
 
 @end

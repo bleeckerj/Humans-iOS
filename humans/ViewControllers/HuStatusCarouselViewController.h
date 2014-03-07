@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "HuHuman.h"
+#import <iCarousel.h>
 
 @interface HuStatusCarouselViewController : UIViewController
 

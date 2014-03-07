@@ -98,8 +98,11 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define UICOLOR_SHADOW          [UIColor lightGrayColor];
 #define UICOLOR_BACK            [UIColor darkGrayColor];
 
+#define BUTTON_FONT_SMALL       [UIFont fontWithName:@"AvenirNext-Regular" size:18]
 #define BUTTON_FONT_LARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:26]
 #define TEXTFIELD_FONT_LARGE    [UIFont fontWithName:@"AvenirNext-Medium" size:26]
+#define TEXTFIELD_FONT_SMALL    [UIFont fontWithName:@"AvenirNext-Regular" size:18]
+
 #define ALERT_FONT_LIGHT     [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 
 #define HEADLINE_FONT           [UIFont fontWithName:@"AvenirNext-Medium" size:18]
