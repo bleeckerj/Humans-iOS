@@ -82,7 +82,7 @@
     //[mainPhotoBox setRightMargin:10];
     [self.topLines addObject:mainPhotoBox];
     [mainPhotoBox setTopParentBox:self.parentBox];
-    statusLine = [MGLine multilineWithText:[NSString stringWithFormat:@"Instagram %@", [status statusText]] font:INSTAGRAM_FONT width:self.width padding:UIEdgeInsetsMake(TEXT_TOP_PADDING, TEXT_LEFT_PADDING, TEXT_BOTTOM_PADDING, TEXT_RIGHT_PADDING)];
+    statusLine = [MGLine multilineWithText:[NSString stringWithFormat:@"Instagram %@", [status statusText]] font:INSTAGRAM_STATUS_TEXT_FONT  width:self.width padding:UIEdgeInsetsMake(TEXT_TOP_PADDING, TEXT_LEFT_PADDING, TEXT_BOTTOM_PADDING, TEXT_RIGHT_PADDING)];
     
     [self.bottomLines addObject:statusLine];
     
