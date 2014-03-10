@@ -34,7 +34,6 @@ PODS:
   - BlocksKit/UIKit (2.0.0):
     - BlocksKit/DynamicDelegate
   - Bolts (1.0.0)
-  - CoconutKit (2.0.2)
   - ConciseKit (0.1.2)
   - DropdownMenu (1.0.0)
   - ECSlidingViewController (2.0.1)
@@ -118,9 +117,9 @@ PODS:
   - RNBlurModalView (0.1.0)
   - RNCryptor (2.2)
   - SBJson (4.0.0)
-  - SDWebImage (3.5.2):
+  - SDWebImage (3.5.4):
     - SDWebImage/Core
-  - SDWebImage/Core (3.5.2)
+  - SDWebImage/Core (3.5.4)
   - Sequencer (1.0.1)
   - SKSlideViewController (0.0.1)
   - TPKeyboardAvoiding (1.2.3)
@@ -134,7 +133,6 @@ DEPENDENCIES:
   - AQGridView (~> 1.3)
   - BlocksKit (~> 2.0.0)
   - Bolts
-  - CoconutKit (~> 2.0.2)
   - ConciseKit
   - DropdownMenu
   - ECSlidingViewController (~> 2.0.0-beta2)
@@ -196,7 +194,6 @@ SPEC CHECKSUMS:
   AQGridView: ee436c64bc4a972ca7f3ce99971c0204af9e65ea
   BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
   Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
-  CoconutKit: f37b6f0890344e36988b807865266fe1174d0c8f
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
   DropdownMenu: 3c454205c2db1fd39dc1ebf099114c4fdb73f136
   ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
@@ -236,7 +233,7 @@ SPEC CHECKSUMS:
   RNBlurModalView: ab3855ced43749cb0fb4d370160bd2908476c8b6
   RNCryptor: 1420380792b33758d2414cf37af160ea2495e15c
   SBJson: f3c686806e8e36ab89e020189ac582ba26ec4220
-  SDWebImage: fe7ce01ae4e0a884d168f59c9dd82d35baf8429e
+  SDWebImage: 1a62010700adbba823b621fc217906739dbf6aa5
   Sequencer: ac64fdd704f83883536b73c7e5adc974fa285223
   SKSlideViewController: 98e4cee58146aaf8b24d300b9a32bc7c45cc5b25
   TPKeyboardAvoiding: 17995aaa6db26ac2a9fa8714a86509c5888f0392

@@ -124,7 +124,7 @@
     
     __weak PhotoBox* bself = self;
     
-    [self.imageView setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed progress:^(NSUInteger receivedSize, long long expectedSize) {
+    [self.imageView setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         //
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         LOG_UI_VERBOSE(0, @"Got it from none=0, disk=1, memory2 [%d] %@", cacheType, error);

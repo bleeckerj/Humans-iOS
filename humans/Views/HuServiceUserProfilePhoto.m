@@ -115,7 +115,7 @@
         
         __weak HuServiceUserProfilePhoto* bself = self;
         
-        [self.imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"angry_unicorn"] options:SDWebImageRetryFailed progress:^(NSUInteger receivedSize, long long expectedSize) {
+        [self.imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"angry_unicorn"] options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
             //
         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if(error == nil) {

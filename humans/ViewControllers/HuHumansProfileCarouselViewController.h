@@ -22,7 +22,7 @@
 #import <UIColor+FPBrandColor.h>
 #import <UIColor+Crayola.h>
 #import "UIColor+UIColor_LighterDarker.h"
-#import "CoconutKit.h"
+//#import "CoconutKit.h"
 #import "HuHumanProfileViewController.h"
 
 @interface HuHumansProfileCarouselViewController : UIViewController

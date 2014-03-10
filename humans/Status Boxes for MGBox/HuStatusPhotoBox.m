@@ -129,10 +129,10 @@
         
         __weak HuStatusPhotoBox* bself = self;
         
-        
-        [self.imageView setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed progress:^(NSUInteger receivedSize, long long expectedSize) {
+      
+        [self.imageView setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
             //
-            LOG_UI(0, @"Progress for image %d %lld", receivedSize, expectedSize);
+            LOG_UI(0, @"Progress for image %d %d", receivedSize, expectedSize);
         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             
             LOG_UI(0, @"Was image cached? %d", cacheType);
