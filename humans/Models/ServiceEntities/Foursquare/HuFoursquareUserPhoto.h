@@ -7,14 +7,14 @@
 #import <Foundation/Foundation.h>
 
 
-@interface HuFoursquareContact : NSObject
+@interface HuFoursquareUserPhoto : NSObject
 {
-	NSString *email;
-	NSString *twitter;
+	NSString *prefix;
+	NSString *suffix;
 }
 
-@property (strong, nonatomic) NSString *email;
-@property (strong, nonatomic) NSString *twitter;
+@property (strong, nonatomic) NSString *prefix;
+@property (strong, nonatomic) NSString *suffix;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;

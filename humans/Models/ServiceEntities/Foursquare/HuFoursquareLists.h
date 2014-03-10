@@ -6,15 +6,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class NSArray;
 
-@interface HuFoursquareContact : NSObject
+@interface HuFoursquareLists : NSObject
 {
-	NSString *email;
-	NSString *twitter;
+	NSArray *groups;
 }
 
-@property (strong, nonatomic) NSString *email;
-@property (strong, nonatomic) NSString *twitter;
+@property (strong, nonatomic) NSArray *groups;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;

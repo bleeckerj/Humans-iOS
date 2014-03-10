@@ -8,7 +8,8 @@
 #import "HuHuman.h"
 #import "HuServiceUser.h"
 #import "SBJson4Writer.h"
-#import <AFNetworking/AFNetworking.h>
+//#import <AFNetworking/AFNetworking.h>
+#import <UIImageView+AFNetworking.h>
 
 @implementation HuHuman
 

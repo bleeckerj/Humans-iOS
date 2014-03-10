@@ -5,14 +5,14 @@
 //
 
 // Import
-#import "HuFoursquareContact.h"
+#import "HuFoursquareGroup.h"
 
 
-@implementation HuFoursquareContact
+@implementation HuFoursquareGroup
 
 
-@synthesize email;
-@synthesize twitter;
+@synthesize count;
+@synthesize type;
 
 
 - (void) dealloc
@@ -34,16 +34,16 @@
 - (void) parseJSONDictionary:(NSDictionary *)dic
 {
 	// PARSER
-	id email_ = [dic objectForKey:@"email"];
-	if([email_ isKindOfClass:[NSString class]])
+	id count_ = [dic objectForKey:@"count"];
+	if([count_ isKindOfClass:[NSNumber class]])
 	{
-		self.email = email_;
+		self.count = count_;
 	}
 
-	id twitter_ = [dic objectForKey:@"twitter"];
-	if([twitter_ isKindOfClass:[NSString class]])
+	id type_ = [dic objectForKey:@"type"];
+	if([type_ isKindOfClass:[NSString class]])
 	{
-		self.twitter = twitter_;
+		self.type = type_;
 	}
 
 	

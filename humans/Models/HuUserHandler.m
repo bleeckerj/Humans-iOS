@@ -10,7 +10,9 @@
 #import "defines.h"
 #import "LoggerClient.h"
 #import <AFNetworking.h>
-#import <RestKit.h>
+//#import <RestKit.h>
+#import <RNDecryptor.h>
+#import <ObjectiveSugar.h>
 #import "Flurry.h"
 
 #import <ConciseKit.h>
@@ -20,14 +22,12 @@
 #import "HuOnBehalfOf.h"
 #import "HuServiceUser.h"
 #import "HuAppDelegate.h"
-#import "RKValueTransformers.h"
-#import <RNDecryptor.h>
 #import <WSLObjectSwitch.h>
 #import <Parse/Parse.h>
 
 @implementation HuUserHandler
 
-@synthesize client;
+@synthesize huRequestOperationManager;
 @synthesize humans_user;
 @synthesize statusForHumanId;
 @synthesize lastStatusResultHeader;
@@ -42,8 +42,6 @@ NSDateFormatter *twitter_formatter;
     self = [super init];
     if(self) {
         [self commonInit];
-        //RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelDebug);
-        //RKLogConfigureByName("RestKit/Support", RKLogLevelTrace);
     }
     return self;
     
@@ -57,12 +55,13 @@ NSDateFormatter *twitter_formatter;
     
     statusForHumanId = [[NSMutableDictionary alloc]init];
     
-#pragma mark This is where you set either the sharedDevClient or the sharedProdClient
+#pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
     
-    client = [HuHumansHTTPClient sharedProdClient];
+    huRequestOperationManager = [HuHumansHTTPSessionManager sharedDevClient];
     
     __block HuUserHandler *bself = self;
-    [client setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+    
+    [huRequestOperationManager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusNotReachable) {
             // Not reachable
             LOG_NETWORK(0, @"Network is down..");
@@ -115,9 +114,59 @@ NSDateFormatter *twitter_formatter;
 
 - (void)createNewUser:(HuUser *)aUser password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    NSString *path =[NSString stringWithFormat:@"/rest/user/new?access_token=%@", [self access_token]];
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *request =[client requestWithMethod:@"POST" path:path parameters:nil];
+    NSString *path = @"/rest/user/new";
+    NSError *err = nil;
+    NSDictionary *simple = [[NSDictionary alloc]initWithObjectsAndKeys:aUser.username, @"username", aPassword, @"password", aUser.email, @"email", nil];
+
+    NSData *data = [NSJSONSerialization dataWithJSONObject:simple options:NSJSONWritingPrettyPrinted error:&err];
+    NSString *jsonDataStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    NSData *requestData = [jsonDataStr dataUsingEncoding:NSUTF8StringEncoding];
+
+    [huRequestOperationManager POST:path parameters:nil data:requestData success:^(NSURLSessionDataTask *task, id responseObject) {
+        //
+        LOG_NETWORK(0, @"Success: %@", task.response);
+        
+        
+        // success in the request, not necessarily creating a user successfully
+        NSDictionary *message = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedDescriptionKey, [responseObject valueForKey:@"message"], nil];
+        NSError *err = [[NSError alloc]initWithDomain:@"humans" code:100 userInfo:message];
+        
+        NSString *result = [responseObject valueForKey:@"result"];
+        
+        NSDictionary *dimensions = @{@"username": [aUser username], @"result": result};
+        [PFAnalytics trackEvent:@"create-new-user" dimensions:dimensions];
+        
+        [Flurry logEvent:@"create-new-user" withParameters:dimensions];
+        
+        [WSLObjectSwitch switchOn:result
+                     defaultBlock:^{
+                         //
+                         if(completionHandler) {
+                             completionHandler(responseObject, NO, err);
+                         }
+                         
+                     } cases:
+         @"fail", ^{
+             LOG_ERROR(0, @"%@", [responseObject valueForKey:@"message"] );
+             
+             if(completionHandler) {
+                 completionHandler(responseObject, NO, err);
+             }
+         },
+         @"success", ^{
+             if(completionHandler) {
+                 completionHandler(responseObject, YES, nil);
+             }
+         }];
+
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        if(completionHandler) {
+            completionHandler(nil ,NO, error);
+        }
+    }];
+    
+/*
+    NSMutableURLRequest *request =[huRequestOperationManager requestWithMethod:@"POST" path:path parameters:nil];
     
     request.timeoutInterval = 30.000000;
     
@@ -185,81 +234,54 @@ NSDateFormatter *twitter_formatter;
     
     // connection
     [operation start];
+ */
 }
 
 
 - (void)userAddHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    NSString *path =[NSString stringWithFormat:@"/rest/user/add/human?access_token=%@", [self access_token]];
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    
-    NSMutableURLRequest *request =[client requestWithMethod:@"POST" path:path parameters:nil];
-    
-    request.timeoutInterval = 30.000000;
-    
-    // Request Operation
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    
+    NSString *path = @"/rest/user/add/human";
     NSString *jsonRequest = [aHuman jsonString];
-    
     NSData *requestData = [jsonRequest dataUsingEncoding:NSUTF8StringEncoding];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody: requestData];
-    
-    [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        LOG_NETWORK(0, @"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
-    }];
-    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
-    }];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+
+    [huRequestOperationManager POST:path parameters:nil data:requestData success:^(NSURLSessionDataTask *task, id responseObject) {
         [Flurry logEvent:[NSString stringWithFormat:@"Successfully added a human %@ \n%@", [aHuman name], [aHuman jsonString]]];
         
         if(completionHandler) {
             completionHandler(true, nil);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
         [Flurry logEvent:[NSString stringWithFormat:@"Failed adding a human %@ %@", [aHuman name], error]];
         
         if(completionHandler) {
             completionHandler(false, error);
         }
+
     }];
     
-    // Connection
-    [operation start];
 }
 
 #pragma mark Basically login /oauth2/token?grant_typ
 - (void)userRequestTokenForUsername:(NSString *)username forPassword:(NSString *)password withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    NSString *path =[NSString stringWithFormat:@"/oauth2/token?grant_type=password&client_id=ioshumans&username=%@&password=%@",username,password];
+    LOG_ERROR(0, @"Hello %@ %@", username, password);
+    NSString* buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CWBuildNumber"];
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    [huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithUsername:username password:password];
     
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    
-    NSMutableURLRequest *request =[client requestWithMethod:@"POST" path:path parameters:nil];
-    //[request setHTTPBody:postData];
-    [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Accept"];
-    [request setValue:[NSString stringWithFormat:@"application/x-www-form-urlencoded"] forHTTPHeaderField:@"Content-Type"];
-    LOG_GENERAL(0, @"The request is to %@", [request URL]);
-    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
+    NSString *path =[NSString stringWithFormat:@"/oauth2/token"];
+    NSDictionary *params = @{@"grant_type": @"password", @"client_id": CLIENT_NAME, @"build": buildNumber, @"ver": version};
     
     
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //
+    [huRequestOperationManager GET:path parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
         LOG_NETWORK(0, @"Success %@", responseObject);
         [self setAccess_token:[responseObject objectForKey:@"access_token"]];
-        
+        [huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithToken:self.access_token];
         [self getHumansWithCompletionHandler:completionHandler];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
+  
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Failure %@", error);
         [Flurry logError:error.localizedDescription message:@"" error:error];
         
@@ -267,131 +289,50 @@ NSDateFormatter *twitter_formatter;
         if(completionHandler) {
             completionHandler(NO, error);
         }
+        
+
     }];
-    
-    [operation setSSLPinningMode:AFSSLPinningModeNone];
-    //[operation setAllowsInvalidSSLCertificate:YES];
-    [operation start];
-    [operation waitUntilFinished];
-    
+
 }
 
+#pragma --- mark get the user's humans as well as the user's details, id, services, username, etc.
 
-
-#pragma mark get the user's humans as well as the user's details, id, services, username, etc.
 - (void)getHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    RKObjectManager *objectManager = [[RKObjectManager alloc]initWithHTTPClient:client];
-    
-    
-    RKObjectMapping *userMapping = [RKObjectMapping mappingForClass:[HuUser class]];
-    [userMapping addAttributeMappingsFromArray:@[@"email",@"id",@"username",@"isAdmin", @"isSuperuser"]];
-    
-    RKObjectMapping *humansMappping = [RKObjectMapping mappingForClass:[HuHuman class]];
-    [humansMappping addAttributeMappingsFromArray:@[@"humanid", @"name"]];
-    
-    RKObjectMapping *servicesMapping = [RKObjectMapping mappingForClass:[HuServices class]];
-    [servicesMapping addAttributeMappingsFromArray:@[@"serviceName", @"serviceUserID", @"serviceUsername"]];
-    
-    RKObjectMapping *onBehalfOfMapping = [RKObjectMapping mappingForClass:[HuOnBehalfOf class]];
-    [onBehalfOfMapping addAttributeMappingsFromArray:@[@"serviceName", @"serviceUserID", @"serviceUsername"]];
-    
-    RKObjectMapping *serviceUsersMapping = [RKObjectMapping mappingForClass:[HuServiceUser class]];
-    [serviceUsersMapping addAttributeMappingsFromArray:@[@"id", @"imageURL", @"lastUpdated", @"serviceName", @"serviceUserID", @"username"]];
-    
-    // relationships
-    // humans within users
-    [userMapping addPropertyMapping:[RKRelationshipMapping
-                                     relationshipMappingFromKeyPath:@"humans"
-                                     toKeyPath:@"humans"
-                                     withMapping:humansMappping]];
-    
-    // services within users
-    [userMapping addPropertyMapping:[RKRelationshipMapping
-                                     relationshipMappingFromKeyPath:@"services"
-                                     toKeyPath:@"services"
-                                     withMapping:servicesMapping]];
-    
-    // serviceUsers (friends) within humans
-    [humansMappping addPropertyMapping:[RKRelationshipMapping
-                                        relationshipMappingFromKeyPath:@"serviceUsers"
-                                        toKeyPath:@"serviceUsers"
-                                        withMapping:serviceUsersMapping]];
-    
-    // onBehalfOf within serviceUsers (friends)
-    [serviceUsersMapping addPropertyMapping:[RKRelationshipMapping
-                                             relationshipMappingFromKeyPath:@"onBehalfOf"
-                                             toKeyPath:@"onBehalfOf"
-                                             withMapping:onBehalfOfMapping]];
-    
-    NSIndexSet *statusCodes =  RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful); // Anything in 2xx
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:userMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"" statusCodes:statusCodes];
-    
-    [objectManager addResponseDescriptor:responseDescriptor];
-    
-    RKObjectMapping *errorMapping = [RKObjectMapping mappingForClass:[RKErrorMessage class]];
-    
-    [errorMapping addPropertyMapping:[RKAttributeMapping attributeMappingFromKeyPath:nil toKeyPath:@"errorMessage"]];
-    
-    RKResponseDescriptor *errorDescriptor =
-    [RKResponseDescriptor responseDescriptorWithMapping:errorMapping
-                                                 method:RKRequestMethodGET
-                                            pathPattern:nil
-                                                keyPath:@"message"
-                                            statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassClientError)];
-    
-    
-    [objectManager addResponseDescriptor:errorDescriptor];
-    
-    NSDictionary *queryParams;
-    queryParams = [NSDictionary dictionaryWithObjectsAndKeys:[self access_token], @"access_token", nil];
-    
-    RKObjectRequestOperation *operation;
-    operation = [objectManager appropriateObjectRequestOperationWithObject:self method:RKRequestMethodGET path:@"/rest/user/get" parameters:queryParams];
-    [operation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [huRequestOperationManager GET:@"/rest/user/get" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         //
         [Flurry logEvent:[NSString stringWithFormat:@"Successful getHumansWithCompletion %@" , [humans_user username]]];
         
-        LOG_NETWORK(0, @"User Get Success %@", [mappingResult firstObject]);
-        humans_user = [mappingResult firstObject];
+        humans_user = [[HuUser alloc]initWithJSONDictionary:responseObject];
         
         LOG_GENERAL(0, @"%@", [humans_user dictionary]);
         if(completionHandler) {
             completionHandler(true, nil);
         }
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        //
+
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [Flurry logEvent:[NSString stringWithFormat:@"Failed getHumansWithCompletion %@" , [humans_user username]]];
         
-        RKErrorMessage *errorMessage =  [[error.userInfo objectForKey:RKObjectMapperErrorObjectsKey] firstObject];
         LOG_NETWORK(0, @"User Get Failed.. %@", error);
-        LOG_NETWORK(0, @"%@", errorMessage);
+        LOG_NETWORK(0, @"%@", [error localizedDescription]);
         if(completionHandler) {
             completionHandler(false, error);
         }
-        
+
     }];
-    
-    [operation start];
-    [operation waitUntilFinished];
-    
-    
 }
+
+
 #pragma mark /status/count
 -(void)getStatusCountsWithCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    NSString *path =[NSString stringWithFormat:@"/rest/human/status/count?access_token=%@", [self access_token]];
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
-    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+    NSString *path =@"/rest/human/status/count";
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
             completionHandler(responseObject, true, nil);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
         [Flurry logError:error.localizedDescription message:@"" error:error];
         
@@ -399,66 +340,49 @@ NSDateFormatter *twitter_formatter;
             completionHandler(nil, false, error);
         }
     }];
-    [operation start];
-
 }
 
 
 #pragma mark /status/count/{humanid}
 - (void)getStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    NSString *path =[NSString stringWithFormat:@"/rest/human/status/count/%@?access_token=%@", [human humanid], [self access_token]];
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
-    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
+    NSString *path =[NSString stringWithFormat:@"/rest/human/status/count/%@", [human humanid]];
     
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
             completionHandler([responseObject objectForKey:@"count"], true, nil);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
         [Flurry logError:error.localizedDescription message:@"" error:error];
         
         if(completionHandler) {
             completionHandler(nil, false, error);
         }
+
     }];
-    [operation start];
 }
 
 #pragma mark /status/count/{humanid}/after/{timestamp}
 - (void)getStatusCountForHuman:(HuHuman *)human after:(NSTimeInterval)timestamp withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setNumberStyle:NSNumberFormatterNoStyle];
+   // [huRequestOperationManager getStatusCountForHuman:human after:timestamp withCompletionHandler:completionHandler];
+    NSNumber *time = [NSNumber numberWithLong:timestamp];
     
-    NSString *path =[NSString stringWithFormat:@"/rest/human/status/count/%@/after/%@?access_token=%@", [human humanid], [numberFormatter stringFromNumber:@(timestamp*1000l) ], [self access_token]];
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
-    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
-    
-    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
-    }];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+    NSString *path = [NSString stringWithFormat:@"/rest/human/status/count/%@/after/%@", [human humanid],[time stringValue]];
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        LOG_TODO(0, @"%@", responseObject);
         if(completionHandler) {
-            completionHandler([responseObject objectForKey:@"count"], true, nil);
+            completionHandler(responseObject, YES, nil);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-        [Flurry logError:error.localizedDescription message:@"" error:error];
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        LOG_ERROR(0, @"%@", error);
+        if(completionHandler) {
+            completionHandler(nil, NO, error);
+        }
         
-        if(completionHandler) {
-            completionHandler(nil, false, error);
-        }
     }];
-    
-    // Connection
-    
-    [operation start];
 }
 
 #pragma mark Delete a service connection for a user
@@ -466,11 +390,39 @@ NSDateFormatter *twitter_formatter;
 {
     [Flurry logEvent:[NSString stringWithFormat:@"Attempting userRemoveServiceUser for %@", [aService description]]];
     
-    NSString *path = [NSString stringWithFormat:@"/rest/user/rm/service?access_token=%@", [self access_token] ];
+    NSString *path = @"/rest/user/rm/service";
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        [Flurry logEvent:[NSString stringWithFormat:@"Success for %@ response=%@", [aService description], responseObject]];
+        if(completionHandler) {
+            
+            id result = [responseObject objectForKey:@"result"];
+            if(result != nil && [result isKindOfClass:[NSString class]]) {
+                if([result isEqualToString:@"success"]) {
+                    completionHandler(YES, nil);
+                } else {
+                    NSString *message = [responseObject objectForKey:@"message"];
+                    if(message == nil) {
+                        message = @"no message";
+                    }
+                    NSError *err = [[NSError alloc]initWithDomain:@"error" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:result, @"result", message, @"message", nil]];
+                    completionHandler(NO, err);
+                    
+                }
+            }
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+        
+        [Flurry logError:error.localizedDescription message:@"" error:error];
+       if(completionHandler) {
+            completionHandler(NO, error);
+        }
+  
+    }];
+    /*
+    [huRequestOperationManager setParameterEncoding:NSUTF8StringEncoding];
     
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    
-    NSMutableURLRequest *request =[client requestWithMethod:@"POST" path:path parameters:nil];
+    NSMutableURLRequest *request =[huRequestOperationManager requestWithMethod:@"POST" path:path parameters:nil];
     request.HTTPMethod = @"POST";
     request.timeoutInterval = 30.000000;
     request.HTTPBody = [aService json];
@@ -519,7 +471,7 @@ NSDateFormatter *twitter_formatter;
     // Connection
     
     [operation start];
-    
+    */
 }
 
 - (void)userAddServiceUsers:(NSMutableArray *)arrayOfServiceUsers forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
@@ -530,242 +482,76 @@ NSDateFormatter *twitter_formatter;
 #pragma mark add a service user {humanid}/add/serviceuser/ with JSON for the service user
 - (void)userAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    NSString *path =[NSString stringWithFormat:@"/rest/human/%@/add/serviceuser?access_token=%@", [aHuman humanid], [self access_token]];
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *request =[client requestWithMethod:@"POST" path:path parameters:nil];
-    
-    request.timeoutInterval = 30.000000;
-    
-    // Request Operation
-    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
-    
-    NSData *requestData = [[aServiceUser jsonString] dataUsingEncoding:NSUTF8StringEncoding];
-    
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[requestData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody: requestData];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //
-        LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
-        
-        
-        // success in the request, not necessarily creating a user successfully
-        NSDictionary *message = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedDescriptionKey, [responseObject valueForKey:@"message"], nil];
-        NSError *err = [[NSError alloc]initWithDomain:@"humans" code:100 userInfo:message];
-        
-        NSString *result = [responseObject valueForKey:@"result"];
-        
-        NSDictionary *dimensions = @{@"human-id": [aHuman jsonString], @"service-user" : [aServiceUser jsonString], @"result": result};
-        [PFAnalytics trackEvent:@"add-service-user" dimensions:dimensions];
-        
-        [Flurry logEvent:@"add-service-user" withParameters:dimensions];
-        
-        [WSLObjectSwitch switchOn:result
-                     defaultBlock:^{
-                         //
-                         if(completionHandler) {
-                             completionHandler(responseObject, YES, nil);
-                         }
-                         
-                     } cases:
-         @"fail", ^{
-             LOG_ERROR(0, @"%@", [responseObject valueForKey:@"message"] );
-             
-             if(completionHandler) {
-                 completionHandler(responseObject, NO, err);
-             }
-         },
-         @"success", ^{
-             if(completionHandler) {
-                 completionHandler(responseObject, YES, nil);
-             }
-         }];
-        
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
-        if(completionHandler) {
-            completionHandler(nil ,NO, error);
-        }
-    }];
-    
-    // connection
-    [operation start];
-    
+
+    [huRequestOperationManager userAddServiceUser:aServiceUser forHuman:aHuman withProgress:nil withCompletionHandler:completionHandler];
 }
 
 #pragma mark remove a service user (someone as part of a human composite) by ID /rest/rm/{serviceuserid}/serviceuser
 - (void)userRemoveServiceUser:(HuServiceUser *)aServiceUser withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     
-    NSString *path = [NSString stringWithFormat:@"/rest/user/rm/%@/serviceuser?access_token=%@", [aServiceUser id], [self access_token] ];
+    NSString *path = [NSString stringWithFormat:@"/rest/user/rm/%@/serviceuser", [aServiceUser id]];
     
-    [client setParameterEncoding:NSUTF8StringEncoding];
-    
-    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
-    request.HTTPMethod = @"GET";
-    request.timeoutInterval = 30.000000;
-    
-    // Request Operation
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    
-    // Progress & Completion blocks
-    
-    //    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-    //        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
-    //    }];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
             completionHandler(YES, nil);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
         [Flurry logError:error.localizedDescription message:@"" error:error];
         
         if(completionHandler) {
             completionHandler(NO, error);
         }
+
     }];
     
-    // Connection
-    
-    [operation start];
- 
 }
 
 #pragma mark Delete Human By ID /user/rm/{humanid}/human
 - (void)userRemoveHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     
-    NSString *path = [NSString stringWithFormat:@"/rest/user/rm/%@/human?access_token=%@", [aHuman humanid], [self access_token] ];
+    NSString *path = [NSString stringWithFormat:@"/rest/user/rm/%@/human", [aHuman humanid]];
     
-    //    NSURL* URL = [NSURL URLWithString:@"https://localhost:8443/rest/user/rm/52df74850364e4bd329f50d5/human?access_token=9677da300993e1cbf4d7c15aabf3152e"];
-    [client setParameterEncoding:NSUTF8StringEncoding];
     
-    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
-    request.HTTPMethod = @"GET";
-    request.timeoutInterval = 30.000000;
-    
-    // Request Operation
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    
-    // Progress & Completion blocks
-    
-    //    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-    //        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
-    //    }];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
             completionHandler(YES, nil);
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-        [Flurry logError:error.localizedDescription message:@"" error:error];
-        
+
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         if(completionHandler) {
             completionHandler(NO, error);
         }
+
     }];
     
-    // Connection
-    
-    [operation start];
 }
 
 
 #pragma mark Get Friends
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler
 {
-    RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPClient:client];
-    
-    RKObjectMapping *friendsMapping = [RKObjectMapping mappingForClass:[HuFriend class]];
-    [friendsMapping addAttributeMappingsFromArray:@[@"imageURL", @"largeImageURL", @"serviceName", @"serviceUserID", @"username", @"fullname", @"lastUpdated"]];
-    
-    RKResponseDescriptor *dynamicResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:friendsMapping method:RKRequestMethodAny pathPattern:nil keyPath:@"" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
-    [objectManager addResponseDescriptor:dynamicResponseDescriptor];
-    
-    // onBehalfOfMapping
-    RKObjectMapping *onBehalfOfMapping = [RKObjectMapping mappingForClass:[HuOnBehalfOf class]];
-    [onBehalfOfMapping addAttributeMappingsFromArray:@[@"serviceName", @"serviceUserID", @"serviceUsername"]];
-    
-    // onBehalfOf within serviceUsers (friends)
-    [friendsMapping addPropertyMapping:[RKRelationshipMapping
-                                        relationshipMappingFromKeyPath:@"onBehalfOf"
-                                        toKeyPath:@"onBehalfOf"
-                                        withMapping:onBehalfOfMapping]];
-    
-    
-    // errors
-    RKObjectMapping *errorMapping = [RKObjectMapping mappingForClass:[RKErrorMessage class]];
-    
-    [errorMapping addPropertyMapping:[RKAttributeMapping attributeMappingFromKeyPath:nil toKeyPath:@"errorMessage"]];
-    
-    
-    
-    RKResponseDescriptor *errorDescriptor =
-    [RKResponseDescriptor responseDescriptorWithMapping:errorMapping
-                                                 method:RKRequestMethodPOST
-                                            pathPattern:nil
-                                                keyPath:@"message"
-                                            statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassClientError)];
-    
-    [objectManager addResponseDescriptor:errorDescriptor];
-    
-    NSDictionary *queryParams;
-    queryParams = [NSDictionary dictionaryWithObjectsAndKeys:[self access_token], @"access_token", nil];
-    
-    
-    [objectManager getObjectsAtPath:@"/rest/user/friends/get"
-                         parameters:queryParams
-                            success:^(RKObjectRequestOperation * operaton, RKMappingResult *mappingResult)
-     {
-         //         LOG_GENERAL(0, @"success: mappings %@", mappingResult);
-         //         LOG_GENERAL(0, @"success: size=%d", [mappingResult count]);
-         
-         self.friends = [[NSMutableArray alloc]init];
-         for (HuFriend *item in [mappingResult array]) {
-             if([item.serviceName caseInsensitiveCompare:@"twitter"] == NSOrderedSame) {
-                 [item setServiceImageBadge:@"twitter-bird-color.png"];
-                 [item setTinyServiceImageBadge:@"twitter-bird-white-tiny.png"];
-             }
-             if([item.serviceName caseInsensitiveCompare:@"instagram"] == NSOrderedSame) {
-                 [item setServiceImageBadge:@"instagram-camera-color.png"];
-                 [item setTinyServiceImageBadge:@"instagram-camera-white-tiny.png"];
-             }
-             if([item.serviceName caseInsensitiveCompare:@"flickr"] == NSOrderedSame) {
-                 [item setServiceImageBadge:@"flickr-peepers-color.png"];
-                 [item setTinyServiceImageBadge:@"flickr-peepers-white-tiny.png"];
-             }
-             if([item.serviceName caseInsensitiveCompare:@"foursquare"] == NSOrderedSame) {
-                 [item setServiceImageBadge:@"foursquare-icon-16x16.png"];
-                 [item setTinyServiceImageBadge:@"foursquare-icon-gray-16x16.png"];
-             }
-             [self.friends addObject:item];
-             
-         }
-         if(completionHandler) {
-             completionHandler(friends);
-         }
-     }
-     
-                            failure:^(RKObjectRequestOperation * operaton, NSError * error)
-     {
-         LOG_NETWORK(0, @"failure: operation: %@ \n\nerror: %@", operaton, error);
-         LOG_NETWORK(0, @"errorMessage: %@", [[error userInfo] objectForKey:RKObjectMapperErrorObjectsKey]);
-         [Flurry logEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
-         
-         if(completionHandler) {
-             completionHandler(nil);
-         }
-     }];
+    NSString *path = @"rest/user/friends/get";
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSMutableArray *result = [[NSMutableArray alloc]init];
+        [responseObject each:^(id object) {
+            HuFriend *friend = [[HuFriend alloc]initWithJSONDictionary:object];
+            [result addObject:friend];
+        }];
+        if(completionHandler) {
+            completionHandler(result);
+        }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [Flurry logError:[error localizedDescription] message:[error description] error:error];
+        if(completionHandler) {
+            completionHandler(nil);
+        }
+    }];
+
     
 }
 
@@ -796,7 +582,9 @@ NSDateFormatter *twitter_formatter;
                                     range:NSMakeRange(0, [string length])];
 }
 
-#pragma mark status for human
+#pragma mark --- status for human ---
+
+
 // An array of status. This will check this temporary object cache first. No strategy for dumping it other than
 // when the application or GC dumps it..
 - (NSArray *)statusForHuman:(HuHuman *)aHuman
@@ -816,10 +604,70 @@ NSDateFormatter *twitter_formatter;
     [self getStatusForHuman:(HuHuman *)aHuman atPage:0 withCompletionHandler:(CompletionHandlerWithResult)completionHandler];
     
 }
+
+- (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    NSString *humanid = [aHuman humanid];
+    
+    NSDictionary *queryParams;
+
+    NSNumber *page = [NSNumber numberWithInt:aPage];
+    
+    queryParams = @{@"humanid": humanid, @"page":page};
+    
+    [huRequestOperationManager GET:@"/rest/human/status" parameters:queryParams success:^(NSURLSessionDataTask *task, id responseObject) {
+        LOG_GENERAL(0, @"success: %@", responseObject);
+        //[[self statusForHumanId] setObject:[responseObject objectForKey:@"status"] forKey:[aHuman humanid]];
+        [self setLastStatusResultHeader:[responseObject objectForKey:@"head"]];
+
+        NSArray *sent_status = [responseObject objectForKey:@"status"];
+        NSMutableArray *saved_status = [[NSMutableArray alloc]initWithCapacity:[sent_status count]];
+        [sent_status each:^(id object) {
+            LOG_TODO(0, @"service=%@", [object valueForKey:@"service"]);
+            if([[object valueForKey:@"service"] isEqualToString:@"flickr"]) {
+                HuFlickrStatus *status = [[HuFlickrStatus alloc]initWithJSONDictionary:object];
+                [saved_status addObject:status];
+            }
+            if([[object valueForKey:@"service"] isEqualToString:@"instagram"]) {
+                InstagramStatus *status = [[InstagramStatus alloc]initWithJSONDictionary:object];
+                [saved_status addObject:status];
+            }
+            if([[object valueForKey:@"service"] isEqualToString:@"twitter"]) {
+                HuTwitterStatus *status = [[HuTwitterStatus alloc]initWithJSONDictionary:object];
+                [saved_status addObject:status];
+            }
+            if([[object valueForKey:@"service"] isEqualToString:@"foursquare"]) {
+                HuFoursquareCheckin *status = [[HuFoursquareCheckin alloc]initWithJSONDictionary:object];
+                [saved_status addObject:status];
+            }
+        }];
+
+        [[self statusForHumanId] setObject:saved_status forKey:[aHuman humanid]];
+        
+        LOG_GENERAL(0, @"%@", [self lastStatusResultHeader]);
+        if(completionHandler) {
+            completionHandler(true, nil);
+        }
+
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        LOG_GENERAL (0, @"failure: error: %@", error);
+        LOG_GENERAL(0, @"%@", [error localizedDescription] );
+        [Flurry logError:error.localizedDescription message:@"" error:error];
+        
+        [self setLastStatusResultHeader:nil];
+        [[self statusForHumanId]removeObjectForKey:humanid];
+        if(completionHandler) {
+            completionHandler(false, error);
+        }
+        
+    }];
+}
+
+/*
 - (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     
-    RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPClient:client];
+    RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPRequestOperationManager:huRequestOperationManager];
     
     RKDynamicMapping *statusMapping = [RKDynamicMapping new];
     
@@ -848,20 +696,20 @@ NSDateFormatter *twitter_formatter;
     [objectManager addResponseDescriptor:statusResponseDescriptor];
     
     
-    // Client Errors
-    RKObjectMapping *clientErrorMapping = [RKObjectMapping mappingForClass:[RKErrorMessage class]];
+    // huRequestOperationManager Errors
+    RKObjectMapping *huRequestOperationManagerErrorMapping = [RKObjectMapping mappingForClass:[RKErrorMessage class]];
     
-    [clientErrorMapping addPropertyMapping:
+    [huRequestOperationManagerErrorMapping addPropertyMapping:
      [RKAttributeMapping attributeMappingFromKeyPath:nil toKeyPath:@"errorMessage"]];
     
-    RKResponseDescriptor *clientErrorDescriptor =
-    [RKResponseDescriptor responseDescriptorWithMapping:clientErrorMapping
+    RKResponseDescriptor *huRequestOperationManagerErrorDescriptor =
+    [RKResponseDescriptor responseDescriptorWithMapping:huRequestOperationManagerErrorMapping
                                                  method:RKRequestMethodAny
                                             pathPattern:nil
                                                 keyPath:@"message"
-                                            statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassClientError)];
+                                            statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClasshuRequestOperationManagerError)];
     
-    [objectManager addResponseDescriptor:clientErrorDescriptor];
+    [objectManager addResponseDescriptor:huRequestOperationManagerErrorDescriptor];
     
     
     // Server Errors
@@ -919,7 +767,9 @@ NSDateFormatter *twitter_formatter;
     
     
 }
+*/
 
+/*
 - (RKObjectMappingMatcher *)twitterNewStatusMatcher
 {
     RKObjectMapping *twitterStatusMapping = [RKObjectMapping mappingForClass:[HuTwitterStatus class]];
@@ -979,7 +829,7 @@ NSDateFormatter *twitter_formatter;
     [twitterUserMapping addAttributeMappingsFromArray:@[@"id",
                                                         @"id_str",
                                                         @"lastUpdated",
-                                                        /* @"created_at",*/
+                                                        // @"created_at",
                                                         @"description",
                                                         @"favourites_count",
                                                         @"following",
@@ -1090,7 +940,7 @@ NSDateFormatter *twitter_formatter;
     return twitterStatusMatcher;
 }
 
-
+*/
 
 // OLD TWITTER
 //
@@ -1135,7 +985,7 @@ NSDateFormatter *twitter_formatter;
 //    return twitterStatusMatcher;
 //}
 
-
+/*
 // INSTAGRAM
 - (RKObjectMappingMatcher *)instagramStatusMatcher
 {
@@ -1332,16 +1182,37 @@ NSDateFormatter *twitter_formatter;
     RKObjectMappingMatcher *flickrStatusMatcher = [RKObjectMappingMatcher matcherWithKeyPath:@"service" expectedValue:@"flickr" objectMapping:flickrStatusMapping];
     return flickrStatusMatcher;
 }
-
+*/
 
 - (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     
     __block bool exists = true;
     NSString *json = $str(@"{\"check_username\" : \"%@\"}", username);
-    [client setParameterEncoding:AFJSONParameterEncoding];
     
-    NSMutableURLRequest *request =[client requestWithMethod:@"POST" path:@"/rest/user/username/exists" parameters:nil];
+    [huRequestOperationManager POST:@"/rest/user/username/exists" parameters:nil data:[json dataUsingEncoding:NSUTF8StringEncoding] success:^(NSURLSessionDataTask *task, id responseObject) {
+        CFBooleanRef result = ( CFBooleanRef)CFBridgingRetain([responseObject objectForKey:@"exists"]);
+        if(result == kCFBooleanTrue) {
+            exists = true;
+        } else {
+            exists = false;
+        }
+        if(completionHandler) {
+            completionHandler(exists, nil);
+        }
+
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        LOG_GENERAL(0, @"Failure %@", error);
+        if(completionHandler) {
+            completionHandler(exists, error);
+        }
+
+    }];
+    
+    /*
+    [huRequestOperationManager setParameterEncoding:AFJSONParameterEncoding];
+    
+    NSMutableURLRequest *request =[huRequestOperationManager requestWithMethod:@"POST" path:@"/rest/user/username/exists" parameters:nil];
     request.HTTPBody = [json dataUsingEncoding:NSUTF8StringEncoding];
     [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Accept"];
     [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Content-Type"];
@@ -1369,21 +1240,23 @@ NSDateFormatter *twitter_formatter;
     }];
     
     [operation start];
+     */
 }
 
 #pragma mark access token crap for a specific service
 // given a HuService this will try and get the access token particulars for that service + user
+
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler
 {
     
-    [client  setParameterEncoding:AFJSONParameterEncoding];
-    NSString *path = [NSString stringWithFormat:@"/rest/user/get/auth/%@/%@?access_token=%@", [service serviceName], [service serviceUserID], [self access_token]];
-    NSMutableURLRequest *request =[client requestWithMethod:@"GET" path:path parameters:nil];
-    [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Accept"];
-    [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Content-Type"];
-    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //
+    NSString *path = [NSString stringWithFormat:@"/rest/user/get/auth/%@/%@", [service serviceName], [service serviceUserID]];
+//    NSMutableURLRequest *request =[huRequestOperationManager requestWithMethod:@"GET" path:path parameters:nil];
+//    [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Accept"];
+//    [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Content-Type"];
+//    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
+    
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        @try {
         LOG_GENERAL(0, @"Success %@", responseObject);
         NSString *serviceNameCap = [[service serviceName]uppercaseString];
         NSString *general =[NSString stringWithFormat:@"humans-%@_CF_PV", serviceNameCap];
@@ -1394,12 +1267,12 @@ NSDateFormatter *twitter_formatter;
         NSString *encryptedParcelStr = [responseObject valueForKey:@"parcel"];
         NSData *parcelData = [[NSData alloc]initWithBase64EncodedString:encryptedParcelStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSData *decryptedParcelData =[RNDecryptor decryptData:parcelData
-                                           withPassword:parcel_key
-                                                  error:&err];
+                                                 withPassword:parcel_key
+                                                        error:&err];
         NSString *foo = [[NSString alloc]initWithData:decryptedParcelData encoding:NSUTF8StringEncoding];
         id decryptedParselJson = [NSJSONSerialization JSONObjectWithData:[foo dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&err];
         
-
+        
         
         NSString *encryptedCK_DataStr = [decryptedParselJson valueForKey:@"ck"];
         
@@ -1407,8 +1280,8 @@ NSDateFormatter *twitter_formatter;
         NSData *data = [[NSData alloc] initWithBase64EncodedString:encryptedCK_DataStr
                                                            options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSData *decryptedCK_Data = [RNDecryptor decryptData:data
-                                            withPassword:general
-                                                   error:&err];
+                                               withPassword:general
+                                                      error:&err];
         NSString *consumer_key = [[NSString alloc]initWithData:decryptedCK_Data encoding:NSUTF8StringEncoding];
         
         
@@ -1416,24 +1289,24 @@ NSDateFormatter *twitter_formatter;
         
         
         data = [[NSData alloc] initWithBase64EncodedString:encryptedCS_DataStr
-                                                           options:NSDataBase64DecodingIgnoreUnknownCharacters];
+                                                   options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSData *decryptedCS_Data = [RNDecryptor decryptData:data
                                                withPassword:general
                                                       error:&err];
         NSString *consumer_secret = [[NSString alloc]initWithData:decryptedCS_Data encoding:NSUTF8StringEncoding];
-
+        
         
         
         NSString *encryptedTK_DataStr = [decryptedParselJson valueForKey:@"tk"];
         data = [[NSData alloc]initWithBase64EncodedString:encryptedTK_DataStr
                                                   options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSData *decryptedTK_Data = [RNDecryptor decryptData:data
-                                    withPassword:general
-                                           error:&err];
+                                               withPassword:general
+                                                      error:&err];
         
         NSString *token_key = [[NSString alloc]initWithData:decryptedTK_Data encoding:NSUTF8StringEncoding];
-
-
+        
+        
         NSString *encryptedSK_DataStr = [decryptedParselJson valueForKey:@"ts"];
         data = [[NSData alloc]initWithBase64EncodedString:encryptedSK_DataStr
                                                   options:NSDataBase64DecodingIgnoreUnknownCharacters];
@@ -1444,19 +1317,32 @@ NSDateFormatter *twitter_formatter;
         
         
         NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:consumer_key, @"consumer_key", consumer_secret, @"consumer_secret", token_key, @"token_key", token_secret, @"token_secret", nil];
-
+        
         if(completionHandler) {
             completionHandler(result, YES, nil);
         }
         LOG_GENERAL(0, @"What we got..%@", result);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }
+        @catch (NSException *ne) {
+            NSString *loc = [NSString stringWithFormat:@"%s", __PRETTY_FUNCTION__];
+            NSError *error = [[NSError alloc]initWithDomain:@"HuUserHandler" code:99 userInfo:@{@"reason": [ne reason], @"name": [ne name], @"place": loc, @"exception": ne}];
+            [Flurry logError:[ne reason] message:[ne reason] error:error];
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_GENERAL(0, @"Failure %@", error);
         if (completionHandler) {
             completionHandler(nil, NO, error);
         }
     }];
-    [operation start];
-    [operation waitUntilFinished];
+    
+    
+//    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        //
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        
+//    }];
+//    [operation start];
+//    [operation waitUntilFinished];
     
 }
 
@@ -1464,7 +1350,7 @@ NSDateFormatter *twitter_formatter;
 - (NSURL *)urlForInstagramAuthentication
 {
     NSURL *result;
-    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/instagram?access_token=%@",[client baseURL],[self access_token]];
+    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/instagram?access_token=%@",[huRequestOperationManager baseURL],[self access_token]];
     result = [NSURL URLWithString:url];
     return result;
 }
@@ -1472,7 +1358,7 @@ NSDateFormatter *twitter_formatter;
 - (NSURL *)urlForTwitterAuthentication
 {
     NSURL *result;
-    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/twitter?access_token=%@", [client baseURL], [self access_token]];
+    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/twitter?access_token=%@", [huRequestOperationManager baseURL], [self access_token]];
     result = [NSURL URLWithString:url];
     return result;
 }
@@ -1480,7 +1366,7 @@ NSDateFormatter *twitter_formatter;
 - (NSURL *)urlForFlickrAuthentication
 {
     NSURL *result;
-    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/flickr?access_token=%@", [client baseURL], [self access_token]];
+    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/flickr?access_token=%@", [huRequestOperationManager baseURL], [self access_token]];
     result = [NSURL URLWithString:url];
     return result;
 }
@@ -1488,7 +1374,7 @@ NSDateFormatter *twitter_formatter;
 - (NSURL *)urlForFoursquareAuthentication
 {
     NSURL *result;
-    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/foursquare?access_token=%@", [client baseURL], [self access_token]];
+    NSString *url = [NSString stringWithFormat:@"%@/rest/auth/foursquare?access_token=%@", [huRequestOperationManager baseURL], [self access_token]];
     result = [NSURL URLWithString:url];
     return result;
 }
@@ -1510,15 +1396,3 @@ NSDateFormatter *twitter_formatter;
 
 
 
-//    RKValueTransformer *dateTransformer = [RKBlockValueTransformer valueTransformerWithValidationBlock:^BOOL(__unsafe_unretained Class inputValueClass, __unsafe_unretained Class outputValueClass) {
-//        //
-//        return ([inputValueClass isSubclassOfClass:[NSString class]] && [outputValueClass isSubclassOfClass:[NSDate class]]);
-//    } transformationBlock:^BOOL(id inputValue, __autoreleasing id *outputValue, __unsafe_unretained Class outputClass, NSError *__autoreleasing *error) {
-//        //
-//        RKValueTransformerTestInputValueIsKindOfClass(inputValue, [NSString class], error);
-//        RKValueTransformerTestOutputValueClassIsSubclassOfClass(outputClass, [NSDate class], error);
-//
-//        *outputValue = [twitter_formatter dateFromString:inputValue];
-//
-//        return YES;
-//    }];

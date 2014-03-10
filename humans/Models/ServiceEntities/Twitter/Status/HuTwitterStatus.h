@@ -20,6 +20,7 @@
 
 
 @property (strong, nonatomic) NSDate *created_at;
+@property (strong, nonatomic) NSDecimalNumber *created;
 @property (strong, nonatomic) NSDecimalNumber *tweet_id;
 @property (strong, nonatomic) NSString *id_str;
 @property (strong, nonatomic) NSString *text;

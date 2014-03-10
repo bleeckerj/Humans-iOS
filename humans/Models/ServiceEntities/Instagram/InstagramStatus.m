@@ -132,7 +132,8 @@
 	id created_time_ = [dic objectForKey:@"created_time"];
 	if([created_time_ isKindOfClass:[NSNumber class]])
 	{
-		self.created_time = created_time_;
+        NSNumber *time = (NSNumber *)created_time_;
+		self.created_time = [NSDate dateWithTimeIntervalSince1970:[time longValue]];//created_time_;
 	}
 
 	id filter_ = [dic objectForKey:@"filter"];

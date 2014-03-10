@@ -53,6 +53,19 @@
     
 }
 
++ (NSDateFormatter *)dateFormatter
+{
+    static NSDateFormatter *frm;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+    frm = [[NSDateFormatter alloc] init];
+    [frm setDateStyle:NSDateFormatterLongStyle];
+    [frm setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [frm setDateFormat: @"EEE MMM dd HH:mm:ss 'Z' yyyy"];
+    });
+    return frm;
+}
+
 - (id) initWithJSONDictionary:(NSDictionary *)dic
 {
 	if(self = [super init])
@@ -67,11 +80,18 @@
 {
 	// PARSER
 	id created_at_ = [dic objectForKey:@"created_at"];
-	if([created_at_ isKindOfClass:[NSDate class]])
+	if([created_at_ isKindOfClass:[NSString class]])
 	{
-		self.created_at = created_at_;
+        
+        NSDateFormatter *formatter = [HuTwitterStatus dateFormatter];
+		self.created_at = [formatter dateFromString:created_at_];
 	}
-    
+    id created_ = [dic objectForKey:@"created"];
+	if([created_ isKindOfClass:[NSNumber class]])
+	{
+		self.created = created_;
+	}
+
 	id tweet_id_ = [dic objectForKey:@"tweet_id"];
 	if([tweet_id_ isKindOfClass:[NSNumber class]])
 	{
@@ -276,15 +296,12 @@
 
 - (NSTimeInterval)statusTime
 {
-    return [[self created]doubleValue];
+    return [[self created]doubleValue]/1000l;
 }
 
 - (NSDate *)dateForSorting
 {
-    
-    NSTimeInterval interval = [[self created]doubleValue];
-    interval /= 1000;
-    NSDate *result = [NSDate dateWithTimeIntervalSince1970:interval];
+    NSDate *result = [NSDate dateWithTimeIntervalSince1970:[self statusTime]];
     return result;
 }
 

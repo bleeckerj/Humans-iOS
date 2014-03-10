@@ -1,7 +1,23 @@
 PODS:
-  - AFNetworking (1.3.3)
-  - AFOAuth1Client (0.3.3):
-    - AFNetworking (~> 1.3)
+  - AFNetworking (2.2.0):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+    - AFNetworking/UIKit
+  - AFNetworking/NSURLConnection (2.2.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.2.0):
+    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (2.2.0)
+  - AFNetworking/Security (2.2.0)
+  - AFNetworking/Serialization (2.2.0)
+  - AFNetworking/UIKit (2.2.0):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
   - AQGridView (1.3)
   - BlocksKit (2.0.0):
     - BlocksKit/All
@@ -23,7 +39,7 @@ PODS:
   - DropdownMenu (1.0.0)
   - ECSlidingViewController (2.0.1)
   - EKKeyboardAvoiding (2.0)
-  - Expecta (0.2.3)
+  - Expecta (0.2.4)
   - Facebook-iOS-SDK (3.12.0)
   - FlatUIKit (1.3)
   - FLKAutoLayout (0.1.1)
@@ -32,8 +48,6 @@ PODS:
   - FXKeychain (1.5)
   - iCarousel (1.7.6)
   - ionicons (1.1)
-  - ISO8601DateFormatterValueTransformer (0.5.0):
-    - RKValueTransformers (~> 1.0.0)
   - KeyboardController (1.0.0)
   - libffi (3.0.13)
   - MBProgressHUD (0.8)
@@ -87,6 +101,7 @@ PODS:
   - NHBalancedFlowLayout (0.1.2)
   - NSLogger (1.1)
   - oauthconsumer (1.0.0)
+  - ObjectiveSugar (1.1.0)
   - OCHamcrest (3.0.1)
   - OCMock (2.2.3)
   - OCMockito (1.1.0):
@@ -99,26 +114,7 @@ PODS:
     - ReactiveCocoa/no-arc
   - ReactiveCocoa/no-arc (2.2.4)
   - REMenu (1.8.1)
-  - RestKit (0.22.0):
-    - RestKit/Core
-  - RestKit/Core (0.22.0):
-    - RestKit/CoreData
-    - RestKit/Network
-    - RestKit/ObjectMapping
-  - RestKit/CoreData (0.22.0)
-  - RestKit/Network (0.22.0):
-    - AFNetworking (~> 1.3.0)
-    - RestKit/ObjectMapping
-    - RestKit/Support
-    - SOCKit
-  - RestKit/ObjectMapping (0.22.0):
-    - ISO8601DateFormatterValueTransformer (~> 0.5.0)
-    - RestKit/Support
-    - RKValueTransformers (~> 1.0.1)
-  - RestKit/Support (0.22.0):
-    - TransitionKit (= 2.0.0)
   - RFRotate (1.0.0)
-  - RKValueTransformers (1.0.1)
   - RNBlurModalView (0.1.0)
   - RNCryptor (2.2)
   - SBJson (4.0.0)
@@ -127,16 +123,14 @@ PODS:
   - SDWebImage/Core (3.5.2)
   - Sequencer (1.0.1)
   - SKSlideViewController (0.0.1)
-  - SOCKit (1.1)
   - TPKeyboardAvoiding (1.2.3)
-  - TransitionKit (2.0.0)
   - UIColor-Crayola (1.0)
   - UIImage-Categories (0.0.1)
   - ViewUtils (1.1.2)
   - WSLObjectSwitch (1.0.0)
 
 DEPENDENCIES:
-  - AFOAuth1Client (~> 0.3.3)
+  - AFNetworking
   - AQGridView (~> 1.3)
   - BlocksKit (~> 2.0.0)
   - Bolts
@@ -167,13 +161,13 @@ DEPENDENCIES:
   - NHBalancedFlowLayout (~> 0.1.2)
   - NSLogger
   - oauthconsumer (from `~/Code/oauthconsumer/`)
+  - ObjectiveSugar
   - OCHamcrest (~> 3.0.1)
   - OCMock
   - OCMockito (~> 1.0)
   - RDVKeyboardAvoiding
   - ReactiveCocoa
   - REMenu (~> 1.8)
-  - RestKit
   - RFRotate (from `~/Code/RFRotate`)
   - RNBlurModalView (~> 0.1.0)
   - RNCryptor (~> 2.2)
@@ -198,8 +192,7 @@ EXTERNAL SOURCES:
     :path: ~/Code/WSLObjectSwitch
 
 SPEC CHECKSUMS:
-  AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
-  AFOAuth1Client: 8b06e54087732068e19c4efcd7bed5d74bc9538a
+  AFNetworking: e8cfd8f3fe3bfe19124a0cc63f4d45752d892a56
   AQGridView: ee436c64bc4a972ca7f3ce99971c0204af9e65ea
   BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
   Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
@@ -208,7 +201,7 @@ SPEC CHECKSUMS:
   DropdownMenu: 3c454205c2db1fd39dc1ebf099114c4fdb73f136
   ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
   EKKeyboardAvoiding: b589dcaa5ff765818f69e69f03a1efab618d6953
-  Expecta: dbc4a27fabb853bdd2e907e33f11ee43a9a47d0c
+  Expecta: 5c147dedfea5fbcf773995f7e65020abcc936ce5
   Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
   FlatUIKit: 3b32b52bb3c266477709cfe4812ab2c877ae942b
   FLKAutoLayout: fc04b932009174d4118ef4bda9dc8fedf1369efc
@@ -217,7 +210,6 @@ SPEC CHECKSUMS:
   FXKeychain: 90cc7bf9ba005e4d099a113a194792e7983c5778
   iCarousel: e23a26d7ba722215a42144e80adb0dcb59bebc41
   ionicons: 50c5368bc6e4dbd1a26559aff0b67f2ed8640c48
-  ISO8601DateFormatterValueTransformer: d0af1f50a9df42db72d7418db31938b8473e0af8
   KeyboardController: 368f5ebc3ceab64a863636db2a313648bbe1e643
   libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
@@ -233,24 +225,21 @@ SPEC CHECKSUMS:
   NHBalancedFlowLayout: 95f1d7bffadc73bead84b63e7e4c37aa52975f7a
   NSLogger: 4567fef08d0db18a89cce91b2053823fc0950738
   oauthconsumer: 96e97f21400a93ab501a0a98920e33766f8d6178
+  ObjectiveSugar: fed588577bcf9733546aeaa089de444e4bab9a52
   OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
   OCMock: 74e4ddbcef134170dcc844f91c691f13868075d7
   OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
   RDVKeyboardAvoiding: d624b80508c45e9e14a9c7e2f23b2318887b110e
   ReactiveCocoa: 953a45dda30674fe704d1d9c77cc874141742f47
   REMenu: e8ba5e8592c07e35d6ba43180acb20090f0bc5c9
-  RestKit: dc107a0aa4f962575ad0385bac5b3c5e4f591f4e
   RFRotate: 32613810b400f04cce8b6e532f52fe9f59effb68
-  RKValueTransformers: 1562d458b9c9d59ce777bfc5982f2e1aef2e9182
   RNBlurModalView: ab3855ced43749cb0fb4d370160bd2908476c8b6
   RNCryptor: 1420380792b33758d2414cf37af160ea2495e15c
   SBJson: f3c686806e8e36ab89e020189ac582ba26ec4220
   SDWebImage: fe7ce01ae4e0a884d168f59c9dd82d35baf8429e
   Sequencer: ac64fdd704f83883536b73c7e5adc974fa285223
   SKSlideViewController: 98e4cee58146aaf8b24d300b9a32bc7c45cc5b25
-  SOCKit: 2f3bc4d07910de12dcc202815e07db68a3802581
   TPKeyboardAvoiding: 17995aaa6db26ac2a9fa8714a86509c5888f0392
-  TransitionKit: 433284465abacdc07852d7db6dd0cc075010059a
   UIColor-Crayola: 20eacda0777fd487efba6831e2b34625e8ce3ceb
   UIImage-Categories: d9f10e0afb9b281b35a3c2b0c7d16d1ca251d824
   ViewUtils: e0b147bd0b2acfbf6b030f6a32b0c2bdd959df68

@@ -7,14 +7,12 @@
 #import <Foundation/Foundation.h>
 
 
-@interface HuFoursquareContact : NSObject
+@interface HuFoursquareTips : NSObject
 {
-	NSString *email;
-	NSString *twitter;
+	NSString *count;
 }
 
-@property (strong, nonatomic) NSString *email;
-@property (strong, nonatomic) NSString *twitter;
+@property (strong, nonatomic) NSString *count;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;

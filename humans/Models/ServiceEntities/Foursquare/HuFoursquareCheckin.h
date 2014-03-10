@@ -5,11 +5,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HuServiceStatus.h"
 
 @class HuFoursquareSource;
 @class HuFoursquareVenue;
+@class HuFoursquareUser;
 
-@interface HuFoursquareCheckin : NSObject
+@interface HuFoursquareCheckin : NSObject <HuServiceStatus>
 
 
 
@@ -24,7 +26,7 @@
 @property (strong, nonatomic) NSString *user_id;
 @property (strong, nonatomic) HuFoursquareVenue *venue;
 @property (strong, nonatomic) NSDecimalNumber *version;
-
+@property (strong, nonatomic) HuFoursquareUser *user;
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
 

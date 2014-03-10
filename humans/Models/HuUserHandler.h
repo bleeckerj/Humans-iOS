@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "HuHumansHTTPClient.h"
+#import "HuHumansHTTPSessionManager.h"
 #import "defines.h"
 #import "HuUser.h"
 #import "HuHuman.h"
@@ -45,8 +45,10 @@
 #import "HuFlickrStatus.h"
 #import "HuFlickrDescription.h"
 
-#import "HuRestStatusHeader.h"
+#import "HuFoursquareCheckin.h"
+
 #import <Parse/Parse.h>
+#import <ObjectiveSugar.h>
 
 @interface HuUserHandler : NSObject <NSURLConnectionDelegate>
 
@@ -59,11 +61,11 @@ typedef enum networkStateTypes
     NETWORK_WIFI
 } HuNetworkState;
 
-@property (nonatomic, retain) HuHumansHTTPClient *client;
+@property (nonatomic, retain) HuHumansHTTPSessionManager *huRequestOperationManager;
 @property (nonatomic, copy) NSString *access_token;
 @property (nonatomic, copy) HuUser *humans_user;
 @property (nonatomic, readonly) NSMutableDictionary *statusForHumanId;
-@property (nonatomic, retain) HuRestStatusHeader *lastStatusResultHeader;
+@property (nonatomic, retain) NSDictionary *lastStatusResultHeader;
 @property (nonatomic, retain) NSMutableArray *friends;
 @property HuNetworkState networkState;
 

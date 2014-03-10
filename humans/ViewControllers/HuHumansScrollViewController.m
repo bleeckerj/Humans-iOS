@@ -12,8 +12,8 @@
 #import <MGScrollView.h>
 #import <MGTableBoxStyled.h>
 #import <MGLineStyled.h>
-//#import "UIImageView+AFNetworking.h"
-#import <AFNetworking/AFNetworking.h>
+#import <UIImageView+AFNetworking.h>
+//#import <AFNetworking/AFNetworking.h>
 #import "UIImage+Resize.h"
 #import "defines.h"
 #import "HuStatusCarouselViewController.h"

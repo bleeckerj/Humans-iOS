@@ -9,12 +9,13 @@
 #import "HuHeaderForServiceStatusView.h"
 #import "HuFriend.h"
 #import "UILabel+withDate.h"
-#import <AFNetworking/AFNetworking.h>
+//#import <AFNetworking/AFNetworking.h>
 #import <UIView+FLKAutoLayout.h>
 #import "UIImage+ResizeToFit.h"
 //#import "HuInstagramStatus.h"
 #import <MKFoundationKit.h>
 #import <UIColor+FPBrandColor.h>
+#import <UIImageView+AFNetworking.h>
 
 @implementation HuHeaderForServiceStatusView
 {

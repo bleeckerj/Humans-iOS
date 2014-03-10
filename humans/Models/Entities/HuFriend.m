@@ -90,7 +90,7 @@
 		self.onBehalfOf = [[HuOnBehalfOf alloc] initWithJSONDictionary:onBehalfOf_];
 	}
 
-	id serviceName_ = [dic objectForKey:@"service"];
+	id serviceName_ = [dic objectForKey:@"serviceName"];
 	if([serviceName_ isKindOfClass:[NSString class]])
 	{
 		self.serviceName = serviceName_;

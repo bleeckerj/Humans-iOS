@@ -8,6 +8,11 @@
 #import "HuFoursquareCheckin.h"
 #import "HuFoursquareSource.h"
 #import "HuFoursquareVenue.h"
+#import "HuFoursquareUser.h"
+#import "HuFoursquareUserPhoto.h"
+#import "defines.h"
+
+#import <UIColor+FPBrandColor.h>
 
 
 @implementation HuFoursquareCheckin
@@ -24,13 +29,55 @@
 @synthesize user_id = _user_id;
 @synthesize venue = _venue;
 @synthesize version = _version;
+@synthesize hasBeenRead;
+@synthesize doNotShow;
 
+- (NSDate *)dateForSorting
+{
+    return [NSDate dateWithTimeIntervalSince1970:[[self createdAt]doubleValue]];
+}
+
+- (UIColor *)serviceSolidColor
+{
+    return [UIColor Foursquare];
+}
+
+- (NSString *)serviceImageBadgeName
+{
+    return @"foursquare-icon-36x36";
+}
+
+- (NSString *)tinyServiceImageBadgeName
+{
+    return @"foursquare-icon-16x16";
+}
+
+- (NSString *)monochromeServiceImageBadgeName
+{
+    return @"foursquare-icon-gray-36x36";
+}
+
+- (NSString *)tinyMonochromeServiceImageBadgeName
+{
+    return @"foursquare-icon-gray-16x16";
+}
+
+- (NSURL *)userProfileImageURL
+{
+    NSURL *result = nil;
+    HuFoursquareUserPhoto *photo = [[self user]photo];
+    NSString *c = [NSString stringWithFormat:@"%@original%@", [photo prefix], [photo suffix]];
+    result = [NSURL URLWithString:c];
+    return result;
+}
 
 - (void) dealloc
 {
 	
 
 }
+
+
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic
 {
@@ -97,6 +144,12 @@
 	if([user_id_ isKindOfClass:[NSString class]])
 	{
 		self.user_id = user_id_;
+	}
+
+    id user_ = [dic objectForKey:@"user"];
+	if([user_ isKindOfClass:[NSDictionary class]])
+	{
+		self.user = [[HuFoursquareUser alloc] initWithJSONDictionary:user_];
 	}
 
 	id venue_ = [dic objectForKey:@"venue"];

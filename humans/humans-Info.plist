@@ -22,13 +22,15 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>0.2.1</string>
+	<key>CWBuildNumber</key>
+	<integer>351</integer>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>HelveticaLTStd-BlkObl.otf</string>
 		<string>fontawesome-webfont.ttf</string>
-		<string>&apos;ionicons.ttf&apos;. [Info.plist modification]()</string>
+		<string>'ionicons.ttf'. [Info.plist modification]()</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
@@ -39,8 +41,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>
