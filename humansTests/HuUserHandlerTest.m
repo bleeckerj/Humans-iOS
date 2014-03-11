@@ -427,7 +427,31 @@ HuUserHandler *user_handler;
 
 - (void)test_userRemoveService
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    
+    ASYNC_START
+    NSArray *services = [[user_handler humans_user]services];
+    expect(services).toNot.beNil();
+    expect([services count]).to.beGreaterThan(@0);
+    HuServices *service = [services objectAtIndex:0];
+    int before_count = [services count];
+    [user_handler userRemoveService:service withCompletionHandler:^(BOOL success, NSError *error) {
+        
+        expect(success).to.beTruthy();
+        expect(error).to.beNil();
+        [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+            ASYNC_DONE
+            expect(success).to.beTruthy();
+            expect(error).to.beNil();
+            NSArray *after_services = [[user_handler humans_user]services];
+            expect(after_services).toNot.contain(service);
+            int after_count = [after_services count];
+            expect(after_count).to.equal(before_count - 1);
+        }];
+    }];
+    
+    
+    ASYNC_TEST_END
+    //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 
 }
 

@@ -391,7 +391,8 @@ NSDateFormatter *twitter_formatter;
     [Flurry logEvent:[NSString stringWithFormat:@"Attempting userRemoveServiceUser for %@", [aService description]]];
     
     NSString *path = @"/rest/user/rm/service";
-    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+   
+    [huRequestOperationManager POST:path parameters:nil data:[aService json] success:^(NSURLSessionDataTask *task, id responseObject) {
         [Flurry logEvent:[NSString stringWithFormat:@"Success for %@ response=%@", [aService description], responseObject]];
         if(completionHandler) {
             
@@ -410,15 +411,47 @@ NSDateFormatter *twitter_formatter;
                 }
             }
         }
+
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
         
         [Flurry logError:error.localizedDescription message:@"" error:error];
-       if(completionHandler) {
+        if(completionHandler) {
             completionHandler(NO, error);
         }
-  
+        
+
     }];
+    
+    
+//    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+//        [Flurry logEvent:[NSString stringWithFormat:@"Success for %@ response=%@", [aService description], responseObject]];
+//        if(completionHandler) {
+//            
+//            id result = [responseObject objectForKey:@"result"];
+//            if(result != nil && [result isKindOfClass:[NSString class]]) {
+//                if([result isEqualToString:@"success"]) {
+//                    completionHandler(YES, nil);
+//                } else {
+//                    NSString *message = [responseObject objectForKey:@"message"];
+//                    if(message == nil) {
+//                        message = @"no message";
+//                    }
+//                    NSError *err = [[NSError alloc]initWithDomain:@"error" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:result, @"result", message, @"message", nil]];
+//                    completionHandler(NO, err);
+//                    
+//                }
+//            }
+//        }
+//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+//        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+//        
+//        [Flurry logError:error.localizedDescription message:@"" error:error];
+//       if(completionHandler) {
+//            completionHandler(NO, error);
+//        }
+//  
+//    }];
     /*
     [huRequestOperationManager setParameterEncoding:NSUTF8StringEncoding];
     

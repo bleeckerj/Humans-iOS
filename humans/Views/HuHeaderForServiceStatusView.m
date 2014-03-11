@@ -72,7 +72,7 @@
                 }];
 
             });
-            
+            [status description];
             LOG_GENERAL(2, @"Service User In Header is %@ %@", [self.status serviceUsername], status);
             self.username = [self.status serviceUsername];//[serviceUser username];
             self.statusDate = [status dateForSorting];

@@ -35,6 +35,7 @@ PODS:
     - BlocksKit/DynamicDelegate
   - Bolts (1.0.0)
   - ConciseKit (0.1.2)
+  - DACircularProgress (2.1.0)
   - DropdownMenu (1.0.0)
   - ECSlidingViewController (2.0.1)
   - EKKeyboardAvoiding (2.0)
@@ -46,6 +47,10 @@ PODS:
   - FPBrandColors (0.1.3)
   - FXKeychain (1.5)
   - iCarousel (1.7.6)
+  - IDMPhotoBrowser (1.3.2):
+    - AFNetworking (~> 2.0.2)
+    - DACircularProgress (~> 2.1.0)
+    - SVProgressHUD (~> 1.0)
   - ionicons (1.1)
   - KeyboardController (1.0.0)
   - libffi (3.0.13)
@@ -122,6 +127,7 @@ PODS:
   - SDWebImage/Core (3.5.4)
   - Sequencer (1.0.1)
   - SKSlideViewController (0.0.1)
+  - SVProgressHUD (1.0)
   - TPKeyboardAvoiding (1.2.3)
   - UIColor-Crayola (1.0)
   - UIImage-Categories (0.0.1)
@@ -145,6 +151,7 @@ DEPENDENCIES:
   - FPBrandColors (~> 0.1.3)
   - FXKeychain
   - iCarousel
+  - IDMPhotoBrowser
   - ionicons
   - KeyboardController (~> 1.0.0)
   - MBProgressHUD (~> 0.8)
@@ -195,6 +202,7 @@ SPEC CHECKSUMS:
   BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
   Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
+  DACircularProgress: 8c8f20c8dffdd647fbf570ddecbc2b1b59da5888
   DropdownMenu: 3c454205c2db1fd39dc1ebf099114c4fdb73f136
   ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
   EKKeyboardAvoiding: b589dcaa5ff765818f69e69f03a1efab618d6953
@@ -206,6 +214,7 @@ SPEC CHECKSUMS:
   FPBrandColors: e0df3950b283d1a6d6c42d6b97f04a031ccf9e12
   FXKeychain: 90cc7bf9ba005e4d099a113a194792e7983c5778
   iCarousel: e23a26d7ba722215a42144e80adb0dcb59bebc41
+  IDMPhotoBrowser: aee42ff18cdb1bf2f7326631094ad18f236d2ab9
   ionicons: 50c5368bc6e4dbd1a26559aff0b67f2ed8640c48
   KeyboardController: 368f5ebc3ceab64a863636db2a313648bbe1e643
   libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
@@ -236,6 +245,7 @@ SPEC CHECKSUMS:
   SDWebImage: 1a62010700adbba823b621fc217906739dbf6aa5
   Sequencer: ac64fdd704f83883536b73c7e5adc974fa285223
   SKSlideViewController: 98e4cee58146aaf8b24d300b9a32bc7c45cc5b25
+  SVProgressHUD: 5e10939a296debf5fe5a5895eda9539b8b2114f1
   TPKeyboardAvoiding: 17995aaa6db26ac2a9fa8714a86509c5888f0392
   UIColor-Crayola: 20eacda0777fd487efba6831e2b34625e8ce3ceb
   UIImage-Categories: d9f10e0afb9b281b35a3c2b0c7d16d1ca251d824
