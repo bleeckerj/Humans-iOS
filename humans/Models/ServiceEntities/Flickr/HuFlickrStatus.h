@@ -7,6 +7,8 @@
 #import <Foundation/Foundation.h>
 #import "HuServiceStatus.h"
 #import "defines.h"
+#import <SBJson4Writer.h>
+
 //@class _id;
 @class HuFlickrDescription;
 
@@ -21,7 +23,7 @@
 @property (strong, nonatomic) NSDate *datetaken;
 @property (strong, nonatomic) NSDecimalNumber *datetakengranularity;
 @property (strong, nonatomic) NSDecimalNumber *dateupload;
-@property (strong, nonatomic) HuFlickrDescription *description;
+@property (strong, nonatomic) HuFlickrDescription *flickr_description;
 @property (strong, nonatomic) NSString *farm;
 @property (strong, nonatomic) NSDecimalNumber *height_c;
 @property (strong, nonatomic) NSDecimalNumber *height_l;

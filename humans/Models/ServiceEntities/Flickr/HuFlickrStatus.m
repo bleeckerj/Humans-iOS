@@ -12,6 +12,12 @@
 
 @implementation HuFlickrStatus
 
+@synthesize hasBeenRead;
+@synthesize doNotShow;
+@synthesize statusText;
+@synthesize statusTime;
+@synthesize serviceUsername;
+@synthesize serviceSolidColor;
 
 //@synthesize _id = __id;
 @synthesize accuracy = _accuracy;
@@ -20,7 +26,7 @@
 @synthesize datetaken = _datetaken;
 @synthesize datetakengranularity = _datetakengranularity;
 @synthesize dateupload = _dateupload;
-@synthesize description = _description;
+@synthesize flickr_description = _flickr_description;
 @synthesize farm = _farm;
 @synthesize height_c = _height_c;
 @synthesize height_l = _height_l;
@@ -88,6 +94,8 @@
 
 }
 
+
+
 - (id) initWithJSONDictionary:(NSDictionary *)dic
 {
 	if(self = [super init])
@@ -143,10 +151,10 @@
 		self.dateupload = dateupload_;
 	}
 
-	id description_ = [dic objectForKey:@"description"];
-	if([description_ isKindOfClass:[NSDictionary class]])
+	id _flickr_description_ = [dic objectForKey:@"description"];
+	if([_flickr_description_ isKindOfClass:[NSDictionary class]])
 	{
-		self.description = [[HuFlickrDescription alloc] initWithJSONDictionary:description_];
+		self.flickr_description = [[HuFlickrDescription alloc] initWithJSONDictionary:_flickr_description_];
 	}
 
 	id farm_ = [dic objectForKey:@"farm"];
@@ -573,6 +581,12 @@
     return [[self created]doubleValue];
 }
 
+- (NSString *)statusText
+{
+    return [self.flickr_description _content];
+}
+
+
 - (NSDate *)dateForSorting
 {
     
@@ -582,10 +596,38 @@
     return result;
 }
 
-- (NSString *)statusText
+-(NSString *)tinyServiceImageBadgeName
 {
-    return [self.description _content];
+    return @"flickr-peepers-color";
 }
+
+
+-(NSString *)serviceImageBadgeName
+{
+    return @"flickr-peepers-color";
+}
+
+-(NSString *)monochromeServiceImageBadgeName
+{
+    return @"flickr-white-large-chiclet";
+}
+
+//- (NSDictionary*) proxyForJson
+//{
+//    NSDictionary *result =  [NSMutableDictionary dictionaryWithObjectsAndKeys:@"hello", @"goodbye"
+//            ,
+//            nil];
+//    return result;
+//}
+
+
+//- (NSString *)description
+//{
+//    SBJson4Writer *writer = [[SBJson4Writer alloc] init];
+//    writer.humanReadable = YES;
+//    NSString* json = [writer stringWithObject:self];
+//    return json;
+//}
 - (NSString *)tinyMonochromeServiceImageBadgeName
 {
     return @"flickr-peepers-white-tiny.png";
