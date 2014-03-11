@@ -1,6 +1,7 @@
 platform :ios, '7.0'
 pod 'AFNetworking'
 pod 'ObjectiveSugar'
+pod 'IDMPhotoBrowser'
 #pod 'SSToolkit'
 #pod 'AFOAuth1Client', '~> 0.3.3'
 pod 'oauthconsumer', :path => '~/Code/oauthconsumer/'
