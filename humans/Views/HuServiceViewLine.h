@@ -27,5 +27,3 @@
 - (id)initWithService:(HuServices *)aServices;
 
 @end
-
-

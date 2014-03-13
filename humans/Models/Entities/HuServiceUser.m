@@ -7,7 +7,7 @@
 // Import
 #import "HuServiceUser.h"
 #import "HuOnBehalfOf.h"
-
+#import <SBJson4Writer.h>
 @implementation HuServiceUser
 
 
@@ -102,9 +102,14 @@
 
 -(NSString *)jsonString
 {
-    NSError *writeError = nil; 
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.dictionary options:NSJSONWritingPrettyPrinted error:&writeError];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSDictionary *dict = [self dictionary];
+    NSError *error;
+    
+    SBJson4Writer *writer = [[SBJson4Writer alloc] init];
+    NSString *jsonString = [writer stringWithObject:dict];
+    if ( ! jsonString ) {
+        NSLog(@"Error: %@", error);
+    }
     return jsonString;
 }
 

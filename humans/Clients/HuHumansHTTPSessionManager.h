@@ -18,7 +18,9 @@
 +(HuHumansHTTPSessionManager *)sharedProdClient;
 
 - (void)getStatusCountForHuman:(HuHuman *)human after:(NSTimeInterval)timestamp withCompletionHandler:(CompletionHandlerWithData)completionHandler;
-- (void)userAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler;
+- (void)humanAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler;
+- (void)humanAddServiceUsers:(NSArray *)aServiceUser forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler;
+
 - (NSURLSessionDataTask *)POST:(NSString *)URLString
                     parameters:(NSDictionary *)parameters
                           data:(NSData *)data

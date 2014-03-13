@@ -18,10 +18,11 @@
 @implementation HuHumanProfileViewController
 NSMutableArray *textFields;
 UIStoryboard *storyBoard;
-HuStatusCarouselViewController *statusCarouselViewController;
+BOOL refreshOnReturn;
+//HuHumansScrollViewController *statusCarouselViewController;
 
 @synthesize editButton;
-@synthesize viewButton;
+@synthesize deleteButton;
 @synthesize nameLabel;
 @synthesize human;
 @synthesize nameTextField;
@@ -64,13 +65,19 @@ HuStatusCarouselViewController *statusCarouselViewController;
 
 CGRect frame;
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    refreshOnReturn = NO;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     [[MZFormSheetBackgroundWindow appearance] setBackgroundBlurEffect:YES];
     [[MZFormSheetBackgroundWindow appearance] setBlurRadius:2.0];
-
+    
     frame = [nameLabel frame];
 	// Do any additional setup after loading the view.
     CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
@@ -103,14 +110,14 @@ CGRect frame;
         HuDeleteServiceUserCarouselViewController *vc = [[HuDeleteServiceUserCarouselViewController alloc]init];////[self.storyboard instantiateViewControllerWithIdentifier:@"HuAddDelHumansViewController"];
         [vc setHuman:human];
         
-
+        
         MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:vc];
         [formSheet setCornerRadius:3.0f];
         
         [MZFormSheetController sharedBackgroundWindow].formSheetBackgroundWindowDelegate = weakSelf;
         __weak MZFormSheetController *weakFormSheet = formSheet;
-
-
+        
+        
         formSheet.presentedFormSheetSize = CGSizeMake(300, 150);
         formSheet.transitionStyle = MZFormSheetTransitionStyleSlideFromTop;
         formSheet.shadowRadius = 4.0;
@@ -123,6 +130,7 @@ CGRect frame;
         formSheet.didTapOnBackgroundViewCompletionHandler = ^(CGPoint location) {
             if([vc changesWereMade]) {
                 // gettyup
+                refreshOnReturn = YES;
                 
             }
             
@@ -149,7 +157,7 @@ CGRect frame;
             if([vc wantsNewUser]) {
                 [self performBlock:^{
                     [self addServiceUser];
-
+                    
                 } afterDelay:.1];
             }
         };
@@ -160,21 +168,21 @@ CGRect frame;
         
         
         [self mz_presentFormSheetController:formSheet animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-        
+            
         }];
-
+        
         
     } forControlEvents:UIControlEventTouchUpInside];
     
     [keyboardAvoidingScrollView addSubview:editButton];
     
-    [viewButton setButtonColor:[UIColor crayolaGreenSheenColor]];
-    viewButton.shadowColor = editButton.buttonColor;
-    viewButton.shadowHeight = 0.0f;
-    viewButton.cornerRadius = 0.0f;
-    viewButton.titleLabel.font = BUTTON_FONT_LARGE;
-    [viewButton setHighlightedColor:[UIColor Garmin]];
-    [viewButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [deleteButton setButtonColor:[UIColor crayolaRazzleDazzleRoseColor]];
+    deleteButton.shadowColor = editButton.buttonColor;
+    deleteButton.shadowHeight = 0.0f;
+    deleteButton.cornerRadius = 0.0f;
+    deleteButton.titleLabel.font = BUTTON_FONT_LARGE;
+    [deleteButton setHighlightedColor:[UIColor Garmin]];
+    [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     
     
@@ -182,74 +190,83 @@ CGRect frame;
     //
     //
     //
-    [viewButton bk_addEventHandler:^(id sender) {
+    [deleteButton bk_addEventHandler:^(id sender) {
         //
         HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
         HuUserHandler *user_handler = [delegate humansAppUser];
-        [user_handler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
-            int lcount = 0;
+        [user_handler userRemoveHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+            //
             if(success) {
-                NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-                [f setNumberStyle:NSNumberFormatterDecimalStyle];
-                lcount = [[f numberFromString:[data description]] intValue];
-                
-            }
-            if(lcount <= 0) {
-                [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
-                
-                MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-                noticeView.mode = MRProgressOverlayViewModeCross;
-                noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
-                [self performBlock:^{
-                    [noticeView dismiss:YES];
-                    [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-                } afterDelay:4.0];
-                
-            }
-            
-            if(success && lcount > 0) {
-                [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-                    //
-                    if(success) {
-                        LOG_GENERAL(0, @"Loaded Status for %@", human);
-                        //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
-                        
-                        //NSString *human_id = [human humanid]    ;
-                        NSArray *status = [user_handler statusForHuman:human];
-                        LOG_GENERAL(0, @"Count is %d", [status count]);
-                        statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-                        [statusCarouselViewController setHuman:human];
-                        
-                        NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
-                        
-                        [statusCarouselViewController setItems:items];
-                        
-                        [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-                        
-                        UINavigationController *nav = self.navigationController;
-                        [nav pushViewController:statusCarouselViewController animated:YES];
-                        
-                    } else {
-                        LOG_ERROR(0, @"Error loading status %@", error);
-                        [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-                        [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
-                        MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-                        noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-                        noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
-                        [self performBlock:^{
-                            [noticeView dismiss:YES];
-                        } afterDelay:2.0];
-                        
-                    }
-                    
-                }];
+                refreshOnReturn = YES;
             }
         }];
-
+        
+        /***
+         [user_handler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+         int lcount = 0;
+         if(success) {
+         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+         [f setNumberStyle:NSNumberFormatterDecimalStyle];
+         lcount = [[f numberFromString:[data description]] intValue];
+         
+         }
+         if(lcount <= 0) {
+         [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
+         
+         MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+         noticeView.mode = MRProgressOverlayViewModeCross;
+         noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
+         [self performBlock:^{
+         [noticeView dismiss:YES];
+         [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+         } afterDelay:4.0];
+         
+         }
+         
+         if(success && lcount > 0) {
+         [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+         //
+         if(success) {
+         LOG_GENERAL(0, @"Loaded Status for %@", human);
+         //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+         
+         //NSString *human_id = [human humanid]    ;
+         NSArray *status = [user_handler statusForHuman:human];
+         LOG_GENERAL(0, @"Count is %d", [status count]);
+         statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
+         [statusCarouselViewController setHuman:human];
+         
+         NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
+         
+         [statusCarouselViewController setItems:items];
+         
+         [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+         
+         UINavigationController *nav = self.navigationController;
+         [nav pushViewController:statusCarouselViewController animated:YES];
+         
+         } else {
+         LOG_ERROR(0, @"Error loading status %@", error);
+         [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+         [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
+         MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+         noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+         noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+         [self performBlock:^{
+         [noticeView dismiss:YES];
+         } afterDelay:2.0];
+         
+         }
+         
+         }];
+         }
+         }];
+         **/
+        
     } forControlEvents:UIControlEventTouchUpInside];
-    [keyboardAvoidingScrollView addSubview:viewButton];
-
-   
+    [keyboardAvoidingScrollView addSubview:deleteButton];
+    
+    
     //[nameTextField setFrame:[nameLabel frame]];
     [nameTextField setFont:[nameLabel font]];
     [nameTextField setBackgroundColor:[UIColor asbestosColor]];
@@ -262,52 +279,90 @@ CGRect frame;
     
     [keyboardAvoidingScrollView addSubview:nameTextField];
     [keyboardAvoidingScrollView addSubview:nameLabel];
-
+    
     [[self nameLabel]setText:[human name]];
     [[self nameTextField]setText:[human name]];
     [[self nameTextField]setHidden:YES];
     [nameLabel setBackgroundColor:[UIColor asbestosColor]];
     
-    [keyboardAvoidingScrollView setContentSize:CGSizeMake(applicationFrame.size.width, CGRectGetMaxY(viewButton.frame) + 20)];
+    [keyboardAvoidingScrollView setContentSize:CGSizeMake(applicationFrame.size.width, CGRectGetMaxY(deleteButton.frame) + 20)];
     
-    FUIButton *goBack = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
+    FUIButton *goBack = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, 100, 50)];
     goBack.titleLabel.font = HEADER_FONT;
-    goBack.titleLabel.text = @"GO BAKC";
-    goBack.buttonColor = [UIColor redColor];
+    goBack.titleLabel.text = @"GO BACK";
+    goBack.buttonColor = [UIColor crayolaRadicalRedColor];
     [self.view addSubview:goBack];
     [goBack mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:nameLabel];
     [goBack bk_addEventHandler:^(id sender) {
-        [self.navigationController popViewControllerAnimated:YES];
+        if(refreshOnReturn == YES) {
+            HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+            HuUserHandler *user_handler = [delegate humansAppUser];
+            [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+                if(success) {
+                    MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+                    noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+                    noticeView.tintColor = [UIColor crayolaRazzleDazzleRoseColor];
+                    noticeView.titleLabelText = @"Knolling changes..";
+                    [self performBlock:^{
+                        [noticeView dismiss:YES];
+                        [self.navigationController popViewControllerAnimated:YES];
+                        
+                    } afterDelay:4.0];
+                } else {
+                    MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+                    noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+                    noticeView.titleLabelText = [NSString stringWithFormat:@"There was a knolling error.. %@", [error localizedDescription]];
+                    noticeView.tintColor = [UIColor crayolaRazzmicBerryColor];
+
+                    [self performBlock:^{
+                        [noticeView dismiss:YES];
+                        [self.navigationController popViewControllerAnimated:YES];
+                        
+                    } afterDelay:4.0];
+                    
+                }
+                
+            }];
+        } else {
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        }
+        
     } forControlEvents:UIControlEventTouchUpInside];
     
-//    [viewButton bk_addEventHandler:^(id sender) {
-//        //
-//        [self.navigationController popViewControllerAnimated:YES];
-//    } forControlEvents:UIControlEventTouchUpOutside];
+    //    [viewButton bk_addEventHandler:^(id sender) {
+    //        //
+    //        [self.navigationController popViewControllerAnimated:YES];
+    //    } forControlEvents:UIControlEventTouchUpOutside];
     
-   // [self.view addSubview:keyboardAvoidingScrollView];
+    // [self.view addSubview:keyboardAvoidingScrollView];
+    
+}
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 - (void)addServiceUser
 {
     LOG_UI(0, @"Add Service User");
-//
+    //
     [[MZFormSheetBackgroundWindow appearance] setBackgroundBlurEffect:YES];
     [[MZFormSheetBackgroundWindow appearance] setBlurRadius:2.0];
-
-
+    
+    
     HuJediMiniFindFriendsViewController *vc = [[HuJediMiniFindFriendsViewController alloc]init];
     [vc setMaxNewUsers:4];
     [vc setHuman:self.human];
     [vc setInvokingViewController:self];
     MZFormSheetController *addUserFormSheet = [[MZFormSheetController alloc] initWithViewController:vc];
-
+    
     [addUserFormSheet setCornerRadius:3.0f];
     
     [MZFormSheetController sharedBackgroundWindow].formSheetBackgroundWindowDelegate = self;
-   // __weak MZFormSheetController *weakFormSheet = addUserFormSheet;
-
+    // __weak MZFormSheetController *weakFormSheet = addUserFormSheet;
+    
     
     addUserFormSheet.presentedFormSheetSize = CGSizeMake(300, 400);
     addUserFormSheet.portraitTopInset = 20.0;
@@ -339,7 +394,7 @@ CGRect frame;
             [textField resignFirstResponder];
             [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
             if([[textField text]length] > 0) {
-            [human setName:[textField text]];
+                [human setName:[textField text]];
                 [nameLabel setText:[human name]];
                 [nameTextField setHidden:YES];
                 [nameLabel setHidden:NO];

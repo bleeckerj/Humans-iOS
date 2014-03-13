@@ -20,10 +20,13 @@
 #import "HuTextFieldLine.h"
 #import "HuServiceUserProfilePhoto.h"
 #import "StateMachine.h"
-#import "HuServiceViewLine.h"
+//#import "HuServiceViewLine.h"
 #import <UIColor+FlatUI.h>
 #import <UIColor+Crayola.h>
 #import <UIColor+FPBrandColor.h>
+
+@class HuServiceViewLine;
+@protocol HuServiceViewLineDelegate;
 
 @interface HuShowServicesViewController : UIViewController <HuServiceViewLineDelegate>
 @property BOOL checkMarkTapped, exTapped;

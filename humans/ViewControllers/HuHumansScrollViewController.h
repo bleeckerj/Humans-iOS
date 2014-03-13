@@ -17,7 +17,7 @@
 @interface HuHumansScrollViewController : UIViewController
 
 @property (nonatomic, strong) NSMutableArray *arrayOfHumans;
-@property (nonatomic, strong) HuStatusCarouselViewController *statusCarouselViewController;
+@property (nonatomic, strong) HuHumansScrollViewController *statusCarouselViewController;
 
 @property (nonatomic, strong) ECSlidingViewController *slidingViewController;
 

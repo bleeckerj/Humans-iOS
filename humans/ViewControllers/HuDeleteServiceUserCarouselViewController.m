@@ -231,6 +231,35 @@
         //
         HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
         HuUserHandler *handler = [delegate humansAppUser];
+        [handler humanRemoveServiceUser:service_user forHuman:self.human withCompletionHandler:^(BOOL success, NSError *error) {
+            if(success) {
+                
+                [handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+                    
+                    if(success) {
+                        changesWereMade = YES;
+                        [carousel removeItemAtIndex:index animated:YES];
+                        [[self.human serviceUsers]removeObjectAtIndex:index];
+                    } else {
+                        NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+                        [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
+                        [Flurry logEvent:@"remove-service-user" withParameters:dimensions];
+                        
+                    }
+                }];
+                
+                
+            } else {
+                LOG_ERROR(0, @"Problem deleting a user");
+                NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+                [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
+                [Flurry logEvent:@"remove-service-user" withParameters:dimensions];
+                
+            }
+
+        }];
+        
+  /**
         [handler userRemoveServiceUser:service_user withCompletionHandler:^(BOOL success, NSError *error) {
             //
             if(success) {
@@ -258,7 +287,8 @@
 
             }
         }];
-        LOG_UI(0, @"Delete %@", [service_user username]);
+   **/     
+   LOG_UI(0, @"Delete %@", [service_user username]);
         
     } forControlEvents:UIControlEventTouchUpInside];
     

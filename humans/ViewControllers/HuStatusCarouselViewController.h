@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "HuHuman.h"
 #import <iCarousel.h>
+#import "HuHumansProfileCarouselViewController.h"
+
+//@class HuHumansProfileCarouselViewController;
 
 @interface HuStatusCarouselViewController : UIViewController
 

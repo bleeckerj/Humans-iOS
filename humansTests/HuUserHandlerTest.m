@@ -22,7 +22,7 @@
 #import "HuServiceStatus.h"
 #import <AFNetworking.h>
 #import "HuFoursquareUser.h"
-
+#import "HuOnBehalfOf.h"
 @interface HuUserHandlerTest : XCTestCase
 
 
@@ -395,14 +395,14 @@ HuUserHandler *user_handler;
     ASYNC_START
     __block HuServiceUser *remove;
     NSArray *humans = [[user_handler humans_user]humans];
-    NSNumber *count =  [NSNumber numberWithInt:[humans count]];
+    //NSNumber *count =  [NSNumber numberWithInt:[humans count]];
 
    // [humans each:^(id object) {
         HuHuman *human = (HuHuman*)[humans objectAtIndex:[humans count]-1];
         NSArray *service_users = [human serviceUsers];
         assertThatInt([service_users count], is(greaterThan(@0)));
         remove = (HuServiceUser*)[service_users objectAtIndex:0];
-        [user_handler userRemoveServiceUser:remove withCompletionHandler:^(BOOL success, NSError *error) {
+        [user_handler humanRemoveServiceUser:remove forHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
             assertThatBool(success, is(equalToBool(YES)));
             assertThat(error, is(nilValue()));
             [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
@@ -455,14 +455,87 @@ HuUserHandler *user_handler;
 
 }
 
-- (void)test_userAddServiceUsers
+- (void)test_humanAddServiceUser
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    ASYNC_START
+    NSArray *humans = [[user_handler humans_user]humans];
+    assertThatInt([humans count], greaterThan(@0));
+    
+    HuHuman *before_human = [humans objectAtIndex:0];
+    NSArray *before_service_users = [before_human serviceUsers];
+    LOG_TEST(0, @"%@", before_human);
+
+    expect([before_service_users count]).to.beGreaterThan(@0);
+    //int before_count = [before_service_users count];
+    
+    HuServiceUser *before_service_user = [[before_human serviceUsers]objectAtIndex:0];
+    LOG_TEST(0, @"before_service_user=%@", [before_service_user jsonString]);
+    [before_service_user setId:nil];
+    [before_service_user setServiceName:@"testtesttest"];
+    [user_handler humanAddServiceUser:before_service_user forHuman:before_human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+        expect(success).to.beTruthy();
+        expect(error).to.beNil();
+    
+        [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+            ASYNC_DONE
+
+            NSArray *after_humans = [[user_handler humans_user]humans];
+            HuHuman *after_human = [after_humans objectAtIndex:0];
+            LOG_TEST(0, @"%@", after_human);
+            expect([[after_human serviceUsers]count]).to.beGreaterThan(@0);
+            //NSArray *after_service_users = [after_human serviceUsers];
+            //expect([after_service_users count]).to.equal(before_count +1);
+            
+
+        }];
+        
+    }];
+    ASYNC_TEST_END_LONG_TIMEOUT
+    //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 
 }
 
-- (void)test_userAddServiceUser
+- (void)test_userAddServiceUsers
 {
+    HuServiceUser *su_1 = [[HuServiceUser alloc]initWithJSONDictionary:@{
+                                                                        @"serviceName" : @"test_1",
+                                                                        @"serviceUserID" : @"test_1",
+                                                                        @"username" : @"test_1",
+                                                                         @"imageURL" : @"http://test",
+                                                                         @"id" : @"",
+                                                                         @"lastUpdated": @""}];
+    
+    HuServiceUser *su_2 = [[HuServiceUser alloc]initWithJSONDictionary:@{
+                                                                         @"serviceName" : @"test_2",
+                                                                         @"serviceUserID" : @"test_2",
+                                                                         @"username" : @"test_2",
+                                                                         @"imageURL" : @"http://test",
+                                                                         @"id" : @"",
+                                                                         @"lastUpdated" : @""}];
+    
+    HuOnBehalfOf *ob_1 = [[HuOnBehalfOf alloc]initWithJSONDictionary:@{@"serviceName" : @"test",
+                                                                       @"serviceUserID" : @"16463713",
+                                                                       @"serviceUsername" : @"test"}];
+    
+    NSError *error;
+    
+     [NSJSONSerialization dataWithJSONObject:ob_1 options:NSJSONWritingPrettyPrinted error:&error];
+    [su_1 setOnBehalfOf:ob_1];
+    [su_2 setOnBehalfOf:ob_1];
+    
+    NSArray *sus = @[su_1, su_2];
+
+    NSArray *humans = [[user_handler humans_user]humans];
+    HuHuman *before_human = [humans objectAtIndex:0];
+    assertThat(before_human, is(notNilValue()));
+    
+    LOG_TEST(0, @"before_human = %@", [before_human name]);
+    [user_handler humanAddServiceUsers:sus forHuman:before_human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+        expect(success).to.beTruthy();
+        expect(error).to.beNil();
+    }];
+    
+            
     XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 
 }

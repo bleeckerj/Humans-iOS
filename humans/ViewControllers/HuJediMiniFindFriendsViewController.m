@@ -148,7 +148,7 @@
             HuServiceUser *service_user = [[HuServiceUser alloc]initWithFriend:f];
             
            
-            [userHandler userAddServiceUser:service_user forHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+            [userHandler humanAddServiceUser:service_user forHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
                 //
                 LOG_GENERAL(0, @"added service user? %@ %@ %@", success?@"YES":@"NO", data, error);
                 if(success) {
@@ -200,7 +200,7 @@
             progressView.titleLabelText = [NSString stringWithFormat:@"Found %d Friends",  [[userHandler friends] count]];
             [self performBlock:^{
                 [progressView dismiss:YES];
-            } afterDelay:1.0];
+            } afterDelay:4.0];
             
         }];
         

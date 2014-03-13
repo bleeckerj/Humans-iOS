@@ -19,6 +19,7 @@
 #import "LoggerClient.h"
 #import <UIView+MCLayout.h>
 
+
 @interface HuTwitterStatusView : HuViewForServiceStatus {
     HuStatusPhotoBox *photoBox;
     UITextView *statusView;
@@ -38,6 +39,7 @@
 
 @interface HuInstagramStatusView : HuViewForServiceStatus {
     HuStatusPhotoBox *photoBox;
+    //IDMPhotoBrowser *photoBrowser;
     UITextView *statusView;
     InstagramStatus *status;
     
@@ -76,7 +78,7 @@
     }
     
     
-    if([mstatus isKindOfClass:[HuFoursquareStatusView class]]) {
+    if([mstatus isKindOfClass:[HuFoursquareCheckin class]]) {
         hView = [[HuFoursquareStatusView alloc]initWithFrame:frame forStatus:mstatus];
     }
     
@@ -256,10 +258,27 @@
         
         status = mstatus;
         //LOG_UI(0, @"Status Image URL %@", [status statusImageURL]);
-        
-        photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:YES];
-        [photoBox setBackgroundColor:[UIColor grayColor]];
+        photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:NO];
+//        [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
+//            //
+//            LOG_UI(0, @"LOADED %@", [status statusImageURL]);
+//        }];
+        [photoBox setBackgroundColor:[UIColor blueColor]];
         [self addSubview:photoBox];
+        
+        
+        
+//        IDMPhoto *photo = [[IDMPhoto alloc]initWithURL:[NSURL URLWithString:[status statusImageURL]]];
+//        UIImageView *iv = [[UIImageView alloc]initWithImage:[photo underlyingImage]];
+//        [iv setSize:CGSizeMake(frame.size.width, frame.size.height)];
+//        [iv setFrame:frame];
+//        [iv setBackgroundColor:[UIColor Amazon]];
+//        [self addSubview:iv];
+////        [photo setProgressUpdateBlock:<#(IDMProgressUpdateBlock)progressUpdateBlock#>]
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [photo loadUnderlyingImageAndNotify];
+//            [iv setNeedsDisplay];
+//        });
         
         
         if([status statusText] != nil) {
@@ -368,7 +387,7 @@
         
         [self setBackgroundColor:[UIColor whiteColor]];
         
-        photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:YES];
+        photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:NO];
         [photoBox setBackgroundColor:[UIColor grayColor]];
         [self addSubview:photoBox];
         

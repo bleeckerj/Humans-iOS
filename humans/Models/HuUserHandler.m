@@ -388,7 +388,7 @@ NSDateFormatter *twitter_formatter;
 #pragma mark Delete a service connection for a user
 - (void)userRemoveService:(HuServices *)aService withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    [Flurry logEvent:[NSString stringWithFormat:@"Attempting userRemoveServiceUser for %@", [aService description]]];
+    [Flurry logEvent:[NSString stringWithFormat:@"Attempting userRemoveService for %@", [aService description]]];
     
     NSString *path = @"/rest/user/rm/service";
    
@@ -507,23 +507,23 @@ NSDateFormatter *twitter_formatter;
     */
 }
 
-- (void)userAddServiceUsers:(NSMutableArray *)arrayOfServiceUsers forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
+- (void)humanAddServiceUsers:(NSArray *)arrayOfServiceUsers forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    
+    [huRequestOperationManager humanAddServiceUsers:arrayOfServiceUsers forHuman:aHuman withProgress:nil withCompletionHandler:completionHandler];
 }
 
-#pragma mark add a service user {humanid}/add/serviceuser/ with JSON for the service user
-- (void)userAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
+#pragma mark add a service user /rest/human/{humanid}/add/serviceuser/ with JSON for the service user
+- (void)humanAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
 
-    [huRequestOperationManager userAddServiceUser:aServiceUser forHuman:aHuman withProgress:nil withCompletionHandler:completionHandler];
+    [huRequestOperationManager humanAddServiceUser:aServiceUser forHuman:aHuman withProgress:nil withCompletionHandler:completionHandler];
 }
 
 #pragma mark remove a service user (someone as part of a human composite) by ID /rest/rm/{serviceuserid}/serviceuser
-- (void)userRemoveServiceUser:(HuServiceUser *)aServiceUser withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+- (void)humanRemoveServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     
-    NSString *path = [NSString stringWithFormat:@"/rest/user/rm/%@/serviceuser", [aServiceUser id]];
+    NSString *path = [NSString stringWithFormat:@"/rest/human/%@/rm/serviceuser/%@", [aHuman humanid], [aServiceUser id]];
     
     [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
@@ -574,6 +574,7 @@ NSDateFormatter *twitter_formatter;
             HuFriend *friend = [[HuFriend alloc]initWithJSONDictionary:object];
             [result addObject:friend];
         }];
+        self.friends = result;
         if(completionHandler) {
             completionHandler(result);
         }

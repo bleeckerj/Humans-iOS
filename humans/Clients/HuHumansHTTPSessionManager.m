@@ -44,9 +44,12 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     if (!self) {
         return nil;
     }
-    [self setResponseSerializer:[AFJSONResponseSerializer serializer]];
-    [self.requestSerializer setTimeoutInterval:30.0];
+    AFCompoundResponseSerializer *c = [AFCompoundResponseSerializer compoundSerializerWithResponseSerializers:@[ [AFJSONResponseSerializer serializer], [AFHTTPResponseSerializer serializer] ]];
     
+    [self setResponseSerializer:c];
+    self.requestSerializer = [AFJSONRequestSerializer serializer];
+    [self.requestSerializer setTimeoutInterval:30.0];
+
     // not proud of this..
     AFSecurityPolicy *sec = [[AFSecurityPolicy alloc]init];
     [sec setSSLPinningMode:AFSSLPinningModeNone];
@@ -80,22 +83,44 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     
 }
 
-- (void)userAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler
+- (void)humanAddServiceUsers:(NSArray *)aServiceUsers forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    NSString *URLString = [NSString stringWithFormat:@"/rest/human/%@/add/serviceuser", [aHuman humanid]];
+    /*
+    NSString *URLString = [NSString stringWithFormat:@"rest/human/%@/add/serviceuser", [aHuman humanid]];
+    
+    NSError *error;
 
-    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:nil error:nil];
-    NSData *data = [[aServiceUser jsonString]dataUsingEncoding:NSUTF8StringEncoding];
-    data = [data subdataWithRange:NSMakeRange(0, [data length]-1)];
-    [self uploadTaskWithRequest:request fromData:data progress:progress completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:aServiceUsers options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+    [self POST:URLString parameters:nil data:jsonData success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
-            if(error == nil) {
-                completionHandler(responseObject, YES, error);
-            } else {
-                completionHandler(responseObject, NO, error);
-            }
-            
+            completionHandler(responseObject, YES, nil);
         }
+
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        if(completionHandler) {
+            completionHandler(nil, NO, error);
+        }
+
+    }];
+     */
+}
+
+- (void)humanAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler
+{
+    NSString *URLString = [NSString stringWithFormat:@"rest/human/%@/add/serviceuser", [aHuman humanid]];
+
+    [self POST:URLString parameters:[aServiceUser dictionary] success:^(NSURLSessionDataTask *task, id responseObject) {
+        if(completionHandler) {
+            completionHandler(responseObject, YES, nil);
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        if(completionHandler) {
+            completionHandler(nil, NO, error);
+        }
+        LOG_ERROR(0, @"Error %@", error);
+        
     }];
 }
 
@@ -148,10 +173,10 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
                        success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
                        failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure
 {
-    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:nil];
 
+    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:nil];
      __block NSURLSessionDataTask *task = [self uploadTaskWithRequest:request fromData:data progress:nil completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
-        
+    
         if (error) {
             if (failure) {
                 failure(task, error);

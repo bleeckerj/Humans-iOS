@@ -24,7 +24,7 @@
 
 @interface HuHumanProfileViewController : UIViewController  <UITextFieldDelegate, MZFormSheetBackgroundWindowDelegate>
 @property (strong, nonatomic) IBOutlet FUIButton *editButton;
-@property (strong, nonatomic) IBOutlet FUIButton *viewButton;
+@property (strong, nonatomic) IBOutlet FUIButton *deleteButton;
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UITextField *nameTextField;
 @property (strong, nonatomic) HuHuman *human;

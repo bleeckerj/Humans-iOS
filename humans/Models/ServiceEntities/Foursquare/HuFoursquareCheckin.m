@@ -31,6 +31,9 @@
 @synthesize version = _version;
 @synthesize hasBeenRead;
 @synthesize doNotShow;
+@synthesize serviceUsername = _serviceUsername;
+@synthesize serviceSolidColor = _serviceSolidColor;
+@synthesize statusText = _statusText;
 
 - (NSDate *)dateForSorting
 {
@@ -70,6 +73,13 @@
     result = [NSURL URLWithString:c];
     return result;
 }
+
+- (NSString *)serviceUsername
+{
+    NSString *name = [self.user firstName];
+    return name;
+}
+
 
 - (void) dealloc
 {

@@ -25,6 +25,8 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 #define LOG_TODO(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"todo",level,__VA_ARGS__)
 #define LOG_DEBUG(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"debug",level,__VA_ARGS__)
+#define LOG_TEST(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"test",level,__VA_ARGS__)
+
 #define LOG_ERROR(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"error",level,__VA_ARGS__)
 
 #define LOG_NETWORK(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"network",level,__VA_ARGS__)
@@ -56,6 +58,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #else
 #define LOG_TODO(...)    do{}while(0)
 #define LOG_DEBUG(...)    do{}while(0)
+#define LOG_TEST(...)    do{}while(0)
 
 #define LOG_NETWORK(...)    do{}while(0)
 #define LOG_GENERAL(...)    do{}while(0)

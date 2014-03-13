@@ -149,8 +149,6 @@ MRProgressOverlayView *activityIndicatorView;
     LOG_GENERAL(0, @"Would present %@", human);
     [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
     
-//    UINavigationController *nav = [parentViewController navigationController];
-//    [nav pushViewController:statusCarouselViewController animated:YES];
     
     UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     HuHumanProfileViewController *profileViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuHumanProfileViewController"];

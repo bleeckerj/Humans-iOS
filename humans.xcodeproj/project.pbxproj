@@ -88,6 +88,7 @@
 		B91BE75D18A29DDA00D6E171 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B91BE75718A29DDA00D6E171 /* README.md */; };
 		B91BE75E18A29DDA00D6E171 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = B91BE75818A29DDA00D6E171 /* release_notes.md */; };
 		B92400C0185C12FA00A10410 /* HuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B92400BE185C12FA00A10410 /* HuViewController.m */; };
+		B92493A218D15A27000C23D9 /* GIJoeAngry.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B92493A118D15A27000C23D9 /* GIJoeAngry.jpg */; };
 		B93024A31895B887000168E4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B93024A21895B887000168E4 /* libz.dylib */; };
 		B937464F188CCA120037A95C /* FindFollowsForService_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */; };
 		B9374650188CCA120037A95C /* HuFindFollowsMain_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464C188CCA120037A95C /* HuFindFollowsMain_ViewController.m */; };
@@ -326,6 +327,7 @@
 		B92400BD185C12FA00A10410 /* HuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuViewController.h; sourceTree = "<group>"; };
 		B92400BE185C12FA00A10410 /* HuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuViewController.m; sourceTree = "<group>"; };
 		B92400C1185C158600A10410 /* defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = defines.h; path = Supporting/defines.h; sourceTree = "<group>"; };
+		B92493A118D15A27000C23D9 /* GIJoeAngry.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = GIJoeAngry.jpg; sourceTree = "<group>"; };
 		B93024A21895B887000168E4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		B9374649188CCA120037A95C /* FindFollowsForService_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindFollowsForService_ViewController.h; sourceTree = "<group>"; };
 		B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindFollowsForService_ViewController.m; sourceTree = "<group>"; };
@@ -625,6 +627,7 @@
 		B91BE6DA18A29B9600D6E171 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				B92493A118D15A27000C23D9 /* GIJoeAngry.jpg */,
 				B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */,
 				B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */,
 				B9AC5EC418AA15FD00BEE77C /* foursquare-icon-gray-36x36.png */,
@@ -1261,6 +1264,7 @@
 				B91BE72518A29B9600D6E171 /* HumanAppIcon60pt.png in Resources */,
 				B91BE74C18A29B9600D6E171 /* twitter-bird-white-tiny.png in Resources */,
 				B91BE73618A29B9600D6E171 /* checkbox-checked.png in Resources */,
+				B92493A218D15A27000C23D9 /* GIJoeAngry.jpg in Resources */,
 				B91BE71A18A29B9600D6E171 /* angry_unicorn_tiny.png in Resources */,
 				B91BE72218A29B9600D6E171 /* foursquare-icon-36x36.png in Resources */,
 				B91BE74F18A29B9600D6E171 /* user-profile-image-mask-48px.png in Resources */,
@@ -1649,25 +1653,15 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/Frameworks",
-					"/Users/julian/Code/humans-ios/humans",
-					"/Users/julian/Code/humans-tmp/Humans-iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
 				INFOPLIST_FILE = "humans/humans-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/**",
 					"$(inherited)",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Supporting/Flurry",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/TestFlightSDK2.1.4",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Supporting/TestFlightSDK2.1.4",
-					"/Users/julian/Code/humans-ios/humans/TestFlightSDK2.2.1",
-					"/Users/julian/Code/humans-ios/humans/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1715,25 +1709,14 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/Frameworks",
-					"/Users/julian/Code/humans-ios/humans",
-					"/Users/julian/Code/humans-tmp/Humans-iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
 				INFOPLIST_FILE = "humans/humans-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/**",
 					"$(inherited)",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Supporting/Flurry",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/TestFlightSDK2.1.4",
-					"/Volumes/Slippy/Users/julian/Code/humans-ios/humans/humans/Supporting/TestFlightSDK2.1.4",
-					"/Users/julian/Code/humans-ios/humans/TestFlightSDK2.2.1",
-					"/Users/julian/Code/humans-ios/humans/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
