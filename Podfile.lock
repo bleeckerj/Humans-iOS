@@ -1,37 +1,40 @@
 PODS:
-  - AFNetworking (2.2.0):
+  - AFNetworking (2.2.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.2.0):
+  - AFNetworking/NSURLConnection (2.2.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.2.0):
+  - AFNetworking/NSURLSession (2.2.1):
     - AFNetworking/NSURLConnection
-  - AFNetworking/Reachability (2.2.0)
-  - AFNetworking/Security (2.2.0)
-  - AFNetworking/Serialization (2.2.0)
-  - AFNetworking/UIKit (2.2.0):
+  - AFNetworking/Reachability (2.2.1)
+  - AFNetworking/Security (2.2.1)
+  - AFNetworking/Serialization (2.2.1)
+  - AFNetworking/UIKit (2.2.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - AQGridView (1.3)
-  - BlocksKit (2.0.0):
+  - BlocksKit (2.2.0):
     - BlocksKit/All
-  - BlocksKit/All (2.0.0):
+  - BlocksKit/All (2.2.0):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
     - BlocksKit/MessageUI
     - BlocksKit/UIKit
-  - BlocksKit/Core (2.0.0)
-  - BlocksKit/DynamicDelegate (2.0.0):
-    - libffi
-  - BlocksKit/MessageUI (2.0.0):
+  - BlocksKit/Core (2.2.0)
+  - BlocksKit/DynamicDelegate (2.2.0):
+    - BlocksKit/MiniFFI
+  - BlocksKit/MessageUI (2.2.0):
+    - BlocksKit/Core
     - BlocksKit/DynamicDelegate
-  - BlocksKit/UIKit (2.0.0):
+  - BlocksKit/MiniFFI (2.2.0)
+  - BlocksKit/UIKit (2.2.0):
+    - BlocksKit/Core
     - BlocksKit/DynamicDelegate
   - Bolts (1.0.0)
   - ConciseKit (0.1.2)
@@ -40,7 +43,7 @@ PODS:
   - ECSlidingViewController (2.0.1)
   - EKKeyboardAvoiding (2.0)
   - Expecta (0.2.4)
-  - Facebook-iOS-SDK (3.12.0)
+  - Facebook-iOS-SDK (3.13.0)
   - FlatUIKit (1.3)
   - FLKAutoLayout (0.1.1)
   - FontAwesome-iOS (0.0.4)
@@ -53,7 +56,6 @@ PODS:
     - SVProgressHUD (~> 1.0)
   - ionicons (1.1)
   - KeyboardController (1.0.0)
-  - libffi (3.0.13)
   - MBProgressHUD (0.8)
   - MCUIViewLayout (0.3.4)
   - MGBoxKit (2.1.1):
@@ -103,7 +105,7 @@ PODS:
   - MZFormSheetController (2.3.2):
     - MZAppearance (~> 1.1.1)
   - NHBalancedFlowLayout (0.1.2)
-  - NSLogger (1.1)
+  - NSLogger (1.2)
   - oauthconsumer (1.0.0)
   - ObjectiveSugar (1.1.0)
   - OCHamcrest (3.0.1)
@@ -117,7 +119,7 @@ PODS:
   - ReactiveCocoa/Core (2.2.4):
     - ReactiveCocoa/no-arc
   - ReactiveCocoa/no-arc (2.2.4)
-  - REMenu (1.8.1)
+  - REMenu (1.8.3)
   - RFRotate (1.0.0)
   - RNBlurModalView (0.1.0)
   - RNCryptor (2.2)
@@ -137,7 +139,7 @@ PODS:
 DEPENDENCIES:
   - AFNetworking
   - AQGridView (~> 1.3)
-  - BlocksKit (~> 2.0.0)
+  - BlocksKit
   - Bolts
   - ConciseKit
   - DropdownMenu
@@ -157,6 +159,7 @@ DEPENDENCIES:
   - MBProgressHUD (~> 0.8)
   - MCUIViewLayout (from `https://github.com/mirego/MCUIViewLayout.git`)
   - MGBoxKit
+  - MGBoxKit (from `https://github.com/sobri909/MGBoxKit.git`, commit `7474eef2cb16b7f1338607115b3dc0a92ef88e71`)
   - MHTextField (~> 0.0.3)
   - MKFoundationKit (~> 1.1.0)
   - MMDrawerController (~> 0.5.2)
@@ -189,6 +192,9 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   MCUIViewLayout:
     :git: https://github.com/mirego/MCUIViewLayout.git
+  MGBoxKit:
+    :commit: 7474eef2cb16b7f1338607115b3dc0a92ef88e71
+    :git: https://github.com/sobri909/MGBoxKit.git
   oauthconsumer:
     :path: ~/Code/oauthconsumer/
   RFRotate:
@@ -197,9 +203,9 @@ EXTERNAL SOURCES:
     :path: ~/Code/WSLObjectSwitch
 
 SPEC CHECKSUMS:
-  AFNetworking: e8cfd8f3fe3bfe19124a0cc63f4d45752d892a56
+  AFNetworking: 0121f4b69be3fa58d1ab317866e036e12ac9651d
   AQGridView: ee436c64bc4a972ca7f3ce99971c0204af9e65ea
-  BlocksKit: b29ee3f28ba06a09f5c64987314ce5b75b2c3962
+  BlocksKit: 1b106f407a11997fd79e1da31453758e51277613
   Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
   DACircularProgress: 8c8f20c8dffdd647fbf570ddecbc2b1b59da5888
@@ -207,7 +213,7 @@ SPEC CHECKSUMS:
   ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
   EKKeyboardAvoiding: b589dcaa5ff765818f69e69f03a1efab618d6953
   Expecta: 5c147dedfea5fbcf773995f7e65020abcc936ce5
-  Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
+  Facebook-iOS-SDK: 5788541337dc88265bc940cb5ffb05915f9b64e3
   FlatUIKit: 3b32b52bb3c266477709cfe4812ab2c877ae942b
   FLKAutoLayout: fc04b932009174d4118ef4bda9dc8fedf1369efc
   FontAwesome-iOS: 5e33a7bbabacdc8a177cb9d3d81876f0c7a272c1
@@ -217,7 +223,6 @@ SPEC CHECKSUMS:
   IDMPhotoBrowser: aee42ff18cdb1bf2f7326631094ad18f236d2ab9
   ionicons: 50c5368bc6e4dbd1a26559aff0b67f2ed8640c48
   KeyboardController: 368f5ebc3ceab64a863636db2a313648bbe1e643
-  libffi: 64ef39353e747bb2b25e1026afd96a157bf9231c
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   MCUIViewLayout: db43d391388bcee6763ac3364c2109e32016f04d
   MGBoxKit: 5de9fd5f49539c30348ef750e2b9ea5a14374b88
@@ -229,7 +234,7 @@ SPEC CHECKSUMS:
   MZAppearance: 8b02683f0019f725557ae9839ed6cab153fff669
   MZFormSheetController: 17c5e96a51e0c658dfe8cc032a7ed2c624113639
   NHBalancedFlowLayout: 95f1d7bffadc73bead84b63e7e4c37aa52975f7a
-  NSLogger: 4567fef08d0db18a89cce91b2053823fc0950738
+  NSLogger: 9607fdeafd0b09922c69615f99f127de45971b8f
   oauthconsumer: 96e97f21400a93ab501a0a98920e33766f8d6178
   ObjectiveSugar: fed588577bcf9733546aeaa089de444e4bab9a52
   OCHamcrest: 782c52ae8c673e5d6060a65005cfd26d20d519ba
@@ -237,7 +242,7 @@ SPEC CHECKSUMS:
   OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
   RDVKeyboardAvoiding: d624b80508c45e9e14a9c7e2f23b2318887b110e
   ReactiveCocoa: 953a45dda30674fe704d1d9c77cc874141742f47
-  REMenu: e8ba5e8592c07e35d6ba43180acb20090f0bc5c9
+  REMenu: 527cca0af74cd247a7e29e6e46d92506492dd85b
   RFRotate: 32613810b400f04cce8b6e532f52fe9f59effb68
   RNBlurModalView: ab3855ced43749cb0fb4d370160bd2908476c8b6
   RNCryptor: 1420380792b33758d2414cf37af160ea2495e15c

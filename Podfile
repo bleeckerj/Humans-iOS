@@ -66,10 +66,12 @@ pod 'OCHamcrest', '~> 3.0.1'
   pod 'Expecta',     '~> 0.2.3'   # expecta matchers
     pod 'OCMockito', '~> 1.0'
 end
-pod 'MGBoxKit'
+####pod 'MGBoxKit'
+pod 'MGBoxKit', :git => 'https://github.com/sobri909/MGBoxKit.git', :commit => '7474eef2cb16b7f1338607115b3dc0a92ef88e71'
+
 pod 'UIImage-Categories', '~> 0.0.1'
 #pod 'BlocksKit', :git => 'https://github.com/pandamonia/BlocksKit', :branch => 'next'
-pod 'BlocksKit', '~> 2.0.0'
+pod 'BlocksKit'
 pod 'MBProgressHUD', '~> 0.8'
 pod 'SDWebImage'
 #pod 'UIDevice-Helpers', '~> 0.0.1'
