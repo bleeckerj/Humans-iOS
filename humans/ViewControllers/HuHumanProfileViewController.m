@@ -18,21 +18,23 @@
 @implementation HuHumanProfileViewController
 NSMutableArray *textFields;
 UIStoryboard *storyBoard;
-BOOL refreshOnReturn;
 //HuHumansScrollViewController *statusCarouselViewController;
 
 @synthesize editButton;
 @synthesize deleteButton;
+@synthesize goBackButton;
 @synthesize nameLabel;
 @synthesize human;
 @synthesize nameTextField;
 @synthesize keyboardAvoidingScrollView;
+@synthesize refreshOnReturn;
+@synthesize humansProfileCarouselViewController;
 
 - (id)init
 {
     self = [super init];
     if(self) {
-        
+        [self commonInit];
     }
     return self;
 }
@@ -61,6 +63,7 @@ BOOL refreshOnReturn;
 {
     textFields = [[NSMutableArray alloc]init];
     storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    refreshOnReturn = NO;
 }
 
 CGRect frame;
@@ -68,7 +71,11 @@ CGRect frame;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    refreshOnReturn = NO;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
 }
 
 - (void)viewDidLoad
@@ -106,7 +113,7 @@ CGRect frame;
         //
         __block HuHumanProfileViewController *weakSelf = self;
         
-        
+
         HuDeleteServiceUserCarouselViewController *vc = [[HuDeleteServiceUserCarouselViewController alloc]init];////[self.storyboard instantiateViewControllerWithIdentifier:@"HuAddDelHumansViewController"];
         [vc setHuman:human];
         
@@ -128,7 +135,7 @@ CGRect frame;
         
         // If you want to animate status bar use this code
         formSheet.didTapOnBackgroundViewCompletionHandler = ^(CGPoint location) {
-            if([vc changesWereMade]) {
+            if([vc changesWereMade] == YES) {
                 // gettyup
                 refreshOnReturn = YES;
                 
@@ -176,6 +183,8 @@ CGRect frame;
     
     [keyboardAvoidingScrollView addSubview:editButton];
     
+
+#pragma mark -- delete button
     [deleteButton setButtonColor:[UIColor crayolaRazzleDazzleRoseColor]];
     deleteButton.shadowColor = editButton.buttonColor;
     deleteButton.shadowHeight = 0.0f;
@@ -183,90 +192,49 @@ CGRect frame;
     deleteButton.titleLabel.font = BUTTON_FONT_LARGE;
     [deleteButton setHighlightedColor:[UIColor Garmin]];
     [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
-    
-    
-    //
-    //
-    //
-    //
+
+#pragma mark -- delete button event handler
     [deleteButton bk_addEventHandler:^(id sender) {
         //
+        MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+        noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+        noticeView.tintColor = [UIColor crayolaRazzleDazzleRoseColor];
+        noticeView.titleLabelText = @"Deleting..";
+
         HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
         HuUserHandler *user_handler = [delegate humansAppUser];
         [user_handler userRemoveHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
             //
             if(success) {
                 refreshOnReturn = YES;
+            [self performBlock:^{
+                [noticeView dismiss:YES];
+                [self.navigationController popViewControllerAnimated:YES];
+                
+            } afterDelay:4.0];
+            } else {
+                noticeView.titleLabelText = @"There was a problem deleting..";
+                NSDictionary *dimensions = @{@"user-remove-human": human, @"user" : [user_handler humans_user],  @"success": success?@"YES":@"NO", @"error" : error};
+                [PFAnalytics trackEvent:@"user-remove-human" dimensions:dimensions];
+                [Flurry logEvent:@"user-remove-human" withParameters:dimensions];
+
+                [self performBlock:^{
+                    [noticeView dismiss:YES];
+                    //[self.navigationController popViewControllerAnimated:YES];
+                    
+                } afterDelay:4.0];
+ 
             }
+            
+            
         }];
         
-        /***
-         [user_handler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
-         int lcount = 0;
-         if(success) {
-         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-         [f setNumberStyle:NSNumberFormatterDecimalStyle];
-         lcount = [[f numberFromString:[data description]] intValue];
-         
-         }
-         if(lcount <= 0) {
-         [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
-         
-         MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-         noticeView.mode = MRProgressOverlayViewModeCross;
-         noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
-         [self performBlock:^{
-         [noticeView dismiss:YES];
-         [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-         } afterDelay:4.0];
-         
-         }
-         
-         if(success && lcount > 0) {
-         [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-         //
-         if(success) {
-         LOG_GENERAL(0, @"Loaded Status for %@", human);
-         //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
-         
-         //NSString *human_id = [human humanid]    ;
-         NSArray *status = [user_handler statusForHuman:human];
-         LOG_GENERAL(0, @"Count is %d", [status count]);
-         statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-         [statusCarouselViewController setHuman:human];
-         
-         NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
-         
-         [statusCarouselViewController setItems:items];
-         
-         [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-         
-         UINavigationController *nav = self.navigationController;
-         [nav pushViewController:statusCarouselViewController animated:YES];
-         
-         } else {
-         LOG_ERROR(0, @"Error loading status %@", error);
-         [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-         [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
-         MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-         noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-         noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
-         [self performBlock:^{
-         [noticeView dismiss:YES];
-         } afterDelay:2.0];
-         
-         }
-         
-         }];
-         }
-         }];
-         **/
         
     } forControlEvents:UIControlEventTouchUpInside];
     [keyboardAvoidingScrollView addSubview:deleteButton];
     
-    
+
+#pragma mark -- name text field
     //[nameTextField setFrame:[nameLabel frame]];
     [nameTextField setFont:[nameLabel font]];
     [nameTextField setBackgroundColor:[UIColor asbestosColor]];
@@ -287,31 +255,48 @@ CGRect frame;
     
     [keyboardAvoidingScrollView setContentSize:CGSizeMake(applicationFrame.size.width, CGRectGetMaxY(deleteButton.frame) + 20)];
     
-    FUIButton *goBack = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, 100, 50)];
-    goBack.titleLabel.font = HEADER_FONT;
-    goBack.titleLabel.text = @"GO BACK";
-    goBack.buttonColor = [UIColor crayolaRadicalRedColor];
-    [self.view addSubview:goBack];
-    [goBack mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:nameLabel];
-    [goBack bk_addEventHandler:^(id sender) {
+#pragma mark -- go back button
+    //FUIButton *goBack = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, 100, 50)];
+    //goBackButton.titleLabel.text = @"GO BACK";
+    goBackButton.titleLabel.textColor = [UIColor whiteColor];
+    [goBackButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+
+    goBackButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    goBackButton.buttonColor = [UIColor crayolaRadicalRedColor];
+    [keyboardAvoidingScrollView addSubview:goBackButton];
+    
+//    CGFloat left = [editButton left];
+//    CGFloat right = [deleteButton right];
+//    CGFloat width = right-left;
+    
+    //[goBackButton mc_setPosition:MCViewPositionHorizontalCenter inView:self.view withMargins:UIEdgeInsetsMake(-35, 0, 0, 0) size:CGSizeMake(right-left, 55)];
+    [goBackButton bk_addEventHandler:^(id sender) {
         if(refreshOnReturn == YES) {
+            refreshOnReturn = NO;
             HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
             HuUserHandler *user_handler = [delegate humansAppUser];
+            
+            [user_handler userGettyUpdate:self.human withCompletionHandler:nil];
+            
             [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
                 if(success) {
+                    
+
+                    
                     MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
                     noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
                     noticeView.tintColor = [UIColor crayolaRazzleDazzleRoseColor];
                     noticeView.titleLabelText = @"Knolling changes..";
+                    //[humansProfileCarouselViewController updateHumansForView];
                     [self performBlock:^{
                         [noticeView dismiss:YES];
                         [self.navigationController popViewControllerAnimated:YES];
                         
-                    } afterDelay:4.0];
+                    } afterDelay:5.0];
                 } else {
                     MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
                     noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-                    noticeView.titleLabelText = [NSString stringWithFormat:@"There was a knolling error.. %@", [error localizedDescription]];
+                    noticeView.titleLabelText = [NSString stringWithFormat:@"There was a Knolling error.. %@", [error localizedDescription]];
                     noticeView.tintColor = [UIColor crayolaRazzmicBerryColor];
 
                     [self performBlock:^{
@@ -329,13 +314,6 @@ CGRect frame;
         }
         
     } forControlEvents:UIControlEventTouchUpInside];
-    
-    //    [viewButton bk_addEventHandler:^(id sender) {
-    //        //
-    //        [self.navigationController popViewControllerAnimated:YES];
-    //    } forControlEvents:UIControlEventTouchUpOutside];
-    
-    // [self.view addSubview:keyboardAvoidingScrollView];
     
 }
 

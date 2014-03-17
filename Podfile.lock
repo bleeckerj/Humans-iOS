@@ -131,6 +131,7 @@ PODS:
   - SKSlideViewController (0.0.1)
   - SVProgressHUD (1.0)
   - TPKeyboardAvoiding (1.2.3)
+  - TYMActivityIndicatorView (0.2.0)
   - UIColor-Crayola (1.0)
   - UIImage-Categories (0.0.1)
   - ViewUtils (1.1.2)
@@ -184,6 +185,7 @@ DEPENDENCIES:
   - Sequencer
   - SKSlideViewController (~> 0.0.1)
   - TPKeyboardAvoiding
+  - TYMActivityIndicatorView
   - UIColor-Crayola
   - UIImage-Categories (~> 0.0.1)
   - ViewUtils (~> 1.1.2)
@@ -252,6 +254,7 @@ SPEC CHECKSUMS:
   SKSlideViewController: 98e4cee58146aaf8b24d300b9a32bc7c45cc5b25
   SVProgressHUD: 5e10939a296debf5fe5a5895eda9539b8b2114f1
   TPKeyboardAvoiding: 17995aaa6db26ac2a9fa8714a86509c5888f0392
+  TYMActivityIndicatorView: 7fed923cbba6fa95b101a6cd51394c15ad30451f
   UIColor-Crayola: 20eacda0777fd487efba6831e2b34625e8ce3ceb
   UIImage-Categories: d9f10e0afb9b281b35a3c2b0c7d16d1ca251d824
   ViewUtils: e0b147bd0b2acfbf6b030f6a32b0c2bdd959df68

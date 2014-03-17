@@ -1,7 +1,10 @@
 #import "LoggerClient.h"
+#import <Parse/Parse.h>
+#import "Flurry.h"
 
 #define IMAGEDEBUG
 #define CA_DEBUG_TRANSACTIONS
+#define ARC4RANDOM_MAX      0x100000000
 
 #ifndef DEPRECATED_ATTRIBUTE_M
 #if __has_attribute(deprecated)
@@ -24,8 +27,9 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 
 #define LOG_TODO(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"todo",level,__VA_ARGS__)
-#define LOG_DEBUG(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"debug",level,__VA_ARGS__)
+#define LOG_DEEBUG(level, ...)   LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"debug",level,__VA_ARGS__)
 #define LOG_TEST(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"test",level,__VA_ARGS__)
+#define LOG_DEBUG(level, ...)   LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"debug",level,__VA_ARGS__)
 
 #define LOG_ERROR(level, ...)    LogMessageF(__FILE__,__LINE__,__FUNCTION__,@"error",level,__VA_ARGS__)
 
@@ -57,7 +61,9 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 #else
 #define LOG_TODO(...)    do{}while(0)
+#define LOG_DEEBUG(...)    do{}while(0)
 #define LOG_DEBUG(...)    do{}while(0)
+
 #define LOG_TEST(...)    do{}while(0)
 
 #define LOG_NETWORK(...)    do{}while(0)
@@ -131,28 +137,36 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define TWITTER_STATUS_VIEW_FGCOLOR  UIColorFromRGB(0xF0F0F0)
 #define TWITTER_COLOR_IMAGE     @"twitter-bird-color.png"
 #define TWITTER_GRAY_IMAGE      @"twitter-bird-gray.png"
+#define TWITTER_TINY_GRAY_IMAGE @"twitter-bird-gray-tiny.png"
 
 #define INSTAGRAM_STATUS_TEXT_FONT            [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 #define INSTAGRAM_TEXT_COLOR    [UIColor blackColor]
-#define INSTAGRAM_COLOR         UIColorFromRGB(0xffc03f)
+#define INSTAGRAM_COLOR         [UIColor Instagram]
 #define INSTAGRAM_COLOR_HEX     0xffc03f
 #define INSTAGRAM_COLOR_IMAGE   @"instagram-camera-color.png"
 #define INSTAGRAM_GRAY_IMAGE    @"instagram-camera.png"
+#define INSTAGRAM_TINY_GRAY_IMAGE @"instagram-camera-gray-tiny.png"
 
 #define FLICKR_FONT             [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 #define FLICKR_TEXT_COLOR       [UIColor blackColor]
-#define FLICKR_COLOR            UIColorFromRGB(0x0063DC)
+#define FLICKR_COLOR            [UIColor FlickrPink]
 #define FLICKR_COLOR_IMAGE      @"flickr-peepers-color.png"
 #define FLICKR_GRAY_IMAGE       @"flickr-peepers.png"
+#define FLICKR_TINY_GRAY_IMAGE  @"flickr-peepers-gray-tiny.png"
+
 
 #define FOURSQUARE_FONT         [UIFont fontWithName:@"AvenirNext-Regular" size:16]
 #define FOURSQUARE_TEXT_COLOR   [UIColor blackColor]
-#define FOURSQUARE_COLOR        UIColorFromRGB(0xcbadf)
+#define FOURSQUARE_COLOR        [UIColor Foursquare]
 #define FOURSQUARE_COLOR_IMAGE @"foursquare-icon-36x36.png"
 #define FOURSQUARE_GRAY_IMAGE @"foursquare-icon-gray-36x36.png"
+#define FOURSQUARE_TINY_GRAY_IMAGE @"foursquare-icon-gray-16x16.png"
 
 #define TUMBLR_COLOR_IMAGE @"angry_unicorn_tiny.png"
+#define TUMBLR_TINY_GRAY_IMAGE @"angry_unicorn_tiny.png"
+
 #define FACEBOOK_COLOR_IMAGE @"angry_unicorn_tiny.png"
+#define FACEBOOK_TINY_GRAY_IMAGE @"angry_unicorn_tiny.png"
 
 #define COUNT_LABEL_FONT        [UIFont fontWithName:@"AvenirNext-Regular" size:12]
 
@@ -254,6 +268,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 #define MAX_USERS_PER_FRIEND 12
 
+#pragma mark -------- TYPEDEFS -----------------
 typedef void(^UIImageViewResultsHandler)(UIImageView *image_view);
 typedef void(^ArrayOfResultsHandler)(NSMutableArray *results);
 typedef void(^BlockIteratorHandler)(id status, NSUInteger idx, BOOL *stop);
@@ -271,3 +286,8 @@ typedef void(^Handler)();
 typedef void(^WebViewHandler)(UIWebView *webView);
 typedef void(^WebViewHandlerWithError)(UIWebView *webView, NSError *error);
 typedef void(^BlockCallback)();
+typedef enum {
+    kListGridView = 0,
+    kHalfHeightScrollView,
+    kFullHeightScrollView
+} tViewType;

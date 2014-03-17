@@ -71,18 +71,19 @@
     
     //CGFloat x = picksGrid.bottom;
     [resultsView setSize:CGSizeMake(self.view.size.width, 2.9*(PICTURE_HEIGHT+picture_insets.bottom + picture_insets.top))];
-    [resultsView setBackgroundColor:[UIColor blueColor]];
+    [resultsView setBackgroundColor:[UIColor crayolaQuickSilverColor]];
     [resultsView mc_setRelativePosition:MCViewPositionUnder toView:searchField withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
     
     
     resultsScroller = [MGScrollView scrollerWithSize:resultsView.size];
     [resultsScroller setContentSize:resultsView.size];
-    [resultsScroller setBackgroundColor:[[UIColor crayolaBlueJeansColor]darkerColor]];
+   // [resultsScroller setBackgroundColor:[[UIColor crayolaQuickSilverColor]lighterColor]];
     [resultsScroller setBounces:YES];
     [resultsView addSubview:resultsScroller];
     
     resultsGrid = [MGBox boxWithSize:[resultsScroller size]];
     resultsGrid.contentLayoutMode = MGLayoutGridStyle;
+    [resultsGrid setBackgroundColor:[[UIColor crayolaQuickSilverColor]lighterColor]];
     [resultsScroller.boxes addObject:resultsGrid];
     
     [self.view addSubview:resultsView];
@@ -93,9 +94,8 @@
 
     [resultsScroller mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:searchField withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
 
-    // Do any additional setup after loading the view from its nib.
     picksScroller = [MGScrollView scroller];
-    [picksScroller setBackgroundColor:[UIColor crayolaBlueJeansColor]];
+    [picksScroller setBackgroundColor:[UIColor crayolaQuickSilverColor]];
     [picksScroller setBounces:NO];
     picksScroller.padding = UIEdgeInsetsZero;
     picksScroller.margin = UIEdgeInsetsZero;
@@ -105,7 +105,7 @@
     
     picksGrid = [MGBox boxWithSize:CGSizeMake(self.view.width, PICTURE_ROW_HEIGHT)];
     picksGrid.contentLayoutMode = MGLayoutGridStyle;
-    picksGrid.backgroundColor = [[UIColor crayolaBlueJeansColor]darkerColor];
+    picksGrid.backgroundColor = [UIColor whiteColor];
     //picksGrid.padding = UIEdgeInsetsMake(10, 0, 10, 0);
     
     // build picksGrid
@@ -128,14 +128,12 @@
     acceptButton.titleLabel.font = BUTTON_FONT_LARGE;
     [acceptButton setHighlightedColor:[[UIColor emerlandColor]lighterColor]];
     [acceptButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    acceptButton.titleLabel.text = @"Add These";
+    [acceptButton setTitle:@"Add" forState:UIControlStateNormal];
     [self.view addSubview:acceptButton];
     [acceptButton mc_setRelativePosition:MCViewRelativePositionUnderAlignedRight toView:picksScroller withMargins:UIEdgeInsetsMake(2, 0, 0, 0)];
     
-    
-//    dispatch_group_t group = dispatch_group_create();
-//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0UL);
-    
+
+    __block HuJediMiniFindFriendsViewController *bself = self;
     [acceptButton bk_addEventHandler:^(id sender) {
         //
         [picksGrid.boxes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -152,7 +150,11 @@
                 //
                 LOG_GENERAL(0, @"added service user? %@ %@ %@", success?@"YES":@"NO", data, error);
                 if(success) {
-                    
+                        [self performBlock:^{
+                            [bself mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+                                // do sth
+                            }];
+                        } afterDelay:1.0];
                 }
             }];
             
@@ -193,11 +195,11 @@
         } afterDelay:12.0];
         
         [userHandler userFriendsGet:^(NSMutableArray *results) {
-            [MRProgressOverlayView dismissOverlayForView:mainWindow.subviews[0] animated:YES];
+            //[MRProgressOverlayView dismissOverlayForView:mainWindow.subviews[0] animated:YES];
             
             //MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
             progressView.mode = MRProgressOverlayViewModeCheckmark;
-            progressView.titleLabelText = [NSString stringWithFormat:@"Found %d Friends",  [[userHandler friends] count]];
+            progressView.titleLabelText = [NSString stringWithFormat:@"Found %lu Friends",  [[userHandler friends] count]];
             [self performBlock:^{
                 [progressView dismiss:YES];
             } afterDelay:4.0];
@@ -336,7 +338,7 @@
             
             //[img setPadding:(UIEdgeInsetsMake(12, 12, 12, 12))];
             [img setBackgroundColor:[UIColor colorWithWhite:0.97 alpha:1.0]];
-            img.layer.cornerRadius = 10;
+            img.layer.cornerRadius = 4;
             [img.layer setShadowColor:[UIColor clearColor].CGColor];
             img.layer.shadowOffset = CGSizeZero;
             

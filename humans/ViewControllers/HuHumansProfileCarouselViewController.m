@@ -15,6 +15,14 @@
 #import <IonIcons.h>
 
 @interface HuHumanProfileView : UIView
+{
+    TYMActivityIndicatorView *waitOnStatusActivityIndicatorView;
+    HuStatusCarouselViewController *statusCarouselViewController;
+    HuHumansProfileCarouselViewController *parentViewController;
+    MRProgressOverlayView *activityIndicatorView;
+    UIView *containerView;
+    
+}
 
 - (void)editHuman;
 
@@ -22,6 +30,7 @@
 @property HuUserHandler *userHandler;
 @property UILabel *nameLabel;
 @property UILabel *countLabel;
+@property UILabel *instagramCountLabel, *flickrCountLabel, *twitterCountLabel, *foursquareCountLabel;
 @property NSNumber *count;
 
 @end
@@ -30,12 +39,9 @@
 @synthesize human;
 @synthesize userHandler;
 @synthesize nameLabel;
-@synthesize countLabel;
+@synthesize countLabel, instagramCountLabel, flickrCountLabel, twitterCountLabel, foursquareCountLabel;
 @synthesize count;
 
-HuStatusCarouselViewController *statusCarouselViewController;
-HuHumansProfileCarouselViewController *parentViewController;
-MRProgressOverlayView *activityIndicatorView;
 
 - (id)initWithFrame:(CGRect)frame human:(HuHuman *)aHuman parent:(HuHumansProfileCarouselViewController *)aParent
 {
@@ -48,6 +54,11 @@ MRProgressOverlayView *activityIndicatorView;
     return self;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+}
+
 - (void)commonInit
 {
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
@@ -55,23 +66,20 @@ MRProgressOverlayView *activityIndicatorView;
     
     self.count = [NSNumber numberWithInt:0];
     
-    
     CGFloat width = self.frame.size.width/6;
+    
     NSArray *s = [human serviceUsers];
     
+    containerView = [[UIView alloc]initWithFrame:self.frame];
+    [containerView setBackgroundColor:[UIColor whiteColor]];
     
-    UIView *container = [[UIView alloc]initWithFrame:self.frame];
-    [container setBackgroundColor:[UIColor whiteColor]];
-    
-    [self addSubview:container];
+    [self addSubview:containerView];
     
     UIView *overlay = [[UIView alloc]init];
-    [container addSubview:overlay];
+    [containerView addSubview:overlay];
     
-    [overlay mc_setSize:CGSizeMake(container.bounds.size.width, container.bounds.size.height/6)];
-    //[overlay mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:container];
-    //[overlay mc_setPosition:MCViewPositionCenters inView:container];
-    [overlay mc_setPosition:MCViewPositionTopHCenter inView:container withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
+    [overlay mc_setSize:CGSizeMake(containerView.bounds.size.width, containerView.bounds.size.height/6)];
+    [overlay mc_setPosition:MCViewPositionTopHCenter inView:containerView withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
     [overlay setBackgroundColor:[UIColor Garmin]];
     
     nameLabel = [[UILabel alloc]initWithFrame:[overlay frame]];
@@ -85,18 +93,85 @@ MRProgressOverlayView *activityIndicatorView;
     CGFloat diam = overlay.size.height -8;
     
     countLabel = [[UILabel alloc]init];
-    [countLabel setSize:CGSizeMake(diam, diam)];
-    [container addSubview:countLabel];
+    [countLabel setSize:CGSizeMake(diam+2, diam+2)];
+    [containerView addSubview:countLabel];
     [countLabel setFont:COUNT_LABEL_FONT];
     [countLabel setTextColor:[UIColor darkGrayColor]];
     [countLabel setBackgroundColor:[UIColor whiteColor]];
     [countLabel setTextAlignment:NSTextAlignmentCenter];
-    [countLabel mc_setRelativePosition:MCViewPositionRight toView:overlay];
-    [countLabel.layer setCornerRadius:diam/2];
+    [countLabel mc_setRelativePosition:MCViewPositionRight toView:overlay withMargins:UIEdgeInsetsMake(0, 0, 0, 4)];
+    [countLabel mc_setRelativePosition:MCViewPositionVerticalCenter toView:overlay];
+    [countLabel.layer setCornerRadius:(diam+2)/2];
+    [countLabel.layer setMasksToBounds:YES];
+    [countLabel.layer setBorderColor:[[UIColor crayolaNeonCarrotColor]CGColor]];
+    [countLabel.layer setBorderWidth:3];
+    
+    
+    instagramCountLabel = [[UILabel alloc]init];
+    [instagramCountLabel setSize:CGSizeMake(diam, diam)];
+    [containerView addSubview:instagramCountLabel];
+    [instagramCountLabel setFont:COUNT_LABEL_FONT];
+    [instagramCountLabel setTextColor:[UIColor whiteColor]];
+    [instagramCountLabel setBackgroundColor:INSTAGRAM_COLOR];
+    [instagramCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [instagramCountLabel mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:countLabel withMargins:UIEdgeInsetsMake(6, 0, 0, 0)];
+    [instagramCountLabel.layer setCornerRadius:diam/2];
+    [instagramCountLabel.layer setMasksToBounds:YES];
+    
+    flickrCountLabel = [[UILabel alloc]init];
+    [flickrCountLabel setSize:CGSizeMake(diam+3, diam+3)];
+    [containerView addSubview:flickrCountLabel];
+    [flickrCountLabel setFont:COUNT_LABEL_FONT];
+    [flickrCountLabel setTextColor:[UIColor whiteColor]];
+    [flickrCountLabel setBackgroundColor:[UIColor FlickrPink]];
+    [flickrCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [flickrCountLabel mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:instagramCountLabel withMargins:UIEdgeInsetsMake(6, 0, 0, 0)];
+    [flickrCountLabel.layer setCornerRadius:(diam+3)/2];
+    [flickrCountLabel.layer setMasksToBounds:YES];
+
+    
+    twitterCountLabel = [[UILabel alloc]init];
+    [twitterCountLabel setSize:CGSizeMake(diam, diam)];
+    [containerView addSubview:twitterCountLabel];
+    [twitterCountLabel setFont:COUNT_LABEL_FONT];
+    [twitterCountLabel setTextColor:[UIColor whiteColor]];
+    [twitterCountLabel setBackgroundColor:TWITTER_COLOR];
+    [twitterCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [twitterCountLabel mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:flickrCountLabel withMargins:UIEdgeInsetsMake(6, 0, 0, 0)];
+    [twitterCountLabel.layer setCornerRadius:diam/2];
+    [twitterCountLabel.layer setMasksToBounds:YES];
+    
+    foursquareCountLabel = [[UILabel alloc]init];
+    [foursquareCountLabel setSize:CGSizeMake(diam, diam)];
+    [containerView addSubview:foursquareCountLabel];
+    [foursquareCountLabel setFont:COUNT_LABEL_FONT];
+    [foursquareCountLabel setTextColor:[UIColor whiteColor]];
+    [foursquareCountLabel setBackgroundColor:FOURSQUARE_COLOR];
+    [foursquareCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [foursquareCountLabel mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:twitterCountLabel withMargins:UIEdgeInsetsMake(6, 0, 0, 0)];
+    [foursquareCountLabel.layer setCornerRadius:diam/2];
+    [foursquareCountLabel.layer setMasksToBounds:YES];
+    
+    
+    
+    
+    waitOnStatusActivityIndicatorView = [[TYMActivityIndicatorView alloc] initWithActivityIndicatorStyle:TYMActivityIndicatorViewStyleNormal];
+    NSUInteger r = arc4random_uniform(2);
+    [waitOnStatusActivityIndicatorView setFullRotationDuration:3+r];
+    [waitOnStatusActivityIndicatorView setSize:[countLabel size]];
+    [waitOnStatusActivityIndicatorView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+    [waitOnStatusActivityIndicatorView setOpaque:NO];
+    [waitOnStatusActivityIndicatorView setBackgroundImage:[UIImage imageNamed:@"hublankbackground"]];
+    [waitOnStatusActivityIndicatorView setIndicatorImage:[UIImage imageNamed:@"hugrayspinner"]];
+    [waitOnStatusActivityIndicatorView setTintColor:[UIColor whiteColor]];
+    [waitOnStatusActivityIndicatorView mc_setRelativePosition:MCViewPositionRight toView:overlay];
+    [waitOnStatusActivityIndicatorView mc_setRelativePosition:MCViewPositionVerticalCenter toView:overlay];
+    [waitOnStatusActivityIndicatorView setHidden:YES];
+    
+    [containerView addSubview:waitOnStatusActivityIndicatorView];
     
     [self bk_whenTapped:^{
         //
-        LOG_UI(0, @"Tapped");
         activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
         activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
         activityIndicatorView.tintColor = [UIColor orangeColor];
@@ -108,9 +183,7 @@ MRProgressOverlayView *activityIndicatorView;
         
     }];
     
-    
     UIView *profile_image_container = [[UIView alloc]init];
-    
     [s enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         //
         HuServiceUser *user = (HuServiceUser*)obj;
@@ -118,10 +191,6 @@ MRProgressOverlayView *activityIndicatorView;
         UIImageView *profile_imgview = [[UIImageView alloc]initWithFrame:(CGRectMake((idx/2)*width, (idx%2)*width, width, width))];
         profile_imgview.layer.borderWidth = 0.5;
         profile_imgview.layer.borderColor = [[UIColor lightGrayColor]CGColor];
-        //        [profile_imgview setImageWithURL:[NSURL URLWithString:[user imageURL]] placeholderImage:];
-        //
-        //        [profile_imgview setImageWithURL:[NSURL URLWithString:[user imageURL]] placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"]];
-        //
         [profile_imgview setImageWithURL:[NSURL URLWithString:[user imageURL]] placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] options:SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             //
             if(image == nil) {
@@ -132,17 +201,14 @@ MRProgressOverlayView *activityIndicatorView;
         
         [profile_image_container addSubview:profile_imgview];
     }];
-    [container addSubview:profile_image_container];
+    [containerView addSubview:profile_image_container];
     [profile_image_container mc_setRelativePosition:MCViewRelativePositionUnderAlignedLeft toView:overlay];
     
-    container.layer.cornerRadius = 0;
+    containerView.layer.cornerRadius = 0;
     
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-}
+
 
 - (void)editHuman
 {
@@ -152,6 +218,7 @@ MRProgressOverlayView *activityIndicatorView;
     
     UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     HuHumanProfileViewController *profileViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuHumanProfileViewController"];
+    [profileViewController setHumansProfileCarouselViewController:parentViewController];
     [profileViewController setHuman:human];
     
     UINavigationController *root = (UINavigationController*)self.window.rootViewController;
@@ -172,11 +239,8 @@ MRProgressOverlayView *activityIndicatorView;
         
         if(success) {
             LOG_GENERAL(0, @"Loaded Status for %@", human);
-            //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+            [Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
             
-            //NSString *human_id = [human humanid]    ;
-            NSArray *status = [user_handler statusForHuman:human];
-            LOG_GENERAL(0, @"Count is %d", [status count]);
             statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
             [statusCarouselViewController setHuman:human];
             
@@ -188,7 +252,7 @@ MRProgressOverlayView *activityIndicatorView;
             
             UINavigationController *nav = [parentViewController navigationController];
             [nav pushViewController:statusCarouselViewController animated:YES];
-            
+         
         } else {
             LOG_ERROR(0, @"Error loading status %@", error);
             [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
@@ -203,101 +267,157 @@ MRProgressOverlayView *activityIndicatorView;
         }
         
     }];
-    
-    /*
-     [userHandler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
-     int lcount = 0;
-     if(success) {
-     NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-     [f setNumberStyle:NSNumberFormatterDecimalStyle];
-     lcount = [[f numberFromString:[data description]] intValue];
-     
-     }
-     if(lcount <= 0) {
-     [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
-     
-     MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
-     noticeView.mode = MRProgressOverlayViewModeCross;
-     noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
-     [self performBlock:^{
-     [noticeView dismiss:YES];
-     [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
-     } afterDelay:4.0];
-     
-     }
-     
-     if(success && lcount > 0) {
-     [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-     //
-     if(success) {
-     LOG_GENERAL(0, @"Loaded Status for %@", human);
-     //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
-     
-     //NSString *human_id = [human humanid]    ;
-     NSArray *status = [user_handler statusForHuman:human];
-     LOG_GENERAL(0, @"Count is %d", [status count]);
-     statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-     [statusCarouselViewController setHuman:human];
-     
-     NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
-     
-     [statusCarouselViewController setItems:items];
-     
-     [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
-     
-     UINavigationController *nav = [parentViewController navigationController];
-     [nav pushViewController:statusCarouselViewController animated:YES];
-     
-     } else {
-     LOG_ERROR(0, @"Error loading status %@", error);
-     [Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-     [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:NO];
-     MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
-     noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-     noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
-     [self performBlock:^{
-     [noticeView dismiss:YES];
-     } afterDelay:2.0];
-     
-     }
-     
-     }];
-     }
-     }];
-     */
 }
 
-- (void)refreshCounts:(NSString *)countAsStr
+
+- (void)turnOnStatusActivityIndicator
 {
-    NSNumberFormatter *f = [[NSNumberFormatter alloc]init];
-    [f setNumberStyle:NSNumberFormatterDecimalStyle];
-    self.count = [f numberFromString:countAsStr];
-    [self.countLabel setText:[self.count stringValue]];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
+        //LOG_DEEBUG(0, @"Show Activity Indicator For %@ %@", [self.human name], waitOnStatusActivityIndicatorView);
+        self.count = [NSNumber numberWithInt:0];
+        [self.countLabel setHidden:YES];
+        [self.flickrCountLabel setHidden:YES];
+        [self.instagramCountLabel setHidden:YES];
+        [self.twitterCountLabel setHidden:YES];
+        [self.foursquareCountLabel setHidden:YES];
+        
+        
+        [waitOnStatusActivityIndicatorView setHidden:NO];
+        double val = ((double)arc4random() / ARC4RANDOM_MAX);
+        double r = arc4random_uniform(3)*val;
+        [self performBlock:^{
+            [waitOnStatusActivityIndicatorView startAnimating];
+        } afterDelay:1+r];
+        [self setNeedsDisplay];
+        [waitOnStatusActivityIndicatorView setNeedsDisplay];
+    });
+}
+
+- (void)turnOffStatusActivityIndicator
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.countLabel setHidden:NO];
+        [self.flickrCountLabel setHidden:NO];
+        [self.foursquareCountLabel setHidden:NO];
+        [self.instagramCountLabel setHidden:NO];
+        [self.twitterCountLabel setHidden:NO];
+
+        [waitOnStatusActivityIndicatorView setHidden:YES];
         [self setNeedsDisplay];
     });
-    //    [userHandler getStatusCountForHuman:self.human withCompletionHandler:^(id data, BOOL success, NSError *error) {
-    //        //
-    //        if(success) {
-    //            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-    //            [f setNumberStyle:NSNumberFormatterDecimalStyle];
-    //            bself.count = [f numberFromString:[data description]];
-    //            [self.countLabel setText:[bself.count stringValue]];
-    //            dispatch_async(dispatch_get_main_queue(), ^{
-    //                [bself setNeedsDisplay];
-    //            });
-    //        } else {
-    //            LOG_UI(0, @"Couldn't get a count for %@", bself.human.name);
-    //            LOG_UI(0, @"This probably means you should log out and log back in, especially if you're debugging as the access token may have changed based on logging in from somewhere else.");
-    //            bself.count = [[NSNumber alloc]initWithInt:65535];
-    //            dispatch_async(dispatch_get_main_queue(), ^{
-    //                [bself setNeedsLayout];
-    //            });
-    //        }
-    //
-    //    }];
     
 }
+
+- (void)refreshStats:(id)jsonStatsData
+{
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
+    [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    id period = nil;
+    id cached = nil;
+    if(jsonStatsData != nil) {
+        period = [jsonStatsData objectForKey:[NSString stringWithFormat:@"%@_period", [self.human humanid]]];
+        cached =[jsonStatsData objectForKey:[NSString stringWithFormat:@"%@_cache", [self.human humanid]]];
+    }
+    
+    if(period != nil) {
+        NSNumber *total =[period objectForKey:@"service.count.total"];
+        int total_int = [total intValue];
+        if(total_int < 1) {
+            [self turnOnStatusActivityIndicator];
+            return;
+        } else {
+            [self turnOffStatusActivityIndicator];
+        }
+        NSNumber *dur_days = [period objectForKey:@"duration.days"];
+        NSNumber *dur_hours = [period objectForKey:@"duration.hours"];
+        int dur_days_int = [dur_days intValue];
+        int dur_hours_int = [dur_hours intValue];
+        if(dur_days_int > 1) {
+        NSString *time_total = [NSString stringWithFormat:@"%@d", dur_days];
+        [self.countLabel setText:time_total];
+        } else {
+            NSString *time_total = [NSString stringWithFormat:@"%@h", dur_hours];
+            [self.countLabel setText:time_total];
+        }
+        if([period objectForKey:@"service.flickr.count"] != nil) {
+            NSString *_ppd = [formatter stringFromNumber:[period objectForKey:@"service.flickr.ppd"]];
+            NSString *_pph =[period objectForKey:@"service.flickr.pph"];
+            
+            NSString *_total = [NSString stringWithFormat:@"%@", [period objectForKey:@"service.flickr.count"] ];
+            [self.flickrCountLabel setText:_total];
+        } else {
+            [self.flickrCountLabel setText:@"0"];
+        }
+        
+        if([period objectForKey:@"service.instagram.count"] != nil) {
+            NSString *_ppd = [formatter stringFromNumber:[period objectForKey:@"service.instagram.ppd"]];
+            NSString *_pph =[period objectForKey:@"service.instagram.pph"];
+            
+            NSString *_total = [NSString stringWithFormat:@"%@", [period objectForKey:@"service.instagram.count"] ];
+            [self.instagramCountLabel setText:_total];
+        } else {
+            [self.instagramCountLabel setText:@"0"];
+        }
+        if([period objectForKey:@"service.twitter.count"] != nil) {
+            NSString *_ppd = [formatter stringFromNumber:[period objectForKey:@"service.twitter.ppd"]];
+            NSString *_pph =[period objectForKey:@"service.twitter.pph"];
+            
+            NSString *_total = [NSString stringWithFormat:@"%@", [period objectForKey:@"service.twitter.count"] ];
+            [self.twitterCountLabel setText:_total];
+        } else {
+            [self.twitterCountLabel setText:@"0"];
+        }
+        
+        if([period objectForKey:@"service.foursquare.count"] != nil) {
+            NSString *_ppd = [formatter stringFromNumber:[period objectForKey:@"service.foursquare.ppd"]];
+            NSString *_pph =[period objectForKey:@"service.foursquare.pph"];
+            
+            NSString *_total = [NSString stringWithFormat:@"%@", [period objectForKey:@"service.foursquare.count"] ];
+            [self.foursquareCountLabel setText:_total];
+        } else {
+            [self.foursquareCountLabel setText:@"0"];
+        }
+   
+        
+        
+    }
+    
+}
+- (void)shouldMakeStatusLabel:(UILabel *)aLabel ringOn:(BOOL)on
+{
+    if(on) {
+    [aLabel.layer setBorderColor:[[UIColor crayolaNeonCarrotColor]CGColor]];
+    [aLabel.layer setBorderWidth:3];
+    } else {
+        [aLabel.layer setBorderColor:[aLabel.backgroundColor CGColor]];
+        [aLabel.layer setBorderWidth:0];
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [aLabel setNeedsDisplay];
+        [self setNeedsDisplay];
+    });
+}
+
+-(void)statusSinceLast:(id)data
+{
+    //service.count.total
+    if(data != nil) {
+        NSString *key = [NSString stringWithFormat:@"%@_period", [human humanid]];
+        if([data objectForKey:key] != nil) {
+            id period = [data objectForKey:key];
+            NSNumber *since_last_count = [period objectForKey:@"service.count.total"];
+            int since_int = [since_last_count intValue];
+            if(since_int > 0) {
+                [self shouldMakeStatusLabel:countLabel ringOn:YES];
+            } else {
+                [self shouldMakeStatusLabel:countLabel ringOn:NO];
+            }
+        }
+    }
+}
+
+
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
@@ -306,8 +426,11 @@ MRProgressOverlayView *activityIndicatorView;
 
 @end
 
+#pragma mark ==================
+
 @interface HuHumansProfileCarouselViewController () <iCarouselDataSource, iCarouselDelegate>
 {
+    
     
     HuUserHandler *userHandler;
     iCarousel *carousel;
@@ -320,7 +443,7 @@ MRProgressOverlayView *activityIndicatorView;
     dispatch_queue_t privateQueue;
     CGRect full_sized, half_sized;
     REMenu *mainMenu;
-    
+    tViewType viewType;
 }
 @end
 
@@ -328,14 +451,6 @@ MRProgressOverlayView *activityIndicatorView;
 
 @synthesize indexToShow;
 @synthesize humanHasEdited;
-
-typedef enum {
-    kListGridView = 0,
-    kHalfHeightScrollView,
-    kFullHeightScrollView
-} tViewType;
-
-tViewType viewType;
 
 
 static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProfileCarouselViewControllerTimerQueueContext";
@@ -369,63 +484,61 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     humans_views = [[NSMutableArray alloc]init];
     
     viewType = kHalfHeightScrollView;
+    indexToShow = 0;
     
     // do it once now
-    [self updateHumanStatusCounts];
+    [self updateHumanProfileViewsStatusCounts];
     //and queue to do it every 2 minutes as well..
-     privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
+    privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
     
-     timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
-     target:self
-     selector:@selector(updateHumanStatusCounts)
-     userInfo:nil
-     repeats:YES
-     dispatchQueue:privateQueue];
+    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
+                                                                 target:self
+                                                               selector:@selector(updateHumanProfileViewsStatusCounts)
+                                                               userInfo:nil
+                                                                repeats:YES
+                                                          dispatchQueue:privateQueue];
     
-    indexToShow = 0;
-     
-     dispatch_queue_set_specific(privateQueue, (__bridge const void *)(self), (void *)HuHumansScrollViewControllerTimerQueueContext, NULL);
+    
+    dispatch_queue_set_specific(privateQueue, (__bridge const void *)(self), (void *)HuHumansScrollViewControllerTimerQueueContext, NULL);
     
 }
 
-- (void)updateHumanStatusCounts
+- (void)updateHumanProfileViewsStatusCounts
 {
     //__block HuHumanProfileView *bself = self;
     [userHandler getStatusCountsWithCompletionHandler:^(id data, BOOL success, NSError *error) {
         if(success) {
             // handle counts
-            
-            
+            __block BOOL containsEmptyStatus = NO;
             [humans_views enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 HuHumanProfileView *humanProfileView = (HuHumanProfileView *)obj;
                 HuHuman *human = [humanProfileView human];
-                [humanProfileView refreshCounts:[data objectForKey:[human humanid]]];
+                [humanProfileView refreshStats:data];
+                NSTimeInterval last = [userHandler lastPeekTimeFor:human];
+
+                [userHandler getStatusCountForHuman:human after:last withCompletionHandler:^(id data, BOOL success, NSError *error) {
+                    //
+                    if(success) {
+                        //service.count.total
+                        [humanProfileView statusSinceLast:data];
+                    } else {
+                        
+                    }
+                }];
                 
-                // update the box presentation on the main thread
-                //                dispatch_async(dispatch_get_main_queue(), ^{
-                //                    NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[[[humanProfileView count]stringValue]]];
-                //                    //NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[@"WTF?"]];
-                //                    //[line setRightItems:c];
-                //                    //[line layout];
-                //                });
                 
-                //        __block HuHumanLineStyled *bline = line;
-                //
-                //        line.asyncLayoutOnce = ^{
-                //            // fetch a remote image on a background thread
-                //            [bline refreshCounts];
-                //
-                //            // update the box presentation on the main thread
-                //            dispatch_async(dispatch_get_main_queue(), ^{
-                //                NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[[[bline count]stringValue]]];
-                //                //NSMutableArray *c = [[NSMutableArray alloc]initWithArray:@[@"WTF?"]];
-                //
-                //                [bline setRightItems:c];
-                //                [bline layout];
-                //            });
-                //        };
+                
+                NSNumber *c = [data objectForKey:[human humanid]];
+                if([c intValue] < 1) {
+                    containsEmptyStatus = YES;
+                }
                 
             }];
+            if(containsEmptyStatus) {
+                [self resetStatusRefreshTimer:60];
+            } else {
+                [self resetStatusRefreshTimer:240];
+            }
         }
     }];
     
@@ -448,6 +561,18 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     [timerForStatusRefresh invalidate];
 }
 
+- (void)resetStatusRefreshTimer:(NSTimeInterval)refreshTime
+{
+    [self invalidateStatusRefreshTimer];
+    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:refreshTime
+                                                                 target:self
+                                                               selector:@selector(updateHumanProfileViewsStatusCounts)
+                                                               userInfo:nil
+                                                                repeats:YES
+                                                          dispatchQueue:privateQueue];
+    
+}
+
 - (void)addHumanToView:(HuHuman *)human
 {
     if([arrayOfHumans containsObject:human] == NO) {
@@ -459,13 +584,14 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
             [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:full_sized human:human parent:self]];
             
         }
-        [carousel insertItemAtIndex:[carousel numberOfItems] animated:YES];
     }
     
 }
 
 - (void)updateHumansForView
 {
+    [arrayOfHumans removeAllObjects];
+    [humans_views removeAllObjects];
     NSArray *list_of_humans = [[userHandler humans_user]humans];
     [list_of_humans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         //
@@ -475,7 +601,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         }
     }];
     [carousel reloadData];
-    //[self updateHumanStatusCounts];
+    [self updateHumanProfileViewsStatusCounts];
     
     
 }
@@ -496,7 +622,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     
     [carousel setCurrentItemIndex:indexToShow];
     
-    LOG_UI(0, @"Here we have %d humans", [arrayOfHumans count]);
+    LOG_UI(0, @"Here we have %ld humans", [arrayOfHumans count]);
     [super viewWillAppear:animated];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -505,16 +631,16 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         
     });
     
-    
-     if(timerForStatusRefresh == nil) {
-     timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
-     target:self
-     selector:@selector(updateHumanStatusCounts)
-     userInfo:nil
-     repeats:YES
-     dispatchQueue:privateQueue];
-     
-     }
+    if(timerForStatusRefresh != nil) {
+        [timerForStatusRefresh invalidate];
+    }
+    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:240
+                                                                 target:self
+                                                               selector:@selector(updateHumanProfileViewsStatusCounts)
+                                                               userInfo:nil
+                                                                repeats:YES
+                                                          dispatchQueue:privateQueue];
+    ///[timerForStatusRefresh fire];
     
 }
 
@@ -546,8 +672,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     
     MGLine *settings_bar = [MGLine lineWithLeft:settings_bar_img right:nil size:[settings_bar_img size]];
     settings_bar.onTap = ^{
-        LOG_UI(0, @"Tapped Settings Box");
-        //[mainMenu showInView:carousel];
         if(mainMenu.isOpen == NO) {
             [mainMenu showFromRect:(CGRectMake(0, header.height, header.width, 400)) inView:carousel];
         } else {
@@ -633,8 +757,8 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
                                                          image:[UIImage imageNamed:@"Icon_Home"]
                                               highlightedImage:nil
                                                         action:^(REMenuItem *item) {
-                                                            LOG_UI(0, @"Item: %@", item);
-                                                            NSInteger index = [carousel currentItemIndex];
+                                                            //LOG_UI(0, @"Item: %@", item);
+                                                            //NSInteger index = [carousel currentItemIndex];
                                                             HuHumanProfileView *current = (HuHumanProfileView*)[carousel currentItemView];
                                                             [current editHuman];
                                                         }];
@@ -697,28 +821,28 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
 #pragma mark size the individual humans views based on the type of view we want
 	// Do any additional setup after loading the view.
     full_sized = CGRectMake(0, header.bottom, self.view.frame.size.width, self.view.frame.size.height-header.bottom/*-status_bar_height*/);
-    half_sized = CGRectMake(0, header.bottom, self.view.frame.size.width,  (full_sized.size.height+10)/2);
+    half_sized = CGRectMake(0, header.bottom, self.view.frame.size.width,  (full_sized.size.height)/2);
     
     
-    [arrayOfHumans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        
-        CGRect sizeBasedOnType;
-        
-        if(viewType == kHalfHeightScrollView) {
-            sizeBasedOnType = half_sized;
-        } else {
-            sizeBasedOnType = full_sized;
-        }
-        
-        [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:sizeBasedOnType human:obj parent:self]];
-        
-    }];
+    //    [arrayOfHumans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    //
+    //        CGRect sizeBasedOnType;
+    //
+    //        if(viewType == kHalfHeightScrollView) {
+    //            sizeBasedOnType = half_sized;
+    //        } else {
+    //            sizeBasedOnType = full_sized;
+    //        }
+    //
+    //        [humans_views addObject:[[HuHumanProfileView alloc]initWithFrame:sizeBasedOnType human:obj parent:self]];
+    //
+    //    }];
     
     
     carousel = [[iCarousel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, full_sized.size.height)];
     //carousel = [[iCarousel alloc]initWithFrame:full_sized];
     
-    [carousel setBackgroundColor:[UIColor cloudsColor]];
+    [carousel setBackgroundColor:[UIColor whiteColor]];
     [carousel setType:iCarouselTypeCustom];
     [carousel setDataSource:self];
     [carousel setDelegate:self];
@@ -746,71 +870,73 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     userHandler = aUserHandler;
 }
 
-- (void)__showHuman:(HuHuman *)human fromLine:(HuHumanProfileView *)line
-{
-    [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
-    
-    HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
-    HuUserHandler *user_handler = [delegate humansAppUser];
-    [userHandler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
-        int count = 0;
-        if(success) {
-            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-            [f setNumberStyle:NSNumberFormatterDecimalStyle];
-            count = [[f numberFromString:[data description]] intValue];
-            
-        }
-        if(count <= 0) {
-            [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
-            
-            MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-            noticeView.mode = MRProgressOverlayViewModeCross;
-            noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
-            [self performBlock:^{
-                [noticeView dismiss:YES];
-                [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-            } afterDelay:4.0];
-            
-        }
-        
-        if(success && count > 0) {
-            [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-                //
-                if(success) {
-                    LOG_GENERAL(0, @"Loaded Status for %@", human);
-                    //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
-                    
-                    //NSString *human_id = [human humanid]    ;
-                    NSArray *status = [user_handler statusForHuman:human];
-                    LOG_GENERAL(0, @"Count is %d", [status count]);
-                    statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-                    
-                    [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];
-                    
-                    //[self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
-                    
-                    [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-                    
-                    [[self navigationController] pushViewController:statusCarouselViewController animated:YES];
-                    
-                } else {
-                    LOG_ERROR(0, @"Error loading status %@", error);
-                    //[Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-                    [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
-                    MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-                    noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-                    noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
-                    [self performBlock:^{
-                        [noticeView dismiss:YES];
-                    } afterDelay:2.0];
-                    
-                }
-                
-            }];
-        }
-    }];
-}
 
+/**
+ - (void)__showHuman:(HuHuman *)human fromLine:(HuHumanProfileView *)line
+ {
+ [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
+ 
+ HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
+ HuUserHandler *user_handler = [delegate humansAppUser];
+ [userHandler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+ int count = 0;
+ if(success) {
+ NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+ [f setNumberStyle:NSNumberFormatterDecimalStyle];
+ count = [[f numberFromString:[data description]] intValue];
+ 
+ }
+ if(count <= 0) {
+ [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
+ 
+ MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+ noticeView.mode = MRProgressOverlayViewModeCross;
+ noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
+ [self performBlock:^{
+ [noticeView dismiss:YES];
+ [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+ } afterDelay:4.0];
+ 
+ }
+ 
+ if(success && count > 0) {
+ [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+ //
+ if(success) {
+ LOG_GENERAL(0, @"Loaded Status for %@", human);
+ //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+ 
+ //NSString *human_id = [human humanid]    ;
+ NSArray *status = [user_handler statusForHuman:human];
+ LOG_GENERAL(0, @"Count is %d", [status count]);
+ statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
+ 
+ [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];
+ 
+ //[self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
+ 
+ [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+ 
+ [[self navigationController] pushViewController:statusCarouselViewController animated:YES];
+ 
+ } else {
+ LOG_ERROR(0, @"Error loading status %@", error);
+ //[Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+ [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
+ MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+ noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+ noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+ [self performBlock:^{
+ [noticeView dismiss:YES];
+ } afterDelay:2.0];
+ 
+ }
+ 
+ }];
+ }
+ }];
+ }
+ **/
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
@@ -835,8 +961,8 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     //    CATransform3D result =CATransform3DTranslate(transform, 0.0f, (offset - .24) * (carousel.bounds.size.height) * spacing, 0.0f);
     
     if(viewType == kHalfHeightScrollView) {
-        spacing = [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:.51];
-        result = CATransform3DTranslate(transform, 0.0f, (offset - .49) * (carousel.bounds.size.height) * spacing, 0.0f);
+        spacing = [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:.50];
+        result = CATransform3DTranslate(transform, 0.0f, (offset - .50) * (carousel.bounds.size.height) * spacing, 0.0f);
     } else {
         spacing = [self carousel:carousel valueForOption:iCarouselOptionSpacing withDefault:1.01];
         result = CATransform3DTranslate(transform, 0.0f, (offset - 0) * (carousel.bounds.size.height) * spacing, 0.0f);
@@ -873,7 +999,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
         case iCarouselOptionWrap:
         {
             //normally you would hard-code this to YES or NO
-            if([self numberOfItemsInCarousel:aCarousel] < 3) {
+            if([self numberOfItemsInCarousel:aCarousel] < 4) {
                 return NO;
             } else {
                 return YES;
@@ -908,17 +1034,18 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
 #pragma mark iCarouselDataSource delegate methods
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    NSUInteger result = [arrayOfHumans count];//[[[userHandler humans_user]humans]count];
+    NSUInteger result = [humans_views count];//[[[userHandler humans_user]humans]count];
     return result;
 }
 
 - (NSUInteger)numberOfPlaceholdersInCarousel:(iCarousel *)aCarousel
 {
-    if ([self numberOfItemsInCarousel:aCarousel] < 4) {
-        return 3;
-    } else {
-        return 0;
-    }
+    return 0;
+    //    if ([self numberOfItemsInCarousel:aCarousel] < 4) {
+    //        return 3;
+    //    } else {
+    //        return 0;
+    //    }
 }
 
 - (UIView *)carousel:(iCarousel *)carousel placeholderViewAtIndex:(NSUInteger)index reusingView:(UIView *)view
@@ -926,7 +1053,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     UIView *result;
     if(view == nil) {
         result = [[UIView alloc]initWithFrame:half_sized];
-        [result setBackgroundColor:[UIColor crayolaBittersweetColor]];
+        [result setBackgroundColor:[UIColor whiteColor]];
     }
     return result;
 }
@@ -942,7 +1069,9 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansProf
     //        [foo setBackgroundColor:[UIColor Technorati]];
     //    }
     //    return foo;
-    
+    if([humans_views count] < 1) {
+        return nil;
+    }
     return [humans_views objectAtIndex:index];
     
     //    CGRect half = CGRectMake(0, 0, carousel.bounds.size.width, carousel.bounds.size.height/2);

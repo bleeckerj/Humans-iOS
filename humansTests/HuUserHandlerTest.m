@@ -390,6 +390,33 @@ HuUserHandler *user_handler;
 }
 
 
+
+- (void)test_userGettyUpdate
+{
+    ASYNC_START
+    NSArray *humans = [[user_handler humans_user]humans];
+    HuHuman *human = (HuHuman*)[humans objectAtIndex:0];
+    [user_handler userGettyUpdate:human withCompletionHandler:^(BOOL success, NSError *error) {
+        ASYNC_DONE
+        assertThatBool(success, is(equalToBool(YES)));
+        assertThat(error, is(nilValue()));
+    }];
+    
+    ASYNC_TEST_END
+}
+
+
+- (void)test_userGettyUpdateFriends
+{
+    ASYNC_START
+    [user_handler userGettyUpdateFriends:^(BOOL success, NSError *error) {
+        ASYNC_DONE
+        assertThatBool(success, is(equalToBool(YES)));
+        assertThat(error, is(nilValue()));
+    }];
+    ASYNC_TEST_END
+}
+
 - (void)test_userRemoveServiceUser
 {
     ASYNC_START

@@ -69,6 +69,7 @@ typedef enum networkStateTypes
 @property (nonatomic, retain) NSMutableArray *friends;
 @property HuNetworkState networkState;
 
+- (NSTimeInterval)lastPeekTimeFor:(HuHuman *)aHuman;
 - (void)parseCreateNewUser:(HuUser *)aUser password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 //- (void)createNewUser:(HuUser *)user password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 - (void)getStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler;
@@ -92,6 +93,9 @@ typedef enum networkStateTypes
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler;
 
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;
+- (void)userGettyUpdate:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+- (void)userGettyUpdateFriends:(CompletionHandlerWithResult)completionHandler;
+
 - (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)getStatusForHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (NSArray *)statusForHuman:(HuHuman *)aHuman;

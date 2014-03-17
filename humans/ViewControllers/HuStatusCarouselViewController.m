@@ -151,6 +151,27 @@
     LOG_UI(0, @"view (%@) header= carousel=%@", self.view, NSStringFromCGRect(carousel.frame));
 }
 
+- (void)trackOpenTime
+{
+    // track last time we looked here
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *lastPeeks = [[defaults objectForKey:@"lastPeeks"]mutableCopy];;
+    NSNumber *time = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970] * 1000L];
+    [lastPeeks setValue:time forKey:[human humanid]];
+    [defaults setObject:lastPeeks forKey:@"lastPeeks"];
+    [defaults setObject:lastPeeks forKey:@"hello"];
+    [defaults synchronize];
+    id foo = [defaults objectForKey:@"hello"];
+    id bar = [defaults objectForKey:@"lastPeeks"];
+    id baz = [bar objectForKey:[human humanid]];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self trackOpenTime];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

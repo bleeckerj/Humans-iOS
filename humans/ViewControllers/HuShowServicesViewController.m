@@ -58,17 +58,6 @@ HuConnectServicesViewController *connectServicesViewController;
     MGLine *ex_ = [MGLine lineWithLeft:small_exbox_img right:nil size:[small_exbox_img size]];
     ex_.onTap = self.tapOnEx;
     
-    /**
-     ^{
-     LOG_UI(0, @"Tapped Ex Box");
-     
-     //LOG_GENERAL(0, @"%@", stateMachine.currentState.stateName);
-     //bself.exTapped = YES;
-     //[bself.stateMachine nextState:bself];
-     //bself.exTapped = NO;
-     //LOG_GENERAL(0, @"%@", stateMachine.currentState.stateName);
-     };
-     **/
     UIImage *small_checkbox_img = [UIImage imageNamed:@"add-cloud-gray.png"];
     
     check_ = [MGLine lineWithLeft:small_checkbox_img right:nil size:[small_checkbox_img size]];

@@ -99,7 +99,7 @@ UISearchBar *mSearchBar;
     [self initialState];
     // this'll stock us with the follows for all the appusers's "serviceuser" accounts
     [self loadAppUserServiceFollows];
-
+    
 }
 
 
@@ -118,7 +118,7 @@ UISearchBar *mSearchBar;
 
 -(BOOL)prefersStatusBarHidden
 {
-    return NO;
+    return YES;
 }
 
 - (void)commonInit
@@ -263,6 +263,7 @@ UISearchBar *mSearchBar;
     LOG_GENERAL(0, @"Finish And Exit State");
     // get a handle on the UILabel in the header
     __block UILabel *labelView;
+    
     [[header middleItems]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         // get the views..it's only one
         if([obj isKindOfClass:[UIView class]]) {
@@ -310,7 +311,7 @@ UISearchBar *mSearchBar;
                     // so that when we go back to the main humans scroll view, the new human could
                     // appear.
                     // it's up to HuHumansScrollViewController to refresh the scroll view, though.
-                    LOG_UI(0, @"Now we have %d humans", [[[self.appUser humans_user]humans]count]);
+                    LOG_UI(0, @"Now we have %ld humans", [[[self.appUser humans_user]humans]count]);
                     HuJediFindFriends_ViewController *bself = self;
                     
                     // this'll take us back to initialState for the next time
@@ -468,10 +469,9 @@ UISearchBar *mSearchBar;
     for (UIView *subview in mSearchBar.subviews) {
         if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")]) {
             [subview removeFromSuperview];
-            break;
         }
+
     }
-    
     [mSearchBar setBackgroundColor:UIColorFromRGB(0xCCCCCC)];
     // [mSearchBar mc_setPosition:MCViewPositionCenters withMargins:UIEdgeInsetsZero size:mSearchBar.size];
     [self.view addSubview:mSearchBar];
@@ -576,10 +576,10 @@ UISearchBar *mSearchBar;
     [finalStateView mc_setRelativePosition:MCViewPositionToTheRight toView:self.resultsView];
     [finalStateView setTop:namingTextField.bottom];
     [finalStateView setLeft:[self resultsView].right];
-
+    
     //[finalStateView mc_setRelativePosition:MCViewPositionUnder toView:picksScroller];
     [self.view addSubview:finalStateView];
-
+    
 }
 
 -(void)swipe:(UISwipeGestureRecognizer *)sender
@@ -686,6 +686,7 @@ NSUInteger lastLength;
     return count;
 }
 
+#pragma mark -- This is where the search happens
 -(void)searchFor:(NSString *)string {
     NSError* error = nil;
     NSRegularExpression* regex;
@@ -856,38 +857,38 @@ NSUInteger lastLength;
     MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     progressView.mode = MRProgressOverlayViewModeIndeterminate;
     progressView.titleLabelText = @"Finding Friends";
-
     
     
-//    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [HUD show:YES];
-//    HUD.center = CGPointMake(160, 120);
-//    HUD.mode = MBProgressHUDModeIndeterminate;
-//    [HUD setDetailsLabelFont:INFO_FONT_SMALL];
-//    
-//    HUD.delegate = self;
-//    [HUD setAnimationType:MBProgressHUDAnimationZoom];
-//    [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
-//    
-//    HUD.labelText = @"Finding Friends..";
-//    HUD.graceTime = 0.3;
+    
+    //    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //    [HUD show:YES];
+    //    HUD.center = CGPointMake(160, 120);
+    //    HUD.mode = MBProgressHUDModeIndeterminate;
+    //    [HUD setDetailsLabelFont:INFO_FONT_SMALL];
+    //
+    //    HUD.delegate = self;
+    //    [HUD setAnimationType:MBProgressHUDAnimationZoom];
+    //    [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
+    //
+    //    HUD.labelText = @"Finding Friends..";
+    //    HUD.graceTime = 0.3;
     
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
     appUser = [appDel humansAppUser];//[[HuAppUser alloc]init];
     
     [appUser userFriendsGet:^(NSMutableArray *results) {
         // now appUser has all my friends..
-        LOG_GENERAL(0, @"Load Follows of %@ found %d follows/friends.", [[appUser humans_user]username], [[appUser friends] count]);
+        LOG_GENERAL(0, @"Load Follows of %@ found %ld follows/friends.", [[appUser humans_user]username], [[appUser friends] count]);
         
         [MRProgressOverlayView dismissOverlayForView:self.view animated:YES];
-
+        
         MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
         progressView.mode = MRProgressOverlayViewModeCheckmark;
-        progressView.titleLabelText = [NSString stringWithFormat:@"Found %d Friends",  [[appUser friends] count]];
+        progressView.titleLabelText = [NSString stringWithFormat:@"Found %ld Friends",  [[appUser friends] count]];
         [self performBlock:^{
             [progressView dismiss:YES];
         } afterDelay:5.0];
-
+        
         
     }];
     

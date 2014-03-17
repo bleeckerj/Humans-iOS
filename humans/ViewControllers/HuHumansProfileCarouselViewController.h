@@ -24,6 +24,7 @@
 #import "UIColor+UIColor_LighterDarker.h"
 //#import "CoconutKit.h"
 #import "HuHumanProfileViewController.h"
+#import <TYMActivityIndicatorView.h>
 
 @interface HuHumansProfileCarouselViewController : UIViewController
 
@@ -31,7 +32,9 @@
 @property BOOL humanHasEdited;
 
 - (void)invalidateStatusRefreshTimer;
+- (void)resetStatusRefreshTimer:(NSTimeInterval)refreshTime;
 - (void)setHumansUserHandler:(HuUserHandler *)aUserHandler;
+- (void)updateHumansForView;
 //- (id)initWithUserHandler:(HuUserHandler *)aUserHandler;
 
 @end

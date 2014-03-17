@@ -11,6 +11,13 @@
 		346786609E6F470FA34D4392 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3C7AB25D83E4EFA8734A616 /* libPods.a */; };
 		B908171A18A74F610019AC23 /* HuConnectServicesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B908171918A74F610019AC23 /* HuConnectServicesViewController.m */; };
 		B908171D18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B908171C18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m */; };
+		B9087BB518D5464A003507A4 /* hubackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BB018D5464A003507A4 /* hubackground@2x.png */; };
+		B9087BB618D5464A003507A4 /* hublankbackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BB118D5464A003507A4 /* hublankbackground@2x.png */; };
+		B9087BB718D5464A003507A4 /* hufan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BB218D5464A003507A4 /* hufan@2x.png */; };
+		B9087BB818D5464A003507A4 /* huspinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BB318D5464A003507A4 /* huspinner@2x.png */; };
+		B9087BB918D5464A003507A4 /* Untitled-1.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BB418D5464A003507A4 /* Untitled-1.png */; };
+		B9087BBB18D54B66003507A4 /* hupantone151cspinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BBA18D54B66003507A4 /* hupantone151cspinner@2x.png */; };
+		B9087BBD18D54CE2003507A4 /* hugrayspinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BBC18D54CE2003507A4 /* hugrayspinner@2x.png */; };
 		B9161901186803050010A34F /* UIColor+UIColor_LighterDarker.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618F8186803050010A34F /* UIColor+UIColor_LighterDarker.m */; };
 		B9161902186803050010A34F /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FA186803050010A34F /* UIImage+Alpha.m */; };
 		B9161903186803050010A34F /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FC186803050010A34F /* UIImage+Resize.m */; };
@@ -187,6 +194,14 @@
 		B9C2C281187BBA6E00F1DF47 /* HuHumanTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C27F187BBA6E00F1DF47 /* HuHumanTest.m */; };
 		B9C2C282187BBA6E00F1DF47 /* HuServiceUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */; };
 		B9C2C28B187C619A00F1DF47 /* HuTwitterStatusTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */; };
+		B9C61BCB18D3DAE900E1822B /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC218D3DAE900E1822B /* CHANGELOG */; };
+		B9C61BCC18D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC318D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset */; };
+		B9C61BCD18D3DAE900E1822B /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C61BC518D3DAE900E1822B /* HockeySDK.framework */; };
+		B9C61BCE18D3DAE900E1822B /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC718D3DAE900E1822B /* HockeySDK.xcconfig */; };
+		B9C61BCF18D3DAE900E1822B /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC818D3DAE900E1822B /* HockeySDKResources.bundle */; };
+		B9C61BD018D3DAE900E1822B /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC918D3DAE900E1822B /* LICENSE */; };
+		B9C61BD118D3DAE900E1822B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BCA18D3DAE900E1822B /* README.md */; };
+		B9C61BD318D3DB1000E1822B /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C61BD218D3DB1000E1822B /* CoreText.framework */; };
 		B9D29F9818A4D1EF000D94EA /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */; };
 		B9D2B83D18B2831D00A963BD /* HuHumansProfileCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D2B83C18B2831D00A963BD /* HuHumansProfileCarouselViewController.m */; };
 		B9EC9915189A0AC800A17051 /* HuHumanLineStyled.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EC9914189A0AC800A17051 /* HuHumanLineStyled.m */; };
@@ -230,6 +245,13 @@
 		B908171918A74F610019AC23 /* HuConnectServicesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuConnectServicesViewController.m; sourceTree = "<group>"; };
 		B908171B18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuAuthenticateServiceWebViewController.h; sourceTree = "<group>"; };
 		B908171C18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuAuthenticateServiceWebViewController.m; sourceTree = "<group>"; };
+		B9087BB018D5464A003507A4 /* hubackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hubackground@2x.png"; sourceTree = "<group>"; };
+		B9087BB118D5464A003507A4 /* hublankbackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hublankbackground@2x.png"; sourceTree = "<group>"; };
+		B9087BB218D5464A003507A4 /* hufan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hufan@2x.png"; sourceTree = "<group>"; };
+		B9087BB318D5464A003507A4 /* huspinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "huspinner@2x.png"; sourceTree = "<group>"; };
+		B9087BB418D5464A003507A4 /* Untitled-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Untitled-1.png"; sourceTree = "<group>"; };
+		B9087BBA18D54B66003507A4 /* hupantone151cspinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hupantone151cspinner@2x.png"; sourceTree = "<group>"; };
+		B9087BBC18D54CE2003507A4 /* hugrayspinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hugrayspinner@2x.png"; sourceTree = "<group>"; };
 		B91618F7186803050010A34F /* UIColor+UIColor_LighterDarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UIColor_LighterDarker.h"; sourceTree = "<group>"; };
 		B91618F8186803050010A34F /* UIColor+UIColor_LighterDarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UIColor_LighterDarker.m"; sourceTree = "<group>"; };
 		B91618F9186803050010A34F /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
@@ -483,6 +505,14 @@
 		B9C2C27F187BBA6E00F1DF47 /* HuHumanTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuHumanTest.m; sourceTree = "<group>"; };
 		B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuServiceUserTest.m; sourceTree = "<group>"; };
 		B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuTwitterStatusTest.m; sourceTree = "<group>"; };
+		B9C61BC218D3DAE900E1822B /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
+		B9C61BC318D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "de.bitstadium.HockeySDK-iOS-3.5.4.docset"; sourceTree = "<group>"; };
+		B9C61BC518D3DAE900E1822B /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
+		B9C61BC718D3DAE900E1822B /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
+		B9C61BC818D3DAE900E1822B /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
+		B9C61BC918D3DAE900E1822B /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		B9C61BCA18D3DAE900E1822B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		B9C61BD218D3DB1000E1822B /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
 		B9D2B83B18B2831D00A963BD /* HuHumansProfileCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuHumansProfileCarouselViewController.h; sourceTree = "<group>"; };
 		B9D2B83C18B2831D00A963BD /* HuHumansProfileCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuHumansProfileCarouselViewController.m; sourceTree = "<group>"; };
@@ -526,6 +556,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9C61BD318D3DB1000E1822B /* CoreText.framework in Frameworks */,
 				B9F517AC185BC4E20083CA36 /* StoreKit.framework in Frameworks */,
 				B9910A7318B7FD9100A9E918 /* Security.framework in Frameworks */,
 				B9910A7118B7FD8700A9E918 /* QuartzCore.framework in Frameworks */,
@@ -540,6 +571,7 @@
 				B91BE75418A29D1F00D6E171 /* Crashlytics.framework in Frameworks */,
 				B9F51779185BC4930083CA36 /* CoreGraphics.framework in Frameworks */,
 				B9910A6718B7FD1800A9E918 /* Parse.framework in Frameworks */,
+				B9C61BCD18D3DAE900E1822B /* HockeySDK.framework in Frameworks */,
 				B9F5177B185BC4930083CA36 /* UIKit.framework in Frameworks */,
 				B9F51777185BC4930083CA36 /* Foundation.framework in Frameworks */,
 				346786609E6F470FA34D4392 /* libPods.a in Frameworks */,
@@ -571,6 +603,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B9087BAF18D5464A003507A4 /* TYMActivityIndicatorGraphics */ = {
+			isa = PBXGroup;
+			children = (
+				B9087BBC18D54CE2003507A4 /* hugrayspinner@2x.png */,
+				B9087BBA18D54B66003507A4 /* hupantone151cspinner@2x.png */,
+				B9087BB018D5464A003507A4 /* hubackground@2x.png */,
+				B9087BB118D5464A003507A4 /* hublankbackground@2x.png */,
+				B9087BB218D5464A003507A4 /* hufan@2x.png */,
+				B9087BB318D5464A003507A4 /* huspinner@2x.png */,
+				B9087BB418D5464A003507A4 /* Untitled-1.png */,
+			);
+			path = TYMActivityIndicatorGraphics;
+			sourceTree = "<group>";
+		};
 		B91618F6186803050010A34F /* UIImage-categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -601,6 +647,7 @@
 		B9178A0C18C179A500058E1A /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				B9C61BC118D3DAE900E1822B /* HockeySDK-iOS */,
 			);
 			name = Vendor;
 			sourceTree = "<group>";
@@ -672,6 +719,7 @@
 		B91BE6F518A29B9600D6E171 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
+				B9087BAF18D5464A003507A4 /* TYMActivityIndicatorGraphics */,
 				B9547C7C18C40ED900CD2D1E /* 40px-blank-for-user-profile-image.png */,
 				B91BE6F618A29B9600D6E171 /* add-cloud-gray.png */,
 				B91BE6F718A29B9600D6E171 /* add-human-gray.png */,
@@ -1019,6 +1067,36 @@
 			name = Twitter;
 			sourceTree = "<group>";
 		};
+		B9C61BC118D3DAE900E1822B /* HockeySDK-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				B9C61BC218D3DAE900E1822B /* CHANGELOG */,
+				B9C61BC318D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset */,
+				B9C61BC418D3DAE900E1822B /* HockeySDK.embeddedframework */,
+				B9C61BC918D3DAE900E1822B /* LICENSE */,
+				B9C61BCA18D3DAE900E1822B /* README.md */,
+			);
+			path = "HockeySDK-iOS";
+			sourceTree = "<group>";
+		};
+		B9C61BC418D3DAE900E1822B /* HockeySDK.embeddedframework */ = {
+			isa = PBXGroup;
+			children = (
+				B9C61BC518D3DAE900E1822B /* HockeySDK.framework */,
+				B9C61BC618D3DAE900E1822B /* Resources */,
+			);
+			path = HockeySDK.embeddedframework;
+			sourceTree = "<group>";
+		};
+		B9C61BC618D3DAE900E1822B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B9C61BC718D3DAE900E1822B /* HockeySDK.xcconfig */,
+				B9C61BC818D3DAE900E1822B /* HockeySDKResources.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		B9F5176A185BC4930083CA36 = {
 			isa = PBXGroup;
 			children = (
@@ -1044,6 +1122,7 @@
 		B9F51775185BC4930083CA36 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B9C61BD218D3DB1000E1822B /* CoreText.framework */,
 				B9910A7218B7FD9100A9E918 /* Security.framework */,
 				B9910A7018B7FD8700A9E918 /* QuartzCore.framework */,
 				B9910A6E18B7FD7100A9E918 /* MobileCoreServices.framework */,
@@ -1271,11 +1350,16 @@
 				B91BE73D18A29B9600D6E171 /* flickr-peepers-white-tiny.png in Resources */,
 				B91BE74E18A29B9600D6E171 /* user-profile-image-mask-100px.png in Resources */,
 				B91BE75118A29B9600D6E171 /* user-profile-image-mask-80px.png in Resources */,
+				B9C61BCC18D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset in Resources */,
 				B9F5178F185BC4930083CA36 /* Images.xcassets in Resources */,
 				B91BE72418A29B9600D6E171 /* HumanAppIcon40pt.png in Resources */,
 				B91BE71918A29B9600D6E171 /* angry_unicorn.png in Resources */,
+				B9C61BD018D3DAE900E1822B /* LICENSE in Resources */,
 				B91BE71818A29B9600D6E171 /* HelveticaLTStd-BlkObl.otf in Resources */,
 				B91BE75018A29B9600D6E171 /* user-profile-image-mask-60px.png in Resources */,
+				B9C61BCF18D3DAE900E1822B /* HockeySDKResources.bundle in Resources */,
+				B9087BB818D5464A003507A4 /* huspinner@2x.png in Resources */,
+				B9C61BCB18D3DAE900E1822B /* CHANGELOG in Resources */,
 				B91BE74D18A29B9600D6E171 /* twitter-bird-white.png in Resources */,
 				B91BE72118A29B9600D6E171 /* flickr-white-large-chiclet.png in Resources */,
 				B91BE73F18A29B9600D6E171 /* garbage-gray.png in Resources */,
@@ -1287,7 +1371,9 @@
 				B91BE72818A29B9600D6E171 /* Instagram_Icon_Small.png in Resources */,
 				B91BE73118A29B9600D6E171 /* twitter-bottom-line.png in Resources */,
 				B9547C7B18C3B11700CD2D1E /* HuJediMiniFindFriendsViewController.xib in Resources */,
+				B9087BBD18D54CE2003507A4 /* hugrayspinner@2x.png in Resources */,
 				B9547C7D18C40ED900CD2D1E /* 40px-blank-for-user-profile-image.png in Resources */,
+				B9087BB918D5464A003507A4 /* Untitled-1.png in Resources */,
 				B91BE72B18A29B9600D6E171 /* Instagram_Logo_Small.png in Resources */,
 				B91BE72018A29B9600D6E171 /* Default@2x.png in Resources */,
 				B91BE75E18A29DDA00D6E171 /* release_notes.md in Resources */,
@@ -1298,12 +1384,14 @@
 				B91BE72318A29B9600D6E171 /* HumanAppIcon29pt.png in Resources */,
 				B91BE73818A29B9600D6E171 /* checkmark-gray.png in Resources */,
 				B91BE71718A29B9600D6E171 /* CREAMPUF.TTF in Resources */,
+				B9087BB618D5464A003507A4 /* hublankbackground@2x.png in Resources */,
 				B91BE73E18A29B9600D6E171 /* flickr-peepers.png in Resources */,
 				B91BE74B18A29B9600D6E171 /* twitter-bird-gray.png in Resources */,
 				B9D29F9818A4D1EF000D94EA /* fontawesome-webfont.ttf in Resources */,
 				B91BE74918A29B9600D6E171 /* twitter-bird-color.png in Resources */,
 				B91BE74518A29B9600D6E171 /* reload-gray.png in Resources */,
 				B9F51781185BC4930083CA36 /* InfoPlist.strings in Resources */,
+				B9087BBB18D54B66003507A4 /* hupantone151cspinner@2x.png in Resources */,
 				B91BE73318A29B9600D6E171 /* add-human-gray.png in Resources */,
 				B9AC5EC618AA15FD00BEE77C /* foursquare-icon-gray-16x16.png in Resources */,
 				B91BE72618A29B9600D6E171 /* Instagram_Icon_Large.png in Resources */,
@@ -1328,13 +1416,17 @@
 				B91BE73B18A29B9600D6E171 /* flickr-peepers-color.png in Resources */,
 				B91BE75D18A29DDA00D6E171 /* README.md in Resources */,
 				B91BE73418A29B9600D6E171 /* address-book-gray.png in Resources */,
+				B9087BB718D5464A003507A4 /* hufan@2x.png in Resources */,
 				B91BE73518A29B9600D6E171 /* blank-for-user-profile-image.png in Resources */,
 				B91BE71E18A29B9600D6E171 /* Default-568h@2x.png in Resources */,
 				B91BE75218A29B9600D6E171 /* user-profile-image-mask.png in Resources */,
 				B91BE73C18A29B9600D6E171 /* flickr-peepers-gray-tiny.png in Resources */,
+				B9087BB518D5464A003507A4 /* hubackground@2x.png in Resources */,
 				B91BE74A18A29B9600D6E171 /* twitter-bird-gray-tiny.png in Resources */,
+				B9C61BCE18D3DAE900E1822B /* HockeySDK.xcconfig in Resources */,
 				B91BE72918A29B9600D6E171 /* Instagram_Logo_Large.png in Resources */,
 				B91BE72C18A29B9600D6E171 /* noun_project_1734.png in Resources */,
+				B9C61BD118D3DAE900E1822B /* README.md in Resources */,
 				B91BE74118A29B9600D6E171 /* instagram-camera-gray-tiny.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1653,7 +1745,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/humans/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
@@ -1709,7 +1804,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)/humans/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
 				INFOPLIST_FILE = "humans/humans-Info.plist";

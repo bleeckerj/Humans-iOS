@@ -69,7 +69,10 @@
 
 - (void)reloadData
 {
-    [self.carousel reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+            [self.carousel reloadData];
+    });
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -198,7 +201,7 @@
     
     __block UIImageView *weak = profile_image_view;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [profile_image_view setImageWithURLRequest:req placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        [profile_image_view setImageWithURLRequest:req placeholderImage:[UIImage imageNamed:@"angry_unicorn.png"] success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
             
             [weak setImage:[image thumbnailImage:0.5*service_user_view.frame.size.height transparentBorder:0 cornerRadius:0 interpolationQuality:kCGInterpolationHigh]];
             [weak layoutSubviews];
@@ -206,7 +209,7 @@
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
             //
             LOG_ERROR(0, @"Wasn't able to load the profile image %@", error);
-            weak.image = [UIImage imageNamed:@"angry_unicorn_tiny.png"];
+            weak.image = [UIImage imageNamed:@"angry_unicorn.png"];
         }];
     });
     
@@ -229,28 +232,43 @@
     [delete mc_setPosition:MCViewPositionRight inView:service_user_view];
     [delete bk_addEventHandler:^(id sender) {
         //
+        __block MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+        noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+        noticeView.titleLabelText = [NSString stringWithFormat:@"Deleting %@..", [service_user username]];
+        
         HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
         HuUserHandler *handler = [delegate humansAppUser];
         [handler humanRemoveServiceUser:service_user forHuman:self.human withCompletionHandler:^(BOOL success, NSError *error) {
             if(success) {
-                
+                changesWereMade = YES;
                 [handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
                     
                     if(success) {
-                        changesWereMade = YES;
+                        //changesWereMade = YES;
                         [carousel removeItemAtIndex:index animated:YES];
+                        [self reloadData];
                         [[self.human serviceUsers]removeObjectAtIndex:index];
+                        [self performBlock:^{
+                            [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+                        } afterDelay:2.0];
                     } else {
                         NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
                         [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
                         [Flurry logEvent:@"remove-service-user" withParameters:dimensions];
                         
                     }
+
                 }];
                 
                 
             } else {
                 LOG_ERROR(0, @"Problem deleting a user");
+                
+                noticeView.titleLabelText = [NSString stringWithFormat:@"There was a problem deleting %@", [service_user username]];
+                [self performBlock:^{
+                    [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+                } afterDelay:4.0];
+                
                 NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
                 [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
                 [Flurry logEvent:@"remove-service-user" withParameters:dimensions];
@@ -259,35 +277,6 @@
 
         }];
         
-  /**
-        [handler userRemoveServiceUser:service_user withCompletionHandler:^(BOOL success, NSError *error) {
-            //
-            if(success) {
-
-                [handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
-                    
-                    if(success) {
-                    changesWereMade = YES;
-                    [carousel removeItemAtIndex:index animated:YES];
-                    [[self.human serviceUsers]removeObjectAtIndex:index];
-                    } else {
-                        NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
-                        [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
-                        [Flurry logEvent:@"remove-service-user" withParameters:dimensions];
-                        
-                    }
-                }];
-                
-                
-            } else {
-                LOG_ERROR(0, @"Problem deleting a user");
-                NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
-                [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
-                [Flurry logEvent:@"remove-service-user" withParameters:dimensions];
-
-            }
-        }];
-   **/     
    LOG_UI(0, @"Delete %@", [service_user username]);
         
     } forControlEvents:UIControlEventTouchUpInside];
@@ -295,11 +284,6 @@
     return service_user_view;
     }
 }
-
-//- (CGFloat)carouselItemWidth:(iCarousel *)carousel
-//{
-//    return carousel.bounds.size.width-10;
-//}
 
 
 - (CGFloat)carousel:(iCarousel *)carousel valueForOption:(iCarouselOption)option withDefault:(CGFloat)value
@@ -339,6 +323,11 @@
     }
 }
 
+
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
+}
 
 
 - (void)didReceiveMemoryWarning

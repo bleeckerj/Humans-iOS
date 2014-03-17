@@ -14,6 +14,7 @@
 #import "TestFlight.h"
 #import <Parse/Parse.h>
 #import "HuHumansProfileCarouselViewController.h"
+#import <HockeySDK/HockeySDK.h>
 
 @implementation HuAppDelegate
 {
@@ -29,6 +30,11 @@
 {
     
     [TestFlight takeOff:@"7d627af6-7629-44dc-8103-a7a1baa81d03"];
+    
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"89a415bf14fb56ed6e81ef153d4cb481"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+    
     // Override point for customization after application launch.
     LoggerInit();
     
@@ -42,15 +48,23 @@
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     [manager.imageDownloader setDownloadTimeout:30.0];
     
-        for (NSString* family in [UIFont familyNames])
-        {
-            NSLog(@"%@", family);
+//    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+//    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *d = [[NSMutableDictionary alloc]init];
+    [defaults registerDefaults:@{@"lastPeeks" : d}];
+    [defaults synchronize];
     
-            for (NSString* name in [UIFont fontNamesForFamilyName: family])
-            {
-                NSLog(@"  %@", name);
-            }
-        }
+//        for (NSString* family in [UIFont familyNames])
+//        {
+//            NSLog(@"%@", family);
+//    
+//            for (NSString* name in [UIFont fontNamesForFamilyName: family])
+//            {
+//                NSLog(@"  %@", name);
+//            }
+//        }
     
     humansAppUser = [[HuUserHandler alloc]init];
     
@@ -139,6 +153,7 @@
 {
     HuUserHandler *userHandler = [self humansAppUser];
     UINavigationController *root = (UINavigationController*)self.window.rootViewController;
+    //[self.window setBackgroundColor:[UIColor crayolaGraniteGrayColor]];
     
     [userHandler userRequestTokenForUsername:username forPassword:password withCompletionHandler:^(BOOL success, NSError *error) {
         //
@@ -173,6 +188,8 @@
 }
 
 
+
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -200,4 +217,11 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+@end
+
+@implementation NSURLRequest(DataController)
++ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host
+{
+    return YES;
+}
 @end

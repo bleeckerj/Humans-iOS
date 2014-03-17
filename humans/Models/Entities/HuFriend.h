@@ -5,6 +5,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <WSLObjectSwitch.h>
 
 @class HuOnBehalfOf;
 
@@ -26,7 +27,7 @@
 @property (copy, nonatomic) NSString *fullname;
 @property (strong, nonatomic) NSString *lastUpdated;
 
-//@property (strong, nonatomic) UIImage *largeProfileImage;
+@property (strong, nonatomic) UIImage *largeProfileImage;
 //
 @property (atomic, copy) NSString *serviceImageBadge;
 @property (atomic, copy) NSString *tinyServiceImageBadge;

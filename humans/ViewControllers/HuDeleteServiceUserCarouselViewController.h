@@ -34,7 +34,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *label;
 @property (strong, nonatomic) IBOutlet iCarousel *carousel;
 @property (strong, nonatomic) HuHuman *human;
-
 - (void)reloadData;
 
 @end

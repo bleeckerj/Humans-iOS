@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ey5-C7-zvx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ey5-C7-zvx">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--Hu View Controller-->
@@ -52,8 +52,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ARw-nS-U9g" customClass="FUIButton">
-                                <rect key="frame" x="20" y="470" width="130" height="55"/>
+                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ARw-nS-U9g" customClass="FUIButton">
+                                <rect key="frame" x="20" y="415" width="130" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="nt2-KA-D0X"/>
@@ -64,8 +64,8 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0pc-dh-PvK" customClass="FUIButton">
-                                <rect key="frame" x="170" y="470" width="130" height="55"/>
+                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0pc-dh-PvK" customClass="FUIButton">
+                                <rect key="frame" x="170" y="415" width="130" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="3xm-mi-n1W"/>
@@ -97,15 +97,27 @@
                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
                                 <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j6y-n3-N9m" customClass="FUIButton">
+                                <rect key="frame" x="20" y="486" width="280" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="NrG-WG-yd3"/>
+                                    <constraint firstAttribute="width" constant="280" id="mGo-Is-N6g"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="26"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="0pc-dh-PvK" secondAttribute="bottom" constant="43" id="45X-BS-V5a"/>
-                            <constraint firstAttribute="bottom" secondItem="ARw-nS-U9g" secondAttribute="bottom" constant="43" id="8CR-Ok-pzH"/>
                             <constraint firstItem="KyY-QD-rjN" firstAttribute="leading" secondItem="Gt4-Z3-Gac" secondAttribute="leading" id="8Rx-nl-xi6"/>
-                            <constraint firstItem="KyY-QD-rjN" firstAttribute="leading" secondItem="ARw-nS-U9g" secondAttribute="leading" id="Da4-NQ-zN3"/>
+                            <constraint firstItem="j6y-n3-N9m" firstAttribute="top" secondItem="ARw-nS-U9g" secondAttribute="bottom" constant="16" id="AFy-hz-jO1"/>
+                            <constraint firstItem="0pc-dh-PvK" firstAttribute="leading" secondItem="ARw-nS-U9g" secondAttribute="trailing" constant="20" id="EGg-fS-Fu6"/>
+                            <constraint firstItem="ARw-nS-U9g" firstAttribute="leading" secondItem="Gt4-Z3-Gac" secondAttribute="leading" id="LEa-cI-3rV"/>
+                            <constraint firstItem="j6y-n3-N9m" firstAttribute="top" secondItem="0pc-dh-PvK" secondAttribute="bottom" constant="16" id="QHI-Nf-qeP"/>
                             <constraint firstAttribute="bottom" secondItem="Gt4-Z3-Gac" secondAttribute="bottom" constant="350" id="XKj-t4-qfT"/>
-                            <constraint firstItem="KyY-QD-rjN" firstAttribute="trailing" secondItem="0pc-dh-PvK" secondAttribute="trailing" id="XXe-wD-eSl"/>
                             <constraint firstItem="KyY-QD-rjN" firstAttribute="leading" secondItem="SeT-BA-TP7" secondAttribute="leading" constant="20" symbolic="YES" id="bln-Y5-uHh"/>
                             <constraint firstAttribute="bottom" secondItem="KyY-QD-rjN" secondAttribute="bottom" constant="350" id="dSg-x3-pcR"/>
                         </constraints>
@@ -113,6 +125,7 @@
                     <connections>
                         <outlet property="deleteButton" destination="0pc-dh-PvK" id="dUZ-B9-BJF"/>
                         <outlet property="editButton" destination="ARw-nS-U9g" id="s6v-GO-y50"/>
+                        <outlet property="goBackButton" destination="j6y-n3-N9m" id="4eJ-uB-ASw"/>
                         <outlet property="nameLabel" destination="KyY-QD-rjN" id="NIG-Sf-AHd"/>
                         <outlet property="nameTextField" destination="Gt4-Z3-Gac" id="vgB-Zk-Q5x"/>
                     </connections>
