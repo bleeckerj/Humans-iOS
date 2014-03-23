@@ -11,7 +11,7 @@
 #import "HuServices.h"
 #import "HuAppDelegate.h"
 #import "HuUserHandler.h"
-
+#import <MRProgress.h>
 @class HuServiceViewLine;
 
 @protocol HuServiceViewLineDelegate <NSObject>

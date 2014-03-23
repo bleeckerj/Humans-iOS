@@ -9,8 +9,10 @@
 //#import "Flurry.h"
 #import <SDWebImage/SDWebImageManager.h>
 #import "defines.h"
+#import <ViewUtils.h>
 
 @interface HuStatusPhotoBox : MGBox {
+
 }
 @property (nonatomic, copy) NSString *urlStr;
 @property (nonatomic, strong) UIImageView *imageView;
@@ -18,6 +20,7 @@
 @property (nonatomic, assign) BOOL hasLoaded;
 @property (nonatomic, strong) UIImage *mask;
 @property (nonatomic, strong) UIImage *serviceTinyTag;
+@property (nonatomic, strong)     UIActivityIndicatorView *spinner;
 
 + (HuStatusPhotoBox *)photoAddBoxWithSize:(CGSize)size;
 //+ (HuStatusPhotoBox *)photoBoxFor:(int)i size:(CGSize)size;

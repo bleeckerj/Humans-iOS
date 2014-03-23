@@ -119,7 +119,7 @@ NSArray *icons, *titles, *descriptions, *viewControllers;
     
     //header
     MGLineStyled *header = [MGLineStyled lineWithLeft:ex_ right:nil size:(CGSize){320,HEADER_HEIGHT}];
-    [header setMiddleFont:HEADER_FONT];
+    header.middleFont = HEADER_FONT;
     [header setMiddleTextColor:[UIColor darkGrayColor]];
     [header setMiddleItems:[NSMutableArray arrayWithObject:@"Connect To Services"]];
     //[header setMiddleItemsTextAlignment:NSTextAlignmentCenter];

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "HuServiceStatus.h"
 #import <UIColor+FPBrandColor.h>
+#import <UIColor+Crayola.h>
 @interface HuViewForServiceStatus : UIView
 //@property (nonatomic, strong) id<HuServiceStatus> status;
 

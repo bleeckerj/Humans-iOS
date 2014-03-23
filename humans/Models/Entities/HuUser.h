@@ -8,7 +8,7 @@
 
 @class NSArray;
 @class NSArray;
-
+@class HuHuman;
 @interface HuUser : NSObject
 
 
@@ -28,6 +28,8 @@
 - (NSDictionary *)proxyForJson;
 - (Boolean)amSuperuser;
 - (Boolean)amAdmin;
+- (HuHuman *)getHumanByID:(NSString *)humanID;
+
 - (NSString *)jsonString;
 
 @end

@@ -281,7 +281,7 @@ UISearchBar *mSearchBar;
         finalStateView.left = 0;
     }];
     
-    [UIView animateWithDuration:0.75 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         //
         mSearchBar.left = -1*mSearchBar.size.width;
         
@@ -297,27 +297,46 @@ UISearchBar *mSearchBar;
             }
         }];
         
+        __block MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+        progressView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+        progressView.titleLabelText = [NSString stringWithFormat:@"Making New Human %@", [newHuman name]];
+        [progressView setTintColor:[UIColor sunflowerColor]];
         
         
         LOG_GENERAL(0, @"%@", [newHuman description]);
         
         [self.appUser userAddHuman:newHuman withCompletionHandler:^(BOOL success, NSError *error) {
-            //
-            // LOG_NETWORK(0, @"%@ did it work?", error);
-            [Flurry logEvent:[NSString stringWithFormat:@"Add Human? %@ %@ %@" , (success ? @"YES":@"NO"), [newHuman name], error]];
+            //[Flurry logEvent:[NSString stringWithFormat:@"Add Human" , (success ? @"YES":@"NO"), [newHuman name], error]];
+            NSDictionary *dimensions = @{@"user": [[self.appUser humans_user]username], @"": [newHuman name], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+            [Flurry logEvent:@"Add Human" withParameters:dimensions];
             if(success) {
+
+                
                 [self.appUser getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
-                    // reload the representation of ourself..our profile data and list of humans
-                    // so that when we go back to the main humans scroll view, the new human could
-                    // appear.
-                    // it's up to HuHumansScrollViewController to refresh the scroll view, though.
-                    LOG_UI(0, @"Now we have %ld humans", [[[self.appUser humans_user]humans]count]);
                     HuJediFindFriends_ViewController *bself = self;
                     
-                    // this'll take us back to initialState for the next time
-                    // which will clear everything up..
-                    [stateMachine nextState:bself];
+                    if(success) {
+                        progressView.titleLabelText = @"Good deal. New Humans.";
+                        // reload the representation of ourself..our profile data and list of humans
+                        // so that when we go back to the main humans scroll view, the new human could
+                        // appear.
+                        // it's up to HuHumansScrollViewController to refresh the scroll view, though.
+                        LOG_UI(0, @"Now we have %ld humans", [[[self.appUser humans_user]humans]count]);
+                        
+                        // this'll take us back to initialState for the next time
+                        // which will clear everything up..
+                        [stateMachine nextState:bself];
+                        
+                        
+                        
+                        
+                    } else {
+                        
+                    }
                     
+                    [self performBlock:^{
+                        [progressView dismiss:YES];
+                    } afterDelay:3.0];
                     // now pop back
                     dispatch_async(dispatch_get_main_queue(), ^{
                         //[[bself navigationController]popToRootViewControllerAnimated:YES];
@@ -325,6 +344,13 @@ UISearchBar *mSearchBar;
                     });
                     
                 }];
+            } else {
+                [progressView setTitleLabelText:@"There was a problem saving the human"];
+                
+                [self performBlock:^{
+                    [progressView dismiss:YES];
+                } afterDelay:2.0];
+                
             }
             
         }];
@@ -470,7 +496,7 @@ UISearchBar *mSearchBar;
         if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")]) {
             [subview removeFromSuperview];
         }
-
+        
     }
     [mSearchBar setBackgroundColor:UIColorFromRGB(0xCCCCCC)];
     // [mSearchBar mc_setPosition:MCViewPositionCenters withMargins:UIEdgeInsetsZero size:mSearchBar.size];
@@ -572,7 +598,7 @@ UISearchBar *mSearchBar;
     
     finalStateView = [[UIView alloc]init];
     [finalStateView setSize:[resultsScroller size]];
-    [finalStateView setBackgroundColor:UIColorFromRGB(0xF000F0)];
+    [finalStateView setBackgroundColor:[UIColor crayolaManateeColor]];
     [finalStateView mc_setRelativePosition:MCViewPositionToTheRight toView:self.resultsView];
     [finalStateView setTop:namingTextField.bottom];
     [finalStateView setLeft:[self resultsView].right];
@@ -832,9 +858,10 @@ NSUInteger lastLength;
                 }
             };
             [resultsGrid.boxes addObject:img];
-            int count = [resultsGrid.boxes count];
-            int mod = 1+count/4;
-            LOG_UI(0, @"%d %d", count, mod);
+            NSUInteger count = [resultsGrid.boxes count];
+            
+            NSUInteger mod = 1+[resultsGrid.boxes count]/4;
+            LOG_UI(0, @"%lu %lu", count, (unsigned long)mod);
             [resultsScroller setContentSize:CGSizeMake(resultsGrid.size.width, (1+(4+count - 1)/4) * (22 + profilePhotoSize.height))];
             [resultsGrid layoutWithSpeed:0.3 completion:nil];
             [resultsScroller layoutWithSpeed:0.3 completion:nil];
@@ -859,20 +886,6 @@ NSUInteger lastLength;
     progressView.titleLabelText = @"Finding Friends";
     
     
-    
-    //    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    //    [HUD show:YES];
-    //    HUD.center = CGPointMake(160, 120);
-    //    HUD.mode = MBProgressHUDModeIndeterminate;
-    //    [HUD setDetailsLabelFont:INFO_FONT_SMALL];
-    //
-    //    HUD.delegate = self;
-    //    [HUD setAnimationType:MBProgressHUDAnimationZoom];
-    //    [HUD performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:YES];
-    //
-    //    HUD.labelText = @"Finding Friends..";
-    //    HUD.graceTime = 0.3;
-    
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
     appUser = [appDel humansAppUser];//[[HuAppUser alloc]init];
     
@@ -880,14 +893,14 @@ NSUInteger lastLength;
         // now appUser has all my friends..
         LOG_GENERAL(0, @"Load Follows of %@ found %ld follows/friends.", [[appUser humans_user]username], [[appUser friends] count]);
         
-        [MRProgressOverlayView dismissOverlayForView:self.view animated:YES];
-        
-        MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+//        [MRProgressOverlayView dismissOverlayForView:self.view animated:YES];
+//        
+//        MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
         progressView.mode = MRProgressOverlayViewModeCheckmark;
         progressView.titleLabelText = [NSString stringWithFormat:@"Found %ld Friends",  [[appUser friends] count]];
         [self performBlock:^{
             [progressView dismiss:YES];
-        } afterDelay:5.0];
+        } afterDelay:3.5];
         
         
     }];

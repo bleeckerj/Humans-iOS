@@ -32,7 +32,7 @@
     UIView *resultsView;
     FUIButton *acceptButton;
     FUIButton *cancelButton;
-
+    
 }
 
 @synthesize maxNewUsers;
@@ -45,11 +45,11 @@
     if (self) {
         // Custom initialization
         maxNewUsers = 0;
-//        picture_insets = UIEdgeInsetsMake(5, 20, 5, 20);
+        //        picture_insets = UIEdgeInsetsMake(5, 20, 5, 20);
         picture_insets = UIEdgeInsetsMake(8, 11, 8, 8);
         HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
         userHandler = [appDel humansAppUser];
-
+        
     }
     return self;
 }
@@ -59,7 +59,7 @@
     [super viewWillAppear:animated];
     NSAssert(self.human !=nil, @"Why is human nil here?");
     
-        LOG_UI(0, @"presented within here: %@ %@ %@ %@",NSStringFromCGRect(self.view.frame), NSStringFromCGSize(self.view.size), NSStringFromCGRect(self.formSheetController.view.bounds), self.formSheetController.view);
+    LOG_UI(0, @"presented within here: %@ %@ %@ %@",NSStringFromCGRect(self.view.frame), NSStringFromCGSize(self.view.size), NSStringFromCGRect(self.formSheetController.view.bounds), self.formSheetController.view);
     
     [searchField setSize:CGSizeMake(self.view.width, 50)];
     [searchField setBackgroundColor:[UIColor Garmin]];
@@ -77,7 +77,7 @@
     
     resultsScroller = [MGScrollView scrollerWithSize:resultsView.size];
     [resultsScroller setContentSize:resultsView.size];
-   // [resultsScroller setBackgroundColor:[[UIColor crayolaQuickSilverColor]lighterColor]];
+    // [resultsScroller setBackgroundColor:[[UIColor crayolaQuickSilverColor]lighterColor]];
     [resultsScroller setBounces:YES];
     [resultsView addSubview:resultsScroller];
     
@@ -91,9 +91,9 @@
     [resultsScroller layoutWithSpeed:0.3 completion:nil];
     
     [self.view addSubview:resultsScroller];
-
+    
     [resultsScroller mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:searchField withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
-
+    
     picksScroller = [MGScrollView scroller];
     [picksScroller setBackgroundColor:[UIColor crayolaQuickSilverColor]];
     [picksScroller setBounces:NO];
@@ -112,7 +112,7 @@
     [self buildBlankPicksGrid];
     
     [picksGrid layout];
-
+    
     LOG_UI(0, @"%@ %@ %f %f self.view.bottom=%f %f", NSStringFromCGRect(self.view.bounds), NSStringFromCGRect(self.view.frame), self.view.bottom, self.view.boundsHeight, resultsView.bottom, resultsView.origin.y);
     [picksScroller setFrame:CGRectMake(0, 0, self.view.width, picksGrid.height)];
     [picksScroller setContentSize:CGSizeMake(picksGrid.size.width, picksGrid.height)];
@@ -132,37 +132,43 @@
     [self.view addSubview:acceptButton];
     [acceptButton mc_setRelativePosition:MCViewRelativePositionUnderAlignedRight toView:picksScroller withMargins:UIEdgeInsetsMake(2, 0, 0, 0)];
     
-
+    
     __block HuJediMiniFindFriendsViewController *bself = self;
+#pragma mark == when we click the accept button, add the service users
     [acceptButton bk_addEventHandler:^(id sender) {
         //
         [picksGrid.boxes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            // GROSS
+            // THIS IS SO GROSS
             HuServiceUserProfilePhoto *p = (HuServiceUserProfilePhoto*)obj;
             if([p isKindOfClass:[HuProfilePhotoBlank class]]) {
                 return;
             }
             HuFriend *f = [p mFriend];
             HuServiceUser *service_user = [[HuServiceUser alloc]initWithFriend:f];
-            
-           
+            TODO:
+            // THIS IS IN AN ENUMERATOR SO THIS WILL GET CALLED MULTIPLE TIMES
+            // AND SO WILL THE CALL TO GET HUMANS.
+            // FIX THIS .. make a method humanAddServiceUsers that takes an array or something, for chrissake
             [userHandler humanAddServiceUser:service_user forHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
                 //
                 LOG_GENERAL(0, @"added service user? %@ %@ %@", success?@"YES":@"NO", data, error);
                 if(success) {
+                    [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
                         [self performBlock:^{
                             [bself mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
                                 // do sth
                             }];
                         } afterDelay:1.0];
+                    }];
                 }
+                
             }];
             
             LOG_UI(0, @"service_user=%@", [service_user jsonString]);
             
         }];
     } forControlEvents:UIControlEventTouchUpInside];
-
+    
     
     
 }
@@ -170,7 +176,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-        LOG_UI(0, @"presented within here: %@ %@ %@ %@",NSStringFromCGRect(self.view.frame), NSStringFromCGSize(self.view.size), NSStringFromCGRect(self.formSheetController.view.bounds), self.formSheetController.view);
+    LOG_UI(0, @"presented within here: %@ %@ %@ %@",NSStringFromCGRect(self.view.frame), NSStringFromCGSize(self.view.size), NSStringFromCGRect(self.formSheetController.view.bounds), self.formSheetController.view);
     
     
     UIWindow* mainWindow = [[UIApplication sharedApplication] keyWindow];
@@ -180,19 +186,19 @@
         progressView.mode = MRProgressOverlayViewModeIndeterminate;
         progressView.tintColor = [UIColor carrotColor];
         progressView.titleLabelText = @"Finding Friends";
-        [self performBlock:^{
-            //
-            progressView.titleLabelText = @"I know this takes awhile..";
-        } afterDelay:5.0];
-        
-        [self performBlock:^{
-            progressView.titleLabelText = @"I'm working on it..";
-        } afterDelay:8.0];
-        
-        [self performBlock:^{
-            //
-            progressView.titleLabelText = @"Finding Friends..";
-        } afterDelay:12.0];
+        //        [self performBlock:^{
+        //            //
+        //            progressView.titleLabelText = @"I know this takes awhile..";
+        //        } afterDelay:5.0];
+        //
+        //        [self performBlock:^{
+        //            progressView.titleLabelText = @"I'm working on it..";
+        //        } afterDelay:8.0];
+        //
+        //        [self performBlock:^{
+        //            //
+        //            progressView.titleLabelText = @"Finding Friends..";
+        //        } afterDelay:12.0];
         
         [userHandler userFriendsGet:^(NSMutableArray *results) {
             //[MRProgressOverlayView dismissOverlayForView:mainWindow.subviews[0] animated:YES];
@@ -209,7 +215,7 @@
     }
     
     
-
+    
     
 }
 
@@ -235,7 +241,7 @@
     };
     
     __block HuJediMiniFindFriendsViewController *weakself = self;
-
+    
     
     searchField.bk_shouldReturnBlock = ^(UITextField *textField) {
         if([[textField text]length] > 2) {
@@ -243,7 +249,7 @@
             [weakself searchFor:[textField text]];
         }
         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
-
+        
         return YES;
     };
     
@@ -251,8 +257,8 @@
         //
         LOG_UI(0, @"You typed %@", sender);
     } forControlEvents:UIControlEventEditingChanged];
-//    [searchField setBackgroundColor:[UIColor asbestosColor]];
-//    [searchField setFont:TEXTFIELD_FONT_SMALL];
+    //    [searchField setBackgroundColor:[UIColor asbestosColor]];
+    //    [searchField setFont:TEXTFIELD_FONT_SMALL];
     [searchField setBorderStyle:UITextBorderStyleLine];
     searchField.layer.borderWidth = 0;
     
@@ -390,11 +396,11 @@
                             }];
                         }
                     }
-//                if([self countHumansInPicksGrid] > 0) {
-//                    check_.alpha = 1.0;
-//                } else {
-//                    check_.alpha = 0.3;
-//                }
+                //                if([self countHumansInPicksGrid] > 0) {
+                //                    check_.alpha = 1.0;
+                //                } else {
+                //                    check_.alpha = 0.3;
+                //                }
                 
             };
             

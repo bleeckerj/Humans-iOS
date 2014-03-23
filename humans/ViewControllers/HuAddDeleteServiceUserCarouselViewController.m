@@ -6,23 +6,23 @@
 //  Copyright (c) 2014 nearfuturelaboratory. All rights reserved.
 //
 
-#import "HuDeleteServiceUserCarouselViewController.h"
+#import "HuAddDeleteServiceUserCarouselViewController.h"
 
-@interface HuDeleteServiceUserCarouselViewController ()
+@interface HuAddDeleteServiceUserCarouselViewController ()
 
 @end
 
-@implementation HuDeleteServiceUserCarouselViewController
-@synthesize changesWereMade;
-@synthesize wantsNewUser;
+@implementation HuAddDeleteServiceUserCarouselViewController
+@synthesize deletesWereMade;
+@synthesize addMoreHuman;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        wantsNewUser = NO;
-        changesWereMade = NO;
+        addMoreHuman = NO;
+        deletesWereMade = NO;
     }
     return self;
 }
@@ -122,7 +122,7 @@
         add_service_user_view.layer.shadowRadius = 4;
         add_service_user_view.layer.cornerRadius = 4;
         add_service_user_view.layer.masksToBounds = YES;
-
+#pragma mark === add more human button event stuff
         FUIButton *add_user = [[FUIButton alloc]initWithFrame:view_frame];
         [add_user setTitle:@"Add More Human" forState:UIControlStateNormal];
         [[add_user titleLabel]setFont:BUTTON_FONT_LARGE];
@@ -133,8 +133,9 @@
         [add_service_user_view addSubview:add_user];
         
         [add_user bk_addEventHandler:^(id sender) {
-            //
-            wantsNewUser = YES;
+            // bunky flag we'll use to tell the HuEditHumanViewController to pop-up HuJediMiniViewController
+            addMoreHuman = YES;
+            
             [[self formSheetController]dismissAnimated:YES completionHandler:nil ];
             
         } forControlEvents:UIControlEventTouchUpInside];
@@ -230,6 +231,7 @@
     [delete setTitle:@"Delete" forState:UIControlStateNormal];
     [[delete titleLabel]setFont:BUTTON_FONT_SMALL];
     [delete mc_setPosition:MCViewPositionRight inView:service_user_view];
+#pragma mark **** delete service user event handler ****
     [delete bk_addEventHandler:^(id sender) {
         //
         __block MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
@@ -240,17 +242,22 @@
         HuUserHandler *handler = [delegate humansAppUser];
         [handler humanRemoveServiceUser:service_user forHuman:self.human withCompletionHandler:^(BOOL success, NSError *error) {
             if(success) {
-                changesWereMade = YES;
+                LOG_UI(0, @"Delete %@", [service_user username]);
+
+                deletesWereMade = YES;
                 [handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
                     
                     if(success) {
-                        //changesWereMade = YES;
+                        // make sure our human is up to date given that we just deleted
+                        HuUser *user = [handler humans_user];
+                        self.human = [user getHumanByID:self.human.humanid];
+                        
                         [carousel removeItemAtIndex:index animated:YES];
                         [self reloadData];
-                        [[self.human serviceUsers]removeObjectAtIndex:index];
+                        
                         [self performBlock:^{
                             [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-                        } afterDelay:2.0];
+                        } afterDelay:0.5];
                     } else {
                         NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
                         [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
@@ -277,7 +284,6 @@
 
         }];
         
-   LOG_UI(0, @"Delete %@", [service_user username]);
         
     } forControlEvents:UIControlEventTouchUpInside];
     
@@ -293,15 +299,6 @@
     if(option == iCarouselOptionVisibleItems) {
         return 3;
     }
-    //    if(option == iCarouselOptionFadeMax) {
-    //        return .3;
-    //    }
-    //    if(option == iCarouselOptionFadeMin) {
-    //        return -.8;
-    //    }
-    //    if(option == iCarouselOptionFadeRange) {
-    //        return 0.85;
-    //    }
     if(option == iCarouselOptionSpacing) {
         return 1.2;
     }

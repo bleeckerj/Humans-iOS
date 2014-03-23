@@ -18,23 +18,32 @@
 #import "HuStatusCarouselViewController.h"
 #import <MGLineStyled.h>
 #import "ViewUtils.h"
+#import <UIView+MCLayout.h>
 #import "HuShowServicesViewController.h"
 #import <UIColor+FPBrandColor.h>
 #import <UIColor+Crayola.h>
 #import "UIColor+UIColor_LighterDarker.h"
 //#import "CoconutKit.h"
-#import "HuHumanProfileViewController.h"
+#import "HuEditHumanViewController.h"
 #import <TYMActivityIndicatorView.h>
+#import <UIImage+RoundedCorner.h>
+#import "UIImage+ResizeToFit.h"
+#import <UIImage+Resize.h>
+#import <UIView+MCLayout.h>
+#import "Flurry.h"
+#import <BlocksKit+UIKit.h>
+#import "MSWeakTimer.h"
+#import <REMenu.h>
 
 @interface HuHumansProfileCarouselViewController : UIViewController
 
 @property NSUInteger indexToShow;
 @property BOOL humanHasEdited;
-
+@property HuUser *user;
 - (void)invalidateStatusRefreshTimer;
 - (void)resetStatusRefreshTimer:(NSTimeInterval)refreshTime;
 - (void)setHumansUserHandler:(HuUserHandler *)aUserHandler;
-- (void)updateHumansForView;
+- (void)populateViewsForHumans;
 //- (id)initWithUserHandler:(HuUserHandler *)aUserHandler;
 
 @end

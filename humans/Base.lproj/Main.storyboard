@@ -40,10 +40,10 @@
             </objects>
             <point key="canvasLocation" x="188" y="-582"/>
         </scene>
-        <!--Hu Human Profile View Controller-->
+        <!--Hu Edit Human View Controller-->
         <scene sceneID="kS4-la-gRf">
             <objects>
-                <viewController storyboardIdentifier="HuHumanProfileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iIn-AL-u72" customClass="HuHumanProfileViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HuHumanProfileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iIn-AL-u72" customClass="HuEditHumanViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="5EJ-na-t5v"/>
                         <viewControllerLayoutGuide type="bottom" id="6Ug-O6-d6t"/>
@@ -134,10 +134,10 @@
             </objects>
             <point key="canvasLocation" x="1092" y="-2066"/>
         </scene>
-        <!--Hu Delete Service User Carousel View Controller-->
+        <!--Hu Add Delete Service User Carousel View Controller-->
         <scene sceneID="pPr-KO-qd3">
             <objects>
-                <viewController storyboardIdentifier="HuAddDelHumansViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="B70-5h-ubZ" customClass="HuDeleteServiceUserCarouselViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HuAddDelHumansViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="B70-5h-ubZ" customClass="HuAddDeleteServiceUserCarouselViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kGy-bV-1Vv"/>
                         <viewControllerLayoutGuide type="bottom" id="hg0-d1-iLO"/>

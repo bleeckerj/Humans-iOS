@@ -17,6 +17,7 @@
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSMutableArray *serviceUsers;
 @property (strong, atomic) NSMutableArray *profile_images;
+@property BOOL isYouMan;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;

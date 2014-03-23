@@ -17,6 +17,7 @@
 @synthesize humanid = _humanid;
 @synthesize name = _name;
 @synthesize serviceUsers = _serviceUsers;
+@synthesize isYouMan = _isYouMan;
 
 @synthesize profile_images;
 
@@ -38,6 +39,7 @@
     self.serviceUsers = [[NSMutableArray alloc]init];
     self.humanid = @"";
     self.name = @"";
+    self.isYouMan = NO;
 }
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic
@@ -51,15 +53,58 @@
 	return self;
 }
 
+//- (void) parseJSONDictionary:(NSDictionary *)dic
+//{
+//    [self commonInit];
+//
+//	// PARSER
+//	id humanid_ = [dic objectForKey:@"humanid"];
+//	if([humanid_ isKindOfClass:[NSString class]])
+//	{
+//		self.humanid = humanid_;
+//	}
+//
+//    id isYouMan_ = [dic objectForKey:@"isYouMan"];
+//	if([isYouMan_ isKindOfClass:[bool class]])
+//	{
+//		self.humanid = humanid_;
+//	}
+//
+//	id name_ = [dic objectForKey:@"name"];
+//	if([name_ isKindOfClass:[NSString class]])
+//	{
+//		self.name = name_;
+//	}
+//    
+//	id serviceUsers_ = [dic objectForKey:@"serviceUsers"];
+//	if([serviceUsers_ isKindOfClass:[NSArray class]])
+//	{
+//		NSMutableArray *array = [NSMutableArray array];
+//		for(NSDictionary *itemDic in serviceUsers_)
+//		{
+//			HuServiceUser *item = [[HuServiceUser alloc] initWithJSONDictionary:itemDic];
+//			[array addObject:item];
+//		}
+//		self.serviceUsers = [NSMutableArray arrayWithArray:array];
+//	}
+//    
+//	
+//}
+
+
 - (void) parseJSONDictionary:(NSDictionary *)dic
 {
-    [self commonInit];
-
 	// PARSER
 	id humanid_ = [dic objectForKey:@"humanid"];
 	if([humanid_ isKindOfClass:[NSString class]])
 	{
 		self.humanid = humanid_;
+	}
+    
+	id isYouMan_ = [dic objectForKey:@"isYouMan"];
+	if([isYouMan_ isKindOfClass:[NSNumber class]])
+	{
+		self.isYouMan = [isYouMan_ boolValue];
 	}
     
 	id name_ = [dic objectForKey:@"name"];

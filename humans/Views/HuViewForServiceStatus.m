@@ -263,22 +263,9 @@
 //            //
 //            LOG_UI(0, @"LOADED %@", [status statusImageURL]);
 //        }];
-        [photoBox setBackgroundColor:[UIColor blueColor]];
+        [photoBox setBackgroundColor:[UIColor crayolaTimberwolfColor]];
         [self addSubview:photoBox];
         
-        
-        
-//        IDMPhoto *photo = [[IDMPhoto alloc]initWithURL:[NSURL URLWithString:[status statusImageURL]]];
-//        UIImageView *iv = [[UIImageView alloc]initWithImage:[photo underlyingImage]];
-//        [iv setSize:CGSizeMake(frame.size.width, frame.size.height)];
-//        [iv setFrame:frame];
-//        [iv setBackgroundColor:[UIColor Amazon]];
-//        [self addSubview:iv];
-////        [photo setProgressUpdateBlock:<#(IDMProgressUpdateBlock)progressUpdateBlock#>]
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [photo loadUnderlyingImageAndNotify];
-//            [iv setNeedsDisplay];
-//        });
         
         
         if([status statusText] != nil) {

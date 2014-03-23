@@ -122,6 +122,10 @@ UIImage *serviceImage;
     [__longpresser setNumberOfTapsRequired:0];
     garbage_box.longPresser = __longpresser;
     garbage_box.onLongPress = ^{
+        MRProgressOverlayView *overlay = [MRProgressOverlayView overlayForView:self.superview];
+        [overlay setTintColor:[UIColor crayolaRadicalRedColor]];
+        [overlay setTitleLabelText:[NSString stringWithFormat:@"bye bye %@", [aService serviceName]]];
+        overlay.mode = MRProgressOverlayViewModeIndeterminateSmall;
         if (__longpresser.state == UIGestureRecognizerStateEnded) {
             LOG_UI(0, @"Deleting %@", bself.service);
             HuAppDelegate *app_delegate = [[UIApplication sharedApplication]delegate];
@@ -129,7 +133,18 @@ UIImage *serviceImage;
             [userHandler userRemoveService:self.service withCompletionHandler:^(BOOL success, NSError *error) {
                 if(success && error == nil) {
                     LOG_UI(0, @"Successfully deleted service %@", self.service);
-                    [bself.delegate lineDidDelete: bself];
+                    [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+                        [bself.delegate lineDidDelete: bself];
+                        [overlay dismiss:YES];
+                    }];
+
+                } else {
+                    
+                    overlay.mode = MRProgressOverlayViewModeIndeterminateSmall;
+                    [overlay setTitleLabelText:@"Uh oh.."];
+                    [self performBlock:^{
+                        [overlay dismiss:YES];
+                    } afterDelay:2.0];
                 }
             }];
         }
@@ -140,7 +155,10 @@ UIImage *serviceImage;
     //[self layout];
     
 }
-
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
+}
 
 /*
  // Only override drawRect: if you perform custom drawing.

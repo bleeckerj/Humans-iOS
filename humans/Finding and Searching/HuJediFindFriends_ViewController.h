@@ -24,10 +24,12 @@
 #import <UIView+MCLayout.h>
 #import <ViewUtils.h>
 #import "Flurry.h"
+#import <Parse/Parse.h>
 #import <MRProgress/MRProgress.h>
 #import <UIColor+Crayola.h>
 #import <UIColor+FlatUI.h>
-
+#import <MRProgress.h>
+#import <Crashlytics/Crashlytics.h>
 
 @interface HuJediFindFriends_ViewController : UIViewController <UINavigationControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate, UISearchBarDelegate, MBProgressHUDDelegate>
 typedef enum {

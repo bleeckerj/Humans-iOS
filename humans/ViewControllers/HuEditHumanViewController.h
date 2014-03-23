@@ -19,13 +19,13 @@
 #import "HuUserHandler.h"
 #import <MZFormSheetBackgroundWindow.h>
 #import <MZFormSheetController.h>
-#import "HuDeleteServiceUserCarouselViewController.h"
+#import "HuAddDeleteServiceUserCarouselViewController.h"
 #import "HuJediMiniFindFriendsViewController.h"
 #import "HuHumansProfileCarouselViewController.h"
 
 @class HuHumansProfileCarouselViewController;
 
-@interface HuHumanProfileViewController : UIViewController  <UITextFieldDelegate, MZFormSheetBackgroundWindowDelegate>
+@interface HuEditHumanViewController : UIViewController  <UITextFieldDelegate, MZFormSheetBackgroundWindowDelegate>
 @property (strong, nonatomic) IBOutlet FUIButton *editButton;
 @property (strong, nonatomic) IBOutlet FUIButton *deleteButton;
 @property (strong, nonatomic) IBOutlet FUIButton *goBackButton;

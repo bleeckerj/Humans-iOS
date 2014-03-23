@@ -7,9 +7,14 @@
 #import "LoggerClient.h"
 //#import "AppDelegate.h"
 
+
+
 @implementation HuStatusPhotoBox
+
+
 @synthesize topParentBox, serviceTinyTag;
 @synthesize urlStr;
+@synthesize spinner;
 
 #pragma mark - Init
 
@@ -51,17 +56,17 @@
     //box.topParentBox = _topParentBox;
     
     // add a loading spinner
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]
+    box.spinner = [[UIActivityIndicatorView alloc]
                                         initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     
-    spinner.center = CGPointMake(box.width / 2, box.height / 2);
-    spinner.autoresizingMask = UIViewAutoresizingFlexibleTopMargin
+    box.spinner.center = CGPointMake(box.width / 2, box.height / 2);
+    box.spinner.autoresizingMask = UIViewAutoresizingFlexibleTopMargin
     | UIViewAutoresizingFlexibleRightMargin
     | UIViewAutoresizingFlexibleBottomMargin
     | UIViewAutoresizingFlexibleLeftMargin;
-    spinner.color = UIColor.darkGrayColor;
-    [box addSubview:spinner];
-    [spinner startAnimating];
+    box.spinner.color = UIColor.darkGrayColor;
+    [box addSubview:box.spinner];
+    [box.spinner startAnimating];
     
     if(deferLoad == NO) {
         // do the photo loading async, because internets
@@ -132,10 +137,10 @@
       
         [self.imageView setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
             //
-            LOG_UI(0, @"Progress for image %d %d", receivedSize, expectedSize);
+            LOG_UI(0, @"Progress for image %ld %ld", (long)receivedSize, (long)expectedSize);
         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             
-            LOG_UI(0, @"Was image cached? %d", cacheType);
+            LOG_UI(0, @"Was image cached? %ld", cacheType);
 
             if(error == nil) {
                 bself.hasLoaded = YES;
@@ -173,10 +178,19 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 // ditch the spinner
-                UIActivityIndicatorView *spinner = [bself.subviews objectAtIndex:0];
-                [spinner stopAnimating];
-                [spinner removeFromSuperview];
-                
+                @try {
+                    if([bself.spinner isSubviewOfView:bself]) {
+                        [bself.spinner stopAnimating];
+                        [bself.spinner removeFromSuperview];
+                    }
+//                UIActivityIndicatorView *spinner = [bself.subviews objectAtIndex:0];
+//                [spinner stopAnimating];
+//                [spinner removeFromSuperview];
+//                    }
+                }
+                @catch (NSException *e) {
+                    LOG_ERROR(0, @"Woops");
+                }
                 [bself.imageView removeFromSuperview];
                 
                 // but wait..it might already contain the UIImageView, right?

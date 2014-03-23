@@ -27,10 +27,10 @@
 #import <WSLObjectSwitch.h>
 #import <UIControl+BlocksKit.h>
 
-@interface HuDeleteServiceUserCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate>
+@interface HuAddDeleteServiceUserCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate>
 @property BOOL showStatusBar;
-@property BOOL changesWereMade;
-@property BOOL wantsNewUser;
+@property BOOL deletesWereMade;
+@property BOOL addMoreHuman;
 @property (strong, nonatomic) IBOutlet UILabel *label;
 @property (strong, nonatomic) IBOutlet iCarousel *carousel;
 @property (strong, nonatomic) HuHuman *human;

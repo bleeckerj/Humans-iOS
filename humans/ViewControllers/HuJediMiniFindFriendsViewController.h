@@ -23,13 +23,13 @@
 #import <MZFormSheetController.h>
 #import <MRProgress.h>
 #import <UIView+MCLayout.h>
-#import "HuHumanProfileViewController.h"
+#import "HuEditHumanViewController.h"
 
-@class HuHumanProfileViewController;
+@class HuEditHumanViewController;
 
 @interface HuJediMiniFindFriendsViewController : UIViewController <UITextFieldDelegate>
 
 @property  NSUInteger maxNewUsers;
 @property HuHuman *human;
-@property HuHumanProfileViewController *invokingViewController;
+@property HuEditHumanViewController *invokingViewController;
 @end

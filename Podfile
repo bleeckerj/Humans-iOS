@@ -21,6 +21,17 @@ pod 'Sequencer'
 #pod 'MosaicUI', '~> 0.0.1'
 #pod 'MosaicLayout', :path => '~/Code/MosaicLayout/MosaicCollectionView/Libs/MosaicLayout'
 #pod 'UIView+AutoLayout'
+
+#replace text fields in sign up with this?
+#pod 'JVFloatLabeledTextField'
+# uses lovely JVFloatLabeledTextField controls for the field labels!
+#pod 'BPForms'
+
+#pod 'NVDate'
+pod 'US2FormValidator'
+
+pod 'CRToast', :git => 'https://github.com/vIiRuS/CRToast.git', :commit => 'e85576e81d'
+
 pod 'ViewUtils', '~> 1.1.2'
 pod 'KeyboardController', '~> 1.0.0'
 pod 'FLKAutoLayout'

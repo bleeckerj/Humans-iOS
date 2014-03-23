@@ -137,6 +137,20 @@
 }
 
 
+- (HuHuman *)getHumanByID:(NSString *)humanID
+{
+    __block HuHuman *result = NULL;
+    
+    [self.humans enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if([[obj humanid]isEqualToString:humanID]) {
+            result = obj;
+            *stop = YES;
+        }
+    }];
+    
+    return result;
+}
+
 -(NSString *)jsonString
 {
     return [self description];

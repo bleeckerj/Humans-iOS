@@ -85,22 +85,7 @@ MGLine *check_;
     ex_.onTap = ^{
         LOG_UI(0, @"Tapped Ex Box");
         [bself.navigationController popToRootViewControllerAnimated:YES];
-        //LOG_GENERAL(0, @"%@", stateMachine.currentState.stateName);
-        //bself.exTapped = YES;
-        //[bself.stateMachine nextState:bself];
-       // bself.exTapped = NO;
-        //LOG_GENERAL(0, @"%@", stateMachine.currentState.stateName);
     };
-    
-    //    UIImage *small_checkbox_img = [UIImage imageNamed:@"add-cloud-gray.png"];
-    //
-    //    check_ = [MGLine lineWithLeft:small_checkbox_img right:nil size:[small_checkbox_img size]];
-    //    check_.alpha = 1.0;
-    //    check_.onTap = ^{
-    //        LOG_UI(0, @"Tapped Add Service");
-    //        [[self navigationController]pushViewController:addServicesViewController animated:YES];
-    //        //LOG_GENERAL(0, @"%@", stateMachine.currentState.stateName);
-    //    };
 #pragma mark header setup
     //header
     self.header = [MGLineStyled lineWithLeft:ex_ right:check_ size:(CGSize){self.view.width,HEADER_HEIGHT}];
@@ -170,20 +155,6 @@ MGLine *check_;
 - (void)authWithInstagram
 {
     
-//    UIWebView *webView = [[UIWebView alloc]initWithFrame:self.view.frame];
-//    [webView setDelegate:self];
-//    UIViewController *whatever = [[UIViewController alloc]init];
-//    whatever.view = webView;
-//    //        authenticateViewController.view addGestureRecognizer
-//    
-//    NSURLRequest* request = [NSURLRequest requestWithURL:[userHandler urlForInstagramAuthentication] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-//    NSURLRequest *logout = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://instagram.com/accounts/logout/"]];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
-//    
-//    [webView loadRequest:request];
-//    [self.navigationController pushViewController:whatever animated:YES];
     authenticateViewController = [[HuAuthenticateServiceWebViewController alloc]initWithAuthURL:[userHandler urlForInstagramAuthentication]
                                                                                       logoutURL:[NSURL URLWithString:@"https://instagram.com/accounts/logout/"]
                                                                                     serviceName:@"Instagram"];

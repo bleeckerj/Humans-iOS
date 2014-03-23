@@ -19,16 +19,26 @@
 #import "HuUserHandler.h"
 #import <MRProgress.h>
 #import <BlocksKit+UIKit.h>
+#import <US2FormValidator.h>
+#import "HuUS2ConditionLowerAlphaEmotis.h"
+#import "HuUS2ConditionEmojiStringRange.h"
+
 //#import <ReactiveCocoa/ReactiveCocoa.h>
 
-@interface HuSignUpViewController : UIViewController <UITextFieldDelegate>
+@interface HuSignUpViewController : UIViewController <UITextFieldDelegate, US2ValidatorUIDelegate>
 
 @property (strong, nonatomic) IBOutlet UILabel *signUpLabel;
-@property (strong, nonatomic) IBOutlet UITextField *emailTextField;
-@property (strong, nonatomic) IBOutlet UITextField *confirmPasswordTextField;
-@property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
+@property (strong, nonatomic) IBOutlet US2ValidatorTextField *emailTextField;
+@property (strong, nonatomic) IBOutlet US2ValidatorTextField *confirmPasswordTextField;
+@property (strong, nonatomic) IBOutlet US2ValidatorTextField *passwordTextField;
+@property (strong, nonatomic) IBOutlet US2ValidatorTextField *usernameTextField;
+@property (strong, nonatomic) UILabel *usernameInfoLabel;
+@property (strong, nonatomic) UILabel *passwordInfoLabel;
+@property (strong, nonatomic) UILabel *emailInfoLabel;
 @property (strong, nonatomic) IBOutlet FUIButton *signUpButton;
 @property (strong, nonatomic) IBOutlet FUIButton *loginButton;
 @property (retain, nonatomic) IBOutlet RDVKeyboardAvoidingScrollView *keyboardAvoidingScrollView;
+
+- (void)isUniqueUsername:(BOOL)is;
+
 @end

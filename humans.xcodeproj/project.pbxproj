@@ -18,6 +18,8 @@
 		B9087BB918D5464A003507A4 /* Untitled-1.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BB418D5464A003507A4 /* Untitled-1.png */; };
 		B9087BBB18D54B66003507A4 /* hupantone151cspinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BBA18D54B66003507A4 /* hupantone151cspinner@2x.png */; };
 		B9087BBD18D54CE2003507A4 /* hugrayspinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BBC18D54CE2003507A4 /* hugrayspinner@2x.png */; };
+		B911EDB618DAB66200A5C2D0 /* BoozyBear.png in Resources */ = {isa = PBXBuildFile; fileRef = B911EDB418DAB66200A5C2D0 /* BoozyBear.png */; };
+		B911EDB718DAB66200A5C2D0 /* GIJoeAngry.png in Resources */ = {isa = PBXBuildFile; fileRef = B911EDB518DAB66200A5C2D0 /* GIJoeAngry.png */; };
 		B9161901186803050010A34F /* UIColor+UIColor_LighterDarker.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618F8186803050010A34F /* UIColor+UIColor_LighterDarker.m */; };
 		B9161902186803050010A34F /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FA186803050010A34F /* UIImage+Alpha.m */; };
 		B9161903186803050010A34F /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FC186803050010A34F /* UIImage+Resize.m */; };
@@ -95,7 +97,6 @@
 		B91BE75D18A29DDA00D6E171 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B91BE75718A29DDA00D6E171 /* README.md */; };
 		B91BE75E18A29DDA00D6E171 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = B91BE75818A29DDA00D6E171 /* release_notes.md */; };
 		B92400C0185C12FA00A10410 /* HuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B92400BE185C12FA00A10410 /* HuViewController.m */; };
-		B92493A218D15A27000C23D9 /* GIJoeAngry.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B92493A118D15A27000C23D9 /* GIJoeAngry.jpg */; };
 		B93024A31895B887000168E4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B93024A21895B887000168E4 /* libz.dylib */; };
 		B937464F188CCA120037A95C /* FindFollowsForService_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */; };
 		B9374650188CCA120037A95C /* HuFindFollowsMain_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464C188CCA120037A95C /* HuFindFollowsMain_ViewController.m */; };
@@ -132,7 +133,9 @@
 		B9578B5418BE9F8A002E6BD9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6E18B7FD7100A9E918 /* MobileCoreServices.framework */; };
 		B9578B5518BE9F8F002E6BD9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A7018B7FD8700A9E918 /* QuartzCore.framework */; };
 		B9578B5618BE9F95002E6BD9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F517AB185BC4E20083CA36 /* StoreKit.framework */; };
-		B96EF1B118C191C7001E2B5A /* HuHumanProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96EF1B018C191C7001E2B5A /* HuHumanProfileViewController.m */; };
+		B96EF1B118C191C7001E2B5A /* HuEditHumanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96EF1B018C191C7001E2B5A /* HuEditHumanViewController.m */; };
+		B987BE5F18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */; };
+		B987BE6218DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE6118DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m */; };
 		B9910A6718B7FD1800A9E918 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6618B7FD1800A9E918 /* Parse.framework */; };
 		B9910A6918B7FD4C00A9E918 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */; };
 		B9910A6B18B7FD5500A9E918 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6A18B7FD5500A9E918 /* CFNetwork.framework */; };
@@ -226,7 +229,7 @@
 		B9F646DC18679567008EB970 /* XCTestCase+AsyncTesting.h in Sources */ = {isa = PBXBuildFile; fileRef = B9787924186360A900D72288 /* XCTestCase+AsyncTesting.h */; };
 		B9F646DD18679567008EB970 /* XCTestCase+AsyncTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = B9787925186360A900D72288 /* XCTestCase+AsyncTesting.m */; };
 		B9F646E31867BF6E008EB970 /* HuStatusCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9F646E21867BF6E008EB970 /* HuStatusCarouselViewController.m */; };
-		B9FEA8C718C266AC005C5B40 /* HuDeleteServiceUserCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FEA8C618C266AC005C5B40 /* HuDeleteServiceUserCarouselViewController.m */; };
+		B9FEA8C718C266AC005C5B40 /* HuAddDeleteServiceUserCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FEA8C618C266AC005C5B40 /* HuAddDeleteServiceUserCarouselViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -252,6 +255,8 @@
 		B9087BB418D5464A003507A4 /* Untitled-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Untitled-1.png"; sourceTree = "<group>"; };
 		B9087BBA18D54B66003507A4 /* hupantone151cspinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hupantone151cspinner@2x.png"; sourceTree = "<group>"; };
 		B9087BBC18D54CE2003507A4 /* hugrayspinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hugrayspinner@2x.png"; sourceTree = "<group>"; };
+		B911EDB418DAB66200A5C2D0 /* BoozyBear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BoozyBear.png; sourceTree = "<group>"; };
+		B911EDB518DAB66200A5C2D0 /* GIJoeAngry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GIJoeAngry.png; sourceTree = "<group>"; };
 		B91618F7186803050010A34F /* UIColor+UIColor_LighterDarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UIColor_LighterDarker.h"; sourceTree = "<group>"; };
 		B91618F8186803050010A34F /* UIColor+UIColor_LighterDarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UIColor_LighterDarker.m"; sourceTree = "<group>"; };
 		B91618F9186803050010A34F /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
@@ -349,7 +354,6 @@
 		B92400BD185C12FA00A10410 /* HuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuViewController.h; sourceTree = "<group>"; };
 		B92400BE185C12FA00A10410 /* HuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuViewController.m; sourceTree = "<group>"; };
 		B92400C1185C158600A10410 /* defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = defines.h; path = Supporting/defines.h; sourceTree = "<group>"; };
-		B92493A118D15A27000C23D9 /* GIJoeAngry.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = GIJoeAngry.jpg; sourceTree = "<group>"; };
 		B93024A21895B887000168E4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		B9374649188CCA120037A95C /* FindFollowsForService_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindFollowsForService_ViewController.h; sourceTree = "<group>"; };
 		B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindFollowsForService_ViewController.m; sourceTree = "<group>"; };
@@ -395,10 +399,14 @@
 		B9547C7C18C40ED900CD2D1E /* 40px-blank-for-user-profile-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "40px-blank-for-user-profile-image.png"; sourceTree = "<group>"; };
 		B9547C7E18C4522B00CD2D1E /* user-profile-image-mask-45px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-profile-image-mask-45px.png"; sourceTree = "<group>"; };
 		B9547C8018C452DA00CD2D1E /* user-profile-image-mask-55px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-profile-image-mask-55px.png"; sourceTree = "<group>"; };
-		B96EF1AF18C191C7001E2B5A /* HuHumanProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuHumanProfileViewController.h; sourceTree = "<group>"; };
-		B96EF1B018C191C7001E2B5A /* HuHumanProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuHumanProfileViewController.m; sourceTree = "<group>"; };
+		B96EF1AF18C191C7001E2B5A /* HuEditHumanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuEditHumanViewController.h; sourceTree = "<group>"; };
+		B96EF1B018C191C7001E2B5A /* HuEditHumanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuEditHumanViewController.m; sourceTree = "<group>"; };
 		B9787924186360A900D72288 /* XCTestCase+AsyncTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "XCTestCase+AsyncTesting.h"; path = "../humans/Supporting/XCTestCase+AsyncTesting.h"; sourceTree = "<group>"; };
 		B9787925186360A900D72288 /* XCTestCase+AsyncTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "XCTestCase+AsyncTesting.m"; path = "../humans/Supporting/XCTestCase+AsyncTesting.m"; sourceTree = "<group>"; };
+		B987BE5D18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuUS2ConditionLowerAlphaEmotis.h; path = Supporting/US2Conditions/HuUS2ConditionLowerAlphaEmotis.h; sourceTree = "<group>"; };
+		B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUS2ConditionLowerAlphaEmotis.m; path = Supporting/US2Conditions/HuUS2ConditionLowerAlphaEmotis.m; sourceTree = "<group>"; };
+		B987BE6018DEB1D800499034 /* HuUS2ConditionEmojiStringRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuUS2ConditionEmojiStringRange.h; path = Supporting/US2Conditions/HuUS2ConditionEmojiStringRange.h; sourceTree = "<group>"; };
+		B987BE6118DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUS2ConditionEmojiStringRange.m; path = Supporting/US2Conditions/HuUS2ConditionEmojiStringRange.m; sourceTree = "<group>"; };
 		B9910A6618B7FD1800A9E918 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B9910A6A18B7FD5500A9E918 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -544,8 +552,8 @@
 		B9F646DA18679539008EB970 /* XCTest+Async.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "XCTest+Async.h"; path = "TestSupport/XCTest+Async.h"; sourceTree = "<group>"; };
 		B9F646E11867BF6E008EB970 /* HuStatusCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuStatusCarouselViewController.h; sourceTree = "<group>"; };
 		B9F646E21867BF6E008EB970 /* HuStatusCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuStatusCarouselViewController.m; sourceTree = "<group>"; };
-		B9FEA8C518C266AC005C5B40 /* HuDeleteServiceUserCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuDeleteServiceUserCarouselViewController.h; sourceTree = "<group>"; };
-		B9FEA8C618C266AC005C5B40 /* HuDeleteServiceUserCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuDeleteServiceUserCarouselViewController.m; sourceTree = "<group>"; };
+		B9FEA8C518C266AC005C5B40 /* HuAddDeleteServiceUserCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuAddDeleteServiceUserCarouselViewController.h; sourceTree = "<group>"; };
+		B9FEA8C618C266AC005C5B40 /* HuAddDeleteServiceUserCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuAddDeleteServiceUserCarouselViewController.m; sourceTree = "<group>"; };
 		BE6FC55D9C314A2D9154BA19 /* Pods-humansTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-humansTests.xcconfig"; path = "Pods/Pods-humansTests.xcconfig"; sourceTree = "<group>"; };
 		E3C7AB25D83E4EFA8734A616 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0A3D01F449C47EDA374B6BE /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -674,7 +682,8 @@
 		B91BE6DA18A29B9600D6E171 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
-				B92493A118D15A27000C23D9 /* GIJoeAngry.jpg */,
+				B911EDB418DAB66200A5C2D0 /* BoozyBear.png */,
+				B911EDB518DAB66200A5C2D0 /* GIJoeAngry.png */,
 				B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */,
 				B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */,
 				B9AC5EC418AA15FD00BEE77C /* foursquare-icon-gray-36x36.png */,
@@ -789,10 +798,10 @@
 			children = (
 				B9547C7718C3B11700CD2D1E /* HuJediMiniFindFriendsViewController.h */,
 				B9547C7818C3B11700CD2D1E /* HuJediMiniFindFriendsViewController.m */,
-				B9FEA8C518C266AC005C5B40 /* HuDeleteServiceUserCarouselViewController.h */,
-				B9FEA8C618C266AC005C5B40 /* HuDeleteServiceUserCarouselViewController.m */,
-				B96EF1AF18C191C7001E2B5A /* HuHumanProfileViewController.h */,
-				B96EF1B018C191C7001E2B5A /* HuHumanProfileViewController.m */,
+				B9FEA8C518C266AC005C5B40 /* HuAddDeleteServiceUserCarouselViewController.h */,
+				B9FEA8C618C266AC005C5B40 /* HuAddDeleteServiceUserCarouselViewController.m */,
+				B96EF1AF18C191C7001E2B5A /* HuEditHumanViewController.h */,
+				B96EF1B018C191C7001E2B5A /* HuEditHumanViewController.m */,
 				B9C1034818B99D4E006E7D66 /* HuLoginOrSignUpViewController.h */,
 				B9C1034918B99D4E006E7D66 /* HuLoginOrSignUpViewController.m */,
 				B9910A7418B8337F00A9E918 /* HuSignUpViewController.h */,
@@ -889,6 +898,17 @@
 			);
 			name = Foursquare;
 			path = humans/Models/ServiceEntities/Foursquare;
+			sourceTree = "<group>";
+		};
+		B987BE5918DE8FF500499034 /* US2Conditions */ = {
+			isa = PBXGroup;
+			children = (
+				B987BE6018DEB1D800499034 /* HuUS2ConditionEmojiStringRange.h */,
+				B987BE6118DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m */,
+				B987BE5D18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.h */,
+				B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */,
+			);
+			name = US2Conditions;
 			sourceTree = "<group>";
 		};
 		B99657BE1867FDA800C4AB01 /* Status Boxes for MGBox */ = {
@@ -1166,6 +1186,7 @@
 		B9F5177D185BC4930083CA36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B987BE5918DE8FF500499034 /* US2Conditions */,
 				B9178A0C18C179A500058E1A /* Vendor */,
 				B91BE75F18A29EFD00D6E171 /* Flurry */,
 				B91BE75518A29DDA00D6E171 /* TestFlightSDK2.2.1 */,
@@ -1343,7 +1364,6 @@
 				B91BE72518A29B9600D6E171 /* HumanAppIcon60pt.png in Resources */,
 				B91BE74C18A29B9600D6E171 /* twitter-bird-white-tiny.png in Resources */,
 				B91BE73618A29B9600D6E171 /* checkbox-checked.png in Resources */,
-				B92493A218D15A27000C23D9 /* GIJoeAngry.jpg in Resources */,
 				B91BE71A18A29B9600D6E171 /* angry_unicorn_tiny.png in Resources */,
 				B91BE72218A29B9600D6E171 /* foursquare-icon-36x36.png in Resources */,
 				B91BE74F18A29B9600D6E171 /* user-profile-image-mask-48px.png in Resources */,
@@ -1363,10 +1383,12 @@
 				B91BE74D18A29B9600D6E171 /* twitter-bird-white.png in Resources */,
 				B91BE72118A29B9600D6E171 /* flickr-white-large-chiclet.png in Resources */,
 				B91BE73F18A29B9600D6E171 /* garbage-gray.png in Resources */,
+				B911EDB618DAB66200A5C2D0 /* BoozyBear.png in Resources */,
 				B91BE74618A29B9600D6E171 /* right-arrow-gray.png in Resources */,
 				B91BE73A18A29B9600D6E171 /* delete-x.png in Resources */,
 				B93FFD4218BF0EB7000219D0 /* Icon_Home.png in Resources */,
 				B91BE73918A29B9600D6E171 /* delete-x-22sq.png in Resources */,
+				B911EDB718DAB66200A5C2D0 /* GIJoeAngry.png in Resources */,
 				B93FFD4118BF0EB7000219D0 /* 1393303417_78-instagram.png in Resources */,
 				B91BE72818A29B9600D6E171 /* Instagram_Icon_Small.png in Resources */,
 				B91BE73118A29B9600D6E171 /* twitter-bottom-line.png in Resources */,
@@ -1543,8 +1565,9 @@
 				B9374650188CCA120037A95C /* HuFindFollowsMain_ViewController.m in Sources */,
 				B944BB431896FE5500015B10 /* HuFoursquareVenueIcons.m in Sources */,
 				B9C2C267187BB6E100F1DF47 /* InstagramLike.m in Sources */,
-				B96EF1B118C191C7001E2B5A /* HuHumanProfileViewController.m in Sources */,
+				B96EF1B118C191C7001E2B5A /* HuEditHumanViewController.m in Sources */,
 				B99657CF1867FDA800C4AB01 /* DateyMGStyledBox.m in Sources */,
+				B987BE5F18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m in Sources */,
 				B9F646AE186766D0008EB970 /* HuHumanMGLine.m in Sources */,
 				B9C2C266187BB6E100F1DF47 /* InstagramImages.m in Sources */,
 				B9C2C261187BB6E100F1DF47 /* InstagramCaption.m in Sources */,
@@ -1552,6 +1575,7 @@
 				B9D2B83D18B2831D00A963BD /* HuHumansProfileCarouselViewController.m in Sources */,
 				B9C2C268187BB6E100F1DF47 /* InstagramLikes.m in Sources */,
 				B9C2C220187BB67B00F1DF47 /* HuHeaderForServiceStatusView.m in Sources */,
+				B987BE6218DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m in Sources */,
 				B99E01991862AEEB00E70892 /* HuLoginViewController.m in Sources */,
 				B944BB3B1896F06500015B10 /* HuFoursquareSource.m in Sources */,
 				B99657D41867FDA800C4AB01 /* HuTwitterStatus_Box.m in Sources */,
@@ -1605,7 +1629,7 @@
 				B9C2C26A187BB6E100F1DF47 /* InstagramUser.m in Sources */,
 				B9C2C21B187BB65700F1DF47 /* HuUser.m in Sources */,
 				B908171D18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m in Sources */,
-				B9FEA8C718C266AC005C5B40 /* HuDeleteServiceUserCarouselViewController.m in Sources */,
+				B9FEA8C718C266AC005C5B40 /* HuAddDeleteServiceUserCarouselViewController.m in Sources */,
 				B9374658188CCF920037A95C /* HuProfilePhotoBlank.m in Sources */,
 				B937465B188CD0910037A95C /* HuServiceUserProfilePhoto.m in Sources */,
 				B99657D51867FDA800C4AB01 /* PhotoBox.m in Sources */,

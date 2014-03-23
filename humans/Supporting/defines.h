@@ -114,6 +114,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define TEXTFIELD_FONT_SMALL    [UIFont fontWithName:@"AvenirNext-Regular" size:18]
 
 #define ALERT_FONT_LIGHT     [UIFont fontWithName:@"AvenirNext-Regular" size:16]
+#define ALERT_FONT_BOLD     [UIFont fontWithName:@"AvenirNext-Medium" size:16]
 
 #define HEADLINE_FONT           [UIFont fontWithName:@"AvenirNext-Medium" size:18]
 #define HEADLINE_FONT_LIGHT     [UIFont fontWithName:@"AvenirNext-Regular" size:16]

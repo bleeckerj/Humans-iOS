@@ -14,6 +14,8 @@
 #import "HuViewForServiceStatus.h"
 #import "HuServiceStatus.h"
 #import <UIColor+FPBrandColor.h>
+#import <UIColor+Crayola.h>
+#import "UIColor+UIColor_LighterDarker.h"
 #import <UIView+MCLayout.h>
 #import <ViewUtils.h>
 #import "HuUserHandler.h"
@@ -88,6 +90,10 @@
 {
     items = _items;
     
+    [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+    }];
+    
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{
@@ -116,17 +122,18 @@
     [header setStatus:[items objectAtIndex:0]];  //[carousel currentItemIndex]]];
     [self.view addSubview:header];
     
-    [carousel setBackgroundColor:[UIColor grayColor]];
-    carouselFrame =
-    CGRectMake(0, HEADER_HEIGHT, 320, CGRectGetHeight(self.view.frame) - CGRectGetHeight(header.frame));
+    [carousel setBackgroundColor:[[UIColor crayolaTimberwolfColor]lighterColor]];
+      
+    carouselFrame = CGRectMake(0, HEADER_HEIGHT, 320, CGRectGetHeight(self.view.frame) - CGRectGetHeight(header.frame));
     [carousel setFrame:carouselFrame];
 	carousel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	//add carousel to view
 	[self.view addSubview:carousel];
     
+    /** here's where we preload some crap **/
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         HuViewForServiceStatus *result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:idx]];
-        if(idx < 4) {
+        if(idx < 5) {
             [result showOrRefreshPhoto];
         }
         [statusViews addObject:result];
@@ -161,9 +168,8 @@
     [defaults setObject:lastPeeks forKey:@"lastPeeks"];
     [defaults setObject:lastPeeks forKey:@"hello"];
     [defaults synchronize];
-    id foo = [defaults objectForKey:@"hello"];
     id bar = [defaults objectForKey:@"lastPeeks"];
-    id baz = [bar objectForKey:[human humanid]];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -201,7 +207,7 @@
 #pragma mark iCarouselDelegate methods
 
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index {
-    LOG_UI(0, @"Did select Item at Index %d", index );
+    LOG_UI(0, @"Did select Item at Index %ld", index );
 }
 
 - (CGFloat)carouselItemWidth:(iCarousel *)carousel {

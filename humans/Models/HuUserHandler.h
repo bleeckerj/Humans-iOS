@@ -89,6 +89,7 @@ typedef enum networkStateTypes
 - (void)humanAddServiceUsers:(NSArray *)arrayOfServiceUsers forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 - (void)humanRemoveServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 
++ (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionhandler;
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler;
 
