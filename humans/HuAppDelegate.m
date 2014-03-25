@@ -11,15 +11,15 @@
 #import "defines.h"
 #import <Crashlytics/Crashlytics.h>
 #import "Flurry.h"
-#import "TestFlight.h"
 #import <Parse/Parse.h>
 #import "HuHumansProfileCarouselViewController.h"
-#import <HockeySDK/HockeySDK.h>
+#import "HockeySDK.h"
 
 @implementation HuAppDelegate
 {
     HuLoginViewController *loginViewController;
     HuSignUpViewController *signUpViewController;
+    HuHumansProfileCarouselViewController *humansProfileCarouselViewController;
 }
 @synthesize humansAppUser;
 @synthesize jediFindFriendsViewController;
@@ -28,8 +28,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-    [TestFlight takeOff:@"7d627af6-7629-44dc-8103-a7a1baa81d03"];
     
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"89a415bf14fb56ed6e81ef153d4cb481"];
     [[BITHockeyManager sharedHockeyManager] startManager];
@@ -48,23 +46,23 @@
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     [manager.imageDownloader setDownloadTimeout:30.0];
     
-//    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-//    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
-
+    //    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    //    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *d = [[NSMutableDictionary alloc]init];
     [defaults registerDefaults:@{@"lastPeeks" : d}];
     [defaults synchronize];
     
-//        for (NSString* family in [UIFont familyNames])
-//        {
-//            NSLog(@"%@", family);
-//    
-//            for (NSString* name in [UIFont fontNamesForFamilyName: family])
-//            {
-//                NSLog(@"  %@", name);
-//            }
-//        }
+    //        for (NSString* family in [UIFont familyNames])
+    //        {
+    //            NSLog(@"%@", family);
+    //
+    //            for (NSString* name in [UIFont fontNamesForFamilyName: family])
+    //            {
+    //                NSLog(@"  %@", name);
+    //            }
+    //        }
     
     humansAppUser = [[HuUserHandler alloc]init];
     
@@ -78,105 +76,43 @@
     [Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
     [application setStatusBarHidden:NO];
     
-    [self loginViaKeychain];
+    //[self loginViaKeychain];
+    //HuSplashViewController *splash = [[HuSplashViewController alloc]init];
     
+    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    loginViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];
+    signUpViewController = [[HuSignUpViewController alloc]init];//[storyBoard instantiateViewControllerWithIdentifier:@"HuSignUpViewController"];
+    
+    UIViewController *splash = [storyBoard instantiateViewControllerWithIdentifier:@"HuSplashViewController"];
+    
+    UINavigationController *navigator = (UINavigationController *)[self.window rootViewController];
+    [navigator pushViewController:splash animated:NO];
     
     return YES;
 }
 
-- (void)loginViaKeychain
-{
-    [[FXKeychain defaultKeychain]objectForKey:@"username"];
-    
-    
-    if([[FXKeychain defaultKeychain]objectForKey:@"username"] != nil) {
-        // only one really
-        NSString *username = [[FXKeychain defaultKeychain] objectForKey:@"username"];
-        NSString *password = [[FXKeychain defaultKeychain] objectForKey:@"password"];
-        [self loginWithUsername:username password:password completionHandler:^(BOOL success, NSError *error) {
-            //
-            if(success) {
-            NSDictionary *dimensions = @{@"user": username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
-            [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
-                [Flurry logEvent:@"keychain-login" withParameters:dimensions];
-        
-            } else {
-                UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                UIViewController *test = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];
-                UINavigationController *root = (UINavigationController*)self.window.rootViewController;
-                [root pushViewController:test animated:YES];
- 
-            }
-        }];
-    } else {
-        
-        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UIViewController *test = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginOrSignUpViewController"];
-        UINavigationController *root = (UINavigationController*)self.window.rootViewController;
-
-        [root pushViewController:test animated:YES];
-    }
-    
-    
-}
-
-- (HuSignUpViewController *)signUpViewController
-{
-    if(signUpViewController == nil) {
-        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        signUpViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuSignUpViewController"];
-    }
-    [[signUpViewController usernameTextField]setText:@""];
-    [[signUpViewController passwordTextField]setText:@""];
-    [[signUpViewController emailTextField]setText:@""];
-    return signUpViewController;
-}
-
-
-- (HuLoginViewController *)loginViewController
-{
-    if(loginViewController == nil) {
-    UIStoryboard *storyBoard=[UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    loginViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];
-    }
-    [[loginViewController usernameTextField]setText:@""];
-    [[loginViewController passwordTextField]setText:@""];
-    return loginViewController;
-}
 
 - (NSArray *)freshNavigationStack
 {
-    return  @[[self loginViewController]];
+    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    HuLoginOrSignUpViewController *loginOrSignUpViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginOrSignUpViewController"];
+    return  @[loginOrSignUpViewController];
 }
 
-- (void)loginWithUsername:(NSString *)username password:(NSString *)password completionHandler:(CompletionHandlerWithResult)completionHandler
+// only makes sense once we are logged in
+- (HuHumansProfileCarouselViewController *)humansProfileCarouselViewController
 {
-    HuUserHandler *userHandler = [self humansAppUser];
-    UINavigationController *root = (UINavigationController*)self.window.rootViewController;
-    //[self.window setBackgroundColor:[UIColor crayolaGraniteGrayColor]];
-    
-    [userHandler userRequestTokenForUsername:username forPassword:password withCompletionHandler:^(BOOL success, NSError *error) {
-        //
-        if(success) {
-            HuHumansProfileCarouselViewController *x = [[HuHumansProfileCarouselViewController alloc]init];
-           [root pushViewController:x animated:YES];
-            if(completionHandler) {
-                completionHandler(YES, nil);
-            }
-        } else {
-            
-            
-            [root pushViewController:[self loginViewController] animated:YES];
-
-            if(completionHandler) {
-                completionHandler(NO, error);
-            }
-        }
-    }];
-    
-    
+    // are we logged in??
+    if(humansProfileCarouselViewController == nil ) {
+        humansProfileCarouselViewController = [[HuHumansProfileCarouselViewController alloc]init];
+    }
+    return humansProfileCarouselViewController;
 }
 
+- (void)setHumansHumansProfileCarouselViewController:(HuHumansProfileCarouselViewController *)viewController
+{
+    humansProfileCarouselViewController = viewController;
+}
 
 
 - (HuJediFindFriends_ViewController *)jediFindFriendsViewController
@@ -187,7 +123,24 @@
     return jediFindFriendsViewController;
 }
 
+- (HuLoginViewController *)loginViewController
+{
+    if(loginViewController == nil) {
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        loginViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];
+    }
+    return loginViewController;
+}
 
+- (HuSignUpViewController *)signUpViewController
+{
+    if(signUpViewController == nil) {
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        signUpViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuSignUpViewController"];
+    }
+    return signUpViewController;
+    
+}
 
 
 - (void)applicationWillResignActive:(UIApplication *)application

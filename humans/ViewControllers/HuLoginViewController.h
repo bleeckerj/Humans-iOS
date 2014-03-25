@@ -7,8 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <ECSlidingViewController.h>
-#import "HuSlidingViewController.h"
 #import <MRProgress/MRProgress.h>
 #import <FUIButton.h>
 #import "UIColor+UIColor_LighterDarker.h"

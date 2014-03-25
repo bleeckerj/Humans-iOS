@@ -110,7 +110,7 @@
     //self.view.frame = CGRectMake(0, 0, 320, 560);
     self.view.frame = [self.navigationController.view bounds];
 	// Do any additional setup after loading the view.
-    [self.view setBackgroundColor:[UIColor Amazon]];
+    [self.view setBackgroundColor:[UIColor crayolaManateeColor]];
     
     // header?
     header.frame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
@@ -168,7 +168,6 @@
     [defaults setObject:lastPeeks forKey:@"lastPeeks"];
     [defaults setObject:lastPeeks forKey:@"hello"];
     [defaults synchronize];
-    id bar = [defaults objectForKey:@"lastPeeks"];
 
 }
 
@@ -257,7 +256,7 @@ NSUInteger last_index, current_index;
     current_index = [mcarousel currentItemIndex];
     
     
-    for(int i=current_index; i<[carousel numberOfItems] && i < current_index + 3; i++) {
+    for(NSUInteger i=current_index; i<[carousel numberOfItems] && i < current_index + 3; i++) {
         [[statusViews objectAtIndex:i]showOrRefreshPhoto];
     }
     

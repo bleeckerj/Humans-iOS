@@ -512,6 +512,7 @@
 
 - (void)commonInit
 {
+
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
     userHandler = [delegate humansAppUser];
     user = [userHandler humans_user];
@@ -529,16 +530,6 @@
     [self updateHumanProfileViewsStatusCounts];
     //and queue to do it every 2 minutes as well..
     privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
-    
-    //    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:240
-    //                                                                 target:self
-    //                                                               selector:@selector(updateHumanProfileViewsStatusCounts)
-    //                                                               userInfo:nil
-    //                                                                repeats:YES
-    //                                                          dispatchQueue:privateQueue];
-    //
-    //
-    //    dispatch_queue_set_specific(privateQueue, (__bridge const void *)(self), (void *)HuHumansScrollViewControllerTimerQueueContext, NULL);
     
 }
 
@@ -642,12 +633,6 @@
 
 - (void)addHumanToViewIfNotAlready:(HuHuman *)human
 {
-    //    if([self viewForHuman:human] != nil) {
-    //        HuHumanProfileView *view_for_human = [self viewForHuman:human];
-    //        [view_for_human removeFromSuperview];
-    //        [humans_views removeObject:view_for_human];
-    //    }
-    
     if([arrayOfHumans containsObject:human] == NO) {
         [arrayOfHumans addObject:human];
         if(viewType == kHalfHeightScrollView) {
@@ -857,7 +842,7 @@
     UILabel *appNameLabel = [[UILabel alloc]initWithFrame:CGRectMake([settingsButton right], 0, width, HEADER_HEIGHT)];
     [appNameLabel setText:@"Humans"];
     [appNameLabel setTextAlignment:NSTextAlignmentCenter];
-    [appNameLabel setFont:HEADER_FONT_LARGE];
+    [appNameLabel setFont:HEADER_FONT_XLARGE];
     [appNameLabel setUserInteractionEnabled:YES];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]      initWithTarget:self action:@selector(longPressOnAppName:)];
     longPress.minimumPressDuration = 0.5;  // Seconds
@@ -866,9 +851,11 @@
     
     [appNameLabel bk_whenDoubleTapped:^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[bself navigationController]popViewControllerAnimated:YES];
+//            [[bself navigationController]popToRootViewControllerAnimated:YES];
             HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+            
             [[bself navigationController]setViewControllers:[delegate freshNavigationStack] animated:YES];
+            //[[bself navigationController]pushViewController:[[delegate freshNavigationStack]objectAtIndex:0] animated:YES];
         });
         
     }];
@@ -910,39 +897,10 @@
     
 #pragma mark header setup
     //header
-    /*
-     header = [MGLineStyled lineWithLeft:settingsButton right:add_human size:(CGSize){self.view.frame.size.width,HEADER_HEIGHT}];
-     UIColor *color = [UIColor whiteColor];
-     [header setBackgroundColor:color];
-     
-     [header setMiddleFont:HEADLINE_FONT];
-     [header setMiddleTextColor:[UIColor darkGrayColor]];
-     [header setMiddleItems:[NSMutableArray arrayWithObject:@"Foomans"]];
-     [header setMiddleItemsAlignment:NSTextAlignmentCenter];
-     header.sidePrecedence = MGSidePrecedenceMiddle;
-     header.padding = UIEdgeInsetsMake(4, 8, 4, 8);
-     header.fixedPosition = (CGPoint){0,0};
-     header.zIndex = 1;
-     header.layer.cornerRadius = 0;
-     header.layer.shadowOffset = CGSizeZero;
-     header.onTap = ^{
-     LOG_UI(0, @"Tapped Header");
-     //nextState++;
-     };
-     __block MGLineStyled *bheader = header;
-     header.onLongPress = ^{
-     LOG_UI(0, @"Long Press Header..Esc to %@ %@", [bself presentingViewController], bheader.longPresser);
-     dispatch_async(dispatch_get_main_queue(), ^{
-     [[bself navigationController]popViewControllerAnimated:YES];
-     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
-     [[bself navigationController]setViewControllers:[delegate freshNavigationStack] animated:YES];
-     });
-     
-     };
-     */
     
     __block UINavigationController *bnav = [self navigationController];
     __block iCarousel *weak_carousel = carousel;
+#pragma mark here's where we set up the menu items
     settingsItem = [[REMenuItem alloc] initWithTitle:@"Link Services"
                                                image:[UIImage imageNamed:@"add-cloud-gray"]
                                     highlightedImage:nil
@@ -951,12 +909,12 @@
                                                       showServicesViewController = [[HuShowServicesViewController alloc]init];
                                                       
                                                   }
-                                                  showServicesViewController.tapOnEx = ^{
-                                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                                          [bnav popToViewController:bself animated:YES];
-                                                      });
-                                                      
-                                                  };
+//                                                  showServicesViewController.tapOnEx = ^{
+//                                                      dispatch_async(dispatch_get_main_queue(), ^{
+//                                                          [bnav popToViewController:bself animated:YES];
+//                                                      });
+//                                                  
+//                                                  };
                                                   
                                                   
                                                   [bnav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
@@ -976,31 +934,6 @@
                                               
                                               [current editHuman];
                                           }];
-    
-    //    REMenuItem *beakerItem = [[REMenuItem alloc] initWithTitle:@"Height"
-    //                                                         image:[UIImage imageNamed:@"Icon_Home"]
-    //                                              highlightedImage:nil
-    //                                                        action:^(REMenuItem *item) {
-    //                                                            LOG_UI(0, @"Item: %@", item);
-    //                                                            if(viewType == kFullHeightScrollView) {
-    //                                                                viewType = kHalfHeightScrollView;
-    //                                                            } else {
-    //                                                                viewType = kFullHeightScrollView;
-    //                                                            }
-    //                                                            dispatch_async(dispatch_get_main_queue(), ^{
-    //                                                                //
-    //                                                                [[self view]setNeedsLayout];
-    //                                                            });
-    //
-    //                                                        }];
-    //
-    
-    //    UIView *customView = [[UIView alloc] init];
-    //    customView.backgroundColor = [UIColor blueColor];
-    //    customView.alpha = 0.4;
-    //    REMenuItem *customViewItem = [[REMenuItem alloc] initWithCustomView:customView action:^(REMenuItem *item) {
-    //        NSLog(@"Tap on customView");
-    //    }];
     
     
     mainMenu.waitUntilAnimationIsComplete = NO;
@@ -1063,7 +996,7 @@
     {
         LOG_UI(0, @"Long Press Header..Esc to %@", [self presentingViewController]);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[self navigationController]popViewControllerAnimated:YES];
+            //[[self navigationController]popViewControllerAnimated:YES];
             HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
             [[self navigationController]setViewControllers:[delegate freshNavigationStack] animated:YES];
         });

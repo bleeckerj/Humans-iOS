@@ -27,7 +27,7 @@
 
 #pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
 
-#define DEV
+#undef DEV
 
 @implementation HuUserHandler
 
@@ -230,7 +230,7 @@ NSDateFormatter *twitter_formatter;
 #pragma mark Basically login /oauth2/token?grant_typ
 - (void)userRequestTokenForUsername:(NSString *)username forPassword:(NSString *)password withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    LOG_ERROR(0, @"Hello %@ %@", username, password);
+    //LOG_ERROR(0, @"Hello %@ %@", username, password);
     NSString* buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CWBuildNumber"];
     NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
     [huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithUsername:username password:password];

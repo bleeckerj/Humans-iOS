@@ -47,7 +47,6 @@
         //US2ConditionCollection *conditions = [[US2ConditionCollection alloc]init];
         
         HuUS2ConditionLowerAlphaEmotis *lowerAlphaEmotis = [[HuUS2ConditionLowerAlphaEmotis alloc]init];
-        [lowerAlphaEmotis setAllowWhitespace:NO];
         [lowerAlphaEmotis setLocalizedViolationString:@"Must start with lowercase letter"];
         [_conditionCollection addCondition:lowerAlphaEmotis];
         
@@ -79,9 +78,9 @@
     [HuUserHandler usernameExists:string withCompletionHandler:^(BOOL exists, NSError *error) {
         if(error == nil) {
             if(exists) {
-                [_notifyDelegate isUniqueUsername:NO];
+                [_notifyDelegate isUniqueUsername:string isUnique:NO];
             } else {
-                [_notifyDelegate isUniqueUsername:YES];
+                [_notifyDelegate isUniqueUsername:string isUnique:YES];
                 
             }
         }
@@ -146,19 +145,19 @@
 
 - (void)loadView
 {
-    [super loadView];
+   // [super loadView];
     [self initFields];
     CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
     CGFloat status_bar_height = [UIApplication sharedApplication].statusBarFrame.size.height;
     
     CGFloat elementWidth = roundf(applicationFrame.size.width - 2 * 20);
-    CGRect scrollViewFrame = CGRectMake(self.navigationController.view.frame.origin.x, self.navigationController.view.frame.origin.y + 2*status_bar_height, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height);
+    CGRect scrollViewFrame = CGRectMake(self.navigationController.view.frame.origin.x, self.navigationController.view.frame.origin.y + status_bar_height, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height-status_bar_height);
+    
     self.keyboardAvoidingScrollView = [[RDVKeyboardAvoidingScrollView alloc] initWithFrame:scrollViewFrame];
-    [keyboardAvoidingScrollView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [keyboardAvoidingScrollView setBackgroundColor:[UIColor whiteColor]];
     [keyboardAvoidingScrollView setAlwaysBounceVertical:YES];
     
-    signUpLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 20, elementWidth, 45)];
+    signUpLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, elementWidth, 45)];
     [signUpLabel setTextColor:[UIColor blackColor]];
     [signUpLabel setFont:TEXTFIELD_FONT_LARGE];
     [signUpLabel setText:@"Sign Up"];
@@ -178,7 +177,7 @@
     [usernameTextField setValidator:validator];
     
     [usernameTextField setBorderStyle:UITextBorderStyleNone];
-    [usernameTextField setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
+    //[usernameTextField setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [usernameTextField setAdjustsFontSizeToFitWidth:YES];
     [usernameTextField setFont:TEXTFIELD_FONT_LARGE];
     [usernameTextField setBackgroundColor:[UIColor carrotColor ]];
@@ -199,7 +198,7 @@
     passwordTextField = [[US2ValidatorTextField alloc]init ];
     [passwordTextField setFrame:CGRectMake(20, CGRectGetMaxY(usernameTextField.frame) + 45/2, elementWidth, 45)];
     [passwordTextField setBorderStyle:UITextBorderStyleNone];
-    [passwordTextField setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
+    //[passwordTextField setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [passwordTextField setAdjustsFontSizeToFitWidth:YES];
     [passwordTextField setFont:TEXTFIELD_FONT_LARGE];
     [passwordTextField setBackgroundColor:[UIColor carrotColor ]];
@@ -232,7 +231,7 @@
     confirmPasswordTextField = [[US2ValidatorTextField alloc]init];
     [confirmPasswordTextField setFrame:CGRectMake(20, CGRectGetMaxY(passwordInfoLabel.frame) + 45/2, elementWidth, 45)];
     [confirmPasswordTextField setBorderStyle:UITextBorderStyleNone];
-    [confirmPasswordTextField setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
+    //[confirmPasswordTextField setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [confirmPasswordTextField setAdjustsFontSizeToFitWidth:YES];
     [confirmPasswordTextField setFont:TEXTFIELD_FONT_LARGE];
     [confirmPasswordTextField setBackgroundColor:[UIColor carrotColor ]];
@@ -272,7 +271,7 @@
     emailTextField = [[US2ValidatorTextField alloc]init];
     [emailTextField setFrame:CGRectMake(20, CGRectGetMaxY(confirmPasswordTextField.frame) + 45/2, elementWidth, 45)];
     [emailTextField setBorderStyle:UITextBorderStyleNone];
-    [emailTextField setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
+    //[emailTextField setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
     [emailTextField setAdjustsFontSizeToFitWidth:YES];
     [emailTextField setFont:TEXTFIELD_FONT_LARGE];
     [emailTextField setBackgroundColor:[UIColor carrotColor ]];
@@ -304,11 +303,11 @@
     [signUpButton setBackgroundColor:[UIColor carrotColor]];
     [signUpButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
     [signUpButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [signUpButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+
     [signUpButton bk_addEventHandler:^(id sender) {
         [self signUpButtonTouchUpInside];
     } forControlEvents:UIControlEventTouchUpInside];
-    //[completeButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin];
-    // [completeButton addTarget:self action:@selector(completeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [keyboardAvoidingScrollView addSubview:signUpButton];
     
     loginButton = [FUIButton buttonWithType:UIButtonTypeSystem];
@@ -326,21 +325,24 @@
     [keyboardAvoidingScrollView addSubview:loginButton];
     
     
-    [keyboardAvoidingScrollView setContentSize:CGSizeMake(applicationFrame.size.width, CGRectGetMaxY(signUpButton.frame) + 20)];
-    [keyboardAvoidingScrollView setBackgroundColor:[UIColor whiteColor]];
-    [self.view addSubview:self.keyboardAvoidingScrollView];
-    
+    //[keyboardAvoidingScrollView setContentSize:CGSizeMake(applicationFrame.size.width, CGRectGetMaxY(signUpButton.frame) + 20)];
+//    [keyboardAvoidingScrollView setBackgroundColor:[UIColor whiteColor]];
+//    [keyboardAvoidingScrollView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
+//    [keyboardAvoidingScrollView removeConstraints:keyboardAvoidingScrollView.constraints];
+
+    self.view = keyboardAvoidingScrollView;
 }
 
 - (BOOL)prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
-//- (UIStatusBarStyle )preferredStatusBarStyle
-//{
-//    return UIStatusBarStyleLightContent;
-//}
+- (UIStatusBarStyle )preferredStatusBarStyle
+{
+    return UIStatusBarStyleDefault;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -362,29 +364,40 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.view setSize:CGSizeMake(180, 180)];
+
     self.emailTextField.text = @"";
     self.confirmPasswordTextField.text = @"";
     self.usernameTextField.text = @"";
     self.passwordTextField.text = @"";
+    //[self disableSignUpButton];
 }
 
 
-- (void)isUniqueUsername:(BOOL)is
+- (void)disableSignUpButton
 {
-    if(is) {
-        //        dispatch_async(dispatch_get_main_queue(), ^{
-        //            [usernameInfoLabel setText:@""];
-        //            [self.view setNeedsDisplay];
-        //        });
-        //
-    } else {
+    [signUpButton setEnabled:NO];
+    [signUpButton setButtonColor:[UIColor crayolaManateeColor]];
+}
+
+- (void)enableSignUpButton
+{
+    [signUpButton setEnabled:YES];
+    [signUpButton setButtonColor:[UIColor carrotColor]];
+    
+}
+
+
+- (void)isUniqueUsername:(NSString *)username isUnique:(BOOL)is
+{
+    if(is == NO) {
         [usernameInfoLabel setText:@"Username is already taken"];
+        [usernameInfoLabel setTextColor:[UIColor crayolaRadicalRedColor]];
         [usernameInfoLabel setHidden:NO];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view setNeedsDisplay];
-        });
-        
     }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.view setNeedsDisplay];
+    });
 }
 
 
@@ -418,16 +431,19 @@
     
 }
 
+#pragma mark == we check to see if all the fields are copacetic here
+
 - (void)validatorUIDidChange:(id<US2ValidatorUIProtocol>)validatorUI
 {
     if(validatorUI == usernameTextField && [validatorUI isValid]) {
         
         [usernameInfoLabel setText:[NSString stringWithFormat:@"%@ is cool", [validatorUI text]]];
+        [usernameInfoLabel setTextColor:[UIColor Garmin]];
     } else {
         
     }
     if(validatorUI == passwordTextField) {
-        LOG_UI(0, @"%d", [validatorUI isValid]);
+        //LOG_UI(0, @"%d", [validatorUI isValid]);
         BOOL isValid = [validatorUI isValid];
         if(isValid) {
             [passwordInfoLabel setText:@"Not Lame"];
@@ -438,10 +454,20 @@
         }
     }
     
+    // if all fields are good, we can sign up
     if([usernameTextField isValid] && [passwordTextField isValid] && [[confirmPasswordTextField text]isEqualToString:[passwordTextField text]] && [emailTextField isValid]) {
-        [signUpButton setEnabled:YES];
+        [self enableSignUpButton];
+        [self performBlock:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+                [emailTextField resignFirstResponder];
+                
+            });
+
+        } afterDelay:2.5];
+        
     } else {
-        [signUpButton setEnabled:NO];
+        [self disableSignUpButton];
     }
     
     
@@ -450,7 +476,6 @@
 
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    LOG_UI(0, @"%@", string);
     CFMutableStringRef x = (__bridge CFMutableStringRef)string;
     CFStringLowercase(x, CFLocaleCopyCurrent());
     return YES;
@@ -463,9 +488,7 @@
         [usernameTextField resignFirstResponder];
         
     });
-    //    [uniqueUsername check:[usernameTextField text]];
     [usernameTextField isValid];
-    
 }
 
 
@@ -478,12 +501,10 @@
 }
 
 - (void)signUpButtonTouchUpInside {
-    // validate fields
-    //    [self isUsernameValidWithCompletionHandler:^(BOOL exists, NSError *error) {
-    //
-    //        if(exists == NO) {
-    //            if([self isPasswordValid] && [self isEmailValid]) {
-    // good to go
+    [signUpButton setEnabled:NO];
+    //[self popGoodToastNotification:[NSString stringWithFormat:@"Welcome %@", @"shemp"]];
+    //[self popBadToastNotification:@"There was a problem signing up" withSubnotice:@"really weird error message about something obscure"];
+
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
     HuUserHandler *handler = [delegate humansAppUser];
     HuUser *user = [[HuUser alloc]init];
@@ -491,64 +512,74 @@
     [user setEmail:[emailTextField text]];
     [handler parseCreateNewUser:user password:[passwordTextField text] withCompletionHandler:^(id data, BOOL success, NSError *error) {
         //
+        if(success == YES) {
+            [self popGoodToastNotification:[NSString stringWithFormat:@"Welcome %@", [user username]]];
+            [signUpButton setEnabled:NO];
+            [self performBlock:^{
+                //
+                [self loginButtonTouchUpInside:nil];
+            } afterDelay:4];
+
+        }
+        
         if(success == NO) {
+            [self popBadToastNotification:@"There was a problem signing up" withSubnotice:[error userInfo][@"error"]];
+            [self performBlock:^{
+                [self enableSignUpButton];
+            } afterDelay:5];
         }
     }];
-    //            }
-    //        } else {
-    //
-    //        }
-    //}];
+    
     
 }
 
-//- (void)textFieldDidEndEditing:(UITextField *)textField
-//{
-//    if(textField == usernameTextField) {
-//        [self usernameTextFieldEditingDidEnd:textField];
-//    }
-//    if(textField == passwordTextField) {
-//        [self passwordTextFieldEditingDidEnd:passwordTextField];
-//    }
-//    if(textField == confirmPasswordTextField) {
-//        [self confirmPasswordTextFieldEditingDidEnd:confirmPasswordTextField];
-//    }
-//    if(textField == emailTextField) {
-//        if([[[self emailTextField]text]length] > 0) {
-//            [self emailTextFieldEditingDidEnd:emailTextField];
-//        }
-//    }
-//}
-//
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-//{
-//    return YES;
-//}
-//
-//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-//    NSInteger textFieldIndex = [self.textFields indexOfObject:textField];
-//
-//    if (textFieldIndex <self.textFields.count - 1) {
-//        [[self.textFields objectAtIndex:0] becomeFirstResponder];
-//    } else {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [textField resignFirstResponder];
-//            [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
-//        });
-//    }
-//
-//    return YES;
-//}
+- (void)popBadToastNotification:(NSString *)notice withSubnotice:(NSString *)subnotice
+{
+    NSDictionary *options = @{
+                              kCRToastTextKey :notice,
+                              kCRToastSubtitleTextKey : subnotice,
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : [UIColor crayolaManateeColor],
+                              kCRToastFontKey : HEADER_FONT_LARGE,
+                              kCRToastSubtitleFontKey : HEADER_FONT,
+                              kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypeCover),
+                              kCRToastTimeIntervalKey : @5,
+                              kCRToastUnderStatusBarKey : @NO,
+                              kCRToastNotificationTypeKey : @(CRToastTypeNavigationBar),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionRight)
+                              };
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
 
+}
 
-//-(void)textFieldDidEndEditing:(UITextField *)sender
-//{
-//    LOG_UI(0, @"%@", sender);
-//}
-//
-//-(void)textFieldDidBeginEditing:(UITextField *)sender
-//{
-//}
+- (void)popGoodToastNotification:(NSString *)notice
+{
+    NSDictionary *options = @{
+                              kCRToastTextKey :notice,
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : [UIColor Garmin],
+                              kCRToastFontKey : HEADER_FONT_LARGE,
+                              kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypeCover),
+                              kCRToastTimeIntervalKey : @3,
+                              kCRToastUnderStatusBarKey : @NO,
+                              kCRToastNotificationTypeKey : @(CRToastTypeNavigationBar),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionRight)
+                              };
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
+}
+
 
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {

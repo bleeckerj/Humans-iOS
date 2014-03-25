@@ -8,8 +8,11 @@
 
 #import "HuViewForServiceStatus.h"
 #import "InstagramStatus.h"
+#import "InstagramLocation.h"
 #import "HuFlickrStatus.h"
 #import "HuTwitterStatus.h"
+#import "HuTwitterCoordinates.h"
+#import "HuTwitterPlace.h"
 #import "HuFoursquareCheckin.h"
 #import "HuFoursquareVenue.h"
 #import "HuStatusPhotoBox.h"
@@ -150,15 +153,12 @@
         status = mstatus;
         // header isn't part of the actual status view, which gets pasted into the carousel, so we need
         // the header to be separate..it's managed by HuStatusCarousel_ViewController
-        
-        //UITextView *statusView = [[UITextView alloc]initWithFrame:[self getStatusViewFrame]];//(CGRectInset(frame, 5, 5))];
-        
         [self setBackgroundColor:[UIColor whiteColor]];
         
         if([status containsMedia]) {
             photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, 0.5*frame.size.height) deferLoad:NO];
             //[photoBox setFrame:CGRectMake(0, 100, frame.size.width, 0.5*frame.size.height)];
-            [photoBox setBackgroundColor:[UIColor orangeColor]];
+            [photoBox setBackgroundColor:[UIColor whiteColor]];
             [self addSubview:photoBox];
         }
         
@@ -168,7 +168,7 @@
             //statusField.lineBreakMode = UILineBreakModeTailTruncation;
             //statusLabel.numberOfLines = 0;
             [statusView setBackgroundColor:[UIColor whiteColor]];
-            NSString *description = [NSString stringWithFormat:@"%@\ncontributors %@\nin reply to: %@\nfrom %@\nentities %@", [status statusText], [status contributors], [status in_reply_to_status_id_str], [status in_reply_to_screen_name], [status entities]];
+            NSString *description = [NSString stringWithFormat:@"%@\ngeo %@\nplace %@\nbox %@\ncontributors %@\nin reply to: %@\nfrom %@\nentities %@", [status statusText], [status geo], [[status place]name], [[status coordinates]jsonString], [status contributors], [status in_reply_to_status_id_str], [status in_reply_to_screen_name], [status entities]];
             [statusView setText:description];
             [statusView setTextColor:[UIColor blackColor]];
             LOG_TWITTER_VERBOSE(0, @"Status: %@ %@", [status statusText], statusView);
@@ -259,10 +259,6 @@
         status = mstatus;
         //LOG_UI(0, @"Status Image URL %@", [status statusImageURL]);
         photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:NO];
-//        [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
-//            //
-//            LOG_UI(0, @"LOADED %@", [status statusImageURL]);
-//        }];
         [photoBox setBackgroundColor:[UIColor crayolaTimberwolfColor]];
         [self addSubview:photoBox];
         
@@ -273,10 +269,13 @@
             statusView.editable = NO;
             [statusView setBackgroundColor:[UIColor whiteColor]];
             NSString *description;
+            InstagramLocation *loc = [status location];
+
             if([[status type] isEqualToString:@"video"]) {
-            description = [NSString stringWithFormat:@"(video) %@", [status statusText]];
+                
+            description = [NSString stringWithFormat:@"(video) %@ %@", [status statusText], loc == nil?@"": [loc jsonString]];
             } else {
-                description = [NSString stringWithFormat:@"%@",[status statusText]];
+                description = [NSString stringWithFormat:@"%@ %@",[status statusText], loc == nil?@"": [loc jsonString]];
 
             }
             [statusView setText:description];

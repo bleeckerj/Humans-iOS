@@ -17,13 +17,12 @@
 #import <UIColor+Crayola.h>
 #import "HuAppDelegate.h"
 #import "HuUserHandler.h"
-#import <MRProgress.h>
+//#import <MRProgress.h>
 #import <BlocksKit+UIKit.h>
 #import <US2FormValidator.h>
 #import "HuUS2ConditionLowerAlphaEmotis.h"
 #import "HuUS2ConditionEmojiStringRange.h"
-
-//#import <ReactiveCocoa/ReactiveCocoa.h>
+#import <CRToast.h>
 
 @interface HuSignUpViewController : UIViewController <UITextFieldDelegate, US2ValidatorUIDelegate>
 
@@ -39,6 +38,6 @@
 @property (strong, nonatomic) IBOutlet FUIButton *loginButton;
 @property (retain, nonatomic) IBOutlet RDVKeyboardAvoidingScrollView *keyboardAvoidingScrollView;
 
-- (void)isUniqueUsername:(BOOL)is;
+- (void)isUniqueUsername:(NSString *)username isUnique:(BOOL)is;
 
 @end

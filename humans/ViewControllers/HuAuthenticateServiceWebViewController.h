@@ -16,6 +16,7 @@
 #import <MRProgress.h>
 #import "Flurry.h"
 #import <FUIButton.h>
+#import <MRProgress.h>
 
 @interface HuAuthenticateServiceWebViewController : UIViewController <UIWebViewDelegate>
 @property (nonatomic, retain) MGLineStyled *header;

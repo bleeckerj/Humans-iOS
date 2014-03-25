@@ -49,4 +49,25 @@
 	
 }
 
+-(NSString *)jsonString
+{
+    NSError *writeError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.dictionary options:NSJSONWritingPrettyPrinted error:&writeError];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
+}
+
+-(NSDictionary *)dictionary
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+    if(self.coordinates) {
+        [dict setObject:self.coordinates forKey:@"coordinates"];
+    }
+    if(self.type) {
+        [dict setObject:self.type forKey:@"type"];
+    }
+    return dict;
+}
+
+
 @end

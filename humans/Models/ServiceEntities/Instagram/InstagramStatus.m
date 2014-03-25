@@ -13,6 +13,7 @@
 #import "TransientInstagramUser.h"
 #import "InstagramUser.h"
 #import "InstagramImage.h"
+#import "InstagramLocation.h"
 #import "defines.h"
 #import <UIColor+FPBrandColor.h>
 
@@ -32,6 +33,7 @@
 @synthesize transient_instagram_user = _transient_instagram_user;
 @synthesize type = _type;
 @synthesize user = _user;
+@synthesize location = _location;
 @synthesize user_has_liked = _user_has_liked;
 @synthesize version = _version;
 @synthesize hasBeenRead;
@@ -89,6 +91,12 @@
 - (NSString *)tinyMonochromeServiceImageBadgeName
 {
     return @"instagram-camera-white-tiny.png";
+}
+
+- (NSString *)monochromeServiceImageBadgeName
+{
+    return INSTAGRAM_GRAY_IMAGE;
+
 }
 
 - (NSURL *)userProfileImageURL
@@ -196,6 +204,12 @@
 		self.user = [[InstagramUser alloc] initWithJSONDictionary:user_];
 	}
 
+    id location_ = [dic objectForKey:@"location"];
+    if([location_ isKindOfClass:[NSDictionary class]])
+    {
+        self.location = [[InstagramLocation alloc]initWithJSONDictionary:location_];
+    }
+    
 	id user_has_liked_ = [dic objectForKey:@"user_has_liked"];
 	if([user_has_liked_ isKindOfClass:[NSString class]])
 	{
@@ -227,7 +241,7 @@
 
 -(NSDictionary *)dictionary
 {
-    return [NSDictionary dictionaryWithObjectsAndKeys:/*[self caption], @"caption",*//* [self comments], @"comments",*/ [self created_time], @"created_time", [self filter], @"filter", [self instagram_id], @"instagram_id", [self images], @"images", [self lastUpdated], @"lastUpdated", [self likes], @"likes", [self link], @"link", [self service], @"service", [self transient_instagram_user], @"transient_instagram_user", [self type], @"type", [self user], @"user", [self user_has_liked], @"user_has_liked", [self version], @"version", nil];
+    return [NSDictionary dictionaryWithObjectsAndKeys:/*[self caption], @"caption",*//* [self comments], @"comments",*/ [self created_time], @"created_time", [self filter], @"filter", [self instagram_id], @"instagram_id", [self images], @"images", [self lastUpdated], @"lastUpdated", [self likes], @"likes", [self link], @"link", [self service], @"service", [self transient_instagram_user], @"transient_instagram_user", [self location], @"location", [self type], @"type", [self user], @"user", [self user_has_liked], @"user_has_liked", [self version], @"version", nil];
 }
 
 

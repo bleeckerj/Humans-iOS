@@ -40,6 +40,7 @@
 	return self;
 }
 
+
 - (void) parseJSONDictionary:(NSDictionary *)dic
 {
 	// PARSER

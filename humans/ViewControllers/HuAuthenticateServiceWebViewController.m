@@ -34,6 +34,11 @@ HuUserHandler *userHandler;
     return self;
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (id)initWithAuthURL:(NSURL *)aAuthURL logoutURL:(NSURL *)aLogoutURL serviceName:(NSString *)aServiceName
 {
     self = [super init];
@@ -48,18 +53,35 @@ HuUserHandler *userHandler;
     return self;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MRProgressOverlayView showOverlayAddedTo:self.view
+                                            title:[NSString stringWithFormat:@"Waiting for %@", serviceName]
+                                             mode:MRProgressOverlayViewModeIndeterminate animated:YES];
+
+    });
+    // give the progress overlay time to show up
+    [self performBlock:^{
+        
+        NSURLRequest* request = [NSURLRequest requestWithURL:authURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
+        NSURLRequest *logout = [NSURLRequest requestWithURL:logoutURL];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
+        if(webView == nil) {
+            webView = [[UIWebView alloc]init];
+        }
+        [webView loadRequest:request];
+    } afterDelay:0.5];
+
+
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSURLRequest* request = [NSURLRequest requestWithURL:authURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-    NSURLRequest *logout = [NSURLRequest requestWithURL:logoutURL];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
-    if(webView == nil) {
-            webView = [[UIWebView alloc]init];
-    }
-    [webView loadRequest:request];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -85,9 +107,9 @@ HuUserHandler *userHandler;
     [ex_button setButtonColor:[UIColor whiteColor]];
     [ex_button setImage:[UIImage imageNamed:@"delete-x-22sq"] forState:UIControlStateNormal];
     [ex_button bk_addEventHandler:^(id sender) {
-        NSArray *viewControllers = self.navigationController.viewControllers;
-        UIViewController *rootViewController = [viewControllers objectAtIndex:viewControllers.count - 2];
-        [rootViewController.view setNeedsLayout];
+        //NSArray *viewControllers = self.navigationController.viewControllers;
+        //UIViewController *rootViewController = [viewControllers objectAtIndex:viewControllers.count - 2];
+        //[rootViewController.view setNeedsLayout];
         //[bself.navigationController popToRootViewControllerAnimated:YES];
         [bself.navigationController popViewControllerAnimated:YES];
         
@@ -135,14 +157,17 @@ HuUserHandler *userHandler;
 
     webView = [[UIWebView alloc]init];
     webView.delegate = self;
-    [webView setSize:CGSizeMake(self.view.width, self.view.height - self.header.height)];
-    [webView mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:self.header];
+    [webView setSize:CGSizeMake(self.view.width, self.view.height - ex_button.height)];
+    //[webView mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:self.header];
     [self.view addSubview:webView];
+
+    [webView mc_setRelativePosition:MCViewRelativePositionUnderAlignedLeft toView:ex_button];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     if(handleWebViewDidFinishLoad) {
+        [MRProgressOverlayView dismissOverlayForView:self.view animated:YES];
         handleWebViewDidFinishLoad(webView);
     }
 }
@@ -150,6 +175,8 @@ HuUserHandler *userHandler;
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
     if(handleWebViewDidStartLoad) {
+        [MRProgressOverlayView showOverlayAddedTo:self.view title:@"Loading.." mode:MRProgressOverlayViewModeIndeterminate animated:YES];
+
         handleWebViewDidStartLoad(webView);
     }
 }
@@ -162,7 +189,10 @@ HuUserHandler *userHandler;
 }
 
 
-
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

@@ -9,10 +9,8 @@
 #import "HuUS2ConditionLowerAlphaEmotis.h"
 //    //\\U0001f300-\\U0001f5ff\\U0001f600-\\U0001f64f\\U0001f680-\\U0001f6c5]"
 @implementation HuUS2ConditionLowerAlphaEmotis
-#define REGEX_PATTERN @"\"
-#define REGEX_PATTERN_WHITESPACE @"[a-z0-9\\s]"//\u1f300-\u1f5ff\u1f600-\u1f64f\u1f680-\u1f6c5"
-
-@synthesize allowWhitespace;
+#define REGEX_PATTERN @"(?!A-Z)[a-z][a-z0-9]"
+//#define REGEX_PATTERN_WHITESPACE @"[a-z0-9\\s]"//\u1f300-\u1f5ff\u1f600-\u1f64f\u1f680-\u1f6c5"
 
 - (BOOL)check:(NSString *)string
 {
@@ -24,7 +22,7 @@
 //    LOG_UI(0, @"%x", c);
 //    NSString *pattern = @"[a-z0-9]{1}[a-z0-9\U0001F004-\U0001F6C0]";
 //    NSString *pattern = @"[a-z5-9r-za-b]{2}[0-4]";//[\U0001F004-\U0001F6C0]";
-    NSString *pattern = @"(?!A-Z)[a-z][a-z0-9]";//\U0001F004-\U0001F6C0]";
+    NSString *pattern = REGEX_PATTERN;//\U0001F004-\U0001F6C0]";
 //    NSString *pattern = @"[a-z5-9r-za-b]{2}[0-4]";
 //    if (self.allowWhitespace)
 //    {
@@ -41,7 +39,7 @@
                             }];
     NSUInteger numberOfMatches = [regex numberOfMatchesInString:string options:0 range:NSMakeRange(0, length)];
 
-    LOG_UI(0, @"%d %@ =%d= %d %d %@ %@", numberOfMatches==string.length, (numberOfMatches == length?@"YES":@"NO"), (int)numberOfMatches, (int)length, (int)string.length, string, error);
+    //LOG_UI(0, @"%d %@ =%d= %d %d %@ %@", numberOfMatches==string.length, (numberOfMatches == length?@"YES":@"NO"), (int)numberOfMatches, (int)length, (int)string.length, string, error);
     return numberOfMatches > 0;
 }
 

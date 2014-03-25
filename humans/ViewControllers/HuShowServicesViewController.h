@@ -32,5 +32,5 @@
 @property BOOL checkMarkTapped, exTapped;
 @property (nonatomic, retain) HuUserHandler *appUser;
 @property (nonatomic, retain) MGLineStyled *header;
-@property (nonatomic, copy) Block tapOnEx;
+//@property (nonatomic, copy) Block tapOnEx;
 @end

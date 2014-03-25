@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
-        <!--Hu View Controller-->
+        <!--Hu Splash View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="HuViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HuSplashViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vXZ-lx-hvc" customClass="HuSplashViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="eAa-Eh-mDk"/>
                         <viewControllerLayoutGuide type="bottom" id="0CD-g6-arB"/>
@@ -15,8 +15,15 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Humans-iPhone.png" translatesAutoresizingMaskIntoConstraints="NO" id="7mp-eH-FF1">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
@@ -174,16 +181,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oK6-uT-NpI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="410" y="-2103"/>
-        </scene>
-        <!--Hu Sign Up View Controller-->
-        <scene sceneID="kSx-ZJ-zi6">
-            <objects>
-                <viewController storyboardIdentifier="HuSignUpViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jU1-ct-uIH" customClass="HuSignUpViewController" sceneMemberID="viewController">
-                    <nil key="simulatedStatusBarMetrics"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ldk-fr-Q61" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1098" y="-1326"/>
         </scene>
         <!--Hu Login Or Sign Up View Controller-->
         <scene sceneID="V82-NT-vx8">
@@ -363,7 +360,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="PvW-OL-EW7"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="loginButton" destination="hFh-kN-o0k" id="i0v-lC-IoJ"/>
                         <outlet property="passwordTextField" destination="5zf-iB-3gk" id="tOJ-Wp-fyC"/>
@@ -426,7 +423,7 @@
                 <navigationController navigationBarHidden="YES" id="ey5-C7-zvx" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="Zcc-mA-YKI"/>
-                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="2e0-08-azB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -459,6 +456,9 @@
             </objects>
         </scene>
     </scenes>
+    <resources>
+        <image name="Humans-iPhone.png" width="640" height="960"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

@@ -123,6 +123,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 #define HEADER_FONT             [UIFont fontWithName:@"AvenirNext-Medium" size:14]
 #define HEADER_FONT_LARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:20]
+#define HEADER_FONT_XLARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:24]
 
 #define LOGIN_VIEW_FONT_LARGE    [UIFont fontWithName:@"AvenirNext-Medium" size:32]
 

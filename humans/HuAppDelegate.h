@@ -11,23 +11,27 @@
 #import "HuJediFindFriends_ViewController.h"
 #import "HuSignUpViewController.h"
 #import "HuLoginViewController.h"
+#import "HuSplashViewController.h"
+#import "HuHumansProfileCarouselViewController.h"
 //#import "HuFindFollowsMain_ViewController.h"
 
 @class HuJediFindFriends_ViewController;
 @class HuSignUpViewController;
 @class HuLoginViewController;
+@class HuHumansProfileCarouselViewController;
 
 @interface HuAppDelegate : UIResponder <UIApplicationDelegate>
 
 - (NSArray*)freshNavigationStack;
 - (HuLoginViewController *)loginViewController;
 - (HuSignUpViewController *)signUpViewController;
+- (void)setHumansHumansProfileCarouselViewController:(HuHumansProfileCarouselViewController*)humansProfileCarouselViewController;
+- (HuHumansProfileCarouselViewController*)humansProfileCarouselViewController;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) HuUserHandler *humansAppUser;
 
 @property (nonatomic, retain) HuJediFindFriends_ViewController *jediFindFriendsViewController;
-
 
 //@property (nonatomic, retain) HuFindFollowsMain_ViewController *findFollowsMainViewController;
 @end

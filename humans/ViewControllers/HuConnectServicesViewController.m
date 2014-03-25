@@ -84,7 +84,7 @@ MGLine *check_;
     MGLine *ex_ = [MGLine lineWithLeft:small_exbox_img right:nil size:[small_exbox_img size]];
     ex_.onTap = ^{
         LOG_UI(0, @"Tapped Ex Box");
-        [bself.navigationController popToRootViewControllerAnimated:YES];
+        [bself.navigationController popViewControllerAnimated:YES];
     };
 #pragma mark header setup
     //header
@@ -264,7 +264,7 @@ MGLine *check_;
         
     }];
     
-    [authenticateViewController.view setBackgroundColor:[UIColor yellowColor]];
+    //[authenticateViewController.view setBackgroundColor:[UIColor yellowColor]];
     
     [self.navigationController pushViewController:authenticateViewController animated:YES];
    

@@ -13,6 +13,7 @@
 @class InstagramLikes;
 @class TransientInstagramUser;
 @class InstagramUser;
+@class InstagramLocation;
 
 @interface InstagramStatus : NSObject <HuServiceStatus>
 
@@ -31,6 +32,7 @@
 @property (strong, nonatomic) TransientInstagramUser *transient_instagram_user;
 @property (strong, nonatomic) NSString *type;
 @property (strong, nonatomic) InstagramUser *user;
+@property (strong, nonatomic) InstagramLocation *location;
 @property (strong, nonatomic) NSString *user_has_liked;
 @property (strong, nonatomic) NSDecimalNumber *version;
 

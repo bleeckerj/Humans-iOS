@@ -14,7 +14,7 @@ pod 'MZFormSheetController'
 #pod 'SSKeychain'
 pod 'Bolts'
 pod 'MRProgress', '~> 0.3.1'
-pod 'ConciseKit'
+#pod 'ConciseKit'
 pod 'SBJson', '~> 4.0.0'
 pod 'MSWeakTimer', '~> 1.1.0'
 pod 'Sequencer'
@@ -29,6 +29,7 @@ pod 'Sequencer'
 
 #pod 'NVDate'
 pod 'US2FormValidator'
+pod 'HockeySDK', '~> 3.5.4'
 
 pod 'CRToast', :git => 'https://github.com/vIiRuS/CRToast.git', :commit => 'e85576e81d'
 

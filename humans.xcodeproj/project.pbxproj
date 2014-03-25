@@ -20,18 +20,20 @@
 		B9087BBD18D54CE2003507A4 /* hugrayspinner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9087BBC18D54CE2003507A4 /* hugrayspinner@2x.png */; };
 		B911EDB618DAB66200A5C2D0 /* BoozyBear.png in Resources */ = {isa = PBXBuildFile; fileRef = B911EDB418DAB66200A5C2D0 /* BoozyBear.png */; };
 		B911EDB718DAB66200A5C2D0 /* GIJoeAngry.png in Resources */ = {isa = PBXBuildFile; fileRef = B911EDB518DAB66200A5C2D0 /* GIJoeAngry.png */; };
+		B914EE1318DFBBFD000725CB /* InstagramLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B914EE1218DFBBFD000725CB /* InstagramLocation.m */; };
 		B9161901186803050010A34F /* UIColor+UIColor_LighterDarker.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618F8186803050010A34F /* UIColor+UIColor_LighterDarker.m */; };
 		B9161902186803050010A34F /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FA186803050010A34F /* UIImage+Alpha.m */; };
 		B9161903186803050010A34F /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FC186803050010A34F /* UIImage+Resize.m */; };
 		B9161904186803050010A34F /* UIImage+ResizeToFit.m in Sources */ = {isa = PBXBuildFile; fileRef = B91618FE186803050010A34F /* UIImage+ResizeToFit.m */; };
 		B9161905186803050010A34F /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = B9161900186803050010A34F /* UIImage+RoundedCorner.m */; };
 		B916190A18680E3C0010A34F /* UILabel+withDate.m in Sources */ = {isa = PBXBuildFile; fileRef = B916190918680E3C0010A34F /* UILabel+withDate.m */; };
+		B9182A3E18DFCCD100B32D6B /* Humans-iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = B9182A3D18DFCCD100B32D6B /* Humans-iPhone.png */; };
+		B9182A4018DFCCF700B32D6B /* Humans-iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B9182A3F18DFCCF700B32D6B /* Humans-iPhone@2x.png */; };
 		B919BD2B18CD33C9005217F3 /* HuFoursquareGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B919BD2218CD33C9005217F3 /* HuFoursquareGroup.m */; };
 		B919BD2C18CD33C9005217F3 /* HuFoursquareLists.m in Sources */ = {isa = PBXBuildFile; fileRef = B919BD2418CD33C9005217F3 /* HuFoursquareLists.m */; };
 		B919BD2D18CD33C9005217F3 /* HuFoursquareTips.m in Sources */ = {isa = PBXBuildFile; fileRef = B919BD2618CD33C9005217F3 /* HuFoursquareTips.m */; };
 		B919BD2E18CD33C9005217F3 /* HuFoursquareUser.m in Sources */ = {isa = PBXBuildFile; fileRef = B919BD2818CD33C9005217F3 /* HuFoursquareUser.m */; };
 		B919BD2F18CD33C9005217F3 /* HuFoursquareUserPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = B919BD2A18CD33C9005217F3 /* HuFoursquareUserPhoto.m */; };
-		B919DC491893A7E800F86004 /* HuSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B919DC481893A7E800F86004 /* HuSlidingViewController.m */; };
 		B91BE71718A29B9600D6E171 /* CREAMPUF.TTF in Resources */ = {isa = PBXBuildFile; fileRef = B91BE6D818A29B9600D6E171 /* CREAMPUF.TTF */; };
 		B91BE71818A29B9600D6E171 /* HelveticaLTStd-BlkObl.otf in Resources */ = {isa = PBXBuildFile; fileRef = B91BE6D918A29B9600D6E171 /* HelveticaLTStd-BlkObl.otf */; };
 		B91BE71918A29B9600D6E171 /* angry_unicorn.png in Resources */ = {isa = PBXBuildFile; fileRef = B91BE6DB18A29B9600D6E171 /* angry_unicorn.png */; };
@@ -93,10 +95,9 @@
 		B91BE75118A29B9600D6E171 /* user-profile-image-mask-80px.png in Resources */ = {isa = PBXBuildFile; fileRef = B91BE71518A29B9600D6E171 /* user-profile-image-mask-80px.png */; };
 		B91BE75218A29B9600D6E171 /* user-profile-image-mask.png in Resources */ = {isa = PBXBuildFile; fileRef = B91BE71618A29B9600D6E171 /* user-profile-image-mask.png */; };
 		B91BE75418A29D1F00D6E171 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B91BE75318A29D1F00D6E171 /* Crashlytics.framework */; };
-		B91BE75C18A29DDA00D6E171 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B91BE75618A29DDA00D6E171 /* libTestFlight.a */; };
 		B91BE75D18A29DDA00D6E171 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B91BE75718A29DDA00D6E171 /* README.md */; };
 		B91BE75E18A29DDA00D6E171 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = B91BE75818A29DDA00D6E171 /* release_notes.md */; };
-		B92400C0185C12FA00A10410 /* HuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B92400BE185C12FA00A10410 /* HuViewController.m */; };
+		B92400C0185C12FA00A10410 /* HuSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B92400BE185C12FA00A10410 /* HuSplashViewController.m */; };
 		B93024A31895B887000168E4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B93024A21895B887000168E4 /* libz.dylib */; };
 		B937464F188CCA120037A95C /* FindFollowsForService_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464A188CCA120037A95C /* FindFollowsForService_ViewController.m */; };
 		B9374650188CCA120037A95C /* HuFindFollowsMain_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B937464C188CCA120037A95C /* HuFindFollowsMain_ViewController.m */; };
@@ -197,13 +198,6 @@
 		B9C2C281187BBA6E00F1DF47 /* HuHumanTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C27F187BBA6E00F1DF47 /* HuHumanTest.m */; };
 		B9C2C282187BBA6E00F1DF47 /* HuServiceUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */; };
 		B9C2C28B187C619A00F1DF47 /* HuTwitterStatusTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */; };
-		B9C61BCB18D3DAE900E1822B /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC218D3DAE900E1822B /* CHANGELOG */; };
-		B9C61BCC18D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC318D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset */; };
-		B9C61BCD18D3DAE900E1822B /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C61BC518D3DAE900E1822B /* HockeySDK.framework */; };
-		B9C61BCE18D3DAE900E1822B /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC718D3DAE900E1822B /* HockeySDK.xcconfig */; };
-		B9C61BCF18D3DAE900E1822B /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC818D3DAE900E1822B /* HockeySDKResources.bundle */; };
-		B9C61BD018D3DAE900E1822B /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BC918D3DAE900E1822B /* LICENSE */; };
-		B9C61BD118D3DAE900E1822B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B9C61BCA18D3DAE900E1822B /* README.md */; };
 		B9C61BD318D3DB1000E1822B /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C61BD218D3DB1000E1822B /* CoreText.framework */; };
 		B9D29F9818A4D1EF000D94EA /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */; };
 		B9D2B83D18B2831D00A963BD /* HuHumansProfileCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D2B83C18B2831D00A963BD /* HuHumansProfileCarouselViewController.m */; };
@@ -257,6 +251,8 @@
 		B9087BBC18D54CE2003507A4 /* hugrayspinner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hugrayspinner@2x.png"; sourceTree = "<group>"; };
 		B911EDB418DAB66200A5C2D0 /* BoozyBear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BoozyBear.png; sourceTree = "<group>"; };
 		B911EDB518DAB66200A5C2D0 /* GIJoeAngry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GIJoeAngry.png; sourceTree = "<group>"; };
+		B914EE1118DFBBFD000725CB /* InstagramLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstagramLocation.h; sourceTree = "<group>"; };
+		B914EE1218DFBBFD000725CB /* InstagramLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstagramLocation.m; sourceTree = "<group>"; };
 		B91618F7186803050010A34F /* UIColor+UIColor_LighterDarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UIColor_LighterDarker.h"; sourceTree = "<group>"; };
 		B91618F8186803050010A34F /* UIColor+UIColor_LighterDarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UIColor_LighterDarker.m"; sourceTree = "<group>"; };
 		B91618F9186803050010A34F /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
@@ -269,6 +265,8 @@
 		B9161900186803050010A34F /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 		B916190818680E3C0010A34F /* UILabel+withDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+withDate.h"; sourceTree = "<group>"; };
 		B916190918680E3C0010A34F /* UILabel+withDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+withDate.m"; sourceTree = "<group>"; };
+		B9182A3D18DFCCD100B32D6B /* Humans-iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Humans-iPhone.png"; sourceTree = "<group>"; };
+		B9182A3F18DFCCF700B32D6B /* Humans-iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Humans-iPhone@2x.png"; sourceTree = "<group>"; };
 		B919BD2118CD33C9005217F3 /* HuFoursquareGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFoursquareGroup.h; sourceTree = "<group>"; };
 		B919BD2218CD33C9005217F3 /* HuFoursquareGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFoursquareGroup.m; sourceTree = "<group>"; };
 		B919BD2318CD33C9005217F3 /* HuFoursquareLists.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFoursquareLists.h; sourceTree = "<group>"; };
@@ -279,8 +277,6 @@
 		B919BD2818CD33C9005217F3 /* HuFoursquareUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFoursquareUser.m; sourceTree = "<group>"; };
 		B919BD2918CD33C9005217F3 /* HuFoursquareUserPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFoursquareUserPhoto.h; sourceTree = "<group>"; };
 		B919BD2A18CD33C9005217F3 /* HuFoursquareUserPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFoursquareUserPhoto.m; sourceTree = "<group>"; };
-		B919DC471893A7E800F86004 /* HuSlidingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuSlidingViewController.h; sourceTree = "<group>"; };
-		B919DC481893A7E800F86004 /* HuSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuSlidingViewController.m; sourceTree = "<group>"; };
 		B91BE6D818A29B9600D6E171 /* CREAMPUF.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = CREAMPUF.TTF; sourceTree = "<group>"; };
 		B91BE6D918A29B9600D6E171 /* HelveticaLTStd-BlkObl.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaLTStd-BlkObl.otf"; sourceTree = "<group>"; };
 		B91BE6DB18A29B9600D6E171 /* angry_unicorn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = angry_unicorn.png; sourceTree = "<group>"; };
@@ -351,8 +347,8 @@
 		B91BE76018A29EFD00D6E171 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		B92400BB185C12FA00A10410 /* HuFriendsGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFriendsGridViewController.h; sourceTree = "<group>"; };
 		B92400BC185C12FA00A10410 /* HuFriendsGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFriendsGridViewController.m; sourceTree = "<group>"; };
-		B92400BD185C12FA00A10410 /* HuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuViewController.h; sourceTree = "<group>"; };
-		B92400BE185C12FA00A10410 /* HuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuViewController.m; sourceTree = "<group>"; };
+		B92400BD185C12FA00A10410 /* HuSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuSplashViewController.h; sourceTree = "<group>"; };
+		B92400BE185C12FA00A10410 /* HuSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuSplashViewController.m; sourceTree = "<group>"; };
 		B92400C1185C158600A10410 /* defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = defines.h; path = Supporting/defines.h; sourceTree = "<group>"; };
 		B93024A21895B887000168E4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		B9374649188CCA120037A95C /* FindFollowsForService_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindFollowsForService_ViewController.h; sourceTree = "<group>"; };
@@ -513,13 +509,6 @@
 		B9C2C27F187BBA6E00F1DF47 /* HuHumanTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuHumanTest.m; sourceTree = "<group>"; };
 		B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuServiceUserTest.m; sourceTree = "<group>"; };
 		B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuTwitterStatusTest.m; sourceTree = "<group>"; };
-		B9C61BC218D3DAE900E1822B /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
-		B9C61BC318D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "de.bitstadium.HockeySDK-iOS-3.5.4.docset"; sourceTree = "<group>"; };
-		B9C61BC518D3DAE900E1822B /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
-		B9C61BC718D3DAE900E1822B /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
-		B9C61BC818D3DAE900E1822B /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
-		B9C61BC918D3DAE900E1822B /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		B9C61BCA18D3DAE900E1822B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		B9C61BD218D3DB1000E1822B /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
 		B9D2B83B18B2831D00A963BD /* HuHumansProfileCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuHumansProfileCarouselViewController.h; sourceTree = "<group>"; };
@@ -572,14 +561,12 @@
 				B9910A6D18B7FD6400A9E918 /* CoreLocation.framework in Frameworks */,
 				B9910A6B18B7FD5500A9E918 /* CFNetwork.framework in Frameworks */,
 				B9910A6918B7FD4C00A9E918 /* AudioToolbox.framework in Frameworks */,
-				B91BE75C18A29DDA00D6E171 /* libTestFlight.a in Frameworks */,
 				B9AC5EC118A9E07900BEE77C /* libFlurry_4.3.2.a in Frameworks */,
 				B93024A31895B887000168E4 /* libz.dylib in Frameworks */,
 				B99E017718601B2400E70892 /* SystemConfiguration.framework in Frameworks */,
 				B91BE75418A29D1F00D6E171 /* Crashlytics.framework in Frameworks */,
 				B9F51779185BC4930083CA36 /* CoreGraphics.framework in Frameworks */,
 				B9910A6718B7FD1800A9E918 /* Parse.framework in Frameworks */,
-				B9C61BCD18D3DAE900E1822B /* HockeySDK.framework in Frameworks */,
 				B9F5177B185BC4930083CA36 /* UIKit.framework in Frameworks */,
 				B9F51777185BC4930083CA36 /* Foundation.framework in Frameworks */,
 				346786609E6F470FA34D4392 /* libPods.a in Frameworks */,
@@ -655,7 +642,6 @@
 		B9178A0C18C179A500058E1A /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
-				B9C61BC118D3DAE900E1822B /* HockeySDK-iOS */,
 			);
 			name = Vendor;
 			sourceTree = "<group>";
@@ -682,6 +668,8 @@
 		B91BE6DA18A29B9600D6E171 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				B9182A3F18DFCCF700B32D6B /* Humans-iPhone@2x.png */,
+				B9182A3D18DFCCD100B32D6B /* Humans-iPhone.png */,
 				B911EDB418DAB66200A5C2D0 /* BoozyBear.png */,
 				B911EDB518DAB66200A5C2D0 /* GIJoeAngry.png */,
 				B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */,
@@ -808,25 +796,23 @@
 				B9910A7518B8337F00A9E918 /* HuSignUpViewController.m */,
 				B9D2B83B18B2831D00A963BD /* HuHumansProfileCarouselViewController.h */,
 				B9D2B83C18B2831D00A963BD /* HuHumansProfileCarouselViewController.m */,
+				B9F646E11867BF6E008EB970 /* HuStatusCarouselViewController.h */,
+				B9F646E21867BF6E008EB970 /* HuStatusCarouselViewController.m */,
+				B92400BD185C12FA00A10410 /* HuSplashViewController.h */,
+				B92400BE185C12FA00A10410 /* HuSplashViewController.m */,
 				B9374648188CCA120037A95C /* Finding and Searching */,
 				B908171B18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.h */,
 				B908171C18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m */,
 				B94FAEE518A6F80600EA4463 /* HuShowServicesViewController.h */,
 				B94FAEE618A6F80600EA4463 /* HuShowServicesViewController.m */,
-				B919DC471893A7E800F86004 /* HuSlidingViewController.h */,
-				B919DC481893A7E800F86004 /* HuSlidingViewController.m */,
+				B908171818A74F610019AC23 /* HuConnectServicesViewController.h */,
+				B908171918A74F610019AC23 /* HuConnectServicesViewController.m */,
 				B92400BB185C12FA00A10410 /* HuFriendsGridViewController.h */,
 				B92400BC185C12FA00A10410 /* HuFriendsGridViewController.m */,
-				B92400BD185C12FA00A10410 /* HuViewController.h */,
-				B92400BE185C12FA00A10410 /* HuViewController.m */,
 				B99E01971862AEEB00E70892 /* HuLoginViewController.h */,
 				B99E01981862AEEB00E70892 /* HuLoginViewController.m */,
 				B9F646A2186572FF008EB970 /* HuHumansScrollViewController.h */,
 				B9F646A3186572FF008EB970 /* HuHumansScrollViewController.m */,
-				B9F646E11867BF6E008EB970 /* HuStatusCarouselViewController.h */,
-				B9F646E21867BF6E008EB970 /* HuStatusCarouselViewController.m */,
-				B908171818A74F610019AC23 /* HuConnectServicesViewController.h */,
-				B908171918A74F610019AC23 /* HuConnectServicesViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -974,6 +960,8 @@
 		B9C2C226187BB6E100F1DF47 /* Instagram */ = {
 			isa = PBXGroup;
 			children = (
+				B914EE1118DFBBFD000725CB /* InstagramLocation.h */,
+				B914EE1218DFBBFD000725CB /* InstagramLocation.m */,
 				B9C2C227187BB6E100F1DF47 /* InstagramCaption.h */,
 				B9C2C228187BB6E100F1DF47 /* InstagramCaption.m */,
 				B9C2C229187BB6E100F1DF47 /* InstagramCommenter.h */,
@@ -1085,36 +1073,6 @@
 				B9C2C289187C619A00F1DF47 /* Status */,
 			);
 			name = Twitter;
-			sourceTree = "<group>";
-		};
-		B9C61BC118D3DAE900E1822B /* HockeySDK-iOS */ = {
-			isa = PBXGroup;
-			children = (
-				B9C61BC218D3DAE900E1822B /* CHANGELOG */,
-				B9C61BC318D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset */,
-				B9C61BC418D3DAE900E1822B /* HockeySDK.embeddedframework */,
-				B9C61BC918D3DAE900E1822B /* LICENSE */,
-				B9C61BCA18D3DAE900E1822B /* README.md */,
-			);
-			path = "HockeySDK-iOS";
-			sourceTree = "<group>";
-		};
-		B9C61BC418D3DAE900E1822B /* HockeySDK.embeddedframework */ = {
-			isa = PBXGroup;
-			children = (
-				B9C61BC518D3DAE900E1822B /* HockeySDK.framework */,
-				B9C61BC618D3DAE900E1822B /* Resources */,
-			);
-			path = HockeySDK.embeddedframework;
-			sourceTree = "<group>";
-		};
-		B9C61BC618D3DAE900E1822B /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B9C61BC718D3DAE900E1822B /* HockeySDK.xcconfig */,
-				B9C61BC818D3DAE900E1822B /* HockeySDKResources.bundle */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		B9F5176A185BC4930083CA36 = {
@@ -1283,6 +1241,7 @@
 				B9F51771185BC4930083CA36 /* Resources */,
 				CA664681B08A411BBE1B8F69 /* Copy Pods Resources */,
 				B95BB78D189B361E00D5E980 /* ShellScript */,
+				B9CFE81118DFA5E90066A1B2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1363,23 +1322,21 @@
 				B9AC5EC518AA15FD00BEE77C /* foursquare-icon-16x16.png in Resources */,
 				B91BE72518A29B9600D6E171 /* HumanAppIcon60pt.png in Resources */,
 				B91BE74C18A29B9600D6E171 /* twitter-bird-white-tiny.png in Resources */,
+				B9182A3E18DFCCD100B32D6B /* Humans-iPhone.png in Resources */,
 				B91BE73618A29B9600D6E171 /* checkbox-checked.png in Resources */,
 				B91BE71A18A29B9600D6E171 /* angry_unicorn_tiny.png in Resources */,
 				B91BE72218A29B9600D6E171 /* foursquare-icon-36x36.png in Resources */,
 				B91BE74F18A29B9600D6E171 /* user-profile-image-mask-48px.png in Resources */,
+				B9182A4018DFCCF700B32D6B /* Humans-iPhone@2x.png in Resources */,
 				B91BE73D18A29B9600D6E171 /* flickr-peepers-white-tiny.png in Resources */,
 				B91BE74E18A29B9600D6E171 /* user-profile-image-mask-100px.png in Resources */,
 				B91BE75118A29B9600D6E171 /* user-profile-image-mask-80px.png in Resources */,
-				B9C61BCC18D3DAE900E1822B /* de.bitstadium.HockeySDK-iOS-3.5.4.docset in Resources */,
 				B9F5178F185BC4930083CA36 /* Images.xcassets in Resources */,
 				B91BE72418A29B9600D6E171 /* HumanAppIcon40pt.png in Resources */,
 				B91BE71918A29B9600D6E171 /* angry_unicorn.png in Resources */,
-				B9C61BD018D3DAE900E1822B /* LICENSE in Resources */,
 				B91BE71818A29B9600D6E171 /* HelveticaLTStd-BlkObl.otf in Resources */,
 				B91BE75018A29B9600D6E171 /* user-profile-image-mask-60px.png in Resources */,
-				B9C61BCF18D3DAE900E1822B /* HockeySDKResources.bundle in Resources */,
 				B9087BB818D5464A003507A4 /* huspinner@2x.png in Resources */,
-				B9C61BCB18D3DAE900E1822B /* CHANGELOG in Resources */,
 				B91BE74D18A29B9600D6E171 /* twitter-bird-white.png in Resources */,
 				B91BE72118A29B9600D6E171 /* flickr-white-large-chiclet.png in Resources */,
 				B91BE73F18A29B9600D6E171 /* garbage-gray.png in Resources */,
@@ -1445,10 +1402,8 @@
 				B91BE73C18A29B9600D6E171 /* flickr-peepers-gray-tiny.png in Resources */,
 				B9087BB518D5464A003507A4 /* hubackground@2x.png in Resources */,
 				B91BE74A18A29B9600D6E171 /* twitter-bird-gray-tiny.png in Resources */,
-				B9C61BCE18D3DAE900E1822B /* HockeySDK.xcconfig in Resources */,
 				B91BE72918A29B9600D6E171 /* Instagram_Logo_Large.png in Resources */,
 				B91BE72C18A29B9600D6E171 /* noun_project_1734.png in Resources */,
-				B9C61BD118D3DAE900E1822B /* README.md in Resources */,
 				B91BE74118A29B9600D6E171 /* instagram-camera-gray-tiny.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1522,6 +1477,19 @@
 			shellPath = /bin/sh;
 			shellScript = "./Crashlytics.framework/run f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988 8a1af0ea55163eaddef30eb04682cc88b7745b12860ef810e46fa11142720817\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CWBuildNumber\" ${PROJECT_DIR}/humans/humans-Info.plist)\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CWBuildNumber $buildNumber\" ${PROJECT_DIR}/humans/humans-Info.plist";
 		};
+		B9CFE81118DFA5E90066A1B2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "FILE=\"${SRCROOT}/HockeySDK-iOS/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
+		};
 		CA664681B08A411BBE1B8F69 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1565,6 +1533,7 @@
 				B9374650188CCA120037A95C /* HuFindFollowsMain_ViewController.m in Sources */,
 				B944BB431896FE5500015B10 /* HuFoursquareVenueIcons.m in Sources */,
 				B9C2C267187BB6E100F1DF47 /* InstagramLike.m in Sources */,
+				B914EE1318DFBBFD000725CB /* InstagramLocation.m in Sources */,
 				B96EF1B118C191C7001E2B5A /* HuEditHumanViewController.m in Sources */,
 				B99657CF1867FDA800C4AB01 /* DateyMGStyledBox.m in Sources */,
 				B987BE5F18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m in Sources */,
@@ -1591,7 +1560,6 @@
 				B9C2C273187BB6E100F1DF47 /* HuTwitterMediaSize.m in Sources */,
 				B9F646A4186572FF008EB970 /* HuHumansScrollViewController.m in Sources */,
 				B944BB391896F06500015B10 /* HuFoursquareContact.m in Sources */,
-				B919DC491893A7E800F86004 /* HuSlidingViewController.m in Sources */,
 				B9C2C270187BB6E100F1DF47 /* HuTwitterEntitiesSymbols.m in Sources */,
 				B9161903186803050010A34F /* UIImage+Resize.m in Sources */,
 				B9547C7A18C3B11700CD2D1E /* HuJediMiniFindFriendsViewController.m in Sources */,
@@ -1619,7 +1587,7 @@
 				B9C2C26C187BB6E100F1DF47 /* HuTwitterAttributes.m in Sources */,
 				B9C2C274187BB6E100F1DF47 /* HuTwitterPlace.m in Sources */,
 				B9161904186803050010A34F /* UIImage+ResizeToFit.m in Sources */,
-				B92400C0185C12FA00A10410 /* HuViewController.m in Sources */,
+				B92400C0185C12FA00A10410 /* HuSplashViewController.m in Sources */,
 				B94FAEE718A6F80600EA4463 /* HuShowServicesViewController.m in Sources */,
 				B99E016F1860044400E70892 /* HuHumansHTTPSessionManager.m in Sources */,
 				B944BB421896FE5500015B10 /* HuFoursquareVenueIcon.m in Sources */,
@@ -1812,6 +1780,8 @@
 					"-framework",
 					UIKit,
 					"-framework",
+					CrashReporter,
+					"-framework",
 					Reveal,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1869,6 +1839,8 @@
 					SystemConfiguration,
 					"-framework",
 					UIKit,
+					"-framework",
+					CrashReporter,
 					"-framework",
 					Reveal,
 				);

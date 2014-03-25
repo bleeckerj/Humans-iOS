@@ -101,10 +101,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
 - (void)resetController
 {
     [self viewDidLoad];
-    //    scroller = [[MGScrollView alloc]init];
-    //    self.view = [[UIView alloc]init];
-    //    [self.view setBackgroundColor:[UIColor orangeColor]];
-    //    [self.view addSubview:scroller];
 }
 
 - (void)hide:(id)gesture
@@ -186,20 +182,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
-    //    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
-    //    {
-    //        CGRect frame = self.navigationController.view.frame;
-    //        if(frame.origin.y == 0) {
-    //
-    //            frame.origin.y += 20;
-    //            frame.size.height -= 20;
-    //            self.navigationController.view.frame = frame;
-    //            self.navigationController.view.backgroundColor = [UIColor orangeColor];
-    //
-    //        }
-    //    }
     [self setNeedsStatusBarAppearanceUpdate];
     
     
@@ -424,71 +406,6 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     }
 }
 
-//- (void)showHuman:(HuHuman *)human fromLine:(HuHumanLineStyled *)line
-//{
-////    LOG_GENERAL(0, @"Would present %@", human);
-////    [Flurry logEvent:[NSString stringWithFormat:@"Trying to show human %@ (%@)", [human name], [human humanid]]];
-////    
-////    HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
-////    HuUserHandler *user_handler = [delegate humansAppUser];
-////    [userHandler getStatusCountForHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
-////        int count = 0;
-////        if(success) {
-////            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-////            [f setNumberStyle:NSNumberFormatterDecimalStyle];
-////            count = [[f numberFromString:[data description]] intValue];
-////            
-////        }
-////        if(count <= 0) {
-////            [Flurry logEvent:[NSString stringWithFormat:@"Was going to load human=%@, but status is still baking..", [human name]]];
-////            
-////            MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-////            noticeView.mode = MRProgressOverlayViewModeCross;
-////            noticeView.titleLabelText = [NSString stringWithFormat:@"Still baking the cake.."];
-////            [self performBlock:^{
-////                [noticeView dismiss:YES];
-////                [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-////            } afterDelay:4.0];
-////            
-////        }
-////        
-////        if(success && count > 0) {
-////            [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
-////                //
-////                if(success) {
-////                    LOG_GENERAL(0, @"Loaded Status for %@", human);
-////                    //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
-////                    
-////                    //NSString *human_id = [human humanid]    ;
-////                    NSArray *status = [user_handler statusForHuman:human];
-////                    LOG_GENERAL(0, @"Count is %d", [status count]);
-////                    statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-////                    
-////                    [statusCarouselViewController setItems:[[user_handler statusForHuman:human] copy]];
-////                    
-////                    //[self.navigationController.view removeGestureRecognizer:self.slidingViewController.panGesture];
-////                    
-////                    [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
-////                    
-////                    [[self navigationController] pushViewController:statusCarouselViewController animated:YES];
-////                    
-////                } else {
-////                    LOG_ERROR(0, @"Error loading status %@", error);
-////                    //[Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-////                    [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:NO];
-////                    MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-////                    noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-////                    noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
-////                    [self performBlock:^{
-////                        [noticeView dismiss:YES];
-////                    } afterDelay:2.0];
-////                    
-////                }
-////                
-////            }];
-////        }
-////    }];
-//}
 
 - (void)updateHumanStatusCounts
 {

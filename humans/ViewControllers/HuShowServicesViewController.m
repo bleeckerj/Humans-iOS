@@ -56,7 +56,10 @@ HuConnectServicesViewController *connectServicesViewController;
     UIImage *small_exbox_img = [UIImage imageNamed:@"delete-x-22sq"];//resizedImage:(CGSize){22,22}
     
     MGLine *ex_ = [MGLine lineWithLeft:small_exbox_img right:nil size:[small_exbox_img size]];
-    ex_.onTap = self.tapOnEx;
+    ex_.onTap = ^{
+        LOG_UI(0, @"Tapped Ex");
+        [[self navigationController]popViewControllerAnimated:YES];
+    };
     
     UIImage *small_checkbox_img = [UIImage imageNamed:@"add-cloud-gray.png"];
     
@@ -70,14 +73,14 @@ HuConnectServicesViewController *connectServicesViewController;
 #pragma mark header setup
     //header
     self.header = [MGLineStyled lineWithLeft:ex_ right:check_ size:(CGSize){self.view.width,HEADER_HEIGHT}];
-    [self.header setMiddleFont:HEADER_FONT];
-    [self.header setMiddleTextColor:[UIColor darkGrayColor]];
+    [self.header setMiddleFont:HEADER_FONT_LARGE];
+    [self.header setMiddleTextColor:[UIColor blackColor]];
     [self.header setMiddleItems:[NSMutableArray arrayWithObject:@"Services"]];
     [self.header setMiddleItemsAlignment:NSTextAlignmentCenter];
     self.header.sidePrecedence = MGSidePrecedenceMiddle;
     self.header.padding = UIEdgeInsetsMake(4, 8, 4, 8);
     self.header.fixedPosition = (CGPoint){0,0};
-    self.header.backgroundColor = [UIColor asbestosColor];
+    self.header.backgroundColor = [UIColor whiteColor];
     self.header.zIndex = 1;
     self.header.layer.cornerRadius = 0;
     self.header.layer.shadowOffset = CGSizeZero;
@@ -97,27 +100,6 @@ HuConnectServicesViewController *connectServicesViewController;
     [servicesScroller setContentSize:CGSizeMake(servicesScroller.size.width, servicesScroller.size.height+20)];
     [servicesScroller setBackgroundColor:[UIColor whiteColor]];
     [servicesScroller setBounces:YES];
-    __block NSArray *usersServices = [[userHandler humans_user]services];
-    [usersServices enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        //
-        HuServices *service = (HuServices *)obj;
-        HuServiceViewLine *serviceUserLine = [HuServiceViewLine lineWithSize:CGSizeMake(servicesScroller.width, 1.5*HEADER_HEIGHT)];
-        [serviceUserLine setService:service];
-        [serviceUserLine setDelegate:self];
-        [serviceUserLine setBackgroundColor:[UIColor whiteColor]];
-        [serviceUserLine setFont:PROFILE_VIEW_FONT_SMALL];
-        [serviceUserLine setPadding:UIEdgeInsetsMake(5, 20, 5, 20)];
-        UIView *bottomBorderView = [[UIView alloc]initWithFrame:(CGRectMake(10, 0, serviceUserLine.width - 10, 1))];
-        [bottomBorderView setBackgroundColor:[UIColor lightGrayColor]];
-        [serviceUserLine setBorderColors:serviceUserLine.backgroundColor];
-        [serviceUserLine.bottomBorder addSubview:bottomBorderView];
-        [serviceUserLine.bottomBorder setBackgroundColor:serviceUserLine.backgroundColor];
-        
-        
-        [servicesScroller.boxes addObject:serviceUserLine];
-        
-        //[servicesScroller.boxes addObject:serviceUserLine.underneath];
-    }];
     
     
     [servicesView addSubview:servicesScroller];
@@ -136,6 +118,47 @@ HuConnectServicesViewController *connectServicesViewController;
     
     [connectServicesViewController.view setSize:self.view.size];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+        if(success) {
+            [servicesScroller.boxes removeAllObjects];
+        __block NSArray *usersServices = [[userHandler humans_user]services];
+        [usersServices enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            //
+            HuServices *service = (HuServices *)obj;
+            HuServiceViewLine *serviceUserLine = [HuServiceViewLine lineWithSize:CGSizeMake(servicesScroller.width, 1.5*HEADER_HEIGHT)];
+            [serviceUserLine setService:service];
+            [serviceUserLine setDelegate:self];
+            [serviceUserLine setBackgroundColor:[UIColor whiteColor]];
+            [serviceUserLine setFont:PROFILE_VIEW_FONT_SMALL];
+            [serviceUserLine setPadding:UIEdgeInsetsMake(5, 20, 5, 20)];
+            UIView *bottomBorderView = [[UIView alloc]initWithFrame:(CGRectMake(10, 0, serviceUserLine.width - 10, 1))];
+            [bottomBorderView setBackgroundColor:[UIColor lightGrayColor]];
+            [serviceUserLine setBorderColors:serviceUserLine.backgroundColor];
+            [serviceUserLine.bottomBorder addSubview:bottomBorderView];
+            [serviceUserLine.bottomBorder setBackgroundColor:serviceUserLine.backgroundColor];
+            
+            
+            [servicesScroller.boxes addObject:serviceUserLine];
+            
+            //[servicesScroller.boxes addObject:serviceUserLine.underneath];
+        }];
+            CGRect contentRect = CGRectZero;
+            for (UIView *view in servicesScroller.subviews) {
+                contentRect = CGRectUnion(contentRect, view.frame);
+            }
+            servicesScroller.contentSize = contentRect.size;
+            [servicesScroller layoutWithSpeed:0.3 completion:^{
+                //
+                //LOG_UI(0, @"Done laying out.");
+            }];
+        }
+
+    }];
 }
 
 -(void)loadView

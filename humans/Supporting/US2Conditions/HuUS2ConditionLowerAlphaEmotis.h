@@ -10,7 +10,5 @@
 #import "defines.h"
 @interface HuUS2ConditionLowerAlphaEmotis : US2Condition
 
-@property (assign, nonatomic) BOOL allowWhitespace;
-
 
 @end
