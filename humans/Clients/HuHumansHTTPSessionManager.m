@@ -21,8 +21,9 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedClient = [[HuHumansHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:kHumansLocalDevBaseURLString]];
-       
-
+        [_sharedClient.reachabilityManager startMonitoring];
+        
+        
     });
     
     return _sharedClient;
@@ -33,7 +34,7 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedClient = [[HuHumansHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:kHumansProdBaseURLString]];
-        
+        [_sharedClient.reachabilityManager startMonitoring];
     });
     
     return _sharedClient;
@@ -49,19 +50,19 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     [self setResponseSerializer:c];
     self.requestSerializer = [AFJSONRequestSerializer serializer];
     [self.requestSerializer setTimeoutInterval:30.0];
-
+    
     // not proud of this..
     AFSecurityPolicy *sec = [[AFSecurityPolicy alloc]init];
     [sec setSSLPinningMode:AFSSLPinningModeNone];
     [sec setValidatesCertificateChain:NO];
     [sec setAllowInvalidCertificates:YES];
     [self setSecurityPolicy:sec];
-
-//    [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
-//    
-//    // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
-//    [self setDefaultHeader:@"Accept" value:@"application/json"];
-//    [self setAllowsInvalidSSLCertificate:YES];
+    
+    //    [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
+    //
+    //    // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
+    //    [self setDefaultHeader:@"Accept" value:@"application/json"];
+    //    [self setAllowsInvalidSSLCertificate:YES];
     
     return self;
 }
@@ -74,7 +75,7 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     [self GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         LOG_TODO(0, @"%@", responseObject);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-    
+        
     }];
     [self setDataTaskDidReceiveDataBlock:^(NSURLSession *session, NSURLSessionDataTask *dataTask, NSData *data) {
         //
@@ -83,34 +84,65 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     
 }
 
+//
 - (void)humanAddServiceUsers:(NSArray *)aServiceUsers forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
-    /*
+    
     NSString *URLString = [NSString stringWithFormat:@"rest/human/%@/add/serviceuser", [aHuman humanid]];
     
     NSError *error;
-
-    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:aServiceUsers options:NSJSONWritingPrettyPrinted error:&error];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
-    [self POST:URLString parameters:nil data:jsonData success:^(NSURLSessionDataTask *task, id responseObject) {
-        if(completionHandler) {
-            completionHandler(responseObject, YES, nil);
-        }
-
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        if(completionHandler) {
-            completionHandler(nil, NO, error);
-        }
-
+    NSMutableArray *arrayOfDicts = [[NSMutableArray alloc]initWithCapacity:[aServiceUsers count]];
+    
+    [aServiceUsers eachWithIndex:^(id object, NSUInteger index) {
+        [arrayOfDicts addObject:[[aServiceUsers objectAtIndex:index]dictionary]];
     }];
-     */
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arrayOfDicts options:NSJSONWritingPrettyPrinted error:&error];
+    
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    LOG_GENERAL(0, @"%@", [jsonString dataUsingEncoding:NSUTF8StringEncoding]);
+    
+    
+    //NSMutableURLRequest *request = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:nil error:nil];
+    
+    
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+//    [request setURL:[NSURL URLWithString:URLString relativeToURL:self.baseURL]];
+//    [request setHTTPMethod:@"POST"];
+//    
+//    //set headers
+//    NSString *contentType = [NSString stringWithFormat:@"application/json"];
+//    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+//    [request addValue:@"any-value" forHTTPHeaderField: @"User-Agent"];
+//    
+//    //create the body
+//    [request setHTTPBody:jsonData];
+    
+    NSMutableURLRequest *requestFoo = [self.requestSerializer requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:nil error:nil];
+    [requestFoo setValue:@"application/json" forHTTPHeaderField:@"content-type"];
+    __block NSURLSessionUploadTask *task = [self uploadTaskWithRequest:requestFoo fromData:jsonData progress:nil completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        if (error) {
+            if (completionHandler) {
+                completionHandler(nil, NO, error);
+            }
+        } else {
+            if(completionHandler) {
+                completionHandler(responseObject, YES, nil);
+            }
+        }
+        
+    }];
+
+    
+    [task resume];
+
+    
 }
 
 - (void)humanAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
     NSString *URLString = [NSString stringWithFormat:@"rest/human/%@/add/serviceuser", [aHuman humanid]];
-
+    
     [self POST:URLString parameters:[aServiceUser dictionary] success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
             completionHandler(responseObject, YES, nil);
@@ -150,20 +182,20 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
                     [friend setServiceImageBadge:@"foursquare-icon-16x16.png"];
                     [friend setTinyServiceImageBadge:@"foursquare-icon-gray-16x16.png"];
                 }
-
+                
                 [result addObject:friend];
-                LOG_GENERAL(0, @"%d %@", index, friend);
+                //LOG_GENERAL(0, @"%lu %@", (unsigned long)index, friend);
             }];
             completionHandler(result);
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"failure: operation: %@ \n\nerror: %@", task, error);
-        [Flurry logEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
-        
+        //[Flurry logEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
+        [PFAnalytics trackEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
         if(completionHandler) {
             completionHandler(nil);
         }
-
+        
     }];
 }
 
@@ -173,10 +205,10 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
                        success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
                        failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure
 {
-
-    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:nil];
-     __block NSURLSessionDataTask *task = [self uploadTaskWithRequest:request fromData:data progress:nil completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
     
+    //self.requestSerializer = [AFJSONRequestSerializer serializer];
+    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:nil];
+    __block NSURLSessionDataTask *task = [self uploadTaskWithRequest:request fromData:data progress:nil completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         if (error) {
             if (failure) {
                 failure(task, error);
@@ -186,7 +218,7 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
                 success(task, responseObject);
             }
         }
- 
+        
     }];
     
     [task resume];

@@ -115,7 +115,7 @@
 
 -(NSDictionary *)dictionary {
     if(self.id == nil) {
-    return [NSDictionary dictionaryWithObjectsAndKeys:self.imageURL, @"imageURL",self.lastUpdated, @"lastUpdated",
+        return [NSDictionary dictionaryWithObjectsAndKeys:(self.imageURL == nil)?@"":self.imageURL, @"imageURL",(self.lastUpdated==nil)?@"":self.lastUpdated, @"lastUpdated",
             [self.onBehalfOf dictionary], @"onBehalfOf", self.serviceName, @"serviceName", self.serviceUserID, @"serviceUserID", self.username, @"username", nil];
     } else {
         return [NSDictionary dictionaryWithObjectsAndKeys:self.id,@"id",self.imageURL, @"imageURL",self.lastUpdated, @"lastUpdated",

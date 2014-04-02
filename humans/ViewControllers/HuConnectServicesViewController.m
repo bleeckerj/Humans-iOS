@@ -48,7 +48,9 @@ HuUserHandler *userHandler;
 @end
 
 @interface HuConnectServicesViewController ()
-
+{
+    BOOL didSomething;
+}
 @end
 
 @implementation HuConnectServicesViewController
@@ -73,10 +75,15 @@ MGLine *check_;
     return YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    didSomething = NO;
     HuConnectServicesViewController *bself = self;
 
     UIImage *small_exbox_img = [UIImage imageNamed:@"delete-x-22sq"];//resizedImage:(CGSize){22,22}
@@ -85,6 +92,8 @@ MGLine *check_;
     ex_.onTap = ^{
         LOG_UI(0, @"Tapped Ex Box");
         [bself.navigationController popViewControllerAnimated:YES];
+
+
     };
 #pragma mark header setup
     //header
@@ -160,7 +169,7 @@ MGLine *check_;
                                                                                     serviceName:@"Instagram"];
     
     [authenticateViewController setHandleWebViewDidFinishLoad:^(UIWebView *webView) {
-     
+        didSomething = YES;
         LOG_UI(0, @"webView=%@", webView);
         NSString *html = [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
         LOG_UI(0, @"HTML=%@", html);
@@ -184,7 +193,8 @@ MGLine *check_;
                                                                                     serviceName:@"Twitter"];
     
     [authenticateViewController setHandleWebViewDidFinishLoad:^(UIWebView *webView) {
-        
+        didSomething = YES;
+
         LOG_UI(0, @"webView=%@", webView);
         NSString *html = [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
         LOG_UI(0, @"HTML=%@", html);
@@ -220,7 +230,8 @@ MGLine *check_;
 
     authenticateViewController = [[HuAuthenticateServiceWebViewController alloc]initWithAuthURL:[userHandler urlForFlickrAuthentication] logoutURL:[NSURL URLWithString:@"http://www.flickr.com/logout.gne"] serviceName:@"Flickr"];
     [authenticateViewController setHandleWebViewDidFinishLoad:^(UIWebView *webView) {
-        
+        didSomething = YES;
+
         LOG_UI(0, @"webView=%@", webView);
         NSString *html = [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
         LOG_UI(0, @"HTML=%@", html);
@@ -252,7 +263,8 @@ MGLine *check_;
     
     authenticateViewController = [[HuAuthenticateServiceWebViewController alloc]initWithAuthURL:[userHandler urlForFoursquareAuthentication] logoutURL:[NSURL URLWithString:@"https://foursquare.com/logout"] serviceName:@"Foursquare"];
     [authenticateViewController setHandleWebViewDidFinishLoad:^(UIWebView *webView) {
-        
+        didSomething = YES;
+
         LOG_UI(0, @"webView=%@", webView);
         NSString *html = [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
         LOG_UI(0, @"HTML=%@", html);
@@ -294,12 +306,7 @@ MGLine *check_;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 //
-                //[self.view setNeedsDisplayInRect:self.slidingViewController.view.frame];
                 [self.navigationController popViewControllerAnimated:YES];
-                
-                //[self resetController];
-                //[header addGestureRecognizer:self.slidingViewController.panGesture];
-                //[self.slidingViewController anchorTopViewToRightAnimated:YES];
             });
             
         } afterDelay:4];
@@ -314,8 +321,9 @@ MGLine *check_;
         MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:aWebView animated:YES];
         progressView.mode = MRProgressOverlayViewModeCross;
         progressView.titleLabelText = [NSString stringWithFormat:@"There was a problem authenticating. %@", msg];
-        
-        [Flurry logError:[json description] message:msg error:nil];
+        NSDictionary *dimensions = @{@"msg": msg};
+        [PFAnalytics trackEvent:[json description] dimensions:dimensions];
+        //[Flurry logError:[json description] message:msg error:nil];
         
         [self performBlock:^{
             [progressView dismiss:YES];
@@ -323,12 +331,6 @@ MGLine *check_;
         } afterDelay:5.0];
         
     }
-    //    [self performBlock:^{
-    //        //
-    //        self.slidingViewController.topViewController = self;
-    //        [self.slidingViewController resetTopViewAnimated:YES];
-    //
-    //    } afterDelay:40];
 }
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {

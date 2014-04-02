@@ -14,7 +14,7 @@
 #import "HuHumansScrollViewController.h"
 #import <BlocksKit/BlocksKit.h>
 #import <BlocksKit/NSArray+BlocksKit.h>
-#import "Flurry.h"
+//#import "Flurry.h"
 #import <Crashlytics/Crashlytics.h>
 #import "HuHumansProfileCarouselViewController.h"
 #import <Parse/Parse.h>
@@ -64,7 +64,7 @@
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return YES;
+    return NO;
 }
 
 - (void)viewDidLoad
@@ -132,11 +132,15 @@
     progressView.mode = MRProgressOverlayViewModeIndeterminate;
     progressView.titleLabelText = @"Logging In";
     
+    if([usernameTextField text] == NULL || [passwordTextField text] == NULL) {
+        return;
+    }
+    
     [userHandler userRequestTokenForUsername:[usernameTextField text] forPassword:[passwordTextField text] withCompletionHandler:^(BOOL success, NSError *error) {
         //
-        NSDictionary *dimensions = @{@"user": [usernameTextField text], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+        NSDictionary *dimensions = @{@"user": [usernameTextField text], @"success": success?@"YES":@"NO" ,@"error": error==nil?@"nil":[[error userInfo]description]};
         [PFAnalytics trackEvent:@"service-login" dimensions:dimensions];
-        [Flurry logEvent:@"service-login" withParameters:dimensions];
+       // [Flurry logEvent:@"service-login" withParameters:dimensions];
 
         if(success) {
             NSString *userid = [[[userHandler humans_user]id]description];
@@ -165,44 +169,7 @@
                     HuHumansProfileCarouselViewController *x = [[HuHumansProfileCarouselViewController alloc]init];
                     
                     [[self navigationController]pushViewController:x animated:YES];
-                    /*
-                    UIViewController *underLeftViewController  = [[UIViewController alloc] init];
-                    UIViewController *underRightViewController = [[UIViewController alloc] init];
-                    
-                    // configure under left view controller
-                    underLeftViewController.view.layer.borderWidth     = 10;
-                    underLeftViewController.view.layer.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0].CGColor;
-                    underLeftViewController.view.layer.borderColor     = [UIColor colorWithWhite:0.8 alpha:1.0].CGColor;
-                    underLeftViewController.edgesForExtendedLayout     = UIRectEdgeTop | UIRectEdgeBottom | UIRectEdgeLeft; // don't go under the top view
-                    
-                    
-//                    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(mySelector:)];
 
-                    
-                    // configure under right view controller
-                    underRightViewController.view.layer.borderWidth     = 20;
-                    underRightViewController.view.layer.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0].CGColor;
-                    underRightViewController.view.layer.borderColor     = [UIColor colorWithWhite:0.8 alpha:1.0].CGColor;
-                    underRightViewController.edgesForExtendedLayout     = UIRectEdgeTop | UIRectEdgeBottom | UIRectEdgeRight; // don't go under the top view
-                    
-                    // configure sliding view controller
-                    //self.slidingViewController = [ECSlidingViewController slidingWithTopViewController:humansScrollViewController];
-                    self.slidingViewController = [HuSlidingViewController slidingWithTopViewController:humansScrollViewController];
-                    self.slidingViewController.underLeftViewController  = underLeftViewController;
-                    self.slidingViewController.underRightViewController = underRightViewController;
-                    
-                    // configure anchored layout
-                    self.slidingViewController.anchorRightPeekAmount  = 100.0;
-                    self.slidingViewController.anchorLeftRevealAmount = 200.0;
-                    
-                    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:humansScrollViewController action:@selector(mySelector:)];
-                    [tapGesture setNumberOfTapsRequired:2];
-                    [underLeftViewController.view addGestureRecognizer:tapGesture];
-
-                    
-                    [humansScrollViewController setSlidingViewController:self.slidingViewController];
-                    [[self navigationController]pushViewController:self.slidingViewController animated:YES];
-                     */
                 });
             
         
@@ -220,8 +187,8 @@
             } afterDelay:5.0];
             //shake
             NSString *msg =[NSString stringWithFormat:@"%@ had trouble logging in with %@ cause of %@", [usernameTextField text], [passwordTextField text], error ];
-           
-            [Flurry logError:msg message:msg error:error];
+            [PFAnalytics trackEvent:msg];
+            //[Flurry logError:msg message:msg error:error];
 
         }
     }];
@@ -233,20 +200,6 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), block);
 }
-//- (UIPanGestureRecognizer *)recognizer
-//{
-//    UIPanGestureRecognizer *result = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(crashAndBurn:)];
-//    return result;
-//}
-
-//- (void)anchorRight {
-//    [self.slidingViewController anchorTopViewToRightAnimated:YES];
-//}
-//
-//- (void)anchorLeft {
-//    [self.slidingViewController anchorTopViewToLeftAnimated:YES];
-//}
-
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

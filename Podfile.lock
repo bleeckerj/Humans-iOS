@@ -19,50 +19,49 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - AQGridView (1.3)
-  - BlocksKit (2.2.0):
+  - BlocksKit (2.2.2):
     - BlocksKit/All
-  - BlocksKit/All (2.2.0):
+  - BlocksKit/All (2.2.2):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
     - BlocksKit/MessageUI
     - BlocksKit/UIKit
-  - BlocksKit/Core (2.2.0)
-  - BlocksKit/DynamicDelegate (2.2.0):
-    - BlocksKit/MiniFFI
-  - BlocksKit/MessageUI (2.2.0):
+  - BlocksKit/Core (2.2.2)
+  - BlocksKit/DynamicDelegate (2.2.2)
+  - BlocksKit/MessageUI (2.2.2):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
-  - BlocksKit/MiniFFI (2.2.0)
-  - BlocksKit/UIKit (2.2.0):
+  - BlocksKit/UIKit (2.2.2):
     - BlocksKit/Core
     - BlocksKit/DynamicDelegate
   - Bolts (1.0.0)
   - ConciseKit (0.1.2)
   - CRToast (0.0.3)
-  - DACircularProgress (2.1.0)
+  - DACircularProgress (2.2.0)
   - DropdownMenu (1.0.0)
   - ECSlidingViewController (2.0.1)
   - EKKeyboardAvoiding (2.0)
   - Expecta (0.2.4)
+  - EZForm (1.1.4)
   - Facebook-iOS-SDK (3.13.0)
   - FlatUIKit (1.3)
   - FLKAutoLayout (0.1.1)
   - FontAwesome-iOS (0.0.4)
   - FPBrandColors (0.1.3)
   - FXKeychain (1.5)
-  - HockeySDK (3.5.4)
   - iCarousel (1.7.6)
-  - IDMPhotoBrowser (1.3.2):
-    - AFNetworking (~> 2.0.2)
-    - DACircularProgress (~> 2.1.0)
+  - IDMPhotoBrowser (1.3.3):
+    - AFNetworking (~> 2.2.1)
+    - DACircularProgress (~> 2.2)
     - SVProgressHUD (~> 1.0)
   - ionicons (1.1)
   - KeyboardController (1.0.0)
+  - kvo-block-binding (0.0.1)
   - MBProgressHUD (0.8)
   - MCUIViewLayout (0.3.4)
-  - MGBoxKit (2.1.1):
+  - MGBoxKit (3.0.1):
     - MGBoxKit/Categories
-  - MGBoxKit/Categories (2.1.1)
+  - MGBoxKit/Categories (3.0.1)
   - MHTextField (0.0.4)
   - MKFoundationKit (1.1.0):
     - MKFoundationKit/AutoDescribe
@@ -104,7 +103,7 @@ PODS:
   - MRProgress (0.3.1)
   - MSWeakTimer (1.1.0)
   - MZAppearance (1.1.1)
-  - MZFormSheetController (2.3.2):
+  - MZFormSheetController (2.3.3):
     - MZAppearance (~> 1.1.1)
   - NHBalancedFlowLayout (0.1.2)
   - NSLogger (1.2)
@@ -115,23 +114,24 @@ PODS:
   - OCMockito (1.1.0):
     - OCHamcrest (~> 3.0)
   - RDVKeyboardAvoiding (1.1.0)
-  - ReactiveCocoa (2.2.4):
+  - ReactiveCocoa (2.3):
     - ReactiveCocoa/Core
     - ReactiveCocoa/no-arc
-  - ReactiveCocoa/Core (2.2.4):
+  - ReactiveCocoa/Core (2.3):
     - ReactiveCocoa/no-arc
-  - ReactiveCocoa/no-arc (2.2.4)
-  - REMenu (1.8.4)
+  - ReactiveCocoa/no-arc (2.3)
+  - REMenu (1.8.5)
   - RFRotate (1.0.0)
   - RNBlurModalView (0.1.0)
   - RNCryptor (2.2)
   - SBJson (4.0.0)
-  - SDWebImage (3.5.4):
+  - SDWebImage (3.6):
     - SDWebImage/Core
-  - SDWebImage/Core (3.5.4)
+  - SDWebImage/Core (3.6)
   - Sequencer (1.0.1)
   - SKSlideViewController (0.0.1)
   - SVProgressHUD (1.0)
+  - TestFlightSDK (3.0.0)
   - TPKeyboardAvoiding (1.2.3)
   - TYMActivityIndicatorView (0.2.0)
   - UIColor-Crayola (1.0)
@@ -146,22 +146,23 @@ DEPENDENCIES:
   - BlocksKit
   - Bolts
   - ConciseKit
-  - CRToast (from `https://github.com/vIiRuS/CRToast.git`, commit `e85576e81d`)
+  - CRToast (from `https://github.com/cruffenach/CRToast.git`, commit `8187f23e1398f94b466c371f9cc1a3f9e1ffd234`)
   - DropdownMenu
   - ECSlidingViewController (~> 2.0.0-beta2)
   - EKKeyboardAvoiding
   - Expecta (~> 0.2.3)
+  - EZForm
   - Facebook-iOS-SDK
   - FlatUIKit
   - FLKAutoLayout
   - FontAwesome-iOS (~> 0.0.4)
   - FPBrandColors (~> 0.1.3)
   - FXKeychain
-  - HockeySDK (~> 3.5.4)
   - iCarousel
   - IDMPhotoBrowser
   - ionicons
   - KeyboardController (~> 1.0.0)
+  - kvo-block-binding (from `~/Code/kvo-block-binding`)
   - MBProgressHUD (~> 0.8)
   - MCUIViewLayout (from `https://github.com/mirego/MCUIViewLayout.git`)
   - MGBoxKit
@@ -189,6 +190,7 @@ DEPENDENCIES:
   - SDWebImage
   - Sequencer
   - SKSlideViewController (~> 0.0.1)
+  - TestFlightSDK (~> 3.0.0)
   - TPKeyboardAvoiding
   - TYMActivityIndicatorView
   - UIColor-Crayola
@@ -199,8 +201,10 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   CRToast:
-    :commit: e85576e81d
-    :git: https://github.com/vIiRuS/CRToast.git
+    :commit: 8187f23e1398f94b466c371f9cc1a3f9e1ffd234
+    :git: https://github.com/cruffenach/CRToast.git
+  kvo-block-binding:
+    :path: ~/Code/kvo-block-binding
   MCUIViewLayout:
     :git: https://github.com/mirego/MCUIViewLayout.git
   MGBoxKit:
@@ -216,36 +220,37 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 0121f4b69be3fa58d1ab317866e036e12ac9651d
   AQGridView: ee436c64bc4a972ca7f3ce99971c0204af9e65ea
-  BlocksKit: c10ccd83f4027d6a0af928d55d20e03b9280f73d
+  BlocksKit: 125e4e69a62e3b85bacc5175737dae000b00b9fb
   Bolts: 45bceb8be6243d242caf74308563bba02c2af2a3
   ConciseKit: 1e086a66d098ba160ca5faa86458a0431b280b30
   CRToast: 098268afe8f33eea983196badd9c2ca6b1f4e621
-  DACircularProgress: 8c8f20c8dffdd647fbf570ddecbc2b1b59da5888
+  DACircularProgress: 659d6fd11b5fc099c13ba9350239d9dca324916a
   DropdownMenu: 3c454205c2db1fd39dc1ebf099114c4fdb73f136
   ECSlidingViewController: d7bb96ee5bbe261ed80ee16a513f94b9fd3c9767
   EKKeyboardAvoiding: b589dcaa5ff765818f69e69f03a1efab618d6953
   Expecta: 5c147dedfea5fbcf773995f7e65020abcc936ce5
+  EZForm: d525291692d6f225446ce286c77eadba9efc22cb
   Facebook-iOS-SDK: 5788541337dc88265bc940cb5ffb05915f9b64e3
   FlatUIKit: 3b32b52bb3c266477709cfe4812ab2c877ae942b
   FLKAutoLayout: fc04b932009174d4118ef4bda9dc8fedf1369efc
   FontAwesome-iOS: 5e33a7bbabacdc8a177cb9d3d81876f0c7a272c1
   FPBrandColors: e0df3950b283d1a6d6c42d6b97f04a031ccf9e12
   FXKeychain: 90cc7bf9ba005e4d099a113a194792e7983c5778
-  HockeySDK: aa28abb106de7804d31acf515f2c9aa4e6481fd0
   iCarousel: e23a26d7ba722215a42144e80adb0dcb59bebc41
-  IDMPhotoBrowser: aee42ff18cdb1bf2f7326631094ad18f236d2ab9
+  IDMPhotoBrowser: 50173c8493aaac7bef533c1a4dc29a5fc22b46ce
   ionicons: 50c5368bc6e4dbd1a26559aff0b67f2ed8640c48
   KeyboardController: 368f5ebc3ceab64a863636db2a313648bbe1e643
+  kvo-block-binding: 12d5ef24cab0bd8e74fed4bb20c2a40d05771e98
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   MCUIViewLayout: db43d391388bcee6763ac3364c2109e32016f04d
-  MGBoxKit: 5de9fd5f49539c30348ef750e2b9ea5a14374b88
+  MGBoxKit: fc5c586ce67ed22ec5dec5b38b08760b5818ddb7
   MHTextField: ee78e57da989b6e2aacb9cedc75058b3758ac840
   MKFoundationKit: db5b09c3d266b6476e605b6060096a62fd542b61
   MMDrawerController: 4445e1927e8947b7e2382136c9b7109840efbfb9
   MRProgress: 741d8849f3d6e71cf254b32ea8c0bc0b2a122136
   MSWeakTimer: 2cd8d15b58e634517e83a7e433782faa8214a27f
   MZAppearance: 8b02683f0019f725557ae9839ed6cab153fff669
-  MZFormSheetController: 17c5e96a51e0c658dfe8cc032a7ed2c624113639
+  MZFormSheetController: 9630bc61ff30ac48c87930fbe350490e484a6496
   NHBalancedFlowLayout: 95f1d7bffadc73bead84b63e7e4c37aa52975f7a
   NSLogger: 9607fdeafd0b09922c69615f99f127de45971b8f
   oauthconsumer: 96e97f21400a93ab501a0a98920e33766f8d6178
@@ -254,18 +259,19 @@ SPEC CHECKSUMS:
   OCMock: 74e4ddbcef134170dcc844f91c691f13868075d7
   OCMockito: 317fa0cf75c9b0d73d2be335789c556537be7fd2
   RDVKeyboardAvoiding: d624b80508c45e9e14a9c7e2f23b2318887b110e
-  ReactiveCocoa: 953a45dda30674fe704d1d9c77cc874141742f47
-  REMenu: 9ee5b3bea51ce8e48b550feb9b50203d6ad27499
+  ReactiveCocoa: 1f6265f9d521923d3efcc37b00722cefc16df269
+  REMenu: 282a6b5feee8cce5403d7f28e15ffbc0aee359ab
   RFRotate: 32613810b400f04cce8b6e532f52fe9f59effb68
   RNBlurModalView: ab3855ced43749cb0fb4d370160bd2908476c8b6
   RNCryptor: 1420380792b33758d2414cf37af160ea2495e15c
   SBJson: f3c686806e8e36ab89e020189ac582ba26ec4220
-  SDWebImage: 1a62010700adbba823b621fc217906739dbf6aa5
+  SDWebImage: 7eb273e54ca8a2e506ad9bd5e80c35b2a4d7c95e
   Sequencer: ac64fdd704f83883536b73c7e5adc974fa285223
   SKSlideViewController: 98e4cee58146aaf8b24d300b9a32bc7c45cc5b25
   SVProgressHUD: 5e10939a296debf5fe5a5895eda9539b8b2114f1
+  TestFlightSDK: 71e3e78d3a46144dbad975a4bf80a14dae6a818a
   TPKeyboardAvoiding: 17995aaa6db26ac2a9fa8714a86509c5888f0392
-  TYMActivityIndicatorView: 7fed923cbba6fa95b101a6cd51394c15ad30451f
+  TYMActivityIndicatorView: d558631538c2956353042a20ac1544dd0ba5ee17
   UIColor-Crayola: 20eacda0777fd487efba6831e2b34625e8ce3ceb
   UIImage-Categories: d9f10e0afb9b281b35a3c2b0c7d16d1ca251d824
   US2FormValidator: cbf7ab16e8d27511654e1e3d71029746a0015c01

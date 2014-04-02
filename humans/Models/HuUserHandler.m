@@ -12,8 +12,7 @@
 #import <AFNetworking.h>
 #import <RNDecryptor.h>
 #import <ObjectiveSugar.h>
-#import "Flurry.h"
-
+//#import "Flurry.h"
 #import <ConciseKit.h>
 #import "HuFriend.h"
 #import "HuUser.h"
@@ -23,7 +22,6 @@
 #import "HuAppDelegate.h"
 #import <WSLObjectSwitch.h>
 #import <Parse/Parse.h>
-
 
 #pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
 
@@ -65,6 +63,8 @@ NSDateFormatter *twitter_formatter;
     huRequestOperationManager = [HuHumansHTTPSessionManager sharedProdClient];
 #endif
     __block HuUserHandler *bself = self;
+
+
     
     [huRequestOperationManager.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusNotReachable) {
@@ -106,16 +106,6 @@ NSDateFormatter *twitter_formatter;
     return interval;
 }
 
-//- (void)resetLastPeekTimeFor:(HuHuman *)aHuman
-//{
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    NSMutableDictionary *lastPeeks = [[defaults objectForKey:@"lastPeeks"]mutableCopy];;
-//    NSNumber *time = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970] * 1000L];
-//    [lastPeeks setValue:time forKey:[human humanid]];
-//    [defaults setObject:lastPeeks forKey:@"lastPeeks"];
-//    
-//}
-
 - (void)parseCreateNewUser:(HuUser *)aUser password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
     PFUser *user = [PFUser user];
@@ -142,6 +132,8 @@ NSDateFormatter *twitter_formatter;
     }];
 }
 
+
+#pragma mark createNewUser
 - (void)createNewUser:(HuUser *)aUser password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
     NSString *path = @"/rest/user/new";
@@ -166,7 +158,7 @@ NSDateFormatter *twitter_formatter;
         NSDictionary *dimensions = @{@"username": [aUser username], @"result": result};
         [PFAnalytics trackEvent:@"create-new-user" dimensions:dimensions];
         
-        [Flurry logEvent:@"create-new-user" withParameters:dimensions];
+        //[Flurry logEvent:@"create-new-user" withParameters:dimensions];
         
         [WSLObjectSwitch switchOn:result
                      defaultBlock:^{
@@ -197,7 +189,7 @@ NSDateFormatter *twitter_formatter;
     
 }
 
-
+#pragma mark userAddHuman
 - (void)userAddHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     NSString *path = @"/rest/user/add/human";
@@ -206,7 +198,7 @@ NSDateFormatter *twitter_formatter;
     
     [huRequestOperationManager POST:path parameters:nil data:requestData success:^(NSURLSessionDataTask *task, id responseObject) {
         NSDictionary *dimensions = @{@"user": [[self humans_user]username], @"human-name": [aHuman name], @"success": @"YES"};
-        [Flurry logEvent:@"Added a human" withParameters:dimensions];
+        //[Flurry logEvent:@"Added a human" withParameters:dimensions];
         [aHuman setHumanid:[responseObject objectForKey:@"human.id"]];
         [self userGettyUpdate:aHuman withCompletionHandler:nil];
 
@@ -217,7 +209,7 @@ NSDateFormatter *twitter_formatter;
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
         NSDictionary *dimensions = @{@"user": [[self humans_user]username], @"human-name": [aHuman name], @"success": @"NO", @"error" : [error userInfo]};
-        [Flurry logEvent:@"Failed adding a human" withParameters:dimensions];
+        //[Flurry logEvent:@"Failed adding a human" withParameters:dimensions];
         
         if(completionHandler) {
             completionHandler(false, error);
@@ -233,6 +225,7 @@ NSDateFormatter *twitter_formatter;
     //LOG_ERROR(0, @"Hello %@ %@", username, password);
     NSString* buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CWBuildNumber"];
     NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    
     [huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithUsername:username password:password];
     
     NSString *path =[NSString stringWithFormat:@"/oauth2/token"];
@@ -241,13 +234,14 @@ NSDateFormatter *twitter_formatter;
     
     [huRequestOperationManager GET:path parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
         LOG_NETWORK(0, @"Success %@", responseObject);
+#pragma mark here's where we set the access token to live in the requestSerializer for this manager.. =============
         [self setAccess_token:[responseObject objectForKey:@"access_token"]];
         [huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithToken:self.access_token];
         [self getHumansWithCompletionHandler:completionHandler];
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Failure %@", error);
-        [Flurry logError:error.localizedDescription message:@"" error:error];
+        //[Flurry logError:error.localizedDescription message:@"" error:error];
         
         [self setAccess_token:nil];
         if(completionHandler) {
@@ -259,24 +253,30 @@ NSDateFormatter *twitter_formatter;
     
 }
 
+- (HuHuman *)getYouman
+{
+    return [humans_user getYouman];
+}
+
+
 #pragma --- mark get the user's humans as well as the user's details, id, services, username, etc.
 
 - (void)getHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     [huRequestOperationManager GET:@"/rest/user/get" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         //
-        [Flurry logEvent:[NSString stringWithFormat:@"Successful getHumansWithCompletion %@" , [humans_user username]]];
+        //[Flurry logEvent:[NSString stringWithFormat:@"Successful getHumansWithCompletion %@" , [humans_user username]]];
         
         humans_user = [[HuUser alloc]initWithJSONDictionary:responseObject];
-        
-        LOG_GENERAL(0, @"%@", [humans_user dictionary]);
+        //[self makeYouman:nil];
+        //LOG_GENERAL(0, @"%@", [humans_user dictionary]);
         if(completionHandler) {
             completionHandler(true, nil);
         }
         
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        [Flurry logEvent:[NSString stringWithFormat:@"Failed getHumansWithCompletion %@" , [humans_user username]]];
+       // [Flurry logEvent:[NSString stringWithFormat:@"Failed getHumansWithCompletion %@" , [humans_user username]]];
         
         LOG_NETWORK(0, @"User Get Failed.. %@", error);
         LOG_NETWORK(0, @"%@", [error localizedDescription]);
@@ -292,13 +292,13 @@ NSDateFormatter *twitter_formatter;
 -(void)getStatusCountsWithCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
     NSString *path =@"/rest/human/status/count";
-    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+    NSURLSessionDataTask *statusCountTask = [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
             completionHandler(responseObject, true, nil);
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-        [Flurry logError:error.localizedDescription message:@"" error:error];
+        //[Flurry logError:error.localizedDescription message:@"" error:error];
         
         if(completionHandler) {
             completionHandler(nil, false, error);
@@ -321,7 +321,7 @@ NSDateFormatter *twitter_formatter;
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-        [Flurry logError:error.localizedDescription message:@"" error:error];
+        //[Flurry logError:error.localizedDescription message:@"" error:error];
         
         if(completionHandler) {
             completionHandler(nil, false, error);
@@ -351,6 +351,19 @@ NSDateFormatter *twitter_formatter;
     }];
 }
 
+#pragma mark getty update Youman convenience /getty/update/{youman_humanid}
+- (void)userGettyUpdateYoumanWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    HuHuman *youman = [self getYouman];
+    if(youman != NULL) {
+        [self userGettyUpdate:youman withCompletionHandler:completionHandler];
+    } else {
+        if(completionHandler) {
+            NSError *error = [[NSError alloc]initWithDomain:@"" code:909 userInfo:@{@"message": @"There was a problem. You've got no youman."}];
+            completionHandler(NO, error);
+        }
+    }
+}
 
 #pragma mark getty update /getty/update/{humanid}
 - (void)userGettyUpdate:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
@@ -394,12 +407,12 @@ NSDateFormatter *twitter_formatter;
 #pragma mark Delete a service connection for a user
 - (void)userRemoveService:(HuServices *)aService withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    [Flurry logEvent:[NSString stringWithFormat:@"Attempting userRemoveService for %@", [aService description]]];
+    //[Flurry logEvent:[NSString stringWithFormat:@"Attempting userRemoveService for %@", [aService description]]];
     
     NSString *path = @"/rest/user/rm/service";
     
     [huRequestOperationManager POST:path parameters:nil data:[aService json] success:^(NSURLSessionDataTask *task, id responseObject) {
-        [Flurry logEvent:[NSString stringWithFormat:@"Success for %@ response=%@", [aService description], responseObject]];
+       // [Flurry logEvent:[NSString stringWithFormat:@"Success for %@ response=%@", [aService description], responseObject]];
         if(completionHandler) {
             
             id result = [responseObject objectForKey:@"result"];
@@ -421,98 +434,16 @@ NSDateFormatter *twitter_formatter;
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
         
-        [Flurry logError:error.localizedDescription message:@"" error:error];
+        //[Flurry logError:error.localizedDescription message:@"" error:error];
         if(completionHandler) {
             completionHandler(NO, error);
         }
         
         
     }];
-    
-    
-    //    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-    //        [Flurry logEvent:[NSString stringWithFormat:@"Success for %@ response=%@", [aService description], responseObject]];
-    //        if(completionHandler) {
-    //
-    //            id result = [responseObject objectForKey:@"result"];
-    //            if(result != nil && [result isKindOfClass:[NSString class]]) {
-    //                if([result isEqualToString:@"success"]) {
-    //                    completionHandler(YES, nil);
-    //                } else {
-    //                    NSString *message = [responseObject objectForKey:@"message"];
-    //                    if(message == nil) {
-    //                        message = @"no message";
-    //                    }
-    //                    NSError *err = [[NSError alloc]initWithDomain:@"error" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:result, @"result", message, @"message", nil]];
-    //                    completionHandler(NO, err);
-    //
-    //                }
-    //            }
-    //        }
-    //    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-    //        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-    //
-    //        [Flurry logError:error.localizedDescription message:@"" error:error];
-    //       if(completionHandler) {
-    //            completionHandler(NO, error);
-    //        }
-    //
-    //    }];
-    /*
-     [huRequestOperationManager setParameterEncoding:NSUTF8StringEncoding];
-     
-     NSMutableURLRequest *request =[huRequestOperationManager requestWithMethod:@"POST" path:path parameters:nil];
-     request.HTTPMethod = @"POST";
-     request.timeoutInterval = 30.000000;
-     request.HTTPBody = [aService json];
-     [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Accept"];
-     [request setValue:[NSString stringWithFormat:@"application/json"] forHTTPHeaderField:@"Content-Type"];
-     
-     // Request Operation
-     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-     
-     // Progress & Completion blocks
-     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-     LOG_NETWORK(0, @"Success: Status Code %d", operation.response.statusCode);
-     [Flurry logEvent:[NSString stringWithFormat:@"Success for %@ response=%@", [aService description], responseObject]];
-     NSError *readError = nil;
-     id json = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:&readError];
-     // BOOL valid = [NSJSONSerialization isValidJSONObject:json];
-     if(completionHandler) {
-     
-     id result = [json objectForKey:@"result"];
-     if(result != nil && [result isKindOfClass:[NSString class]]) {
-     if([result isEqualToString:@"success"]) {
-     completionHandler(YES, nil);
-     } else {
-     NSString *message = [responseObject objectForKey:@"message"];
-     if(message == nil) {
-     message = @"no message";
-     }
-     NSError *err = [[NSError alloc]initWithDomain:@"error" code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:result, @"result", message, @"message", nil]];
-     completionHandler(NO, err);
-     
-     }
-     }
-     }
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-     LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-     
-     [Flurry logError:error.localizedDescription message:@"" error:error];
-     
-     
-     
-     if(completionHandler) {
-     completionHandler(NO, error);
-     }
-     }];
-     
-     // Connection
-     
-     [operation start];
-     */
 }
 
+#pragma mark add a bunch of service users /rest/human/{humanid}/add/serviceuser/ with JSON for all of the service users
 - (void)humanAddServiceUsers:(NSArray *)arrayOfServiceUsers forHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
     [huRequestOperationManager humanAddServiceUsers:arrayOfServiceUsers forHuman:aHuman withProgress:nil withCompletionHandler:^(id data, BOOL success, NSError *error) {
@@ -561,7 +492,7 @@ NSDateFormatter *twitter_formatter;
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-        [Flurry logError:error.localizedDescription message:@"" error:error];
+        //[Flurry logError:error.localizedDescription message:@"" error:error];
         
         if(completionHandler) {
             completionHandler(NO, error);
@@ -609,7 +540,7 @@ NSDateFormatter *twitter_formatter;
         }
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        [Flurry logError:[error localizedDescription] message:[error description] error:error];
+        //[Flurry logError:[error localizedDescription] message:[error description] error:error];
         if(completionHandler) {
             completionHandler(nil);
         }
@@ -715,7 +646,7 @@ NSDateFormatter *twitter_formatter;
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_GENERAL (0, @"failure: error: %@", error);
         LOG_GENERAL(0, @"%@", [error localizedDescription] );
-        [Flurry logError:error.localizedDescription message:@"" error:error];
+        //[Flurry logError:error.localizedDescription message:@"" error:error];
         
         [self setLastStatusResultHeader:nil];
         [[self statusForHumanId]removeObjectForKey:humanid];
@@ -788,7 +719,7 @@ NSDateFormatter *twitter_formatter;
     }];
 }
 
-#pragma mark access token crap for a specific service
+#pragma mark access token crap for a specific service. name the service and get the authentication parcel
 // given a HuService this will try and get the access token particulars for that service + user
 
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler
@@ -866,7 +797,7 @@ NSDateFormatter *twitter_formatter;
         @catch (NSException *ne) {
             NSString *loc = [NSString stringWithFormat:@"%s", __PRETTY_FUNCTION__];
             NSError *error = [[NSError alloc]initWithDomain:@"HuUserHandler" code:99 userInfo:@{@"reason": [ne reason], @"name": [ne name], @"place": loc, @"exception": ne}];
-            [Flurry logError:[ne reason] message:[ne reason] error:error];
+            //[Flurry logError:[ne reason] message:[ne reason] error:error];
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_GENERAL(0, @"Failure %@", error);

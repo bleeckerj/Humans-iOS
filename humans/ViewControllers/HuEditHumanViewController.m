@@ -14,7 +14,7 @@
 @interface HuEditHumanViewController ()
 {
     NSMutableArray *textFields;
-    UIStoryboard *storyBoard;
+    //UIStoryboard *storyBoard;
     HuUserHandler *user_handler;
 }
 @end
@@ -65,7 +65,7 @@
 - (void)commonInit
 {
     textFields = [[NSMutableArray alloc]init];
-    storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+   // storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     refreshOnReturn = NO;
     HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
     user_handler = [delegate humansAppUser];
@@ -120,16 +120,14 @@ CGRect frame;
         __block HuEditHumanViewController *weakSelf = self;
         
         
-        HuAddDeleteServiceUserCarouselViewController *vc = [[HuAddDeleteServiceUserCarouselViewController alloc]init];////[self.storyboard instantiateViewControllerWithIdentifier:@"HuAddDelHumansViewController"];
+        HuAddDeleteServiceUserCarouselViewController *vc = [[HuAddDeleteServiceUserCarouselViewController alloc]init];
         [vc setHuman:human];
-        
         
         MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:vc];
         [formSheet setCornerRadius:3.0f];
         
         [MZFormSheetController sharedBackgroundWindow].formSheetBackgroundWindowDelegate = weakSelf;
         __weak MZFormSheetController *weakFormSheet = formSheet;
-        
         
         formSheet.presentedFormSheetSize = CGSizeMake(300, 150);
         formSheet.transitionStyle = MZFormSheetTransitionStyleSlideFromTop;
@@ -160,7 +158,6 @@ CGRect frame;
                 }
             }];
         };
-        
         
         
         formSheet.didDismissCompletionHandler = ^(UIViewController *presentedFSViewController) {
@@ -231,7 +228,7 @@ CGRect frame;
                 noticeView.titleLabelText = @"There was a problem deleting..";
                 NSDictionary *dimensions = @{@"user-remove-human": human, @"user" : [user_handler humans_user],  @"success": success?@"YES":@"NO", @"error" : error};
                 [PFAnalytics trackEvent:@"user-remove-human" dimensions:dimensions];
-                [Flurry logEvent:@"user-remove-human" withParameters:dimensions];
+                //[Flurry logEvent:@"user-remove-human" withParameters:dimensions];
                 
                 [self performBlock:^{
                     [noticeView dismiss:YES];

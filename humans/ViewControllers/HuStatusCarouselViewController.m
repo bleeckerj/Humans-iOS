@@ -15,7 +15,6 @@
 #import "HuServiceStatus.h"
 #import <UIColor+FPBrandColor.h>
 #import <UIColor+Crayola.h>
-#import "UIColor+UIColor_LighterDarker.h"
 #import <UIView+MCLayout.h>
 #import <ViewUtils.h>
 #import "HuUserHandler.h"
@@ -122,7 +121,7 @@
     [header setStatus:[items objectAtIndex:0]];  //[carousel currentItemIndex]]];
     [self.view addSubview:header];
     
-    [carousel setBackgroundColor:[[UIColor crayolaTimberwolfColor]lighterColor]];
+    [carousel setBackgroundColor:[UIColor crayolaTimberwolfColor]];
       
     carouselFrame = CGRectMake(0, HEADER_HEIGHT, 320, CGRectGetHeight(self.view.frame) - CGRectGetHeight(header.frame));
     [carousel setFrame:carouselFrame];

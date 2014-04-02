@@ -13,6 +13,8 @@
 #import "HuLoginViewController.h"
 #import "HuSplashViewController.h"
 #import "HuHumansProfileCarouselViewController.h"
+//#import "HockeySDK.h"
+
 //#import "HuFindFollowsMain_ViewController.h"
 
 @class HuJediFindFriends_ViewController;
@@ -20,7 +22,7 @@
 @class HuLoginViewController;
 @class HuHumansProfileCarouselViewController;
 
-@interface HuAppDelegate : UIResponder <UIApplicationDelegate>
+@interface HuAppDelegate : UIResponder <UIApplicationDelegate/*, BITCrashManagerDelegate, BITHockeyManagerDelegate*/>
 
 - (NSArray*)freshNavigationStack;
 - (HuLoginViewController *)loginViewController;

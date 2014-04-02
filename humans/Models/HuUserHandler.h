@@ -95,6 +95,7 @@ typedef enum networkStateTypes
 
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;
 - (void)userGettyUpdate:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+- (void)userGettyUpdateYoumanWithCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userGettyUpdateFriends:(CompletionHandlerWithResult)completionHandler;
 
 - (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler;

@@ -30,7 +30,7 @@
     FUITextField *searchField;
     HuUserHandler *userHandler;
     UIView *resultsView;
-    FUIButton *acceptButton;
+    FUIButton *addButton;
     FUIButton *cancelButton;
     
 }
@@ -57,7 +57,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSAssert(self.human !=nil, @"Why is human nil here?");
+    //NSAssert(self.human !=nil, @"Why is human nil here?");
     
     LOG_UI(0, @"presented within here: %@ %@ %@ %@",NSStringFromCGRect(self.view.frame), NSStringFromCGSize(self.view.size), NSStringFromCGRect(self.formSheetController.view.bounds), self.formSheetController.view);
     
@@ -77,13 +77,14 @@
     
     resultsScroller = [MGScrollView scrollerWithSize:resultsView.size];
     [resultsScroller setContentSize:resultsView.size];
-    // [resultsScroller setBackgroundColor:[[UIColor crayolaQuickSilverColor]lighterColor]];
     [resultsScroller setBounces:YES];
     [resultsView addSubview:resultsScroller];
     
     resultsGrid = [MGBox boxWithSize:[resultsScroller size]];
     resultsGrid.contentLayoutMode = MGLayoutGridStyle;
-    [resultsGrid setBackgroundColor:[[UIColor crayolaQuickSilverColor]lighterColor]];
+    //[resultsGrid setBackgroundColor:[[UIColor crayolaQuickSilverColor]lighterColor]];
+    [resultsGrid setBackgroundColor:[UIColor crayolaQuickSilverColor]];
+
     [resultsScroller.boxes addObject:resultsGrid];
     
     [self.view addSubview:resultsView];
@@ -113,60 +114,90 @@
     
     [picksGrid layout];
     
-    LOG_UI(0, @"%@ %@ %f %f self.view.bottom=%f %f", NSStringFromCGRect(self.view.bounds), NSStringFromCGRect(self.view.frame), self.view.bottom, self.view.boundsHeight, resultsView.bottom, resultsView.origin.y);
+    //LOG_UI(0, @"%@ %@ %f %f self.view.bottom=%f %f", NSStringFromCGRect(self.view.bounds), NSStringFromCGRect(self.view.frame), self.view.bottom, self.view.boundsHeight, resultsView.bottom, resultsView.origin.y);
     [picksScroller setFrame:CGRectMake(0, 0, self.view.width, picksGrid.height)];
     [picksScroller setContentSize:CGSizeMake(picksGrid.size.width, picksGrid.height)];
     [picksScroller addSubview:picksGrid];
     [self.view addSubview:picksScroller];
     [picksScroller mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:resultsView  withMargins:UIEdgeInsetsMake(2, 0, 0, 0)];
     
-    acceptButton = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.width/2, PICTURE_ROW_HEIGHT)];
-    acceptButton.buttonColor = [UIColor emerlandColor];
-    acceptButton.shadowColor = acceptButton.buttonColor;
-    acceptButton.shadowHeight = 0.0f;
-    acceptButton.cornerRadius = 0.0f;
-    acceptButton.titleLabel.font = BUTTON_FONT_LARGE;
-    [acceptButton setHighlightedColor:[[UIColor emerlandColor]lighterColor]];
-    [acceptButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [acceptButton setTitle:@"Add" forState:UIControlStateNormal];
-    [self.view addSubview:acceptButton];
-    [acceptButton mc_setRelativePosition:MCViewRelativePositionUnderAlignedRight toView:picksScroller withMargins:UIEdgeInsetsMake(2, 0, 0, 0)];
+    addButton = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.width/2, PICTURE_ROW_HEIGHT)];
+    addButton.buttonColor = [UIColor emerlandColor];
+    addButton.shadowColor = addButton.buttonColor;
+    addButton.shadowHeight = 0.0f;
+    addButton.cornerRadius = 0.0f;
+    addButton.titleLabel.font = BUTTON_FONT_LARGE;
+    //[addButton setHighlightedColor:[[UIColor emerlandColor]lighterColor]];
+    [addButton setHighlightedColor:[UIColor emerlandColor]];
+
+    [addButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [addButton setTitle:@"Add" forState:UIControlStateNormal];
+    [self.view addSubview:addButton];
+    [addButton mc_setRelativePosition:MCViewRelativePositionUnderAlignedRight toView:picksScroller withMargins:UIEdgeInsetsMake(2, 0, 0, 0)];
     
     
     __block HuJediMiniFindFriendsViewController *bself = self;
-#pragma mark == when we click the accept button, add the service users
-    [acceptButton bk_addEventHandler:^(id sender) {
+#pragma mark == when we click the add button, add the service users
+    [addButton bk_addEventHandler:^(id sender) {
         //
+        __block MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+        progressView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+        [progressView setTintColor:[UIColor sunflowerColor]];
+        
+        NSMutableArray *service_users = [[NSMutableArray alloc]init];
+        
         [picksGrid.boxes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             // THIS IS SO GROSS
-            HuServiceUserProfilePhoto *p = (HuServiceUserProfilePhoto*)obj;
+            
+            HuServiceUserProfilePhoto *p = (HuServiceUserProfilePhoto*)obj;\
+            
             if([p isKindOfClass:[HuProfilePhotoBlank class]]) {
                 return;
             }
-            HuFriend *f = [p mFriend];
-            HuServiceUser *service_user = [[HuServiceUser alloc]initWithFriend:f];
-            TODO:
+            
+            HuFriend *friend = [p mFriend];
+            LOG_UI(0, @"Adding %@ for %@", [friend username], [friend serviceName]);
+            progressView.titleLabelText = [NSString stringWithFormat:@"Adding %@", [friend username]];
+            
+            
+            HuServiceUser *service_user = [[HuServiceUser alloc]initWithFriend:friend];
+        //TODO:
             // THIS IS IN AN ENUMERATOR SO THIS WILL GET CALLED MULTIPLE TIMES
             // AND SO WILL THE CALL TO GET HUMANS.
             // FIX THIS .. make a method humanAddServiceUsers that takes an array or something, for chrissake
-            [userHandler humanAddServiceUser:service_user forHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
-                //
-                LOG_GENERAL(0, @"added service user? %@ %@ %@", success?@"YES":@"NO", data, error);
-                if(success) {
-                    [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
-                        [self performBlock:^{
-                            [bself mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-                                // do sth
-                            }];
-                        } afterDelay:1.0];
-                    }];
-                }
-                
-            }];
-            
-            LOG_UI(0, @"service_user=%@", [service_user jsonString]);
+            [service_users addObject:service_user];
             
         }];
+        
+        
+        [userHandler humanAddServiceUsers:service_users forHuman:human withCompletionHandler:^(id data, BOOL success, NSError *error) {
+            //
+            LOG_GENERAL(0, @"added service user? %@ %@ %@", success?@"YES":@"NO", data, error);
+            if(success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [picksGrid.boxes removeAllObjects];
+                    [picksGrid setNeedsDisplay];
+                });
+                
+            }
+            
+            
+            
+            LOG_UI(0, @"service_users=%@", service_users);
+            
+        }];
+        
+        [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+            [self performBlock:^{
+                [progressView dismiss:YES completion:^{
+                    [bself mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+                        // do sth
+                    }];
+                }];
+                
+            } afterDelay:1.0];
+        }];
+        
     } forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -176,8 +207,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    LOG_UI(0, @"presented within here: %@ %@ %@ %@",NSStringFromCGRect(self.view.frame), NSStringFromCGSize(self.view.size), NSStringFromCGRect(self.formSheetController.view.bounds), self.formSheetController.view);
-    
     
     UIWindow* mainWindow = [[UIApplication sharedApplication] keyWindow];
     if([userHandler friends] == nil || [[userHandler friends]count] == 0) {
@@ -186,26 +215,10 @@
         progressView.mode = MRProgressOverlayViewModeIndeterminate;
         progressView.tintColor = [UIColor carrotColor];
         progressView.titleLabelText = @"Finding Friends";
-        //        [self performBlock:^{
-        //            //
-        //            progressView.titleLabelText = @"I know this takes awhile..";
-        //        } afterDelay:5.0];
-        //
-        //        [self performBlock:^{
-        //            progressView.titleLabelText = @"I'm working on it..";
-        //        } afterDelay:8.0];
-        //
-        //        [self performBlock:^{
-        //            //
-        //            progressView.titleLabelText = @"Finding Friends..";
-        //        } afterDelay:12.0];
         
         [userHandler userFriendsGet:^(NSMutableArray *results) {
-            //[MRProgressOverlayView dismissOverlayForView:mainWindow.subviews[0] animated:YES];
-            
-            //MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
             progressView.mode = MRProgressOverlayViewModeCheckmark;
-            progressView.titleLabelText = [NSString stringWithFormat:@"Found %lu Friends",  [[userHandler friends] count]];
+            progressView.titleLabelText = [NSString stringWithFormat:@"Found %d Friends",  [[userHandler friends] count]];
             [self performBlock:^{
                 [progressView dismiss:YES];
             } afterDelay:4.0];
@@ -213,10 +226,6 @@
         }];
         
     }
-    
-    
-    
-    
 }
 
 - (void)viewDidLoad
@@ -257,8 +266,6 @@
         //
         LOG_UI(0, @"You typed %@", sender);
     } forControlEvents:UIControlEventEditingChanged];
-    //    [searchField setBackgroundColor:[UIColor asbestosColor]];
-    //    [searchField setFont:TEXTFIELD_FONT_SMALL];
     [searchField setBorderStyle:UITextBorderStyleLine];
     searchField.layer.borderWidth = 0;
     

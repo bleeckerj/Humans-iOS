@@ -107,25 +107,9 @@ HuUserHandler *userHandler;
     [ex_button setButtonColor:[UIColor whiteColor]];
     [ex_button setImage:[UIImage imageNamed:@"delete-x-22sq"] forState:UIControlStateNormal];
     [ex_button bk_addEventHandler:^(id sender) {
-        //NSArray *viewControllers = self.navigationController.viewControllers;
-        //UIViewController *rootViewController = [viewControllers objectAtIndex:viewControllers.count - 2];
-        //[rootViewController.view setNeedsLayout];
-        //[bself.navigationController popToRootViewControllerAnimated:YES];
         [bself.navigationController popViewControllerAnimated:YES];
         
     } forControlEvents:UIControlEventTouchUpInside];
-
-//    UIImage *small_exbox_img = [UIImage imageNamed:@"delete-x-22sq"];
-//
-//    MGLine *ex_ = [MGLine lineWithLeft:small_exbox_img right:nil size:[small_exbox_img size]];
-//    ex_.onTap = ^{
-//        LOG_UI(0, @"Tapped Ex Box");
-//        NSArray *viewControllers = self.navigationController.viewControllers;
-//        UIViewController *rootViewController = [viewControllers objectAtIndex:viewControllers.count - 2];
-//        [rootViewController.view setNeedsLayout];
-//        //[bself.navigationController popToRootViewControllerAnimated:YES];
-//        [bself.navigationController popViewControllerAnimated:YES];
-//    };
 
     
     [settings_bar_view addSubview:ex_button];
@@ -133,27 +117,6 @@ HuUserHandler *userHandler;
     
 #pragma mark header setup
     //header
-//    self.header = [MGLineStyled lineWithLeft:ex_ right:nil size:(CGSize){self.view.width,HEADER_HEIGHT}];
-//    [self.header setMiddleFont:HEADER_FONT];
-//    [self.header setMiddleTextColor:[UIColor darkGrayColor]];
-//    NSString *header_text = [NSString stringWithFormat:@"Connect to %@", serviceName];
-//    [self.header setMiddleItems:[NSMutableArray arrayWithObject:header_text]];
-//    [self.header setMiddleItemsAlignment:NSTextAlignmentCenter];
-//    self.header.sidePrecedence = MGSidePrecedenceMiddle;
-//    self.header.padding = UIEdgeInsetsMake(4, 8, 4, 8);
-//    self.header.fixedPosition = (CGPoint){0,0};
-//    self.header.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:0.9];
-//    self.header.zIndex = 1;
-//    self.header.layer.cornerRadius = 0;
-//    self.header.layer.shadowOffset = CGSizeZero;
-//    [self.header setFrame:(CGRectMake(0, 0, self.view.width, HEADER_HEIGHT))];
-//    self.header.onTap = ^{
-//        LOG_UI(0, @"Tapped Header");
-//        //nextState++;
-//    };
-//    // add it to the view then lay it all out
-//    [self.view addSubview:self.header];
-//    [self.header layout];
 
     webView = [[UIWebView alloc]init];
     webView.delegate = self;

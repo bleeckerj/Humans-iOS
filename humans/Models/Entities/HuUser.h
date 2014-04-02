@@ -29,7 +29,8 @@
 - (Boolean)amSuperuser;
 - (Boolean)amAdmin;
 - (HuHuman *)getHumanByID:(NSString *)humanID;
-
+- (BOOL)doesContainYouMan;
+- (HuHuman *)getYouman;
 - (NSString *)jsonString;
 
 @end

@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "HuLoginOrSignUpViewController.h"
 #import "HuLoginViewController.h"
+#import <UIView+MCLayout.h>
 #import "HuSignUpViewController.h"
-
+//#import <HockeySDK.h>
 @interface HuSplashViewController : UIViewController
 
 @end

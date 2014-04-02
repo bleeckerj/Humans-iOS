@@ -1,6 +1,6 @@
 #import "LoggerClient.h"
 #import <Parse/Parse.h>
-#import "Flurry.h"
+//#import "Flurry.h"
 
 #define IMAGEDEBUG
 #define CA_DEBUG_TRANSACTIONS
@@ -60,6 +60,8 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 
 #else
+
+
 #define LOG_TODO(...)    do{}while(0)
 #define LOG_DEEBUG(...)    do{}while(0)
 #define LOG_DEBUG(...)    do{}while(0)

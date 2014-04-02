@@ -13,7 +13,7 @@
 #import "HuServiceUser.h"
 #import "HuUserHandler.h"
 #import "HuAppDelegate.h"
-#import "Flurry.h"
+//#import "Flurry.h"
 #import <Parse/Parse.h>
 
 #import <MZFormSheetController.h>
@@ -21,7 +21,7 @@
 #import <UIColor+FPBrandColor.h>
 #import <UIColor+Crayola.h>
 #import <UIColor+FlatUI.h>
-#import "UIColor+UIColor_LighterDarker.h"
+//#import "UIColor+UIColor_LighterDarker.h"
 #import <UIImageView+AFNetworking.h>
 #import <UIImage+Resize.h>
 #import <WSLObjectSwitch.h>

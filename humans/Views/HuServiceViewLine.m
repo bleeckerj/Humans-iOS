@@ -8,7 +8,7 @@
 
 #import "HuServiceViewLine.h"
 #import <WSLObjectSwitch.h>
-#import "Flurry.h"
+//#import "Flurry.h"
 #import <FontAwesome-iOS/NSString+FontAwesome.h>
 #import <UIImage+Resize.h>
 
@@ -64,7 +64,7 @@ UIImage *serviceImage;
     [WSLObjectSwitch switchOn:[aService serviceName] defaultBlock:^{
         LOG_UI(0, @"Default?");
         NSString *error = [NSString stringWithFormat:@"No service match for serviceName=%@ serviceUserID=%@", [aService serviceName], [aService serviceUserID]];
-        [Flurry logError:error message:error error:nil];
+        //[Flurry logError:error message:error error:nil];
     } cases:
      @"twitter", ^{
          

@@ -23,7 +23,7 @@
 #import "MBProgressHUD.h"
 #import <UIView+MCLayout.h>
 #import <ViewUtils.h>
-#import "Flurry.h"
+//#import "Flurry.h"
 #import <Parse/Parse.h>
 #import <MRProgress/MRProgress.h>
 #import <UIColor+Crayola.h>

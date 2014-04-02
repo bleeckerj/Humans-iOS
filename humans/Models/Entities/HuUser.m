@@ -51,7 +51,35 @@
 		[self parseJSONDictionary:dic];
 	}
 	
+    
+    
+    
 	return self;
+}
+
+- (HuHuman *)getYouman
+{    __block HuHuman *result = nil;
+    [[self humans]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        HuHuman *human = (HuHuman*)obj;
+        if([human isYouMan]) {
+            result = human;
+            *stop = YES;
+        }
+    }];
+    return result;
+}
+
+- (BOOL)doesContainYouMan
+{
+    __block BOOL result = NO;
+    [[self humans]enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        HuHuman *human = (HuHuman*)obj;
+        if([human isYouMan]) {
+            result = YES;
+            *stop = YES;
+        }
+    }];
+    return result;
 }
 
 - (void) parseJSONDictionary:(NSDictionary *)dic
@@ -158,7 +186,6 @@
 
 - (NSString *)description
 {
-    NSDictionary *dict = [self dictionary];
     NSError *error;
     
     SBJson4Writer *writer = [[SBJson4Writer alloc] init];

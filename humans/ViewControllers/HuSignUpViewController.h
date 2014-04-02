@@ -23,6 +23,8 @@
 #import "HuUS2ConditionLowerAlphaEmotis.h"
 #import "HuUS2ConditionEmojiStringRange.h"
 #import <CRToast.h>
+#import <TYMActivityIndicatorView.h>
+#import <MSWeakTimer.h>
 
 @interface HuSignUpViewController : UIViewController <UITextFieldDelegate, US2ValidatorUIDelegate>
 
@@ -37,6 +39,8 @@
 @property (strong, nonatomic) IBOutlet FUIButton *signUpButton;
 @property (strong, nonatomic) IBOutlet FUIButton *loginButton;
 @property (retain, nonatomic) IBOutlet RDVKeyboardAvoidingScrollView *keyboardAvoidingScrollView;
+@property BOOL isCheckingUsernameUniqueness;
+@property (nonatomic, strong)     TYMActivityIndicatorView *checkUsernameAnnunciator;
 
 - (void)isUniqueUsername:(NSString *)username isUnique:(BOOL)is;
 

@@ -10,10 +10,9 @@
 #import "LoggerClient.h"
 #import "defines.h"
 #import <Crashlytics/Crashlytics.h>
-#import "Flurry.h"
+//#import "Flurry.h"
 #import <Parse/Parse.h>
 #import "HuHumansProfileCarouselViewController.h"
-#import "HockeySDK.h"
 
 @implementation HuAppDelegate
 {
@@ -29,10 +28,23 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"89a415bf14fb56ed6e81ef153d4cb481"];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+    [TestFlight takeOff:@"7d627af6-7629-44dc-8103-a7a1baa81d03"];
+    // The rest of your application:didFinishLaunchingWithOptions method// ...
     
+    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
+                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
+    
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    //[Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
+    [application setStatusBarHidden:NO];
+
+    [self setupApplication];
+    
+    return YES;
+}
+
+- (void) setupApplication {
     // Override point for customization after application launch.
     LoggerInit();
     
@@ -44,7 +56,7 @@
     LOG_UI(0, @"Widescreen %d", ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON ));
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    [manager.imageDownloader setDownloadTimeout:30.0];
+    [manager.imageDownloader setDownloadTimeout:45.0];
     
     //    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     //    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
@@ -66,29 +78,17 @@
     
     humansAppUser = [[HuUserHandler alloc]init];
     
-    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
-                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    
-    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
-    [Crashlytics sharedInstance].debugMode = YES;
-    
-    [Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
-    [application setStatusBarHidden:NO];
-    
-    //[self loginViaKeychain];
-    //HuSplashViewController *splash = [[HuSplashViewController alloc]init];
     
     UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    loginViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];
-    signUpViewController = [[HuSignUpViewController alloc]init];//[storyBoard instantiateViewControllerWithIdentifier:@"HuSignUpViewController"];
+    //    loginViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginViewController"];
+    //    signUpViewController = [[HuSignUpViewController alloc]init];//[storyBoard instantiateViewControllerWithIdentifier:@"HuSignUpViewController"];
     
-    UIViewController *splash = [storyBoard instantiateViewControllerWithIdentifier:@"HuSplashViewController"];
+    HuSplashViewController *splash = [storyBoard instantiateViewControllerWithIdentifier:@"HuSplashViewController"];
     
     UINavigationController *navigator = (UINavigationController *)[self.window rootViewController];
     [navigator pushViewController:splash animated:NO];
     
-    return YES;
+    //return YES;
 }
 
 
@@ -135,8 +135,9 @@
 - (HuSignUpViewController *)signUpViewController
 {
     if(signUpViewController == nil) {
-        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        signUpViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuSignUpViewController"];
+//        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//        signUpViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuSignUpViewController"];
+        signUpViewController = [[HuSignUpViewController alloc]init];
     }
     return signUpViewController;
     
@@ -170,6 +171,26 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark - BITCrashManagerDelegate
+/**
+- (void)crashManagerWillCancelSendingCrashReport:(BITCrashManager *)crashManager {
+    if ([self didCrashInLastSessionOnStartup]) {
+        [self setupApplication];
+    }
+}
+
+- (void)crashManager:(BITCrashManager *)crashManager didFailWithError:(NSError *)error {
+    if ([self didCrashInLastSessionOnStartup]) {
+        [self setupApplication];
+    }
+}
+
+- (void)crashManagerDidFinishSendingCrashReport:(BITCrashManager *)crashManager {
+    if ([self didCrashInLastSessionOnStartup]) {
+        [self setupApplication];
+    }
+}
+**/
 @end
 
 @implementation NSURLRequest(DataController)

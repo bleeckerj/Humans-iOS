@@ -10,7 +10,7 @@
 #import "HuHuman.h"
 #import "HuServiceUser.h"
 #import <ObjectiveSugar.h>
-#import "Flurry.h"
+//#import "Flurry.h"
 
 @interface HuHumansHTTPSessionManager : AFHTTPSessionManager
 

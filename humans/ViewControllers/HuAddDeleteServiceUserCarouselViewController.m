@@ -127,7 +127,7 @@
         [add_user setTitle:@"Add More Human" forState:UIControlStateNormal];
         [[add_user titleLabel]setFont:BUTTON_FONT_LARGE];
         [add_user setButtonColor:[UIColor crayolaCaribbeanGreenColor]];
-        UIColor *foo = [[UIColor crayolaCaribbeanGreenColor]darkerColor];
+        UIColor *foo = [UIColor crayolaCaribbeanGreenColor];
         [add_user setHighlightedColor:foo];
         add_user.layer.cornerRadius = 4;
         [add_service_user_view addSubview:add_user];
@@ -261,7 +261,7 @@
                     } else {
                         NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
                         [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
-                        [Flurry logEvent:@"remove-service-user" withParameters:dimensions];
+                        //[Flurry logEvent:@"remove-service-user" withParameters:dimensions];
                         
                     }
 
@@ -278,7 +278,7 @@
                 
                 NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
                 [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
-                [Flurry logEvent:@"remove-service-user" withParameters:dimensions];
+                //[Flurry logEvent:@"remove-service-user" withParameters:dimensions];
                 
             }
 

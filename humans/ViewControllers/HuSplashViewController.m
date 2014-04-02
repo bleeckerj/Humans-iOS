@@ -41,6 +41,7 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
+    
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -58,19 +59,69 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    [self loginViaKeychain];
+    
+    UIImageView *splash = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"Humans-iPhone"]];
+    [self.view addSubview:splash];
+    
+    UILabel *buildLabel = [[UILabel alloc]init];
+    [buildLabel setTextAlignment:NSTextAlignmentCenter];
+    [buildLabel setBackgroundColor:[UIColor clearColor]];
+    [buildLabel setFont:HEADER_FONT];
+    [buildLabel setTextColor:[UIColor crayolaManateeColor]];
+    
+    [self.view addSubview:buildLabel];
+    
+    NSString *shortVersionString = [[[NSBundle mainBundle]infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    NSString *build  = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CWBuildNumber"];
+#ifdef DEV
+#ifdef DEBUG
+    [buildLabel setText:[NSString stringWithFormat:@"%@-debug   version %@   build %@.d",shortVersionString, version, build ]];
+#else
+    [buildLabel setText:[NSString stringWithFormat:@"%@-release   version %@   build %@.d",shortVersionString, version, build ]];
+
+#endif
+#else
+#ifdef DEBUG
+
+    [buildLabel setText:[NSString stringWithFormat:@"%@-debug   version %@   build %@.p",shortVersionString, version, build ]];
+#else
+    [buildLabel setText:[NSString stringWithFormat:@"%@-release   version %@   build %@.p",shortVersionString, version, build ]];
+
+#endif
+#endif
+    [buildLabel setSize:CGSizeMake(self.view.size.width, 40)];
+    [buildLabel mc_setPosition:MCViewPositionBottomHCenter inView:self.view];
+    
+    NSDictionary *dimensions = @{@"start" : @"viewDidLoad"};
+    [PFAnalytics trackEvent:@"start" dimensions:dimensions];
+    //[Flurry logEvent:@"start" withParameters:dimensions];
+    [TestFlight passCheckpoint:@"Splash Screen Did Load"];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    
+    
+    
+
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     
+    
+    //[self performBlock:^{
+        [self loginViaKeychain];
+    //} afterDelay:6.0];
+
 }
+
 
 - (BOOL)prefersStatusBarHidden
 {
@@ -80,6 +131,12 @@
 
 - (void)loginViaKeychain
 {
+    NSDictionary *dimensions = @{@"start" : @"loginViaKeychain"};
+    [PFAnalytics trackEvent:@"start" dimensions:dimensions];
+    ////[Flurry logEvent:@"start" withParameters:dimensions];
+    
+    
+
     [[FXKeychain defaultKeychain]objectForKey:@"username"];
     
     
@@ -93,14 +150,16 @@
 
             if(success) {
                 [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
-                [Flurry logEvent:@"keychain-login" withParameters:dimensions];
+                //[Flurry logEvent:@"keychain-login" withParameters:dimensions];
+                [TestFlight passCheckpoint:@"keychain-login"];
+
                 HuHumansProfileCarouselViewController *theHumansProfileCarousel = [delegate humansProfileCarouselViewController];
                 UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;
                 [root pushViewController:theHumansProfileCarousel animated:YES];
             } else {
                 [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
-                [Flurry logEvent:@"keychain-login" withParameters:dimensions];
-
+                ////[Flurry logEvent:@"keychain-login" withParameters:dimensions];
+                
                 HuLoginViewController *loginViewController = [delegate loginViewController];
                 UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;
                 [root pushViewController:loginViewController animated:YES];
@@ -160,6 +219,10 @@
     }];
 }
 
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
+}
 
 - (void)didReceiveMemoryWarning
 {

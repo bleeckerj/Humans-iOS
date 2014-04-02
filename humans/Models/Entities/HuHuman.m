@@ -198,7 +198,10 @@
 
 -(NSDictionary *)dictionary
 {
-    NSDictionary *result =[NSDictionary dictionaryWithObjectsAndKeys:[self humanid],  @"humanid", [self name], @"name", [self serviceUsers], @"serviceUsers", nil];
+    if(self.humanid == nil) {
+        self.humanid = @"";
+    }
+    NSDictionary *result =[NSDictionary dictionaryWithObjectsAndKeys:[self humanid],  @"humanid", [self name], @"name", [NSNumber numberWithBool:[self isYouMan]], @"isYouMan", [self serviceUsers], @"serviceUsers", nil];
     
     return result;
 }

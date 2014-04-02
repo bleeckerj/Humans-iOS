@@ -17,6 +17,9 @@
 @end
 
 @implementation HuShowServicesViewController
+{
+    BOOL didSomething;
+}
 
 MGScrollView *servicesScroller;
 MGLine *check_;
@@ -33,8 +36,6 @@ HuConnectServicesViewController *connectServicesViewController;
     if (self) {
         // Custom initialization
         [self customInit];
-        
-        
     }
     return self;
 }
@@ -46,6 +47,7 @@ HuConnectServicesViewController *connectServicesViewController;
     userHandler = [delegate humansAppUser];
     connectServicesViewController = [[HuConnectServicesViewController alloc]init];
     [connectServicesViewController.view setBackgroundColor:[UIColor whiteColor]];
+    didSomething = NO;
 }
 
 -(void)viewDidLoad
@@ -58,7 +60,18 @@ HuConnectServicesViewController *connectServicesViewController;
     MGLine *ex_ = [MGLine lineWithLeft:small_exbox_img right:nil size:[small_exbox_img size]];
     ex_.onTap = ^{
         LOG_UI(0, @"Tapped Ex");
-        [[self navigationController]popViewControllerAnimated:YES];
+        __block HuShowServicesViewController *bself = self;
+        if(didSomething == YES) {
+            didSomething = NO;
+            [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+                [userHandler userGettyUpdateYoumanWithCompletionHandler:^(BOOL success, NSError *error) {
+                    [bself.navigationController popViewControllerAnimated:YES];
+                }];
+            }];
+            
+        } else {
+            [bself.navigationController popViewControllerAnimated:YES];
+        }
     };
     
     UIImage *small_checkbox_img = [UIImage imageNamed:@"add-cloud-gray.png"];
@@ -67,6 +80,7 @@ HuConnectServicesViewController *connectServicesViewController;
     check_.alpha = 1.0;
     check_.onTap = ^{
         LOG_UI(0, @"Tapped Add Service");
+        didSomething = YES;
         [[self navigationController]pushViewController:connectServicesViewController animated:YES];
         //LOG_GENERAL(0, @"%@", stateMachine.currentState.stateName);
     };
@@ -164,17 +178,12 @@ HuConnectServicesViewController *connectServicesViewController;
 -(void)loadView
 {
     [super loadView];
-    
-    //    CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
-    //    UIView *contentView = [[UIView alloc] initWithFrame:applicationFrame];
-    //    contentView.backgroundColor = [UIColor blackColor];
-    //    self.view = contentView;
-    
 }
 
 #pragma mark HuServiceViewLineDelegate methods
 - (void)lineDidDelete:(HuServiceViewLine *)lineDeleted
 {
+    didSomething = YES;
     [servicesScroller.boxes removeObject:lineDeleted];
     dispatch_async(dispatch_get_main_queue(), ^{
         [servicesScroller layoutWithSpeed:0.5 completion:^{

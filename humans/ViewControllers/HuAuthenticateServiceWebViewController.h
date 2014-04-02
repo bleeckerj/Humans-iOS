@@ -14,7 +14,7 @@
 #import "UIImage+Resize.h"
 #import "MGBox.h"
 #import <MRProgress.h>
-#import "Flurry.h"
+//#import "Flurry.h"
 #import <FUIButton.h>
 #import <MRProgress.h>
 
