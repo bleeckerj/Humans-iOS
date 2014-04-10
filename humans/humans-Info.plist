@@ -17,13 +17,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>pretest</string>
+	<string>couscous</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.2.9</string>
+	<string>0.2.9.1</string>
 	<key>CWBuildNumber</key>
-	<integer>1794</integer>
+	<integer>1863</integer>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>

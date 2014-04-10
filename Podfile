@@ -47,6 +47,7 @@ pod 'AQGridView', '~> 1.3'
 pod 'UIColor-Crayola'
 #pod 'ionicons'
 pod 'TYMActivityIndicatorView'
+pod 'Masonry', '~> 0.4.0'
 
 pod 'iCarousel'
 #pod 'GMGridView'
