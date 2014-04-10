@@ -61,19 +61,14 @@
     
     LOG_UI(0, @"presented within here: %@ %@ %@ %@",NSStringFromCGRect(self.view.frame), NSStringFromCGSize(self.view.size), NSStringFromCGRect(self.formSheetController.view.bounds), self.formSheetController.view);
     
-    [searchField setSize:CGSizeMake(self.view.width, 50)];
-    [searchField setBackgroundColor:[UIColor Garmin]];
+    [searchField setSize:CGSizeMake(self.view.width, 40)];
     [searchField setTextFieldColor:[UIColor whiteColor]];
-    
     
     resultsView = [[UIView alloc]init];
     
-    
-    //CGFloat x = picksGrid.bottom;
     [resultsView setSize:CGSizeMake(self.view.size.width, 2.9*(PICTURE_HEIGHT+picture_insets.bottom + picture_insets.top))];
     [resultsView setBackgroundColor:[UIColor crayolaQuickSilverColor]];
     [resultsView mc_setRelativePosition:MCViewPositionUnder toView:searchField withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
-    
     
     resultsScroller = [MGScrollView scrollerWithSize:resultsView.size];
     [resultsScroller setContentSize:resultsView.size];
@@ -82,7 +77,6 @@
     
     resultsGrid = [MGBox boxWithSize:[resultsScroller size]];
     resultsGrid.contentLayoutMode = MGLayoutGridStyle;
-    //[resultsGrid setBackgroundColor:[[UIColor crayolaQuickSilverColor]lighterColor]];
     [resultsGrid setBackgroundColor:[UIColor crayolaQuickSilverColor]];
 
     [resultsScroller.boxes addObject:resultsGrid];
@@ -106,7 +100,7 @@
     
     picksGrid = [MGBox boxWithSize:CGSizeMake(self.view.width, PICTURE_ROW_HEIGHT)];
     picksGrid.contentLayoutMode = MGLayoutGridStyle;
-    picksGrid.backgroundColor = [UIColor whiteColor];
+    picksGrid.backgroundColor = [UIColor crayolaManateeColor];
     //picksGrid.padding = UIEdgeInsetsMake(10, 0, 10, 0);
     
     // build picksGrid
@@ -119,9 +113,21 @@
     [picksScroller setContentSize:CGSizeMake(picksGrid.size.width, picksGrid.height)];
     [picksScroller addSubview:picksGrid];
     [self.view addSubview:picksScroller];
-    [picksScroller mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:resultsView  withMargins:UIEdgeInsetsMake(2, 0, 0, 0)];
+    [picksScroller mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:resultsView  withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
     
-    addButton = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.width/2, PICTURE_ROW_HEIGHT)];
+    
+    addButton = FUIButton.new;
+    
+//    addButton = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.width/2, PICTURE_ROW_HEIGHT)];
+    [self.view addSubview:addButton];
+    
+    [addButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@(self.view.width/2));
+        make.bottom.equalTo(self.view.mas_bottom);
+        make.right.equalTo(self.view.mas_right);
+        make.top.equalTo(picksScroller.mas_bottom);
+        
+    }];
     addButton.buttonColor = [UIColor emerlandColor];
     addButton.shadowColor = addButton.buttonColor;
     addButton.shadowHeight = 0.0f;
@@ -132,8 +138,7 @@
 
     [addButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [addButton setTitle:@"Add" forState:UIControlStateNormal];
-    [self.view addSubview:addButton];
-    [addButton mc_setRelativePosition:MCViewRelativePositionUnderAlignedRight toView:picksScroller withMargins:UIEdgeInsetsMake(2, 0, 0, 0)];
+    [addButton mc_setRelativePosition:MCViewRelativePositionUnderAlignedRight toView:picksScroller withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
     
     
     __block HuJediMiniFindFriendsViewController *bself = self;
@@ -218,7 +223,7 @@
         
         [userHandler userFriendsGet:^(NSMutableArray *results) {
             progressView.mode = MRProgressOverlayViewModeCheckmark;
-            progressView.titleLabelText = [NSString stringWithFormat:@"Found %d Friends",  [[userHandler friends] count]];
+            progressView.titleLabelText = [NSString stringWithFormat:@"Found %lu Friends",  (unsigned long)[[userHandler friends] count]];
             [self performBlock:^{
                 [progressView dismiss:YES];
             } afterDelay:4.0];
@@ -264,7 +269,6 @@
     
     [searchField bk_addEventHandler:^(id sender) {
         //
-        LOG_UI(0, @"You typed %@", sender);
     } forControlEvents:UIControlEventEditingChanged];
     [searchField setBorderStyle:UITextBorderStyleLine];
     searchField.layer.borderWidth = 0;
@@ -305,9 +309,6 @@
              regularExpressionWithPattern:regexPattern
              options:NSRegularExpressionCaseInsensitive | NSRegularExpressionAllowCommentsAndWhitespace
              error:&error];
-    
-    
-    LOG_GENERAL(0, @"Search For %@ across xxxx", string);
     
     [userHandler searchFriendsWith:regex withCompletionHandler:^(NSMutableArray *results) {
         [resultsGrid.boxes removeAllObjects];
@@ -403,12 +404,6 @@
                             }];
                         }
                     }
-                //                if([self countHumansInPicksGrid] > 0) {
-                //                    check_.alpha = 1.0;
-                //                } else {
-                //                    check_.alpha = 0.3;
-                //                }
-                
             };
             
             [img setLongPressable:YES];
@@ -417,26 +412,41 @@
                     LOG_UI_VERBOSE(0, @"WTF? %@", [friend username]);
                 } else {
                     LOG_UI_VERBOSE(0, @"LONG PRESS %@\nFor %@", recog, friend);
-                    NSString *string = [NSString stringWithFormat:@"%@", [friend username]];
-                    statusUserHeader.middleItems = [NSMutableArray arrayWithObject:string];//[NSArray arrayWithObject:string];
-                    [statusUserHeader layout];
+                    NSString *string = [NSString stringWithFormat:@"@%@", [friend username]];
+
+                    NSDictionary *options = @{
+                                              kCRToastTextKey : string,
+                                              kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypePush),
+                                              kCRToastFontKey : TEXTFIELD_FONT_LARGE,
+                                              kCRToastTimeIntervalKey : @(DBL_MAX),
+                                              kCRToastNotificationTypeKey : @(CRToastTypeNavigationBar),
+                                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                                              kCRToastBackgroundColorKey : [UIColor crayolaMalachiteColor],
+                                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
+                                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop),
+                                              kCRToastAnimationInTimeIntervalKey : @0.3,
+                                              kCRToastAnimationOutTimeIntervalKey : @0.3
+                                              };
+                  
+                    
+                    //statusUserHeader.middleItems = [NSMutableArray arrayWithObject:string];//[NSArray arrayWithObject:string];
+                    //[statusUserHeader layout];
                     if(recog.state == UIGestureRecognizerStateBegan) {
-                        [UIView animateWithDuration:0.3 animations:^{
-                            header.left = header.size.width * -1; // should vary based on orientation & screen size
-                            statusUserHeader.left = 0;
-                        }];
+                        [CRToastManager showNotificationWithOptions:options
+                                                    completionBlock:^{
+                                                        NSLog(@"Completed");
+                                                    }];
+                        
                     }
                     if(recog.state == UIGestureRecognizerStateEnded) {
-                        [UIView animateWithDuration:0.3 animations:^{
-                            //
-                            header.left = 0.0;
-                            statusUserHeader.left = statusUserHeader.width;
-                        }];
+                        [CRToastManager dismissNotification:YES];
                     }
                 }
             };
             [resultsGrid.boxes addObject:img];
-            int count = [resultsGrid.boxes count];
+            NSUInteger count = [resultsGrid.boxes count];
             //int mod = 1+count/4;
             //LOG_UI(0, @"%d %d", count, mod);
             [resultsScroller setContentSize:CGSizeMake(resultsGrid.size.width, (1+(4+count - 1)/4) * (22 + profilePhotoSize.height))];
