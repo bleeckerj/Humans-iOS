@@ -64,29 +64,57 @@
     [self.view addSubview:splash];
     
     UILabel *buildLabel = [[UILabel alloc]init];
+    [self.view addSubview:buildLabel];
+    UILabel *versionLabel = UILabel.new;
+    [self.view addSubview:versionLabel];
+    
     [buildLabel setTextAlignment:NSTextAlignmentCenter];
     [buildLabel setBackgroundColor:[UIColor clearColor]];
     [buildLabel setFont:HEADER_FONT];
     [buildLabel setTextColor:[UIColor crayolaManateeColor]];
+    [buildLabel setTextColor:[UIColor crayolaManateeColor]];
+    [buildLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@20);
+        make.left.equalTo(self.view.mas_left);
+        make.right.equalTo(self.view.mas_right);
+        make.width.equalTo(self.view.mas_width);
+        
+    }];
     
-    [self.view addSubview:buildLabel];
+    
+
+    [versionLabel setTextAlignment:NSTextAlignmentCenter];
+    [versionLabel setBackgroundColor:[UIColor clearColor]];
+    [versionLabel setFont:HEADER_FONT];
+    [versionLabel setTextColor:[UIColor Amazon]];
+    
+    [versionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(buildLabel.mas_bottom);
+        make.bottom.lessThanOrEqualTo(self.view.mas_bottom).with.offset(-8.0);
+        make.height.equalTo(@15);
+        make.left.equalTo(self.view.mas_left);
+        make.right.equalTo(self.view.mas_right);
+        make.width.equalTo(self.view.mas_width);
+    }];
+    
     
     NSString *shortVersionString = [[[NSBundle mainBundle]infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    [versionLabel setText:shortVersionString];
     NSString *build  = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CWBuildNumber"];
 #ifdef DEV
 #ifdef DEBUG
-    [buildLabel setText:[NSString stringWithFormat:@"%@-debug   version %@   build %@.d",shortVersionString, version, build ]];
+    [buildLabel setText:[NSString stringWithFormat:@"%@-debug   build %@.d",version, build ]];
 #else
-    [buildLabel setText:[NSString stringWithFormat:@"%@-release   version %@   build %@.d",shortVersionString, version, build ]];
+    [buildLabel setText:[NSString stringWithFormat:@"%@-release   build %@.d",version, build ]];
 
 #endif
 #else
 #ifdef DEBUG
 
-    [buildLabel setText:[NSString stringWithFormat:@"%@-debug   version %@   build %@.p",shortVersionString, version, build ]];
+    [buildLabel setText:[NSString stringWithFormat:@"%@-debug   build %@.d",version, build ]];
 #else
-    [buildLabel setText:[NSString stringWithFormat:@"%@-release   version %@   build %@.p",shortVersionString, version, build ]];
+    [buildLabel setText:[NSString stringWithFormat:@"%@-release   build %@.d",version, build ]];
 
 #endif
 #endif
@@ -96,7 +124,6 @@
     NSDictionary *dimensions = @{@"start" : @"viewDidLoad"};
     [PFAnalytics trackEvent:@"start" dimensions:dimensions];
     //[Flurry logEvent:@"start" withParameters:dimensions];
-    [TestFlight passCheckpoint:@"Splash Screen Did Load"];
 
 }
 
@@ -116,9 +143,9 @@
     [super viewDidAppear:animated];
     
     
-    //[self performBlock:^{
+    [self performBlock:^{
         [self loginViaKeychain];
-    //} afterDelay:6.0];
+    } afterDelay:4.0];
 
 }
 

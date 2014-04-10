@@ -11,6 +11,8 @@
 #import "HuLoginViewController.h"
 #import <UIView+MCLayout.h>
 #import "HuSignUpViewController.h"
+#import <Masonry.h>
+
 //#import <HockeySDK.h>
 @interface HuSplashViewController : UIViewController
 
