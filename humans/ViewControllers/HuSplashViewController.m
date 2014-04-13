@@ -112,9 +112,9 @@
 #else
 #ifdef DEBUG
 
-    [buildLabel setText:[NSString stringWithFormat:@"%@-debug   build %@.d",version, build ]];
+    [buildLabel setText:[NSString stringWithFormat:@"%@-debug   build %@.p",version, build ]];
 #else
-    [buildLabel setText:[NSString stringWithFormat:@"%@-release   build %@.d",version, build ]];
+    [buildLabel setText:[NSString stringWithFormat:@"%@-release   build %@.p",version, build ]];
 
 #endif
 #endif
@@ -177,15 +177,12 @@
 
             if(success) {
                 [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
-                //[Flurry logEvent:@"keychain-login" withParameters:dimensions];
-                [TestFlight passCheckpoint:@"keychain-login"];
 
                 HuHumansProfileCarouselViewController *theHumansProfileCarousel = [delegate humansProfileCarouselViewController];
                 UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;
                 [root pushViewController:theHumansProfileCarousel animated:YES];
             } else {
                 [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
-                ////[Flurry logEvent:@"keychain-login" withParameters:dimensions];
                 
                 HuLoginViewController *loginViewController = [delegate loginViewController];
                 UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;

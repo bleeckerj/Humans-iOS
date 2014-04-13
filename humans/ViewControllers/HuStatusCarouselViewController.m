@@ -72,7 +72,7 @@
     [gesture setDirection:UISwipeGestureRecognizerDirectionRight];
     [header addGestureRecognizer:gesture];
     
-    carousel.type = iCarouselTypeCustom;
+    carousel.type = iCarouselTypeLinear;
 	carousel.delegate = self;
 	carousel.dataSource = self;
     carousel.bounces = NO;
@@ -89,9 +89,9 @@
 {
     items = _items;
     
-    [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        
-    }];
+//    [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//        
+//    }];
     
 }
 
@@ -129,10 +129,11 @@
 	//add carousel to view
 	[self.view addSubview:carousel];
     
-    /** here's where we preload some crap **/
+#pragma mark -- set up the HuViewForServiceStatus based on the status
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        HuViewForServiceStatus *result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:idx]];
-        if(idx < 5) {
+        HuViewForServiceStatus *result = HuViewForServiceStatus.new;
+        result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:idx]];
+        if(idx < 10) {
             [result showOrRefreshPhoto];
         }
         [statusViews addObject:result];
@@ -144,16 +145,6 @@
         
     }];
 
-    
-//    UIView *topCard = [[UIView alloc]init];
-//    [topCard mc_setSize:self.carousel.frame.size];
-//     [topCard setBackgroundColor:[UIColor Amazon]];
-//    UILabel *label = [[UILabel alloc]initWithFrame:(CGRectMake(0, 0, topCard.frame.size.width, 50))];
-//    [topCard addSubview:label];
-//    
-//    [items insertObject:topCard atIndex:0];
-    
-    
     LOG_UI(0, @"view (%@) header= carousel=%@", self.view, NSStringFromCGRect(carousel.frame));
 }
 
@@ -204,9 +195,9 @@
 
 #pragma mark iCarouselDelegate methods
 
-- (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index {
-    LOG_UI(0, @"Did select Item at Index %ld", index );
-}
+//- (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index {
+//    LOG_UI(0, @"Did select Item at Index %ld", index );
+//}
 
 - (CGFloat)carouselItemWidth:(iCarousel *)carousel {
     CGFloat result = self.view.frame.size.width;

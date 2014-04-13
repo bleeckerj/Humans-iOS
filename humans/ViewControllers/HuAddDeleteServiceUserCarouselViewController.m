@@ -167,15 +167,20 @@
     // but underneath
     [service_image_view mc_setRelativePosition:MCViewRelativePositionToTheRightAlignedTop toView:profile_image_view withMargins:UIEdgeInsetsMake(0, 10, 0, 10)];
     
+    //CGSize size = CGSizeMake(service_user_view.frame.size.height, service_user_view.frame.size.height);
     
     [WSLObjectSwitch switchOn:[service_user serviceName] defaultBlock:^{
     } cases:
      @"twitter", ^{
-         
-         [service_image_view setImage:[[UIImage imageNamed:TWITTER_COLOR_IMAGE] thumbnailImage:0.5*service_user_view.frame.size.height transparentBorder:0 cornerRadius:0 interpolationQuality:kCGInterpolationHigh]];
+         UIImage *img = [UIImage imageNamed:TWITTER_COLOR_IMAGE];
+         [service_image_view setImage:img];
+         //[service_image_view setImage:[[UIImage imageNamed:TWITTER_COLOR_IMAGE] thumbnailImage:0.5*service_user_view.frame.size.height transparentBorder:0 cornerRadius:0 interpolationQuality:kCGInterpolationHigh]];
      },
      @"flickr", ^{
-         [service_image_view setImage:[[UIImage imageNamed:FLICKR_COLOR_IMAGE] thumbnailImage:0.5*service_user_view.frame.size.height transparentBorder:0 cornerRadius:0 interpolationQuality:kCGInterpolationHigh]];
+         UIImage *img = [UIImage imageNamed:FLICKR_COLOR_IMAGE];
+         [service_image_view setImage:img];
+
+         //[service_image_view setImage:[[UIImage imageNamed:FLICKR_COLOR_IMAGE] thumbnailImage:0.5*service_user_view.frame.size.height transparentBorder:0 cornerRadius:0 interpolationQuality:kCGInterpolationHigh]];
          
          
      },

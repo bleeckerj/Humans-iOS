@@ -286,7 +286,7 @@
     }];
 }
 
-
+#pragma mark here's where we turn on the status activity indicator
 - (void)turnOnStatusActivityIndicator
 {
     
@@ -301,11 +301,11 @@
         
         
         [waitOnStatusActivityIndicatorView setHidden:NO];
-        double val = ((double)arc4random() / ARC4RANDOM_MAX);
-        double r = arc4random_uniform(3)*val;
-        [self performBlock:^{
+        //double val = ((double)arc4random() / ARC4RANDOM_MAX);
+        //double r = 0;//arc4random_uniform(3)*val;
+        //[self performBlock:^{
             [waitOnStatusActivityIndicatorView startAnimating];
-        } afterDelay:1+r];
+        //} afterDelay:0/*1+r*/];
         [self setNeedsDisplay];
         [waitOnStatusActivityIndicatorView setNeedsDisplay];
     });
@@ -777,25 +777,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-   
-    //[[[self.navigationController navigationBar]topItem] setTitle:@"Profile Carousel"];
-    
-    
-    //[self.view setFrame:self.parentViewController.view.frame];
-//    CGFloat status_bar_height = [UIApplication sharedApplication].statusBarFrame.size.height;
-//    
-//    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) // only for iOS 7 and above
-//    {
-//        CGRect frame = self.navigationController.view.frame;
-//        if(frame.origin.y == 0) {
-//            frame.origin.y += status_bar_height;
-//            frame.size.height -= status_bar_height;
-//            self.navigationController.view.frame = frame;
-//            self.navigationController.view.backgroundColor = [UIColor whiteColor];
-//            //[self.navigationController.view setNeedsDisplay];
-//            
-//        }
-//    }
     
     HuHumansProfileCarouselViewController *bself = self;
     
@@ -854,7 +835,6 @@
     
     [addHumanButton mc_setPosition:MCViewPositionRight inView:settings_bar_view];
     [appNameLabel mc_setRelativePosition:MCViewPositionHorizontalCenter toView:self.view];
-    
     
     __block UINavigationController *bnav = [self navigationController];
 
@@ -929,12 +909,7 @@
     [self.view addSubview:carousel];
     [self.view sendSubviewToBack:carousel];
     
-    //    [self.view addSubview:header];
-    //    [header layout];
-    
-    //[self setNeedsStatusBarAppearanceUpdate];
     [self populateViewsForHumans];
-    
 }
 
 
@@ -1025,18 +1000,8 @@
                 return YES;
             }
         }
-            //        case iCarouselOptionSpacing:
-            //        {
-            //            //add a bit of spacing between the item views
-            //            return value * 1.1f;
-            //        }
         case iCarouselOptionFadeMax:
         {
-            //            if (carousel.type == iCarouselTypeCustom)
-            //            {
-            //                //set opacity based on distance from camera
-            //                return 0.0f;
-            //            }
             return value;
         }
         case iCarouselOptionVisibleItems:
@@ -1054,7 +1019,7 @@
 #pragma mark iCarouselDataSource delegate methods
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    NSUInteger result = [humans_views count];//[[[userHandler humans_user]humans]count];
+    NSUInteger result = [humans_views count];
     return result;
 }
 
@@ -1090,7 +1055,6 @@
             [linkService setTitle:@"Link Service" forState:UIControlStateNormal];
             [[linkService titleLabel]setFont:BUTTON_FONT_LARGE];
             [linkService setButtonColor:[UIColor crayolaMangoTangoColor]];
-            //[linkService setHighlightedColor:[[UIColor crayolaMangoTangoColor]lighterColor]];
             [linkService setHighlightedColor:[UIColor crayolaMangoTangoColor]];
 
             [linkService bk_addEventHandler:^(id sender) {

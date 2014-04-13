@@ -22,6 +22,8 @@
 #import "HuAddDeleteServiceUserCarouselViewController.h"
 #import "HuJediMiniFindFriendsViewController.h"
 #import "HuHumansProfileCarouselViewController.h"
+#import <Masonry.h>
+#import <UIImage+Resize.h>
 
 @class HuHumansProfileCarouselViewController;
 

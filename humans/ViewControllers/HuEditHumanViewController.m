@@ -105,7 +105,6 @@ CGRect frame;
     [keyboardAvoidingScrollView setBackgroundColor:[UIColor whiteColor]];
     [keyboardAvoidingScrollView setAlwaysBounceVertical:YES];
     
-    
     [editButton setButtonColor:[UIColor crayolaTealBlueColor]];
     editButton.shadowColor = editButton.buttonColor;
     editButton.shadowHeight = 0.0f;
@@ -118,7 +117,6 @@ CGRect frame;
     [editButton bk_addEventHandler:^(id sender) {
         //
         __block HuEditHumanViewController *weakSelf = self;
-        
         
         HuAddDeleteServiceUserCarouselViewController *vc = [[HuAddDeleteServiceUserCarouselViewController alloc]init];
         [vc setHuman:human];
@@ -278,7 +276,6 @@ CGRect frame;
     goBackButton.buttonColor = [UIColor crayolaRadicalRedColor];
     [keyboardAvoidingScrollView addSubview:goBackButton];
     
-     //[goBackButton mc_setPosition:MCViewPositionHorizontalCenter inView:self.view withMargins:UIEdgeInsetsMake(-35, 0, 0, 0) size:CGSizeMake(right-left, 55)];
     [goBackButton bk_addEventHandler:^(id sender) {
         if(refreshOnReturn == YES) {
             refreshOnReturn = NO;
@@ -334,9 +331,6 @@ CGRect frame;
     [[MZFormSheetBackgroundWindow appearance] setBackgroundBlurEffect:YES];
     [[MZFormSheetBackgroundWindow appearance] setBlurRadius:2.0];
     
-    
-    
-    
     HuJediMiniFindFriendsViewController *vc = [[HuJediMiniFindFriendsViewController alloc]init];
     [vc setMaxNewUsers:4];
     [vc setHuman:self.human];
@@ -346,16 +340,15 @@ CGRect frame;
     [addUserFormSheet setCornerRadius:3.0f];
     
     [MZFormSheetController sharedBackgroundWindow].formSheetBackgroundWindowDelegate = self;
-    // __weak MZFormSheetController *weakFormSheet = addUserFormSheet;
+    UIView *bself = self.view;
     
-    
-    addUserFormSheet.presentedFormSheetSize = CGSizeMake(300, 400);
+    addUserFormSheet.presentedFormSheetSize = CGSizeMake(300, 395);
     addUserFormSheet.portraitTopInset = 20.0;
     addUserFormSheet.transitionStyle = MZFormSheetTransitionStyleSlideFromBottom;
     addUserFormSheet.shadowRadius = 5.0;
     addUserFormSheet.shadowOpacity = 0.5;
     addUserFormSheet.shouldDismissOnBackgroundViewTap = YES;
-    addUserFormSheet.shouldCenterVertically = NO;
+    addUserFormSheet.shouldCenterVertically = YES;
     addUserFormSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
     
     [self mz_presentFormSheetController:addUserFormSheet animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
