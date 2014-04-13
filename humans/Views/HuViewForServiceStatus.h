@@ -10,11 +10,23 @@
 #import "HuServiceStatus.h"
 #import <UIColor+FPBrandColor.h>
 #import <UIColor+Crayola.h>
-@interface HuViewForServiceStatus : UIView
-//@property (nonatomic, strong) id<HuServiceStatus> status;
+#import <UIImage+Resize.h>
+#import <Masonry.h>
+#import "JBAttributedAwareScrollView.h"
+#import <UIImageView+AFNetworking.h>
+#import <UIView+MCLayout.h>
 
+@class HuTwitterStatus;
+
+@interface HuViewForServiceStatus : UIView <TTTAttributedLabelDelegate>
+//@property (nonatomic, strong) id<HuServiceStatus> status;
+- (id)initWithStatus:(HuTwitterStatus *)mStatus;
 - (HuViewForServiceStatus *)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus;
 + (HuViewForServiceStatus *)viewForStatus:(id<HuServiceStatus>)mstatus withFrame:(CGRect)frame;
 - (void)showOrRefreshPhoto;
+#pragma mark TTTAttributedLabelDelegate method
+- (void)attributedLabel:(TTTAttributedLabel *)label
+   didSelectLinkWithURL:(NSURL *)url;
+
 
 @end
