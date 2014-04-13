@@ -1,6 +1,10 @@
-#import "LoggerClient.h"
+#import <LoggerClient.h>
 #import <Parse/Parse.h>
 //#import "Flurry.h"
+
+#pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
+#undef DEV
+
 
 #define IMAGEDEBUG
 #define CA_DEBUG_TRANSACTIONS
@@ -135,7 +139,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define PROFILE_HALF_HEIGHT_VIEW_BORDER_COLOR [UIColor lightGrayColor]
 
 #define TWITTER_FONT           [UIFont fontWithName:@"AvenirNext-Regular" size:16]
-
+#define TWITTER_FONT_LARGE      [UIFont fontWithName:@"AvenirNext-Regular" size:20]
 #define TWITTER_COLOR           [UIColor Twitter]
 #define TWITTER_STATUS_VIEW_BGCOLOR  UIColorFromRGB(0x000000)
 #define TWITTER_STATUS_VIEW_FGCOLOR  UIColorFromRGB(0xF0F0F0)
@@ -150,8 +154,12 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define INSTAGRAM_COLOR_IMAGE   @"instagram-camera-color.png"
 #define INSTAGRAM_GRAY_IMAGE    @"instagram-camera.png"
 #define INSTAGRAM_TINY_GRAY_IMAGE @"instagram-camera-gray-tiny.png"
+#define INSTAGRAM_FONT_LARGE      [UIFont fontWithName:@"AvenirNext-Regular" size:20]
+#define INSTAGRAM_FONT      [UIFont fontWithName:@"AvenirNext-Regular" size:16]
+#define INSTAGRAM_FONT_SMALL      [UIFont fontWithName:@"AvenirNext-Regular" size:12]
 
 #define FLICKR_FONT             [UIFont fontWithName:@"AvenirNext-Regular" size:16]
+#define FLICKR_FONT_SMALL       [UIFont fontWithName:@"AvenirNext-Regular" size:12]
 #define FLICKR_TEXT_COLOR       [UIColor blackColor]
 #define FLICKR_COLOR            [UIColor FlickrPink]
 #define FLICKR_COLOR_IMAGE      @"flickr-peepers-color.png"

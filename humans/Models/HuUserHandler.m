@@ -23,9 +23,6 @@
 #import <WSLObjectSwitch.h>
 #import <Parse/Parse.h>
 
-#pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
-
-#undef DEV
 
 @implementation HuUserHandler
 
@@ -338,7 +335,7 @@ NSDateFormatter *twitter_formatter;
     
     NSString *path = [NSString stringWithFormat:@"/rest/human/status/count/%@/after/%@", [human humanid],[time stringValue]];
     [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-        LOG_TODO(0, @"%@", responseObject);
+        //LOG_TODO(0, @"%@", responseObject);
         if(completionHandler) {
             completionHandler(responseObject, YES, nil);
         }
@@ -610,14 +607,12 @@ NSDateFormatter *twitter_formatter;
     queryParams = @{@"humanid": humanid, @"page":page};
     
     [huRequestOperationManager GET:@"/rest/human/status" parameters:queryParams success:^(NSURLSessionDataTask *task, id responseObject) {
-        LOG_GENERAL(0, @"success: %@", responseObject);
         //[[self statusForHumanId] setObject:[responseObject objectForKey:@"status"] forKey:[aHuman humanid]];
         [self setLastStatusResultHeader:[responseObject objectForKey:@"head"]];
         
         NSArray *sent_status = [responseObject objectForKey:@"status"];
         NSMutableArray *saved_status = [[NSMutableArray alloc]initWithCapacity:[sent_status count]];
         [sent_status each:^(id object) {
-            LOG_TODO(0, @"service=%@", [object valueForKey:@"service"]);
             if([[object valueForKey:@"service"] isEqualToString:@"flickr"]) {
                 HuFlickrStatus *status = [[HuFlickrStatus alloc]initWithJSONDictionary:object];
                 [saved_status addObject:status];
