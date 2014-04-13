@@ -10,7 +10,7 @@
 #import "LoggerClient.h"
 #import "defines.h"
 #import <Crashlytics/Crashlytics.h>
-//#import "Flurry.h"
+#import <HockeySDK/HockeySDK.h>
 #import <Parse/Parse.h>
 #import "HuHumansProfileCarouselViewController.h"
 
@@ -27,16 +27,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-    [TestFlight takeOff:@"7d627af6-7629-44dc-8103-a7a1baa81d03"];
-    // The rest of your application:didFinishLaunchingWithOptions method// ...
-    
     [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
                   clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    //[Flurry startSession:@"W63YQC9B83PWB64HT8VF"];
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"89a415bf14fb56ed6e81ef153d4cb481"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+
     [application setStatusBarHidden:NO];
 
     [self setupApplication];

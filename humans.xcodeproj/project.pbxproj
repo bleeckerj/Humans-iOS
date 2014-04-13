@@ -131,7 +131,9 @@
 		B9578B5418BE9F8A002E6BD9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6E18B7FD7100A9E918 /* MobileCoreServices.framework */; };
 		B9578B5518BE9F8F002E6BD9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A7018B7FD8700A9E918 /* QuartzCore.framework */; };
 		B9578B5618BE9F95002E6BD9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F517AB185BC4E20083CA36 /* StoreKit.framework */; };
+		B96A29F118F8D396006459D6 /* JBAttributedAwareTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A29F018F8D396006459D6 /* JBAttributedAwareTextView.m */; };
 		B96EF1B118C191C7001E2B5A /* HuEditHumanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96EF1B018C191C7001E2B5A /* HuEditHumanViewController.m */; };
+		B975CFD618F7927100A69422 /* JBAttributedAwareScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = B975CFD518F7927100A69422 /* JBAttributedAwareScrollView.m */; };
 		B980D59F18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B980D59E18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m */; };
 		B987BE5F18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */; };
 		B987BE6218DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE6118DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m */; };
@@ -160,7 +162,6 @@
 		B9AC5EC518AA15FD00BEE77C /* foursquare-icon-16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */; };
 		B9AC5EC618AA15FD00BEE77C /* foursquare-icon-gray-16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */; };
 		B9AC5EC718AA15FD00BEE77C /* foursquare-icon-gray-36x36.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC418AA15FD00BEE77C /* foursquare-icon-gray-36x36.png */; };
-		B9BDDAFF18E5F434007723E2 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B9BDDAFE18E5F434007723E2 /* libTestFlight.a */; };
 		B9C1034A18B99D4E006E7D66 /* HuLoginOrSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C1034918B99D4E006E7D66 /* HuLoginOrSignUpViewController.m */; };
 		B9C2C216187BB65700F1DF47 /* HuFriend.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C20B187BB65700F1DF47 /* HuFriend.m */; };
 		B9C2C217187BB65700F1DF47 /* HuHuman.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C20D187BB65700F1DF47 /* HuHuman.m */; };
@@ -201,6 +202,9 @@
 		B9D29F9818A4D1EF000D94EA /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */; };
 		B9D2B83D18B2831D00A963BD /* HuHumansProfileCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D2B83C18B2831D00A963BD /* HuHumansProfileCarouselViewController.m */; };
 		B9EC9915189A0AC800A17051 /* HuHumanLineStyled.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EC9914189A0AC800A17051 /* HuHumanLineStyled.m */; };
+		B9F26E3818F6E89600B25D52 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F26E3418F6E89600B25D52 /* HockeySDK.framework */; };
+		B9F26E3918F6E89600B25D52 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B9F26E3618F6E89600B25D52 /* HockeySDK.xcconfig */; };
+		B9F26E3A18F6E89600B25D52 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B9F26E3718F6E89600B25D52 /* HockeySDKResources.bundle */; };
 		B9F51777185BC4930083CA36 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F51776185BC4930083CA36 /* Foundation.framework */; };
 		B9F51779185BC4930083CA36 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F51778185BC4930083CA36 /* CoreGraphics.framework */; };
 		B9F5177B185BC4930083CA36 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F5177A185BC4930083CA36 /* UIKit.framework */; };
@@ -386,8 +390,12 @@
 		B9547C7C18C40ED900CD2D1E /* 40px-blank-for-user-profile-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "40px-blank-for-user-profile-image.png"; sourceTree = "<group>"; };
 		B9547C7E18C4522B00CD2D1E /* user-profile-image-mask-45px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-profile-image-mask-45px.png"; sourceTree = "<group>"; };
 		B9547C8018C452DA00CD2D1E /* user-profile-image-mask-55px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-profile-image-mask-55px.png"; sourceTree = "<group>"; };
+		B96A29EF18F8D396006459D6 /* JBAttributedAwareTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JBAttributedAwareTextView.h; path = ../../../JBAttributedAwareTextView/JBAttributedAwareTextView/JBAttributedAwareTextView.h; sourceTree = "<group>"; };
+		B96A29F018F8D396006459D6 /* JBAttributedAwareTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JBAttributedAwareTextView.m; path = ../../../JBAttributedAwareTextView/JBAttributedAwareTextView/JBAttributedAwareTextView.m; sourceTree = "<group>"; };
 		B96EF1AF18C191C7001E2B5A /* HuEditHumanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuEditHumanViewController.h; sourceTree = "<group>"; };
 		B96EF1B018C191C7001E2B5A /* HuEditHumanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuEditHumanViewController.m; sourceTree = "<group>"; };
+		B975CFD418F7927100A69422 /* JBAttributedAwareScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JBAttributedAwareScrollView.h; sourceTree = "<group>"; };
+		B975CFD518F7927100A69422 /* JBAttributedAwareScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JBAttributedAwareScrollView.m; sourceTree = "<group>"; };
 		B9787924186360A900D72288 /* XCTestCase+AsyncTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "XCTestCase+AsyncTesting.h"; path = "../humans/Supporting/XCTestCase+AsyncTesting.h"; sourceTree = "<group>"; };
 		B9787925186360A900D72288 /* XCTestCase+AsyncTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "XCTestCase+AsyncTesting.m"; path = "../humans/Supporting/XCTestCase+AsyncTesting.m"; sourceTree = "<group>"; };
 		B980D59D18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuFlickrHTTPSessionManager.h; path = Clients/HuFlickrHTTPSessionManager.h; sourceTree = "<group>"; };
@@ -431,8 +439,6 @@
 		B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-16x16.png"; sourceTree = "<group>"; };
 		B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-gray-16x16.png"; sourceTree = "<group>"; };
 		B9AC5EC418AA15FD00BEE77C /* foursquare-icon-gray-36x36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-gray-36x36.png"; sourceTree = "<group>"; };
-		B9BDDAFC18E5F3B9007723E2 /* libPods-TestFlightSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-TestFlightSDK.a"; path = "Pods/build/Debug-iphoneos/libPods-TestFlightSDK.a"; sourceTree = "<group>"; };
-		B9BDDAFE18E5F434007723E2 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = Pods/TestFlightSDK/libTestFlight.a; sourceTree = "<group>"; };
 		B9C1034818B99D4E006E7D66 /* HuLoginOrSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuLoginOrSignUpViewController.h; sourceTree = "<group>"; };
 		B9C1034918B99D4E006E7D66 /* HuLoginOrSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuLoginOrSignUpViewController.m; sourceTree = "<group>"; };
 		B9C281AE18B42798005AC80F /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
@@ -510,6 +516,9 @@
 		B9D2B83C18B2831D00A963BD /* HuHumansProfileCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuHumansProfileCarouselViewController.m; sourceTree = "<group>"; };
 		B9EC9913189A0AC800A17051 /* HuHumanLineStyled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuHumanLineStyled.h; path = Views/HuHumanLineStyled.h; sourceTree = "<group>"; };
 		B9EC9914189A0AC800A17051 /* HuHumanLineStyled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuHumanLineStyled.m; path = Views/HuHumanLineStyled.m; sourceTree = "<group>"; };
+		B9F26E3418F6E89600B25D52 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
+		B9F26E3618F6E89600B25D52 /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
+		B9F26E3718F6E89600B25D52 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		B9F51773185BC4930083CA36 /* humans.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = humans.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9F51776185BC4930083CA36 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9F51778185BC4930083CA36 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -548,7 +557,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9BDDAFF18E5F434007723E2 /* libTestFlight.a in Frameworks */,
 				B9C61BD318D3DB1000E1822B /* CoreText.framework in Frameworks */,
 				B9F517AC185BC4E20083CA36 /* StoreKit.framework in Frameworks */,
 				B9910A7318B7FD9100A9E918 /* Security.framework in Frameworks */,
@@ -563,6 +571,7 @@
 				B91BE75418A29D1F00D6E171 /* Crashlytics.framework in Frameworks */,
 				B9F51779185BC4930083CA36 /* CoreGraphics.framework in Frameworks */,
 				B9910A6718B7FD1800A9E918 /* Parse.framework in Frameworks */,
+				B9F26E3818F6E89600B25D52 /* HockeySDK.framework in Frameworks */,
 				B9F5177B185BC4930083CA36 /* UIKit.framework in Frameworks */,
 				B9F51777185BC4930083CA36 /* Foundation.framework in Frameworks */,
 				346786609E6F470FA34D4392 /* libPods.a in Frameworks */,
@@ -1057,6 +1066,25 @@
 			name = Twitter;
 			sourceTree = "<group>";
 		};
+		B9F26E3318F6E89600B25D52 /* HockeySDK.embeddedframework */ = {
+			isa = PBXGroup;
+			children = (
+				B9F26E3418F6E89600B25D52 /* HockeySDK.framework */,
+				B9F26E3518F6E89600B25D52 /* Resources */,
+			);
+			name = HockeySDK.embeddedframework;
+			path = "HockeySDK-iOS/HockeySDK.embeddedframework";
+			sourceTree = "<group>";
+		};
+		B9F26E3518F6E89600B25D52 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B9F26E3618F6E89600B25D52 /* HockeySDK.xcconfig */,
+				B9F26E3718F6E89600B25D52 /* HockeySDKResources.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		B9F5176A185BC4930083CA36 = {
 			isa = PBXGroup;
 			children = (
@@ -1082,8 +1110,7 @@
 		B9F51775185BC4930083CA36 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B9BDDAFE18E5F434007723E2 /* libTestFlight.a */,
-				B9BDDAFC18E5F3B9007723E2 /* libPods-TestFlightSDK.a */,
+				B9F26E3318F6E89600B25D52 /* HockeySDK.embeddedframework */,
 				B9C61BD218D3DB1000E1822B /* CoreText.framework */,
 				B9910A7218B7FD9100A9E918 /* Security.framework */,
 				B9910A7018B7FD8700A9E918 /* QuartzCore.framework */,
@@ -1170,6 +1197,10 @@
 		B9F646A7186755E4008EB970 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B96A29EF18F8D396006459D6 /* JBAttributedAwareTextView.h */,
+				B96A29F018F8D396006459D6 /* JBAttributedAwareTextView.m */,
+				B975CFD418F7927100A69422 /* JBAttributedAwareScrollView.h */,
+				B975CFD518F7927100A69422 /* JBAttributedAwareScrollView.m */,
 				B94FAEE818A71B2400EA4463 /* HuServiceViewLine.h */,
 				B94FAEE918A71B2400EA4463 /* HuServiceViewLine.m */,
 				B9EC9913189A0AC800A17051 /* HuHumanLineStyled.h */,
@@ -1223,7 +1254,8 @@
 				B9F51770185BC4930083CA36 /* Frameworks */,
 				B9F51771185BC4930083CA36 /* Resources */,
 				CA664681B08A411BBE1B8F69 /* Copy Pods Resources */,
-				B95BB78D189B361E00D5E980 /* ShellScript */,
+				B95BB78D189B361E00D5E980 /* Run Script */,
+				B9F26E2C18F6E81C00B25D52 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1332,6 +1364,7 @@
 				B91BE72818A29B9600D6E171 /* Instagram_Icon_Small.png in Resources */,
 				B91BE73118A29B9600D6E171 /* twitter-bottom-line.png in Resources */,
 				B9547C7B18C3B11700CD2D1E /* HuJediMiniFindFriendsViewController.xib in Resources */,
+				B9F26E3918F6E89600B25D52 /* HockeySDK.xcconfig in Resources */,
 				B9087BBD18D54CE2003507A4 /* hugrayspinner@2x.png in Resources */,
 				B9547C7D18C40ED900CD2D1E /* 40px-blank-for-user-profile-image.png in Resources */,
 				B9087BB918D5464A003507A4 /* Untitled-1.png in Resources */,
@@ -1365,6 +1398,7 @@
 				B91BE74418A29B9600D6E171 /* magic-search.png in Resources */,
 				B9F5178A185BC4930083CA36 /* Main.storyboard in Resources */,
 				B91BE72F18A29B9600D6E171 /* twitter-bird-blue-on-white.png in Resources */,
+				B9F26E3A18F6E89600B25D52 /* HockeySDKResources.bundle in Resources */,
 				B91BE74018A29B9600D6E171 /* instagram-camera-color.png in Resources */,
 				B91BE72A18A29B9600D6E171 /* Instagram_Logo_Medium.png in Resources */,
 				B91BE74318A29B9600D6E171 /* instagram-camera.png in Resources */,
@@ -1444,7 +1478,21 @@
 			shellScript = "\"${SRCROOT}/Pods/Pods-humansTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B95BB78D189B361E00D5E980 /* ShellScript */ = {
+		B95BB78D189B361E00D5E980 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988 8a1af0ea55163eaddef30eb04682cc88b7745b12860ef810e46fa11142720817\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CWBuildNumber\" ${PROJECT_DIR}/humans/humans-Info.plist)\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CWBuildNumber $buildNumber\" ${PROJECT_DIR}/humans/humans-Info.plist";
+		};
+		B9F26E2C18F6E81C00B25D52 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1455,7 +1503,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Crashlytics.framework/run f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988 8a1af0ea55163eaddef30eb04682cc88b7745b12860ef810e46fa11142720817\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CWBuildNumber\" ${PROJECT_DIR}/humans/humans-Info.plist)\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CWBuildNumber $buildNumber\" ${PROJECT_DIR}/humans/humans-Info.plist";
+			shellScript = "FILE=\"${SRCROOT}/HockeySDK-iOS/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
 		};
 		CA664681B08A411BBE1B8F69 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1515,6 +1563,7 @@
 				B99E01991862AEEB00E70892 /* HuLoginViewController.m in Sources */,
 				B944BB3B1896F06500015B10 /* HuFoursquareSource.m in Sources */,
 				B99657D41867FDA800C4AB01 /* HuTwitterStatus_Box.m in Sources */,
+				B96A29F118F8D396006459D6 /* JBAttributedAwareTextView.m in Sources */,
 				B9C2C217187BB65700F1DF47 /* HuHuman.m in Sources */,
 				B944BB3D1896F06500015B10 /* HuFoursquareVenue.m in Sources */,
 				B9C2C271187BB6E100F1DF47 /* HuTwitterEntitiesURL.m in Sources */,
@@ -1533,6 +1582,7 @@
 				B9F51787185BC4930083CA36 /* HuAppDelegate.m in Sources */,
 				B9C2C221187BB67B00F1DF47 /* HuViewForServiceStatus.m in Sources */,
 				B9C2C264187BB6E100F1DF47 /* InstagramCounts.m in Sources */,
+				B975CFD618F7927100A69422 /* JBAttributedAwareScrollView.m in Sources */,
 				B9C2C21A187BB65700F1DF47 /* HuServiceUser.m in Sources */,
 				B99657D11867FDA800C4AB01 /* HuInstagramStatus_Box.m in Sources */,
 				B99E016B1860028900E70892 /* HuUserHandler.m in Sources */,
@@ -1707,6 +1757,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/humans/HockeySDK-iOS/HockeySDK.embeddedframework",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1719,7 +1770,7 @@
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 					"$(PROJECT_DIR)/Pods/TestFlightSDK",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-Wl,-no_compact_unwind",
@@ -1769,6 +1820,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/humans/HockeySDK-iOS/HockeySDK.embeddedframework",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";
@@ -1780,7 +1832,7 @@
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 					"$(PROJECT_DIR)/Pods/TestFlightSDK",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-Wl,-no_compact_unwind",

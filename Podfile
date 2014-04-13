@@ -1,13 +1,17 @@
 platform :ios, '7.0'
 inhibit_all_warnings!
+
 pod 'AFNetworking'
 pod 'ObjectiveSugar'
+pod 'Antenna'
+pod 'TTTAttributedLabel'
+
 #pod 'SSToolkit'
 #pod 'AFOAuth1Client', '~> 0.3.3'
 pod 'oauthconsumer', :path => '~/Code/oauthconsumer/'
 #pod 'UYLPasswordManager', :path => '~/Code/UYLPasswordManager'
 #pod 'MWWindow', :path => '~/Code/MWWindow'
-pod 'IDMPhotoBrowser'
+#pod 'IDMPhotoBrowser'
 ######## needs afnetworking 2 which restkit does not work with! pod 'IDMPhotoBrowser'
 #pod 'KeychainItemWrapper', :path => '~/Code/KeychainItemWrapper'
 pod 'FXKeychain'
@@ -49,7 +53,7 @@ pod 'UIColor-Crayola'
 pod 'TYMActivityIndicatorView'
 pod 'Masonry', '~> 0.4.0'
 
-pod 'iCarousel'
+pod 'iCarousel', :git => 'https://github.com/bleeckerj/iCarousel'
 #pod 'GMGridView'
 pod 'RNCryptor', '~> 2.2'
 pod 'MKFoundationKit', '~> 1.1.0'
