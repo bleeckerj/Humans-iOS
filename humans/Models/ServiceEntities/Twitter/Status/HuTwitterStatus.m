@@ -244,7 +244,7 @@
 {
     HuTwitterStatusMedia *first_media;
     NSString *result = nil;
-    LOG_TWITTER(0, @"Checking for an image with Twitter Status %@ %@", self.tweet_id, [self entities]);
+    //LOG_TWITTER(0, @"Checking for an image with Twitter Status %@ %@", self.tweet_id, [self entities]);
     // do we have an image?
     if([self containsMedia]) {
         // we have an array of media..
