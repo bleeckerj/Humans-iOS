@@ -102,6 +102,9 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
     [versionLabel setText:shortVersionString];
     NSString *build  = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CWBuildNumber"];
+    LELog *log = [LELog sharedInstance];
+    [log log:[NSString stringWithFormat:@"Splash %@ %@ %@", shortVersionString, version, build]];
+    
 #ifdef DEV
 #ifdef DEBUG
     [buildLabel setText:[NSString stringWithFormat:@"%@-debug   build %@.d",version, build ]];
@@ -120,9 +123,9 @@
 #endif
     [buildLabel setSize:CGSizeMake(self.view.size.width, 40)];
     [buildLabel mc_setPosition:MCViewPositionBottomHCenter inView:self.view];
-    
-    NSDictionary *dimensions = @{@"start" : @"viewDidLoad"};
-    [PFAnalytics trackEvent:@"start" dimensions:dimensions];
+    NSDictionary *dimensions = @{@"start" : CLUSTERED_UUID};
+    [[LELog sharedInstance]log:dimensions];
+    //[PFAnalytics trackEvent:@"start" dimensions:dimensions];
     //[Flurry logEvent:@"start" withParameters:dimensions];
 
 }
@@ -158,14 +161,14 @@
 
 - (void)loginViaKeychain
 {
-    NSDictionary *dimensions = @{@"start" : @"loginViaKeychain"};
-    [PFAnalytics trackEvent:@"start" dimensions:dimensions];
+    //[PFAnalytics trackEvent:@"start" dimensions:dimensions];
     ////[Flurry logEvent:@"start" withParameters:dimensions];
     
     
 
-    [[FXKeychain defaultKeychain]objectForKey:@"username"];
-    
+    //[[FXKeychain defaultKeychain]objectForKey:@"username"];
+    NSDictionary *dimensions = @{@"username" : [[FXKeychain defaultKeychain]objectForKey:@"username"]};
+    [[LELog sharedInstance]log:dimensions];
     
     if([[FXKeychain defaultKeychain]objectForKey:@"username"] != nil) {
         // only one really
@@ -173,16 +176,16 @@
         NSString *password = [[FXKeychain defaultKeychain] objectForKey:@"password"];
         [self loginWithUsername:username password:password completionHandler:^(BOOL success, NSError *error) {
             //
-            NSDictionary *dimensions = @{@"user": username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
-
+            NSDictionary *dimensions = @{@"key" : CLUSTERED_UUID ,@"login-user" : username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+            [[LELog sharedInstance]log:dimensions];
             if(success) {
-                [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
-
+                //[PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
+                
                 HuHumansProfileCarouselViewController *theHumansProfileCarousel = [delegate humansProfileCarouselViewController];
                 UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;
                 [root pushViewController:theHumansProfileCarousel animated:YES];
             } else {
-                [PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
+                //[PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
                 
                 HuLoginViewController *loginViewController = [delegate loginViewController];
                 UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;

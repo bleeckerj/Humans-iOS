@@ -114,8 +114,8 @@
     // header?
     header.frame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
     [header setBackgroundColor:[UIColor Amazon]];
-    NSAssert((items != nil), @"Why is items nil?");
-    NSAssert(([items count] > 0), @"Why are there no status items?");
+//    NSAssert((items != nil), @"Why is items nil?");
+//    NSAssert(([items count] > 0), @"Why are there no status items?");
     
     
     [header setStatus:[items objectAtIndex:0]];  //[carousel currentItemIndex]]];

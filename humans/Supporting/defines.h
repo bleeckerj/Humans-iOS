@@ -1,5 +1,7 @@
 #import <LoggerClient.h>
 #import <Parse/Parse.h>
+#import "lelib.h"
+
 //#import "Flurry.h"
 
 #pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
@@ -25,6 +27,8 @@ while (hasCalledBack == NO && [loopUntil timeIntervalSinceNow] > 0) { \
 [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:loopUntil]; \
 } \
 if (!hasCalledBack) { assert(@"Timeout"); }
+
+#define CLUSTERED_UUID        [((HuAppDelegate*)[[UIApplication sharedApplication]delegate])clusteredUUID]
 
 
 #ifdef DEBUG
@@ -155,7 +159,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define INSTAGRAM_GRAY_IMAGE    @"instagram-camera.png"
 #define INSTAGRAM_TINY_GRAY_IMAGE @"instagram-camera-gray-tiny.png"
 #define INSTAGRAM_FONT_LARGE      [UIFont fontWithName:@"AvenirNext-Regular" size:20]
-#define INSTAGRAM_FONT      [UIFont fontWithName:@"AvenirNext-Regular" size:16]
+#define INSTAGRAM_FONT      [UIFont fontWithName:@"AvenirNext-Regular" size:18]
 #define INSTAGRAM_FONT_SMALL      [UIFont fontWithName:@"AvenirNext-Regular" size:12]
 
 #define FLICKR_FONT             [UIFont fontWithName:@"AvenirNext-Regular" size:16]

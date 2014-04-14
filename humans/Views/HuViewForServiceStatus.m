@@ -327,6 +327,7 @@
                     });
                 } else {
                     // do something if there was a problem loading the image?
+                    
                 }
             }];
             
@@ -468,13 +469,15 @@
 {
     self = [super initWithFrame:frame];
     if(self) {
-        [self setBackgroundColor:[UIColor whiteColor]];
+        [self setBackgroundColor:[UIColor Instagram]];
         
         status = mstatus;
         
         photoView = UIImageView.new;
         [photoView setContentMode:(UIViewContentModeScaleAspectFit)];
         [photoView setClipsToBounds:YES];
+        [photoView.layer setCornerRadius:5.0];
+        
         [photoView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
         [self addSubview:photoView];
         [photoView setBackgroundColor:[UIColor crayolaManateeColor]];
@@ -522,13 +525,13 @@
             statusView.backgroundColor = [UIColor crayolaKeyLimePearlColor];
 
             statusView.label.delegate = self;
-            [statusView setFont:INSTAGRAM_FONT_SMALL];
+            [statusView setFont:INSTAGRAM_FONT];
             NSString *description;
             InstagramLocation *loc = [status location];
             if([[status type] isEqualToString:@"video"]) {
-                description = [NSString stringWithFormat:@"(video) %@ %@", [status statusText], loc == nil?@"": [loc jsonString]];
+                description = [NSString stringWithFormat:@"(video soon) %@", [status statusText]];
             } else {
-                description = [NSString stringWithFormat:@"%@ %@",[status statusText], loc == nil?@"": [loc jsonString]];
+                description = [NSString stringWithFormat:@"%@",[status statusText]];
             }
             
             
@@ -539,7 +542,7 @@
                 //make.bottom.equalTo(self.mas_bottom).with.offset(-10);
                 make.left.equalTo(self.mas_left).with.offset(5);
                 make.right.equalTo(self.mas_right).with.offset(-5);
-                make.height.lessThanOrEqualTo(@90).with.priorityMedium();
+                make.height.lessThanOrEqualTo(@110).with.priorityMedium();
             }];
             
             
@@ -551,7 +554,7 @@
             [[locView layer]setBorderColor:color];
             [[locView layer]setBorderWidth:1];
             [[locView layer]setCornerRadius:5.0];
-            //[locView setBackgroundColor:[UIColor crayolaManateeColor]];
+            [locView setBackgroundColor:[UIColor whiteColor]];
             UILabel *locLabel = UILabel.new;
             [locLabel setFrame:CGRectZero];
             [locLabel setNumberOfLines:0];
@@ -560,7 +563,7 @@
             
             NSString *minimal = [[loc jsonString] stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
             //NSLog(@"%@", minimal);
-            [locLabel setText:minimal];
+            [locLabel setText:[NSString stringWithFormat:@"(FPO MAP HERE SOON)\n%@",minimal]];
             [locLabel setFont:INSTAGRAM_FONT_SMALL];
             [locLabel setContentMode:UIViewContentModeTop];
             
@@ -570,7 +573,7 @@
                 make.bottom.equalTo(self.mas_bottom).offset(-5);
                 make.left.equalTo(statusView.mas_left);
                 make.right.equalTo(statusView.mas_right);
-                make.height.lessThanOrEqualTo(@100).with.priorityMedium();
+                make.height.lessThanOrEqualTo(@50).with.priorityMedium();
                 
             }];
             [locLabel mas_makeConstraints:^(MASConstraintMaker *make) {
