@@ -51,8 +51,6 @@
     LoggerStart(LoggerGetDefaultLogger());
     
     LOG_GENERAL(0, @"Are we running?");
-    LOG_UI(0, @"Model %@ IS_IPHONE? %@", [ [ UIDevice currentDevice ] model ], (IS_IPHONE?@"YES":@"NO"));
-    LOG_UI(0, @"Widescreen %d", ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON ));
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     [manager.imageDownloader setDownloadTimeout:45.0];
@@ -106,6 +104,25 @@
         humansProfileCarouselViewController = [[HuHumansProfileCarouselViewController alloc]init];
     }
     return humansProfileCarouselViewController;
+}
+
+- (NSString *)humansUsername
+{
+    return [[[self humansAppUser]humans_user]username];
+}
+
+- (NSUUID *)uuid
+{
+    return [[ASIdentifierManager sharedManager]advertisingIdentifier];
+}
+
+- (NSString *)clusteredUUID
+{
+    if([self humansAppUser] != nil && [[self humansAppUser]humans_user] != nil) {
+    return [NSString stringWithFormat:@"%@ %@", [self humansUsername], [[self uuid]UUIDString]];
+    } else {
+        return [NSString stringWithFormat:@"%@", [[self uuid]UUIDString]];
+    }
 }
 
 - (void)setHumansHumansProfileCarouselViewController:(HuHumansProfileCarouselViewController *)viewController

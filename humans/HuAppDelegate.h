@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AdSupport/AdSupport.h>
 #import "HuUserHandler.h"
 #import "HuJediFindFriends_ViewController.h"
 #import "HuSignUpViewController.h"
@@ -29,10 +30,11 @@
 - (HuSignUpViewController *)signUpViewController;
 - (void)setHumansHumansProfileCarouselViewController:(HuHumansProfileCarouselViewController*)humansProfileCarouselViewController;
 - (HuHumansProfileCarouselViewController*)humansProfileCarouselViewController;
+- (NSString *)clusteredUUID;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) HuUserHandler *humansAppUser;
-
+@property (strong, nonatomic) NSUUID *uuid;
 @property (nonatomic, retain) HuJediFindFriends_ViewController *jediFindFriendsViewController;
 
 //@property (nonatomic, retain) HuFindFollowsMain_ViewController *findFollowsMainViewController;
