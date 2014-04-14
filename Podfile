@@ -3,7 +3,7 @@ inhibit_all_warnings!
 
 pod 'AFNetworking'
 pod 'ObjectiveSugar'
-pod 'Antenna'
+#pod 'Antenna'
 pod 'TTTAttributedLabel'
 
 #pod 'SSToolkit'
