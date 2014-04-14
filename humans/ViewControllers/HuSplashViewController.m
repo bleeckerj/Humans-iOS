@@ -7,7 +7,6 @@
 //
 
 #import "HuSplashViewController.h"
-#import "defines.h"
 
 @interface HuSplashViewController ()
 

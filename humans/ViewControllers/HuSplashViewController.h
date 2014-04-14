@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AdSupport/AdSupport.h>
 #import "HuLoginOrSignUpViewController.h"
 #import "HuLoginViewController.h"
 #import <UIView+MCLayout.h>
 #import "HuSignUpViewController.h"
 #import <Masonry.h>
-
+#import "defines.h"
 //#import <HockeySDK.h>
 @interface HuSplashViewController : UIViewController
 
