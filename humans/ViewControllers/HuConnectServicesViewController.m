@@ -80,12 +80,27 @@ MGLine *check_;
     [super viewDidAppear:animated];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+        [super viewWillAppear:animated];
+    }];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+        [super viewWillDisappear:animated];
+    }];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     didSomething = NO;
     HuConnectServicesViewController *bself = self;
-
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     UIImage *small_exbox_img = [UIImage imageNamed:@"delete-x-22sq"];//resizedImage:(CGSize){22,22}
     
     MGLine *ex_ = [MGLine lineWithLeft:small_exbox_img right:nil size:[small_exbox_img size]];
@@ -124,7 +139,7 @@ MGLine *check_;
     
     ServiceLine *flickrLine = [ServiceLine lineWithImage:[UIImage imageNamed:FLICKR_GRAY_IMAGE] serviceName:@"Flickr" size:CGSizeMake(self.view.width, 1.5*HEADER_HEIGHT)];
 
-    ServiceLine *foursquareLine = [ServiceLine lineWithImage:[UIImage imageNamed:FOURSQUARE_GRAY_IMAGE] serviceName:@"Foursquare" size:CGSizeMake(self.view.width, 1.5*HEADER_HEIGHT)];
+//    ServiceLine *foursquareLine = [ServiceLine lineWithImage:[UIImage imageNamed:FOURSQUARE_GRAY_IMAGE] serviceName:@"Foursquare" size:CGSizeMake(self.view.width, 1.5*HEADER_HEIGHT)];
 
     
     [twitterLine mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:self.header];
@@ -148,17 +163,17 @@ MGLine *check_;
     };
 
     
-    [foursquareLine mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:flickrLine];
-    [foursquareLine layout];
-    foursquareLine.onTap = ^ {
-        [self authWithFoursquare];
-    };
+//    [foursquareLine mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:flickrLine];
+//    [foursquareLine layout];
+//    foursquareLine.onTap = ^ {
+//        [self authWithFoursquare];
+//    };
 
     
     [self.view addSubview:twitterLine];
     [self.view addSubview:instagramLine];
     [self.view addSubview:flickrLine];
-    [self.view addSubview:foursquareLine];
+//    [self.view addSubview:foursquareLine];
 }
 
 - (void)authWithInstagram
