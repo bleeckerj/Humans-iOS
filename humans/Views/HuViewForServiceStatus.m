@@ -18,11 +18,10 @@
 #import "HuStatusPhotoBox.h"
 #import "defines.h"
 #import "LoggerClient.h"
+#import "UILabel+withDate.h"
 
 
 @interface HuTwitterStatusView : HuViewForServiceStatus <TTTAttributedLabelDelegate> {
-    //HuStatusPhotoBox *photoBox;
-    //UITextView *statusView;
     UIImageView *photoView;
     JBAttributedAwareScrollView *statusView;
     HuTwitterStatus *status;
@@ -35,8 +34,7 @@
 
 
 @interface HuFlickrStatusView : HuViewForServiceStatus {
-    HuStatusPhotoBox *photoBox;
-    //UITextView *statusView;
+    UIImageView *photoView;
     JBAttributedAwareScrollView *statusView;
     HuFlickrStatus *status;
 }
@@ -44,14 +42,9 @@
 
 
 @interface HuInstagramStatusView : HuViewForServiceStatus {
-    //HuStatusPhotoBox *photoBox;
-    //IDMPhotoBrowser *photoBrowser;
-    //UITextView *statusView;
     JBAttributedAwareScrollView *statusView;
     InstagramStatus *status;
     UIImageView *photoView;
-    
-    
 }
 
 @end
@@ -70,7 +63,8 @@
 
 @implementation HuViewForServiceStatus
 #pragma mark TTTAttributedLabelDelegate method
-
+@synthesize onTap;
+UIImageView *exView;
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url
 {
@@ -86,20 +80,6 @@
         //hView = [[HuTwitterStatusView alloc]initWithFrame:frame forStatus:mstatus];
         hView = [[HuTwitterStatusView alloc]initWithStatus:mStatus];
     }
-    //    if([mStatus isKindOfClass:[InstagramStatus class]]) {
-    //        hView = [[HuInstagramStatusView alloc]initWithFrame:frame forStatus:mstatus];
-    //    }
-    //
-    //    if([mStatus isKindOfClass:[HuFlickrStatus class]]) {
-    //        hView = [[HuFlickrStatusView alloc]initWithFrame:frame forStatus:mstatus];
-    //    }
-    //
-    //
-    //    if([mStatus isKindOfClass:[HuFoursquareCheckin class]]) {
-    //        hView = [[HuFoursquareStatusView alloc]initWithFrame:frame forStatus:mstatus];
-    //    }
-    
-    //LOG_GENERAL(0, @"View is %@", hView);
     return hView;
     
 }
@@ -132,13 +112,140 @@
     return hView;
 }
 
-
+#pragma mark gets a view for a specific status
 + (UIView *)viewForStatus:(id<HuServiceStatus>)mstatus withFrame:(CGRect)frame
 {
     //UIView *result;
     return[[HuViewForServiceStatus alloc]initWithFrame:frame forStatus:mstatus];
 }
 
+
+
+#pragma mark Here is where we make the header
+- (UIView *)headerForServiceStatus:(id<HuServiceStatus>)mStatus
+{
+    UIView *head = UIView.new;
+    UIView *topContainer = UIView.new;
+    
+    [head addSubview:topContainer];
+    
+    
+    
+    [head setBackgroundColor:[mStatus serviceSolidColor]];
+    [head.layer setCornerRadius:5.0];
+    
+    UIImageView *avatar = [[UIImageView alloc]init];
+    [topContainer addSubview:avatar];
+    
+    UILabel *usernameLabel = UILabel.new;
+    [topContainer addSubview:usernameLabel];
+    UILabel *dateLabel = UILabel.new;
+    [topContainer addSubview:dateLabel];
+    UIImageView *tinyServiceIcon = UIImageView.new;
+    [topContainer addSubview:tinyServiceIcon];
+    
+    [topContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(head);
+        //make.height.equalTo(head.mas_height)/*.with.offset(-25)*/;
+    }];
+    
+    [usernameLabel setFont:HEADER_FONT_LARGE];
+    [usernameLabel setTextColor:[UIColor whiteColor]];
+    [usernameLabel setTextAlignment:NSTextAlignmentRight];
+    
+    [usernameLabel setText:[NSString stringWithFormat:@"@%@", [mStatus serviceUsername]]];
+    [usernameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(avatar.mas_left).with.offset(-10);
+        //make.height.equalTo(topContainer.mas_height);
+        make.centerY.equalTo(topContainer.mas_centerY).with.offset(-10);
+    }];
+    
+    [dateLabel setDateToShow:[mStatus dateForSorting]];
+    [dateLabel setTextColor:[UIColor whiteColor]];
+    [dateLabel setBackgroundColor:[UIColor clearColor]];
+    [dateLabel setFont:HEADER_FONT];
+    [dateLabel setTextAlignment:NSTextAlignmentRight];
+    [dateLabel setNumberOfLines:1];
+    
+    
+    [dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(tinyServiceIcon.mas_left).with.offset(-3);
+        make.top.equalTo(usernameLabel.mas_bottom).with.offset(-3);
+    }];
+    
+    UIImage *image = [UIImage imageNamed:[mStatus tinyMonochromeServiceImageBadgeName]];
+    [tinyServiceIcon setImage:image];
+    [tinyServiceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(usernameLabel.mas_right);
+        make.top.equalTo(dateLabel.mas_top);
+        make.bottom.equalTo(dateLabel.mas_bottom);
+        make.height.equalTo(@15);
+        make.width.equalTo(@15);
+    }];
+    
+    
+    
+    [avatar setContentMode:(UIViewContentModeScaleAspectFit)];
+    [avatar setClipsToBounds:YES];
+    [avatar setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
+    [avatar.layer setCornerRadius:5.0];
+    __block UIImageView *bavatar = avatar;
+    [avatar setImageWithURL:[mStatus userProfileImageURL] placeholderImage:[UIImage imageNamed:@"GIJoeAngry"] options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if(error == nil) {
+            bavatar.image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:CGSizeMake(35, 35) interpolationQuality:kCGInterpolationHigh];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [bavatar mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.right.equalTo(head.mas_right);
+                    make.top.equalTo(head.mas_top);
+                    make.bottom.equalTo(head.mas_bottom);
+                    make.height.equalTo(head.mas_height);
+                    make.width.equalTo(head.mas_height);
+                    [bavatar sizeToFit];
+                }];
+                [bavatar setNeedsDisplay];
+            });
+        }
+    }
+     ];
+    [avatar.image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:CGSizeMake(35,35) interpolationQuality:kCGInterpolationHigh];
+    //
+    
+    //UIImage *ex = [UIImage imageNamed:@"delete-x"];
+    exView = UIImageView.new;
+    
+    UIButton *button = UIButton.new;
+    [button setUserInteractionEnabled:YES];
+    [button setBackgroundColor:[UIColor crayolaYellowOrangeColor]];
+    [button setTitle:@"Back" forState:UIControlStateNormal];
+    [button.layer setCornerRadius:5];
+    
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapHeader:)];
+    [gesture setNumberOfTapsRequired:1];
+    
+    [button addGestureRecognizer:gesture];
+    
+    
+    [head addSubview:button];
+    //[exView setImage:ex];
+    [button mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(topContainer.mas_left);
+        make.centerY.equalTo(topContainer.mas_centerY);
+        make.width.equalTo(head.mas_height);
+        make.height.equalTo(head.mas_height);
+        //make.top.equalTo(usernameLabel.mas_top);
+        //make.height.equalTo(avatar.mas_height);
+    }];
+    
+    return head;
+}
+
+
+
+- (void)onTapHeader:(id)sender {
+    if(self.onTap != nil) {
+        self.onTap();
+    }
+}
 
 - (void)showOrRefreshPhoto
 {
@@ -148,6 +255,8 @@
 
 @end
 
+
+#pragma mark Foursquare Status View
 @implementation HuFoursquareStatusView
 {
     
@@ -191,21 +300,22 @@
 
 @end
 
+#pragma mark Twitter Status View
 @implementation HuTwitterStatusView
 {
 }
 
-- (void)touchesEnded:(NSSet *)touches
-           withEvent:(UIEvent *)event
-{
-    NSLog(@"GOODBYE %@", event);
-}
+//- (void)touchesEnded:(NSSet *)touches
+//           withEvent:(UIEvent *)event
+//{
+//    NSLog(@"GOODBYE %@", event);
+//}
 
 #pragma mark TTTAttributedLabelDelegate method
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url
 {
-    NSLog(@"%@", url);
+    //NSLog(@"%@", url);
     LOG_DEEBUG(0, @"clicked: %@", url);
     if(self.backgroundColor == [UIColor crayolaApricotColor]) {
         [self setBackgroundColor:[UIColor crayolaAquaPearlColor]];
@@ -215,7 +325,7 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"HELLO %@", event);
+    LOG_UI(0, @"HELLO TOUCH=%@", event);
 }
 
 -(HuTwitterStatusView *)initWithStatus:(HuTwitterStatus *)mStatus
@@ -225,40 +335,7 @@
     
     if([status containsMedia]) {
         
-        //        photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeZero];
-        //        [self addSubview:photoBox];
-        //
-        //        [photoBox mas_makeConstraints:^(MASConstraintMaker *make) {
-        //            make.width.equalTo(self.mas_width);
-        //            make.height.equalTo(self.mas_height);
-        //            make.top.equalTo(self.mas_top);
-        //            make.left.equalTo(self.mas_left);
-        //        }];
-        //        [photoBox setBackgroundColor:[UIColor whiteColor]];
-        //
-        //    }
-        //    if([status statusText] != nil && [status containsMedia] == false ) {
-        //        statusView = JBAttributedAwareScrollView.new;
-        //        [statusView setFrame:CGRectZero];
-        //        [self addSubview:statusView];
-        //        statusView.label.delegate = self;
-        //        [statusView setFont:TWITTER_FONT_LARGE];
-        //        statusView.text = [status statusText];
-        //        [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
-        //            UIEdgeInsets padding = UIEdgeInsetsMake(20, 10, 20, 10);
-        //            make.edges.equalTo(self).with.insets(padding);
-        //
-        //        }];
-        //
-        //    }
-        //    if([status statusText] != nil && [status containsMedia] == true) {
-        //
-        //        UIView *marker = [[UIView alloc]initWithFrame:CGRectMake(0, photoBox.size.height, self.size.width, self.size.height - photoBox.size.height)];
-        //        [marker setBackgroundColor:[UIColor crayolaLapisLazuliColor]];
-        //        [self addSubview:marker];
-        //
-        //    }
-        //
+        
     }
     
     
@@ -269,115 +346,163 @@
 {
     self = [super initWithFrame:frame];
     if(self) {
-        //LOG_TWITTER(0, @"status entities %@", [mstatus entities]);
         status = mstatus;
+
+        Boolean hasStatusText = NO;
+        if([status statusText] != nil) {
+            hasStatusText = YES;
+        }
+
         
+        UIView *head = [self headerForServiceStatus:mstatus];
+        __block HuTwitterStatusView *bself = self;
+        [self addSubview:head];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [head mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(bself.mas_top);
+                make.left.equalTo(bself.mas_left).with.offset(5);
+                make.right.equalTo(bself.mas_right).with.offset(-5);
+                make.height.equalTo(@55).priorityHigh();
+            }];
+        });
         // header isn't part of the actual status view, which gets pasted into the carousel, so we need
         // the header to be separate..it's managed by HuStatusCarousel_ViewController
         [self setBackgroundColor:[UIColor whiteColor]];
         
+        statusView = JBAttributedAwareScrollView.new;
+        [self addSubview:statusView];
+        [statusView setFrame:CGRectZero];
+        [statusView.layer setCornerRadius:5];
+        statusView.label.delegate = self;
+        [statusView setFont:TWITTER_FONT_LARGE];
+        
         if([status containsMedia]) {
             photoView = UIImageView.new;
-            [photoView setContentMode:(UIViewContentModeScaleAspectFit)];
+            [photoView setContentMode:(UIViewContentModeScaleAspectFill | UIViewContentModeTop)];
+            [photoView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
             [photoView setClipsToBounds:YES];
             [self addSubview:photoView];
+            
+            [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.greaterThanOrEqualTo(photoView.mas_bottom).with.offset(3);
+                make.bottom.equalTo(self.mas_bottom).with.offset(-3);
+                make.left.equalTo(head.mas_left);
+                make.right.equalTo(head.mas_right);
+            }];
+            
             [photoView setBackgroundColor:[UIColor crayolaJellyBeanColor]];
+            [photoView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(head.mas_bottom).with.offset(3);
+                make.left.equalTo(head.mas_left);
+                make.right.equalTo(head.mas_right);
+                make.height.equalTo(@320).priorityHigh();
+                //make.bottom.lessThanOrEqualTo(bself.statusView.mas_top).with.offset(3);
+            }];
             
             __block UIImageView *bphotoView = photoView;
-            __block HuViewForServiceStatus *bself = self;
-            [photoView setImageWithURL:[NSURL URLWithString:[mstatus statusImageURL]] placeholderImage:nil options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            [photoView setImageWithURL:[NSURL URLWithString:[mstatus statusImageURL]] placeholderImage: [UIImage imageNamed:@"BoozyBear.png"] options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                 if(error == nil) {
-                    //bphotoView.image = [image resizedImageToFitInSize:bphotoView.frame.size scaleIfSmaller:YES];
-                    if(image.size.width > image.size.height) {
-                        
-                        bphotoView.image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:CGSizeMake(300,300)
-                                                         interpolationQuality:kCGInterpolationHigh];
-                    } else {
-                        
-                        bphotoView.image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:CGSizeMake(320,320)
-                                                         interpolationQuality:kCGInterpolationHigh];
-                    }
-                    //bphotoView.image = image;
+                    CGSize resizeSize = CGSizeMake(320, 320);
                     
-                    //__block CGRect frame;
+                    bphotoView.image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:resizeSize interpolationQuality:kCGInterpolationDefault];
+                    //image = img;
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if(image.size.width > image.size.height) {
-                            [bphotoView mas_makeConstraints:^(MASConstraintMaker *make) {
-                                make.top.equalTo(bself.mas_top);
-                                make.left.equalTo(bself.mas_left).with.offset(10);
-                                make.right.equalTo(bself.mas_right).with.offset(-10);
-                                //make.center.equalTo(bself);
-                                //                                make.width.equalTo(@300);
-                            }];
-                            //frame = CGRectMake(0, 0, bself.size.width, 200);
-                            
-                        } else {
-                            [bphotoView mas_makeConstraints:^(MASConstraintMaker *make) {
-                                make.top.equalTo(bself.mas_top);
-                                make.left.equalTo(bself.mas_left).with.offset(10);
-                                make.right.equalTo(bself.mas_right).with.offset(-10);
-                                //make.center.equalTo(bself);
-                                //                                make.height.equalTo(@300);
-                            }];
-                            
-                        }
-                        //[bphotoView setFrame:frame];
+                        
                         [bphotoView setNeedsDisplay];
                         
                     });
                 } else {
                     // do something if there was a problem loading the image?
+                    bphotoView.image = [UIImage imageNamed:@"BoozyBear.png"];
                     
                 }
             }];
-            
-            
         }
         
-        if([status statusText] != nil && [status containsMedia] == false) {
+        if(/*[status statusText] != nil && */[status containsMedia] == false) {
             
             statusView = JBAttributedAwareScrollView.new;
             [self addSubview:statusView];
+            //[statusView.label setTextColor:[UIColor whiteColor]];
+            [statusView.layer setCornerRadius:5];
             [statusView setFrame:CGRectZero];
             statusView.label.delegate = self;
             [statusView setFont:TWITTER_FONT_LARGE];
-            statusView.text = [status statusText];
-            statusView.backgroundColor = [UIColor crayolaKeyLimePearlColor];
+            
+            NSString *t = [NSString stringWithFormat:@"%@", [status statusText]];
+            //[NSString stringWithFormat:@"%@ in_reply_to=%@ %@", [status statusText], [status in_reply_to_status_id], [status place] == nil ? @"nowhere" : [[status place]jsonString]];
+
+            LOG_DEEBUG(0, @"%@ %@", t, [status place]);
+            statusView.text = t;
+            statusView.backgroundColor = [UIColor whiteColor];
             [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
-                UIEdgeInsets padding = UIEdgeInsetsMake(10, 10, 10, 10);
-                make.edges.equalTo(self).with.insets(padding);
-                //make.center.equalTo(self);
+                make.top.equalTo(head.mas_bottom).with.offset(3);
+                if([status place] == nil) {
+                    make.bottom.equalTo(self.mas_bottom).with.offset(-3);
+
+                } else {
+                    make.height.greaterThanOrEqualTo(@200).with.priorityMedium();
+                }
+                make.left.equalTo(head.mas_left);
+                make.right.equalTo(head.mas_right);
             }];
         }
-        if([status statusText] != nil && [status containsMedia] == true) {
+        if(/*[status statusText] != nil && */[status containsMedia] == true) {
             
-            statusView = JBAttributedAwareScrollView.new;
-            [self addSubview:statusView];
-            [statusView setFrame:CGRectZero];
-            statusView.label.delegate = self;
-            [statusView setFont:TWITTER_FONT_LARGE];
-            statusView.text = [status statusText];
+            NSString *t = [NSString stringWithFormat:@"%@ %@ in_reply_to=%@", [status statusText], [status statusImageURL], [status in_reply_to_status_id]];
+            statusView.text = t;//[status statusText];
             statusView.backgroundColor = [UIColor crayolaKeyLimePearlColor];
-            [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
-                //UIEdgeInsets padding = UIEdgeInsetsMake(200, 10, 20, 10);
-                //make.edges.equalTo(self).with.insets(padding);
-                //make.center.equalTo(self);
-                make.top.equalTo(photoView.mas_bottom).with.offset(10);
-                make.bottom.equalTo(self.mas_bottom).with.offset(-10);
-                make.left.equalTo(self.mas_left).with.offset(10);
-                make.right.equalTo(self.mas_right).with.offset(-10);
-            }];
             
         }
         
         if([status place]  != nil) {
-            LOG_DEEBUG(0, @"%@", [status place]);
+            LOG_TWITTER(0, @"PLACE=%@", [status place]);
+            
+            UIView *locView = UIView.new;
+            [self addSubview:locView];
+            CGColorRef color = [[UIColor crayolaManateeColor]CGColor];
+            [[locView layer]setBorderColor:color];
+            [[locView layer]setBorderWidth:1];
+            [[locView layer]setCornerRadius:5.0];
+            [locView setBackgroundColor:[UIColor whiteColor]];
+            UILabel *locLabel = UILabel.new;
+            [locLabel setFrame:CGRectZero];
+            [locLabel setNumberOfLines:0];
+            [locLabel setBackgroundColor:[UIColor whiteColor]];
+            [locView addSubview:locLabel];
+            HuTwitterPlace *place = [status place];
+            NSString *minimal = [[place jsonString] stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+            //NSLog(@"%@", minimal);
+            [locLabel setText:[NSString stringWithFormat:@"(FPO MAP HERE SOON)\n%@",minimal]];
+            [locLabel setFont:INSTAGRAM_FONT_SMALL];
+            [locLabel setContentMode:UIViewContentModeTop];
+            
+            
+            [locView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if(hasStatusText == YES) {
+                    make.top.equalTo(statusView.mas_bottom).offset(3);
+                } else {
+                    make.top.equalTo(photoView.mas_bottom).offset(3);
+                }
+                //make.bottom.equalTo(self.mas_bottom).offset(-3);
+                
+                make.left.equalTo(head.mas_left);
+                make.right.equalTo(head.mas_right);
+                make.height.greaterThanOrEqualTo(@150).with.priorityMedium();
+                
+            }];
+            [locLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(locView.mas_left).with.offset(3);
+                make.right.equalTo(locView.mas_right).with.offset(-3);
+                make.top.equalTo(locView.mas_top).with.offset(3);
+                make.bottom.equalTo(locView.mas_bottom).with.offset(-3);
+            }];
+        
+        
         }
         
     }
-    
-    
-    
     return self;
 }
 
@@ -404,48 +529,17 @@
 
 - (void)showOrRefreshPhoto
 {
-    //    LOG_TWITTER(0, @"TO DO: If Twitter Has Photo Do Something..");
-    //    if([status containsMedia]) {
-    //        if([photoBox urlStr] == nil) {
-    //            LOG_TWITTER(0, @"Weird. The photo box urlStr should've been set?");
-    //            [photoBox setUrlStr:[status statusImageURL]];
-    //        }
-    //        [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
-    //            if(success) {
-    //                LOG_TWITTER(0, @"If this was an image from Twitter itself, I don't quite yet know how to show it..%@", error);
-    //            } else {
-    //                LOG_TODO(0, @"You'll want to indicate that there was a network problem or something %@", error);
-    //            }
-    //            [self updateStatusView];
-    //        }];
-    //
-    //    }
     
-    LOG_TWITTER(0, @"TO DO: If Twitter Has Photo Do Something..");
-    if([status containsMedia]) {
-        
-        [status statusImageURL];
-        
-        if([status statusImageURL] == nil) {
-            LOG_TWITTER(0, @"Weird. The photo box urlStr should've been set?");
-            //[photoBox setUrlStr:[status statusImageURL]];
-        }
-        __block HuTwitterStatusView *bself = self;
-        //        [photoView setImageWithURL:[NSURL URLWithString:[status statusImageURL]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        //            LOG_DEEBUG(0, @"%@", error);
-        //            [bself updateStatusView];
-        //        }];
-        
-        //        [photoView loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
-        //            if(success) {
-        //                LOG_TWITTER(0, @"If this was an image from Twitter itself, I don't quite yet know how to show it..%@", error);
-        //            } else {
-        //                LOG_TODO(0, @"You'll want to indicate that there was a network problem or something %@", error);
-        //            }
-        //            [self updateStatusView];
-        //        }];
-        
-    }
+//    if([status containsMedia]) {
+//        
+//        [status statusImageURL];
+//        
+//        if([status statusImageURL] == nil) {
+//            LOG_TWITTER(0, @"Weird. The photo box urlStr should've been set?");
+//            //[photoBox setUrlStr:[status statusImageURL]];
+//        }
+//        
+//    }
 }
 
 - (void)updateStatusView
@@ -456,97 +550,146 @@
 
 @end
 
+#pragma mark Instagram Status View
+
 @implementation HuInstagramStatusView {
     
 }
 
-@class CALayer;
-
-
-
-
 -(HuInstagramStatusView *)initWithFrame:(CGRect)frame forStatus:(InstagramStatus*)mstatus
 {
     self = [super initWithFrame:frame];
+    
     if(self) {
-        [self setBackgroundColor:[UIColor Instagram]];
-        
+        [self setBackgroundColor:[UIColor crayolaGraniteGrayColor]];
+        [self.layer setCornerRadius:3.0];
         status = mstatus;
         
+        Boolean hasStatusText = NO;
+        if([status statusText] != nil) {
+            hasStatusText = YES;
+        }
+
+
+        
+        __block HuViewForServiceStatus *bself = self;
+        InstagramLocation *loc = [status location];
+        
+        UIView *head = [self headerForServiceStatus:mstatus];
+        
+        [self addSubview:head];
+        
         photoView = UIImageView.new;
+        [self addSubview:photoView];
         [photoView setContentMode:(UIViewContentModeScaleAspectFit)];
         [photoView setClipsToBounds:YES];
         [photoView.layer setCornerRadius:5.0];
         
         [photoView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-        [self addSubview:photoView];
         [photoView setBackgroundColor:[UIColor crayolaManateeColor]];
+        [photoView mas_makeConstraints:^(MASConstraintMaker *make) {
+            
+            make.top.equalTo(head.mas_bottom).with.offset(3);
+            make.left.equalTo(self.mas_left).with.offset(3);
+            make.right.equalTo(self.mas_right).with.offset(-3);
+            make.height.lessThanOrEqualTo(@310).with.priorityHigh();
+            
+            //[photoView sizeToFit];
+            
+        }];
+        // dispatch_async(dispatch_get_main_queue(), ^{
+        [head mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(bself.mas_top);
+            make.width.equalTo(photoView.mas_width);
+            make.left.equalTo(photoView.mas_left);
+            //                make.right.equalTo(bself.mas_right).with.offset(0);
+            make.height.equalTo(@55).priorityHigh();
+        }];
+        // });
+        
+        
         
         __block UIImageView *bphotoView = photoView;
-        __block HuViewForServiceStatus *bself = self;
-        [photoView setImageWithURL:[NSURL URLWithString:[mstatus statusImageURL]] placeholderImage:nil options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        
+        [photoView setImageWithURL:[NSURL URLWithString:[mstatus statusImageURL]] placeholderImage:[UIImage imageNamed:@"BoozyBear"] options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if(error == nil) {
                 
                 bphotoView.image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:CGSizeMake(310,310) interpolationQuality:kCGInterpolationHigh];
-
+                
                 //bphotoView.image = image;
                 //__block CGRect frame;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [bphotoView mas_makeConstraints:^(MASConstraintMaker *make) {
-                        
-                        make.top.equalTo(bself.mas_top);
-                        make.left.equalTo(bself.mas_left).with.offset(5);
-                        make.right.equalTo(bself.mas_right).with.offset(-5);
-                        make.height.lessThanOrEqualTo(@310).with.priorityHigh();
-                        
-                        //                            make.top.equalTo(bself.mas_top);
-                        //                            make.left.equalTo(bself.mas_left);
-                        //                            make.right.equalTo(bself.mas_right);
-                        //                            make.height.equalTo(@300);
-                        [bphotoView sizeToFit];
-
-                    }];
-                    //frame = CGRectMake(0, 0, bself.size.width, 200);
-                    
-                    
-                    //[bphotoView setFrame:frame];
                     [bphotoView setNeedsDisplay];
                     
                 });
             } else {
+                // pure diagnostics
+                NSString *err = [NSString stringWithFormat:@"error.instagram.image.%@", @"foo"];
+                NSDictionary *dimensions = @{err: [mstatus statusImageURL] == nil ? @"(null statusImageURL)" : [mstatus statusImageURL]};
+                [[LELog sharedInstance]log:dimensions];
+                bphotoView.image = [UIImage imageNamed:@"BoozyBear.png"];
+                //                UILabel *label = UILabel.new;
+                //                [bself addSubview:label];
+                //                [label setText:[mstatus statusImageURL]];
+                NSString *diagnostic = [NSString stringWithFormat:@"Diagnostic null statusImageURL %@", [mstatus statusImageURL]];
+                [bself.status setStatusText:diagnostic];
                 
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [bphotoView mas_makeConstraints:^(MASConstraintMaker *make) {
+                        
+                        make.top.equalTo(head.mas_bottom).with.offset(3);
+                        make.left.equalTo(bself.mas_left).with.offset(3);
+                        make.right.equalTo(bself.mas_right).with.offset(-3);
+                        make.height.lessThanOrEqualTo(@310).with.priorityHigh();
+                        [bphotoView sizeToFit];
+                    }];
+                    [bphotoView setNeedsDisplay];
+                    
+                });
             }
         }];
         
-            statusView = JBAttributedAwareScrollView.new;
-            [self addSubview:statusView];
-            [statusView setFrame:CGRectZero];
+        if(hasStatusText == YES || [[status type]isEqualToString:@"video"]) {
+        statusView = JBAttributedAwareScrollView.new;
+        
+        
+        [self addSubview:statusView];
+        
+        [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(photoView.mas_bottom).with.offset(3);
+            make.left.equalTo(head.mas_left);
+            make.right.equalTo(head.mas_right);
+            if(loc == nil) {
+                make.bottom.equalTo(self.mas_bottom).with.offset(-3);
+            } else {
+                //if(hasStatusText == YES || [[status type] isEqualToString:@"video"]) {
+                    make.height.greaterThanOrEqualTo(@100).with.priorityMedium();
+                //}
+            }
+        }];
+        [statusView setFrame:CGRectZero];
         [[statusView layer]setCornerRadius:5.0];
-            statusView.backgroundColor = [UIColor crayolaKeyLimePearlColor];
-
-            statusView.label.delegate = self;
-            [statusView setFont:INSTAGRAM_FONT];
-            NSString *description;
-            InstagramLocation *loc = [status location];
+        statusView.backgroundColor = [UIColor whiteColor];//[UIColor colorWithRed:186.0/255.0 green:187.0/255.0 blue:188.0/255.0 alpha:1.0];
+        
+        statusView.label.delegate = self;
+        [statusView setFont:INSTAGRAM_FONT];
+        [statusView setTextColor:[UIColor blackColor]];
+        
+        NSString *description;
+        
+        if([status statusText] != nil) {
+            
             if([[status type] isEqualToString:@"video"]) {
                 description = [NSString stringWithFormat:@"(video soon) %@", [status statusText]];
             } else {
                 description = [NSString stringWithFormat:@"%@",[status statusText]];
             }
-            
-            
             statusView.text = description;
-        
-            [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(photoView.mas_bottom).with.offset(5);
-                //make.bottom.equalTo(self.mas_bottom).with.offset(-10);
-                make.left.equalTo(self.mas_left).with.offset(5);
-                make.right.equalTo(self.mas_right).with.offset(-5);
-                make.height.lessThanOrEqualTo(@110).with.priorityMedium();
-            }];
+        } else {
+            statusView.text = @"";
+        }
+        }
             
-            
-        
         if(loc != nil) {
             UIView *locView = UIView.new;
             [self addSubview:locView];
@@ -567,20 +710,25 @@
             [locLabel setFont:INSTAGRAM_FONT_SMALL];
             [locLabel setContentMode:UIViewContentModeTop];
             
-
+            
             [locView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(statusView.mas_bottom).offset(5);
-                make.bottom.equalTo(self.mas_bottom).offset(-5);
-                make.left.equalTo(statusView.mas_left);
-                make.right.equalTo(statusView.mas_right);
-                make.height.lessThanOrEqualTo(@50).with.priorityMedium();
+                if(hasStatusText == YES) {
+                make.top.equalTo(statusView.mas_bottom).offset(3);
+                } else {
+                    make.top.equalTo(photoView.mas_bottom).offset(3);
+                }
+                make.bottom.equalTo(self.mas_bottom).offset(-3);
+                
+                make.left.equalTo(head.mas_left);
+                make.right.equalTo(head.mas_right);
+                make.height.greaterThanOrEqualTo(@100).with.priorityMedium();
                 
             }];
             [locLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(statusView.mas_left).with.offset(5);
-                make.right.equalTo(statusView.mas_right).with.offset(-5);
-                make.top.equalTo(statusView.mas_bottom).with.offset(5);
-                make.bottom.equalTo(locView.mas_bottom).with.offset(-5);
+                make.left.equalTo(locView.mas_left).with.offset(3);
+                make.right.equalTo(locView.mas_right).with.offset(-3);
+                make.top.equalTo(locView.mas_top).with.offset(3);
+                make.bottom.equalTo(locView.mas_bottom).with.offset(-3);
             }];
         }
         
@@ -588,7 +736,7 @@
         //[self setBackgroundColor:[user serviceSolidColor]];
         
     }
-    self.layer.cornerRadius = CORNER_RADIUS;
+    //self.layer.cornerRadius = CORNER_RADIUS;
     
     return self;
 }
@@ -596,16 +744,6 @@
 
 - (void)showOrRefreshPhoto
 {
-    //    //[photoBox setUrlStr:[photoBox urlStr]]; // I guess we can change the photo URL, for fun..and profit
-    //    [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
-    //        if(success) {
-    //            [self updateStatusView];
-    //
-    //        } else {
-    //            LOG_ERROR(0, @"Error loading instagram photo %@", error);
-    //        }
-    //    }];
-    
 }
 
 
@@ -618,7 +756,7 @@
 @end
 
 
-
+#pragma mark Flickr Status View
 @implementation HuFlickrStatusView
 
 @class CALayer;
@@ -631,86 +769,112 @@
     self = [super initWithFrame:frame];
     if(self) {
         status = mstatus;
+        UIView *head = [self headerForServiceStatus:mstatus];
+        [self addSubview:head];
+        __block HuFlickrStatusView *bself = self;
+        [self setBackgroundColor:[UIColor clearColor]];
         
-        [self setBackgroundColor:[UIColor whiteColor]];
         
-        photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:NO];
-        [self addSubview:photoBox];
-        [photoBox setBackgroundColor:[UIColor grayColor]];
+        //photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:NO];
+        photoView = UIImageView.new;
+        __block UIImageView *bphotoView = photoView;
+        [self addSubview:photoView];
+        
+        [head mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(bself.mas_top);
+            //make.width.equalTo(bself.mas_width);
+            make.left.equalTo(self.mas_left).with.offset(5);
+            make.right.equalTo(self.mas_right).with.offset(-5);
+            make.height.equalTo(@55).priorityHigh();
+        }];
+        
+        [photoView setImageWithURL:[NSURL URLWithString:[mstatus statusImageURL]] placeholderImage:[UIImage imageNamed:@"BoozyBear"] options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if(error == nil) {
+                
+                bphotoView.image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:CGSizeMake(310,310) interpolationQuality:kCGInterpolationHigh];
+                
+                //bphotoView.image = image;
+                //__block CGRect frame;
+                //dispatch_async(dispatch_get_main_queue(), ^{
+                [bphotoView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    
+                    make.top.equalTo(head.mas_bottom).with.offset(3);
+                    make.left.equalTo(head.mas_left);
+                    make.right.equalTo(head.mas_right);
+                    make.height.lessThanOrEqualTo(@310).with.priorityHigh();
+                    
+                    [bphotoView sizeToFit];
+                    
+                }];
+                [bphotoView setNeedsDisplay];
+                
+                //});
+                
+            }
+        }];
+        
+        
+        [photoView setBackgroundColor:[UIColor grayColor]];
+        [photoView.layer setCornerRadius:15];
         
         if([status statusText] != nil) {
             
             statusView = JBAttributedAwareScrollView.new;
             [self addSubview:statusView];
+            [statusView.layer setCornerRadius:5];
             [statusView setFrame:CGRectZero];
             statusView.label.delegate = self;
             [statusView setFont:FLICKR_FONT];
             statusView.text = [NSString stringWithFormat:@"%@ - %@", [status title], [status statusText]];
-            statusView.backgroundColor = [UIColor crayolaKeyLimePearlColor];
+            statusView.backgroundColor =[UIColor whiteColor];// [UIColor colorWithRed:186.0/255.0 green:187.0/255.0 blue:188.0/255.0 alpha:1.0];
             [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
                 //UIEdgeInsets padding = UIEdgeInsetsMake(5, 5, 5, 5);
                 //make.edges.equalTo(self).with.insets(padding);
                 //make.center.equalTo(self);
-                make.top.equalTo(photoBox.mas_bottom).with.offset(10.0);
-                make.bottom.equalTo(self.mas_bottom).with.offset(-10.0);
-                make.left.equalTo(self.mas_left).with.offset(10.0);
-                make.right.equalTo(self.mas_right).with.offset(-10.0);
+                make.top.equalTo(photoView.mas_bottom).with.offset(3);
+                make.bottom.equalTo(self.mas_bottom).with.offset(-5.0);
+                make.left.equalTo(head.mas_left);
+                make.right.equalTo(head.mas_right);
             }];
             
-            
-            //            statusView = JBAttributedAwareScrollView.new; //[[UITextView alloc]initWithFrame:[self getStatusViewFrame]];
-            //            //statusField.lineBreakMode = UILineBreakModeTailTruncation;
-            //            //statusLabel.numberOfLines = 0;
-            //            [statusView setBackgroundColor:[UIColor whiteColor]];
-            //            NSString *description = [NSString stringWithFormat:@"%@\n%@", [status title], [status statusText]];
-            //            [statusView setText:description];
-            //            [statusView setTextColor:[UIColor blackColor]];
-            //            LOG_FLICKR_VERBOSE(0, @"Status: %@ %@", [status statusText], statusView);
-            //            [statusView setFont:FLICKR_FONT];
-            //            [statusView setScrollEnabled:YES];
-            //            [statusView setBounces:NO];
-            //            [self addSubview:statusView];
         }
-        //id<HuSocialServiceUser>user = [status serviceUser];
-        //[self setBackgroundColor:[user serviceSolidColor]];
-        
     }
     self.layer.cornerRadius = CORNER_RADIUS;
     
     return self;
 }
 
-- (void)updateStatusView
-{
-    [statusView setFrame:[self getStatusViewFrame]];
-}
-
-- (CGRect) getStatusViewFrame
-{
-    float screen_height;
-    
-    if(IS_IPHONE && IS_IPHONE_5) {
-        screen_height = IPHONE_5_PORTRAIT_SIZE_HEIGHT;
-    } else {
-        screen_height = IPHONE_PORTRAIT_SIZE_HEIGHT;
-    }
-    
-    float clear_bottom = screen_height - CGRectGetMaxY(photoBox.frame);
-    CGRect statusview_frame = (CGRectMake(CGRectGetMinX(photoBox.frame), CGRectGetMaxY(photoBox.frame), CGRectGetWidth(photoBox.frame), clear_bottom));
-    
-    return CGRectInset(statusview_frame, 8, 12);
-    
-}
+//- (void)updateStatusView
+//{
+//    [statusView setFrame:[self getStatusViewFrame]];
+//}
+//
+//- (CGRect) getStatusViewFrame
+//{
+//    float screen_height;
+//
+//    if(IS_IPHONE && IS_IPHONE_5) {
+//        screen_height = IPHONE_5_PORTRAIT_SIZE_HEIGHT;
+//    } else {
+//        screen_height = IPHONE_PORTRAIT_SIZE_HEIGHT;
+//    }
+//
+//    float clear_bottom = screen_height - CGRectGetMaxY(photoView.frame);
+//    CGRect statusview_frame = (CGRectMake(CGRectGetMinX(photoView.frame), CGRectGetMaxY(photoView.frame), CGRectGetWidth(photoView.frame), clear_bottom));
+//
+//    return CGRectInset(statusview_frame, 8, 12);
+//
+//}
 
 - (void)showOrRefreshPhoto
 {
-    [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
-        if(success) {
-            [self updateStatusView];
-        } else {
-            LOG_ERROR(0, @"Error loading flickr photo %@", error);
-        }
-    }];
+    //    [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
+    //        if(success) {
+    //            [self updateStatusView];
+    //        } else {
+    //            LOG_ERROR(0, @"Error loading flickr photo %@", error);
+    //        }
+    //    }];
 }
 
 

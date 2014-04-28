@@ -15,15 +15,21 @@
 #import "JBAttributedAwareScrollView.h"
 #import <UIImageView+AFNetworking.h>
 #import <UIView+MCLayout.h>
+#import "defines.h"
 
 @class HuTwitterStatus;
 
 @interface HuViewForServiceStatus : UIView <TTTAttributedLabelDelegate>
-//@property (nonatomic, strong) id<HuServiceStatus> status;
-- (id)initWithStatus:(HuTwitterStatus *)mStatus;
+@property (nonatomic, strong) id<HuServiceStatus> status;
+@property (nonatomic, copy) Handler onTap;
+
+
+//- (id)initWithStatus:(HuTwitterStatus *)mStatus;
 - (HuViewForServiceStatus *)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus;
 + (HuViewForServiceStatus *)viewForStatus:(id<HuServiceStatus>)mstatus withFrame:(CGRect)frame;
 - (void)showOrRefreshPhoto;
+- (UIView *)headerForServiceStatus:(id<HuServiceStatus>)mStatus;
+
 #pragma mark TTTAttributedLabelDelegate method
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url;
