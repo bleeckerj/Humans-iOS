@@ -31,6 +31,8 @@
 - (void)setHumansHumansProfileCarouselViewController:(HuHumansProfileCarouselViewController*)humansProfileCarouselViewController;
 - (HuHumansProfileCarouselViewController*)humansProfileCarouselViewController;
 - (NSString *)clusteredUUID;
+- (NSString *)clusteredVersionBuild;
+
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) HuUserHandler *humansAppUser;

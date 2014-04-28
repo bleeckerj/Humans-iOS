@@ -83,7 +83,7 @@
     if([human isYouMan]) {
         [topBorder setBackgroundColor:[UIColor Dewalt]];
     } else {
-    [topBorder setBackgroundColor:[UIColor Garmin]];
+        [topBorder setBackgroundColor:[UIColor Garmin]];
     }
     nameLabel = [[UILabel alloc]initWithFrame:[topBorder frame]];
     [topBorder addSubview:nameLabel];
@@ -177,6 +177,7 @@
         //
         activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
         activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
+        [activityIndicatorView setTitleLabelText:@"Gathering Stuff.."];
         activityIndicatorView.tintColor = [UIColor orangeColor];
         [self performBlock:^{
             //[noticeView dismiss:YES];
@@ -244,11 +245,25 @@
     
     HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
     HuUserHandler *user_handler = [delegate humansAppUser];
+    [self performBlock:^{
+        [activityIndicatorView setTitleLabelText:@"Found Services"];
+    } afterDelay:2.0];
+    [self performBlock:^{
+        [activityIndicatorView setTitleLabelText:@"Milling Stuff"];
+    } afterDelay:3.0];
+    [self performBlock:^{
+        [activityIndicatorView setTitleLabelText:@"Milling Stuff."];
+    } afterDelay:5.0];
+    [self performBlock:^{
+        [activityIndicatorView setTitleLabelText:@"Milling Stuff.."];
+    } afterDelay:7.0];
+    
     
     [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
         //
         [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
-        
+        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID, @"show-human" : [human name], @"error" : error == nil ? @"nil":error, @"success" : success ? @"YES":@"NO"};
+        [[LELog sharedInstance]log:dimensions];
         if(success) {
             LOG_GENERAL(0, @"Loaded Status for %@", human);
             //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
@@ -272,19 +287,21 @@
         } else {
             LOG_ERROR(0, @"Error loading status %@", error);
             //[Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-            [PFAnalytics trackEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+            //[PFAnalytics trackEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
             [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:NO];
             MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
             noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
             noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
             [self performBlock:^{
                 [noticeView dismiss:YES];
-            } afterDelay:2.0];
+            } afterDelay:3.0];
             
         }
         
     }];
 }
+
+
 
 #pragma mark here's where we turn on the status activity indicator
 - (void)turnOnStatusActivityIndicator
@@ -304,7 +321,7 @@
         //double val = ((double)arc4random() / ARC4RANDOM_MAX);
         //double r = 0;//arc4random_uniform(3)*val;
         //[self performBlock:^{
-            [waitOnStatusActivityIndicatorView startAnimating];
+        [waitOnStatusActivityIndicatorView startAnimating];
         //} afterDelay:0/*1+r*/];
         [self setNeedsDisplay];
         [waitOnStatusActivityIndicatorView setNeedsDisplay];
@@ -351,7 +368,7 @@
         int dur_days_int = [dur_days intValue];
         int dur_hours_int = [dur_hours intValue];
         int mod = dur_hours_int % 24;
-        LOG_GENERAL(0, @"duration.day_int=%d duration.hours_int=%d mod=%d %@", dur_days_int, dur_hours_int, mod, [human name]);
+        //LOG_GENERAL(0, @"duration.day_int=%d duration.hours_int=%d mod=%d %@", dur_days_int, dur_hours_int, mod, [human name]);
         
         if(dur_days_int > 1 && mod == 0) {
             NSString *time_total = [NSString stringWithFormat:@"%@d", dur_days];
@@ -496,15 +513,6 @@
     return self;
 }
 
-//- (id)init
-//{
-//    self = [super init];
-//    if(self) {
-//        [self commonInit];
-//    }
-//    return self;
-//}
-
 - (void)commonInit
 {
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
@@ -526,6 +534,23 @@
     //and queue to do it every 2 minutes as well..
     privateQueue = dispatch_queue_create("com.nearfuturelaboratory.private_queue", DISPATCH_QUEUE_CONCURRENT);
 }
+
+- (void)linkServices
+{
+    UINavigationController *nav = [self navigationController];
+    NSUInteger servicesCount = [[[userHandler humans_user]services]count];
+    if(servicesCount > 0) {
+        if(showServicesViewController == nil) {
+            showServicesViewController = [[HuShowServicesViewController alloc]init];
+        }
+        [nav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
+    } else {
+        HuConnectServicesViewController *connectServicesViewController = [[HuConnectServicesViewController alloc]init];
+        [nav pushViewController:connectServicesViewController animated:YES];
+    }
+    
+}
+
 
 - (void)updateHumanProfileViewsStatusCounts
 {
@@ -672,7 +697,7 @@
         if([self viewForHuman:human] == nil) {
             // if it's the youman of the user, then only add it to the view if its got something to show
             if([human isYouMan] && [[human serviceUsers]count] > 0) {
-            [self addViewForHuman:human];
+                [self addViewForHuman:human];
             } else {
                 [self addViewForHuman:human];
             }
@@ -708,17 +733,20 @@
     [super viewWillDisappear:animated];
     [timerForStatusRefresh invalidate];
     indexToShow = [carousel currentItemIndex];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
     [self freshenHumansForView];
     
-    [carousel setCurrentItemIndex:indexToShow];
     
-    LOG_UI(0, @"Here we have %ld humans", (unsigned long)[arrayOfHumans count]);
     [super viewWillAppear:animated];
+    LOG_UI(0, @"Here we have %ld humans", (unsigned long)[arrayOfHumans count]);
+    NSDictionary *dimensions = @{@"key" : CLUSTERED_UUID, @"humans-carousel": [NSString stringWithFormat:@"%ld humans", (unsigned long)[arrayOfHumans count]]};
+    [[LELog sharedInstance]log:dimensions];
+    
+    [carousel setCurrentItemIndex:indexToShow];
     
     
     if(timerForStatusRefresh != nil) {
@@ -777,6 +805,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSUInteger servicesCount = [[[userHandler humans_user]services]count];
     
     HuHumansProfileCarouselViewController *bself = self;
     
@@ -812,7 +841,7 @@
     UILabel *appNameLabel = [[UILabel alloc]initWithFrame:CGRectMake([settingsButton right], 0, width, HEADER_HEIGHT)];
     [appNameLabel setText:@"Humans"];
     [appNameLabel setTextAlignment:NSTextAlignmentCenter];
-    [appNameLabel setFont:HEADER_FONT_XLARGE];
+    [appNameLabel setFont:HEADER_FONT_LARGE];
     [appNameLabel setUserInteractionEnabled:YES];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressOnAppName:)];
     longPress.minimumPressDuration = 0.5;  // Seconds
@@ -831,23 +860,30 @@
     [settings_bar_view addSubview:settingsButton];
     [settings_bar_view addSubview:addHumanButton];
     [settings_bar_view addSubview:appNameLabel];
-   
+    
     
     [addHumanButton mc_setPosition:MCViewPositionRight inView:settings_bar_view];
     [appNameLabel mc_setRelativePosition:MCViewPositionHorizontalCenter toView:self.view];
     
     __block UINavigationController *bnav = [self navigationController];
-
+    
 #pragma mark here's where we set up the menu items
     settingsItem = [[REMenuItem alloc] initWithTitle:@"Link Services"
                                                image:[UIImage imageNamed:@"add-cloud-gray"]
                                     highlightedImage:nil
                                               action:^(REMenuItem *item) {
-                                                  if(showServicesViewController == nil) {
-                                                      showServicesViewController = [[HuShowServicesViewController alloc]init];
+                                                  if(servicesCount > 0) {
                                                       
+                                                      
+                                                      if(showServicesViewController == nil) {
+                                                          showServicesViewController = [[HuShowServicesViewController alloc]init];
+                                                          
+                                                      }
+                                                      [bnav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
+                                                  } else {
+                                                      HuConnectServicesViewController *connectServicesViewController = [[HuConnectServicesViewController alloc]init];
+                                                      [bnav pushViewController:connectServicesViewController animated:YES];
                                                   }
-                                                  [bnav pushViewController:showServicesViewController animated:YES];//setViewControllers:@[showServicesViewController] animated:NO];
                                               }];
     
     
@@ -871,7 +907,7 @@
         badgeLabel.backgroundColor = [UIColor colorWithWhite:.9 alpha:.5];
     };
     
-    NSUInteger servicesCount = [[[userHandler humans_user]services]count];
+    //NSUInteger servicesCount = [[[userHandler humans_user]services]count];
     settingsItem.badge = [NSString stringWithFormat:@"%lu", (unsigned long)servicesCount];
     settingsItem.textColor = [UIColor crayolaSmokeColor];
     settingsItem.backgroundColor = [UIColor whiteColor];
@@ -894,7 +930,7 @@
     // Do any additional setup after loading the view.
     full_sized = CGRectMake(0, settings_bar_view.bottom, self.view.frame.size.width, self.view.frame.size.height-settings_bar_view.bottom);
     half_sized = CGRectMake(0, settings_bar_view.bottom, self.view.frame.size.width,  (full_sized.size.height)/2);
-   
+    
     
     carousel = [[iCarousel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, full_sized.size.height)];
     [carousel mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:settings_bar_view];
@@ -1052,35 +1088,42 @@
         [stamp mc_setPosition:MCViewPositionCenters inView:result];
         if([[user services]count] < 1) {
             FUIButton *linkService = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, result.size.width, 55)];
-            [linkService setTitle:@"Link Service" forState:UIControlStateNormal];
+            [linkService setTitle:@"Link Some Services" forState:UIControlStateNormal];
+            [linkService setTitle:@"What" forState:UIControlStateSelected];
             [[linkService titleLabel]setFont:BUTTON_FONT_LARGE];
             [linkService setButtonColor:[UIColor crayolaMangoTangoColor]];
             [linkService setHighlightedColor:[UIColor crayolaMangoTangoColor]];
-
+            [linkService setUserInteractionEnabled:YES];
             [linkService bk_addEventHandler:^(id sender) {
+                [self linkServices];
                 
             } forControlEvents:UIControlEventTouchUpInside];
             
             [result addSubview:linkService];
-            [linkService mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:stamp withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
+            [linkService mc_setRelativePosition:MCViewPositionBottom toView:stamp withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
             
         } else {
             FUIButton *makeHuman = [[FUIButton alloc]initWithFrame:CGRectMake(0, 0, result.size.width, 55)];
-            [makeHuman setTitle:@"Make Human" forState:UIControlStateNormal];
+            [makeHuman setTitle:@"Add Some Humans" forState:UIControlStateNormal];
             [[makeHuman titleLabel]setFont:BUTTON_FONT_LARGE];
             [makeHuman setButtonColor:[UIColor crayolaMangoTangoColor]];
             [makeHuman setHighlightedColor:[UIColor crayolaMangoTangoColor]];
             [makeHuman bk_addEventHandler:^(id sender) {
-                
+                HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+                //
+                HuJediFindFriends_ViewController *jedi = [delegate jediFindFriendsViewController];
+                [[self navigationController]pushViewController:jedi animated:NO];
+
             } forControlEvents:UIControlEventTouchUpInside];
             
             [result addSubview:makeHuman];
-            [makeHuman mc_setRelativePosition:MCViewRelativePositionUnderCentered toView:stamp withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
+            [makeHuman mc_setRelativePosition:MCViewPositionBottom toView:stamp withMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
         }
         [result setBackgroundColor:[UIColor whiteColor]];
     }
     return result;
 }
+
 
 
 -(UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view

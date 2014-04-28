@@ -302,9 +302,6 @@ UISearchBar *mSearchBar;
         progressView.titleLabelText = [NSString stringWithFormat:@"Making New Human %@", [newHuman name]];
         [progressView setTintColor:[UIColor sunflowerColor]];
         
-        
-        LOG_GENERAL(0, @"%@", [newHuman description]);
-        
         [self.appUser userAddHuman:newHuman withCompletionHandler:^(BOOL success, NSError *error) {
             //[Flurry logEvent:[NSString stringWithFormat:@"Add Human" , (success ? @"YES":@"NO"), [newHuman name], error]];
             NSDictionary *dimensions = @{@"user": [[self.appUser humans_user]username], @"": [newHuman name], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};

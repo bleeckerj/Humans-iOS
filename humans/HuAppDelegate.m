@@ -116,6 +116,36 @@
     return [[ASIdentifierManager sharedManager]advertisingIdentifier];
 }
 
+- (NSString *)clusteredVersionBuild
+{
+    NSString *shortVersionString = [[[NSBundle mainBundle]infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    //[versionLabel setText:shortVersionString];
+    NSString *build  = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CWBuildNumber"];
+    
+    NSString *result = NSString.new;
+    
+#ifdef DEV
+#ifdef DEBUG
+   result = [NSString stringWithFormat:@"%@-debug   build %@.dbg aka-%@",version, build, shortVersionString ];
+#else
+    result = [NSString stringWithFormat:@"%@-release   build %@.dbg aka-%@",version, build, shortVersionString ];
+    
+#endif
+#else
+#ifdef DEBUG
+    
+     result = [NSString stringWithFormat:@"%@-debug   build %@.prd aka-%@",version, build, shortVersionString ];
+#else
+    result = [NSString stringWithFormat:@"%@-release   build %@.prd aka-%@",version, build, shortVersionString ];
+    
+#endif
+#endif
+
+    
+    return result;
+}
+
 - (NSString *)clusteredUUID
 {
     if([self humansAppUser] != nil && [[self humansAppUser]humans_user] != nil) {

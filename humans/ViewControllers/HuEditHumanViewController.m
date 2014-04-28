@@ -326,7 +326,6 @@ CGRect frame;
 
 - (void)addServiceUser
 {
-    LOG_UI(0, @"Add Service User");
     //
     [[MZFormSheetBackgroundWindow appearance] setBackgroundBlurEffect:YES];
     [[MZFormSheetBackgroundWindow appearance] setBlurRadius:2.0];
@@ -340,8 +339,6 @@ CGRect frame;
     [addUserFormSheet setCornerRadius:3.0f];
     
     [MZFormSheetController sharedBackgroundWindow].formSheetBackgroundWindowDelegate = self;
-    UIView *bself = self.view;
-    
     addUserFormSheet.presentedFormSheetSize = CGSizeMake(300, 395);
     addUserFormSheet.portraitTopInset = 20.0;
     addUserFormSheet.transitionStyle = MZFormSheetTransitionStyleSlideFromBottom;

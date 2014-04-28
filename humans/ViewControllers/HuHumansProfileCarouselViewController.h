@@ -34,6 +34,7 @@
 #import <BlocksKit+UIKit.h>
 #import "MSWeakTimer.h"
 #import <REMenu.h>
+#import "HuConnectServicesViewController.h"
 
 @interface HuHumansProfileCarouselViewController : UIViewController
 

@@ -480,6 +480,13 @@
         }
     }
     if(validatorUI == passwordTextField) {
+        NSDictionary *dimensions;
+        if(conditions != nil) {
+        dimensions = @{@"signup-password-field": conditions};
+        } else {
+            dimensions = @{@"signup-password-field" : @"nil"};
+        }
+        [[LELog sharedInstance]log:dimensions];
         LOG_UI(0, @"%@", conditions);
     }
     
@@ -554,37 +561,7 @@
     
 }
 
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-//{
-//    if(textField == usernameTextField) {
-//        if([usernameTextField isValid]) {
-//            [passwordTextField setEnabled:YES];
-//           // return YES;
-//        } else {
-//            [passwordTextField setEnabled:NO];
-//            //return NO;
-//        }
-//    }
-//    if(textField == passwordTextField) {
-//        if([passwordTextField isValid]) {
-//            [confirmPasswordTextField setEnabled:YES];
-//            //return NO;
-//        } else {
-//            [confirmPasswordTextField setEnabled:NO];
-//            //return NO;
-//        }
-//    }
-//    if(textField == confirmPasswordTextField) {
-//        if([confirmPasswordTextField isValid] && [[confirmPasswordTextField text]isEqualToString:[passwordTextField text]]) {
-//            [emailTextField setEnabled:YES];
-//            return YES;
-//        } else {
-//            [emailTextField setEnabled:NO];
-//            return NO;
-//        }
-//    }
-//    return YES;
-//}
+
 
 
 - (void)isUniqueUsername:(NSString *)username isUnique:(BOOL)is
@@ -690,7 +667,7 @@
 {
     HuAppDelegate *delegate = (HuAppDelegate*)[[UIApplication sharedApplication]delegate];
     HuLoginViewController *loginViewController = [delegate loginViewController];
-   // [[self navigationController]setViewControllers:@[loginViewController] animated:YES];
+    // [[self navigationController]setViewControllers:@[loginViewController] animated:YES];
     [[self navigationController]setViewControllers:@[loginViewController] animated:YES];
 }
 
@@ -706,6 +683,14 @@
     [user setEmail:[emailTextField text]];
     [handler parseCreateNewUser:user password:[passwordTextField text] withCompletionHandler:^(id data, BOOL success, NSError *error) {
         //
+        NSDictionary *dimensions;
+        if(data != nil) {
+            dimensions = @{@"create-new-user": [user username], @"success" : success ? @"YES" : @"NO", @"data" : data};
+        } else {
+            dimensions = @{@"create-new-user" :[user username],  @"success" : success ? @"YES" : @"NO", @"data" : @"nil"};
+        }
+        [[LELog sharedInstance]log:dimensions];
+        
         if(success == YES) {
             [self popGoodToastNotification:[NSString stringWithFormat:@"Welcome %@", [user username]]];
             [signUpButton setEnabled:NO];

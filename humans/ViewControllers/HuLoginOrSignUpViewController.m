@@ -119,59 +119,7 @@ BOOL stopAnimating;
  
     });
     
-/*
-    [RFRotate rotate:rotatingHandView withDuration:0.5 andDegrees:180 andBlock:^{
-        //
-        isPointingUp ^= YES;
-        if(isPointingUp) {
-            [UIView transitionWithView:rotatingHandTextField duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                //
-                [rotatingHandTextField setTitleColor:signUpButton.buttonColor forState:UIControlStateNormal];
 
-            } completion:^(BOOL finished) {
-                //
-                
-            }];
-            
-            
-
-        } else {
-            [UIView transitionWithView:rotatingHandTextField duration:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                //
-            [rotatingHandTextField setTitleColor:loginButton.buttonColor forState:UIControlStateNormal];
-            } completion:nil];
-        }
-    } andCompletion:^{
-        //
-        if(isPointingUp) {
-            [self animateToggleButtonAlpha:signUpButton withCompletion:^{
-                [self animateToggleButtonAlpha:signUpButton withCompletion:^{
-                    
-                    [self performBlock:^{
-                        [self rotateHand];
-                        
-                    } afterDelay:1.1];
-                }];
-
-            }];
-        } else {
-            [self animateToggleButtonAlpha:loginButton withCompletion:^{
-                [self animateToggleButtonAlpha:loginButton withCompletion:^{
-                    
-                    [self performBlock:^{
-                        [self rotateHand];
-                        
-                    } afterDelay:1.1];
-                }];
-                
-            }];
-            
-        }
- 
-        
-
-    }];
-*/
    
 }
 - (IBAction)loginButtonTouchUpInside:(id)sender

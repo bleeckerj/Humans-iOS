@@ -10,6 +10,7 @@
 #import "HuHuman.h"
 #import <iCarousel.h>
 #import "HuHumansProfileCarouselViewController.h"
+#import <Masonry.h>
 
 //@class HuHumansProfileCarouselViewController;
 

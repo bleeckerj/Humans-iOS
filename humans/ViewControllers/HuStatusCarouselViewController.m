@@ -68,8 +68,11 @@
     carousel = [[iCarousel alloc] init];
     
     header = [[HuHeaderForServiceStatusView alloc]init];
-    UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(onSwipeNameLabel:)];
-    [gesture setDirection:UISwipeGestureRecognizerDirectionRight];
+//    UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(onSwipeNameLabel:)];
+//    [gesture setDirection:UISwipeGestureRecognizerDirectionRight];
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onSwipeNameLabel:)];
+    [gesture setNumberOfTapsRequired:2];
+    
     [header addGestureRecognizer:gesture];
     
     carousel.type = iCarouselTypeLinear;
@@ -111,28 +114,43 @@
 	// Do any additional setup after loading the view.
     [self.view setBackgroundColor:[UIColor crayolaManateeColor]];
     
-    // header?
+    [self.view addSubview:carousel];
+
+    
+    // header
     header.frame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
     [header setBackgroundColor:[UIColor Amazon]];
-//    NSAssert((items != nil), @"Why is items nil?");
-//    NSAssert(([items count] > 0), @"Why are there no status items?");
     
     
-    [header setStatus:[items objectAtIndex:0]];  //[carousel currentItemIndex]]];
-    [self.view addSubview:header];
+    [header setStatus:[items objectAtIndex:0]];
+    //[self.view addSubview:header];
     
     [carousel setBackgroundColor:[UIColor crayolaTimberwolfColor]];
       
-    carouselFrame = CGRectMake(0, HEADER_HEIGHT, 320, CGRectGetHeight(self.view.frame) - CGRectGetHeight(header.frame));
+    carouselFrame = self.view.frame;//CGRectMake(0, 0/*HEADER_HEIGHT*/, 320, CGRectGetHeight(self.view.frame) - CGRectGetHeight(header.frame));
+    
+    [carousel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top);
+        make.bottom.equalTo(self.view.mas_bottom);
+        make.left.equalTo(self.view.mas_left);
+        make.right.equalTo(self.view.mas_right);
+    }];
+    
     [carousel setFrame:carouselFrame];
-	carousel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	//add carousel to view
-	[self.view addSubview:carousel];
+//	carousel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
 #pragma mark -- set up the HuViewForServiceStatus based on the status
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         HuViewForServiceStatus *result = HuViewForServiceStatus.new;
         result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:idx]];
+        [result setOnTap:^(){
+            LOG_UI(0, @"On Tap");
+            [carousel scrollToItemAtIndex:0 duration:0.5];
+            [self performBlock:^{
+                [[self navigationController]popViewControllerAnimated:YES];
+            } afterDelay:0.6];
+
+        }];
         if(idx < 10) {
             [result showOrRefreshPhoto];
         }
@@ -189,7 +207,12 @@
 - (void)onSwipeNameLabel:(id)gesture
 {
     //LOG_UI(0, @"Swiped gesture=%@", gesture);
-    [[self navigationController]popViewControllerAnimated:YES];
+    //[carousel st]
+    [carousel scrollToItemAtIndex:0 duration:0.5];
+    [self performBlock:^{
+            [[self navigationController]popViewControllerAnimated:YES];
+    } afterDelay:0.6];
+
 }
 
 
@@ -313,33 +336,16 @@ NSUInteger last_index, current_index;
 {
     
     if(view != nil) {
-        LOG_TODO(0, @"How do you reuse a view? %@", view);
+       // LOG_TODO(0, @"How do you reuse a view? %@", view);
     }
     
     return [statusViews objectAtIndex:index];
-
-    /*
-    if([[items objectAtIndex:index] isKindOfClass:[UIView class]] == NO) {
-        HuViewForServiceStatus *result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:index]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [result setNeedsDisplay];
-        });
-        return result;
-    } else {
-        // we're probably at a special item
-        return [items objectAtIndex:index];
-        
-    }
-     */
-    //return result;
-    
-    //TODO: tie the friendToView status more delegate-y to the view controller..can refactor to
-    //Make it so we don't need this "items" ivar, which is just a lousy go-between
-    // We'd need to make sure the status array in friend is ordered!
-    
     
 }
-
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
+}
 
 - (void)didReceiveMemoryWarning
 {

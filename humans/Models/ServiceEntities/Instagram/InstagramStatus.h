@@ -6,6 +6,7 @@
 
 #import <Foundation/Foundation.h>
 #import "HuServiceStatus.h"
+#import "InstagramUser.h"
 
 @class InstagramCaption;
 @class InstagramComments;
