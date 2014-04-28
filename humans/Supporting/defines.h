@@ -28,8 +28,9 @@ while (hasCalledBack == NO && [loopUntil timeIntervalSinceNow] > 0) { \
 } \
 if (!hasCalledBack) { assert(@"Timeout"); }
 
-#define CLUSTERED_UUID        [((HuAppDelegate*)[[UIApplication sharedApplication]delegate])clusteredUUID]
 
+#define CLUSTERED_UUID        [((HuAppDelegate*)[[UIApplication sharedApplication]delegate])clusteredUUID]
+#define CLUSTERED_EDITION       [((HuAppDelegate*)[[UIApplication sharedApplication]delegate])clusteredVersionBuild]
 
 #ifdef DEBUG
 
@@ -133,7 +134,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 
 #define HEADER_FONT             [UIFont fontWithName:@"AvenirNext-Medium" size:14]
 #define HEADER_FONT_LARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:20]
-#define HEADER_FONT_XLARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:24]
+#define HEADER_FONT_XLARGE       [UIFont fontWithName:@"AvenirNext-Bold" size:26]
 
 #define LOGIN_VIEW_FONT_LARGE    [UIFont fontWithName:@"AvenirNext-Medium" size:32]
 
@@ -230,6 +231,7 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define PROFILE_IMAGE_SIZE_FACTOR 0.8
 
 #define HEADER_HEIGHT 65
+#define SHORT_HEADER_HEIGHT 45
 #define HEADER_SIZE (CGSize){320, HEADER_HEIGHT}
 
 
