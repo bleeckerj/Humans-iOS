@@ -63,6 +63,12 @@
     
     [searchField setSize:CGSizeMake(self.view.width, 40)];
     [searchField setTextFieldColor:[UIColor whiteColor]];
+    UILabel *magnifyingGlass = [[UILabel alloc] init];
+    [magnifyingGlass setText:[[NSString alloc] initWithUTF8String:"\xF0\x9F\x94\x8D"]];
+    [magnifyingGlass sizeToFit];
+    
+    [searchField setLeftView:magnifyingGlass];
+    [searchField setLeftViewMode:UITextFieldViewModeAlways];
     
     resultsView = [[UIView alloc]init];
     
@@ -122,7 +128,7 @@
     [self.view addSubview:addButton];
     
     [addButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(@(self.view.width/2));
+        make.width.equalTo(@(self.view.width));
         make.bottom.equalTo(self.view.mas_bottom);
         make.right.equalTo(self.view.mas_right);
         make.top.equalTo(picksScroller.mas_bottom);
@@ -162,8 +168,10 @@
             
             HuFriend *friend = [p mFriend];
             LOG_UI(0, @"Adding %@ for %@", [friend username], [friend serviceName]);
-            progressView.titleLabelText = [NSString stringWithFormat:@"Adding %@", [friend username]];
-            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                progressView.titleLabelText = [NSString stringWithFormat:@"Adding %@", [friend username]];
+                [progressView setNeedsDisplay];
+            });
             
             HuServiceUser *service_user = [[HuServiceUser alloc]initWithFriend:friend];
         //TODO:
@@ -183,25 +191,30 @@
                     [picksGrid.boxes removeAllObjects];
                     [picksGrid setNeedsDisplay];
                 });
-                
+                [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+                    [self performBlock:^{
+                        [progressView dismiss:YES completion:^{
+                            [bself mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+                                // do sth
+                                LOG_DEEBUG(0, @"%@", [userHandler humans_user]);
+                            }];
+                        }];
+                        
+                    } afterDelay:1.0];
+                }];
+            } else {
+                [progressView dismiss:YES completion:^{
+                    [bself mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+                        // do sth
+                        LOG_DEEBUG(0, @"%@", [userHandler humans_user]);
+                    }];
+                }];
             }
-            
-            
-            
             LOG_UI(0, @"service_users=%@", service_users);
             
         }];
         
-        [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
-            [self performBlock:^{
-                [progressView dismiss:YES completion:^{
-                    [bself mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-                        // do sth
-                    }];
-                }];
-                
-            } afterDelay:1.0];
-        }];
+
         
     } forControlEvents:UIControlEventTouchUpInside];
     
@@ -422,12 +435,12 @@
                                               kCRToastNotificationTypeKey : @(CRToastTypeNavigationBar),
                                               kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
                                               kCRToastBackgroundColorKey : [UIColor crayolaMalachiteColor],
-                                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
-                                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                                              //kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                                              //kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
                                               kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
                                               kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop),
-                                              kCRToastAnimationInTimeIntervalKey : @0.3,
-                                              kCRToastAnimationOutTimeIntervalKey : @0.3
+                                              kCRToastAnimationInTimeIntervalKey : @0.2,
+                                              kCRToastAnimationOutTimeIntervalKey : @0.2
                                               };
                   
                     
