@@ -226,7 +226,7 @@ NSDateFormatter *twitter_formatter;
     [huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithUsername:username password:password];
     
     NSString *path =[NSString stringWithFormat:@"/oauth2/token"];
-    NSDictionary *params = @{@"grant_type": @"password", @"client_id": CLIENT_NAME, @"build": buildNumber, @"ver": version};
+    NSDictionary *params = @{@"grant_type": @"password", @"client_id": CLIENT_NAME, @"build": buildNumber, @"ver": version, @"edition" : CLUSTERED_EDITION};
     
     
     [huRequestOperationManager GET:path parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -238,6 +238,7 @@ NSDateFormatter *twitter_formatter;
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Failure %@", error);
+        
         //[Flurry logError:error.localizedDescription message:@"" error:error];
         
         [self setAccess_token:nil];
@@ -265,8 +266,7 @@ NSDateFormatter *twitter_formatter;
         //[Flurry logEvent:[NSString stringWithFormat:@"Successful getHumansWithCompletion %@" , [humans_user username]]];
         
         humans_user = [[HuUser alloc]initWithJSONDictionary:responseObject];
-        //[self makeYouman:nil];
-        //LOG_GENERAL(0, @"%@", [humans_user dictionary]);
+
         if(completionHandler) {
             completionHandler(true, nil);
         }
@@ -289,7 +289,8 @@ NSDateFormatter *twitter_formatter;
 -(void)getStatusCountsWithCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
     NSString *path =@"/rest/human/status/count";
-    NSURLSessionDataTask *statusCountTask = [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+    /*NSURLSessionDataTask *statusCountTask = */
+    [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
             completionHandler(responseObject, true, nil);
         }
@@ -573,7 +574,7 @@ NSDateFormatter *twitter_formatter;
                                     range:NSMakeRange(0, [string length])];
 }
 
-#pragma mark --- status for human ---
+#pragma mark ---  GET Status for a Human ---
 
 
 // An array of status. This will check this temporary object cache first. No strategy for dumping it other than
@@ -631,6 +632,7 @@ NSDateFormatter *twitter_formatter;
             }
         }];
         
+#pragma TODO does not seem like we do anything with this yet
         [[self statusForHumanId] setObject:saved_status forKey:[aHuman humanid]];
         
         LOG_GENERAL(0, @"%@", [self lastStatusResultHeader]);
