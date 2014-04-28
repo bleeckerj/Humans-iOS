@@ -123,31 +123,31 @@
 	}
     
 	id in_reply_to_status_id_ = [dic objectForKey:@"in_reply_to_status_id"];
-	if([in_reply_to_status_id_ isKindOfClass:[NSNull class]])
+	if([in_reply_to_status_id_ isKindOfClass:[NSString class]])
 	{
 		self.in_reply_to_status_id = in_reply_to_status_id_;
 	}
     
 	id in_reply_to_status_id_str_ = [dic objectForKey:@"in_reply_to_status_id_str"];
-	if([in_reply_to_status_id_str_ isKindOfClass:[NSNull class]])
+	if([in_reply_to_status_id_str_ isKindOfClass:[NSString class]])
 	{
 		self.in_reply_to_status_id_str = in_reply_to_status_id_str_;
 	}
     
 	id in_reply_to_user_id_ = [dic objectForKey:@"in_reply_to_user_id"];
-	if([in_reply_to_user_id_ isKindOfClass:[NSNull class]])
+	if([in_reply_to_user_id_ isKindOfClass:[NSString class]])
 	{
 		self.in_reply_to_user_id = in_reply_to_user_id_;
 	}
     
 	id in_reply_to_user_id_str_ = [dic objectForKey:@"in_reply_to_user_id_str"];
-	if([in_reply_to_user_id_str_ isKindOfClass:[NSNull class]])
+	if([in_reply_to_user_id_str_ isKindOfClass:[NSString class]])
 	{
 		self.in_reply_to_user_id_str = in_reply_to_user_id_str_;
 	}
     
 	id in_reply_to_screen_name_ = [dic objectForKey:@"in_reply_to_screen_name"];
-	if([in_reply_to_screen_name_ isKindOfClass:[NSNull class]])
+	if([in_reply_to_screen_name_ isKindOfClass:[NSString class]])
 	{
 		self.in_reply_to_screen_name = in_reply_to_screen_name_;
 	}
@@ -237,6 +237,12 @@
     } else {
         return false;
     }
+}
+
+
+- (NSString *)statusLowResImageURL
+{
+    return [self statusImageURL];
 }
 
 //TODO: deal with image media etc for twitter

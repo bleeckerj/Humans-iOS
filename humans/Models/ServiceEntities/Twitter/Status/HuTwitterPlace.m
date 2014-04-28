@@ -30,10 +30,53 @@
 
 }
 
+-(NSDictionary *)dictionary
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+    if(_attributes) {
+        [dict setObject:_attributes forKey:@"attributes"];
+    }
+    if(_bounding_box) {
+        [dict setObject:[_bounding_box dictionary] forKey:@"bounding_box"];
+    }
+    if(_country) {
+        [dict setObject:_country forKey:@"country"];
+    }
+    if(_id) {
+        [dict setObject:_id forKey:@"id"];
+    }
+    if(_country_code) {
+        [dict setObject:_country_code forKey:@"country_code"];
+    }
+    if(_full_name) {
+        [dict setObject:_full_name forKey:@"full_name"];
+    }
+    if(_name) {
+        [dict setObject:_name forKey:@"name"];
+    }
+    if(_place_type) {
+        [dict setObject:_place_type forKey:@"place_type"];
+    }
+    if(_url) {
+        [dict setObject:_url forKey:@"url"];
+    }
+    return dict;
+}
+
+
+-(NSString *)jsonString
+{
+    NSError *writeError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.dictionary options:NSJSONWritingPrettyPrinted error:&writeError];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
+}
+
 - (id) initWithJSONDictionary:(NSDictionary *)dic
 {
 	if(self = [super init])
 	{
+        self.dictionary = dic;
 		[self parseJSONDictionary:dic];
 	}
 	

@@ -11,7 +11,7 @@
 @implementation HuTwitterBoundingBox
 
 
-@synthesize vertex = _vertex;
+@synthesize coordinates = _coordinates;
 @synthesize type = _type;
 
 
@@ -20,6 +20,19 @@
 	
 
 }
+
+-(NSDictionary *)dictionary
+{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+    if(_coordinates) {
+        [dict setObject:_coordinates forKey:@"coordinates"];
+    }
+    if(_type) {
+        [dict setObject:_type forKey:@"type"];
+    }
+    return dict;
+}
+
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic
 {
@@ -35,6 +48,9 @@
 {
 	// PARSER
 	id coordinates_ = [dic objectForKey:@"coordinates"];
+    if([coordinates_ isKindOfClass:[NSArray class]]) {
+        self.coordinates = coordinates_;
+    }
 	id type_ = [dic objectForKey:@"type"];
 	if([type_ isKindOfClass:[NSString class]])
 	{

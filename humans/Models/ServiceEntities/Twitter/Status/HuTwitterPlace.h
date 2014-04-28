@@ -22,8 +22,10 @@
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *place_type;
 @property (strong, nonatomic) NSString *url;
+@property (strong, nonatomic) NSDictionary *dictionary;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
+-(NSString *)jsonString;
 
 @end

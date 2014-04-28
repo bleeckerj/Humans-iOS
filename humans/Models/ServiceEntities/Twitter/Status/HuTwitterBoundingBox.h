@@ -12,10 +12,11 @@
 
 
 
-@property (strong, nonatomic) NSArray *vertex;
+@property (strong, nonatomic) NSArray *coordinates;
 @property (strong, nonatomic) NSString *type;
 
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
+-(NSDictionary *)dictionary;
 
 @end
