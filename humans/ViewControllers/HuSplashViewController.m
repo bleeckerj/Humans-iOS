@@ -80,8 +80,6 @@
         
     }];
     
-    
-
     [versionLabel setTextAlignment:NSTextAlignmentCenter];
     [versionLabel setBackgroundColor:[UIColor clearColor]];
     [versionLabel setFont:HEADER_FONT];
@@ -162,20 +160,18 @@
 {
     //[PFAnalytics trackEvent:@"start" dimensions:dimensions];
     ////[Flurry logEvent:@"start" withParameters:dimensions];
-    
-    
-
     //[[FXKeychain defaultKeychain]objectForKey:@"username"];
-    NSDictionary *dimensions = @{@"username" : [[FXKeychain defaultKeychain]objectForKey:@"username"]};
-    [[LELog sharedInstance]log:dimensions];
     
     if([[FXKeychain defaultKeychain]objectForKey:@"username"] != nil) {
+        NSDictionary *dimensions = @{@"username" : [[FXKeychain defaultKeychain]objectForKey:@"username"]};
+        [[LELog sharedInstance]log:dimensions];
         // only one really
         NSString *username = [[FXKeychain defaultKeychain] objectForKey:@"username"];
         NSString *password = [[FXKeychain defaultKeychain] objectForKey:@"password"];
+        
         [self loginWithUsername:username password:password completionHandler:^(BOOL success, NSError *error) {
             //
-            NSDictionary *dimensions = @{@"key" : CLUSTERED_UUID ,@"login-user" : username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+            NSDictionary *dimensions = @{@"key" : CLUSTERED_UUID ,@"edition" : CLUSTERED_EDITION, @"login-user" : username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
             [[LELog sharedInstance]log:dimensions];
             if(success) {
                 //[PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
@@ -192,6 +188,8 @@
             }
         }];
     } else {
+        NSDictionary *dimensions = @{@"new-user" : CLUSTERED_UUID, @"edition" : CLUSTERED_EDITION};
+        [[LELog sharedInstance]log:dimensions];
         UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         HuLoginOrSignUpViewController *loginOrSignUpViewController = [storyBoard instantiateViewControllerWithIdentifier:@"HuLoginOrSignUpViewController"];
         UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;
