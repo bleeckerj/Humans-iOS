@@ -49,7 +49,7 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     
     [self setResponseSerializer:c];
     self.requestSerializer = [AFJSONRequestSerializer serializer];
-    [self.requestSerializer setTimeoutInterval:30.0];
+    [self.requestSerializer setTimeoutInterval:45.0];
     
     // not proud of this..
     AFSecurityPolicy *sec = [[AFSecurityPolicy alloc]init];
@@ -101,22 +101,7 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
     
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     LOG_GENERAL(0, @"%@", [jsonString dataUsingEncoding:NSUTF8StringEncoding]);
-    
-    
-    //NSMutableURLRequest *request = [[AFJSONRequestSerializer serializer] requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:nil error:nil];
-    
-    
-//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-//    [request setURL:[NSURL URLWithString:URLString relativeToURL:self.baseURL]];
-//    [request setHTTPMethod:@"POST"];
-//    
-//    //set headers
-//    NSString *contentType = [NSString stringWithFormat:@"application/json"];
-//    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
-//    [request addValue:@"any-value" forHTTPHeaderField: @"User-Agent"];
-//    
-//    //create the body
-//    [request setHTTPBody:jsonData];
+
     
     NSMutableURLRequest *requestFoo = [self.requestSerializer requestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:nil error:nil];
     [requestFoo setValue:@"application/json" forHTTPHeaderField:@"content-type"];
@@ -190,7 +175,6 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"failure: operation: %@ \n\nerror: %@", task, error);
-        //[Flurry logEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
         [PFAnalytics trackEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
         if(completionHandler) {
             completionHandler(nil);
