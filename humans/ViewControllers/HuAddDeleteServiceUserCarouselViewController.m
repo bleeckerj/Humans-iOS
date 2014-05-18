@@ -264,10 +264,10 @@
                             [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
                         } afterDelay:0.5];
                     } else {
-                        NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
-                        [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
-                        //[Flurry logEvent:@"remove-service-user" withParameters:dimensions];
+                        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
                         
+                        LELog *log = [LELog sharedInstance];
+                        [log log:dimensions];
                     }
 
                 }];
@@ -281,10 +281,9 @@
                     [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
                 } afterDelay:4.0];
                 
-                NSDictionary *dimensions = @{@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
-                [PFAnalytics trackEvent:@"remove-service-user" dimensions:dimensions];
-                //[Flurry logEvent:@"remove-service-user" withParameters:dimensions];
-                
+                NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+                LELog *log = [LELog sharedInstance];
+                [log log:dimensions];
             }
 
         }];

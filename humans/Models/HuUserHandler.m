@@ -21,7 +21,7 @@
 #import "HuServiceUser.h"
 #import "HuAppDelegate.h"
 #import <WSLObjectSwitch.h>
-#import <Parse/Parse.h>
+//#import <Parse/Parse.h>
 
 
 @implementation HuUserHandler
@@ -152,7 +152,7 @@ NSDateFormatter *twitter_formatter;
         
         NSString *result = [responseObject valueForKey:@"result"];
         
-        NSDictionary *dimensions = @{@"username": [aUser username], @"result": result};
+        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"username": [aUser username], @"result": result};
         [PFAnalytics trackEvent:@"create-new-user" dimensions:dimensions];
         
         //[Flurry logEvent:@"create-new-user" withParameters:dimensions];
@@ -194,8 +194,10 @@ NSDateFormatter *twitter_formatter;
     NSData *requestData = [jsonRequest dataUsingEncoding:NSUTF8StringEncoding];
     
     [huRequestOperationManager POST:path parameters:nil data:requestData success:^(NSURLSessionDataTask *task, id responseObject) {
-        NSDictionary *dimensions = @{@"user": [[self humans_user]username], @"human-name": [aHuman name], @"success": @"YES"};
+        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"user": [[self humans_user]username], @"human-name": [aHuman name], @"success": @"YES"};
         //[Flurry logEvent:@"Added a human" withParameters:dimensions];
+        [[LELog sharedInstance]log:dimensions];
+
         [aHuman setHumanid:[responseObject objectForKey:@"human.id"]];
         [self userGettyUpdate:aHuman withCompletionHandler:nil];
 
@@ -205,7 +207,9 @@ NSDateFormatter *twitter_formatter;
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
-        NSDictionary *dimensions = @{@"user": [[self humans_user]username], @"human-name": [aHuman name], @"success": @"NO", @"error" : [error userInfo]};
+        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"user": [[self humans_user]username], @"human-name": [aHuman name], @"success": @"NO", @"error" : [error userInfo]};
+        [[LELog sharedInstance]log:dimensions];
+        
         //[Flurry logEvent:@"Failed adding a human" withParameters:dimensions];
         
         if(completionHandler) {

@@ -245,18 +245,18 @@
     
     HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
     HuUserHandler *user_handler = [delegate humansAppUser];
-    [self performBlock:^{
-        [activityIndicatorView setTitleLabelText:@"Found Services"];
-    } afterDelay:2.0];
-    [self performBlock:^{
-        [activityIndicatorView setTitleLabelText:@"Milling Stuff"];
-    } afterDelay:3.0];
-    [self performBlock:^{
-        [activityIndicatorView setTitleLabelText:@"Milling Stuff."];
-    } afterDelay:5.0];
-    [self performBlock:^{
-        [activityIndicatorView setTitleLabelText:@"Milling Stuff.."];
-    } afterDelay:7.0];
+//    [self performBlock:^{
+//        [activityIndicatorView setTitleLabelText:@"Found Services"];
+//    } afterDelay:2.0];
+//    [self performBlock:^{
+//        [activityIndicatorView setTitleLabelText:@"Milling Stuff"];
+//    } afterDelay:3.0];
+//    [self performBlock:^{
+//        [activityIndicatorView setTitleLabelText:@"Milling Stuff."];
+//    } afterDelay:5.0];
+//    [self performBlock:^{
+//        [activityIndicatorView setTitleLabelText:@"Milling Stuff.."];
+//    } afterDelay:7.0];
     
     
     [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
@@ -267,6 +267,7 @@
         if(success) {
             LOG_GENERAL(0, @"Loaded Status for %@", human);
             //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+            
             
             statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
             [statusCarouselViewController setHuman:human];
@@ -292,6 +293,7 @@
             MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
             noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
             noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+            
             [self performBlock:^{
                 [noticeView dismiss:YES];
             } afterDelay:3.0];

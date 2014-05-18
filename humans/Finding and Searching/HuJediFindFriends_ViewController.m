@@ -304,8 +304,9 @@ UISearchBar *mSearchBar;
         
         [self.appUser userAddHuman:newHuman withCompletionHandler:^(BOOL success, NSError *error) {
             //[Flurry logEvent:[NSString stringWithFormat:@"Add Human" , (success ? @"YES":@"NO"), [newHuman name], error]];
-            NSDictionary *dimensions = @{@"user": [[self.appUser humans_user]username], @"": [newHuman name], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
-            [PFAnalytics trackEvent:@"add-human" dimensions:dimensions];
+            NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"user": [[self.appUser humans_user]username], @"": [newHuman name], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
+            
+            //[PFAnalytics trackEvent:@"add-human" dimensions:dimensions];
             //[Flurry logEvent:@"Add Human" withParameters:dimensions];
             if(success) {
 

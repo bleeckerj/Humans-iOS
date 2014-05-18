@@ -122,7 +122,6 @@
 		B9547C7D18C40ED900CD2D1E /* 40px-blank-for-user-profile-image.png in Resources */ = {isa = PBXBuildFile; fileRef = B9547C7C18C40ED900CD2D1E /* 40px-blank-for-user-profile-image.png */; };
 		B9547C7F18C4522B00CD2D1E /* user-profile-image-mask-45px.png in Resources */ = {isa = PBXBuildFile; fileRef = B9547C7E18C4522B00CD2D1E /* user-profile-image-mask-45px.png */; };
 		B9547C8118C452DA00CD2D1E /* user-profile-image-mask-55px.png in Resources */ = {isa = PBXBuildFile; fileRef = B9547C8018C452DA00CD2D1E /* user-profile-image-mask-55px.png */; };
-		B9578B4D18BE9A73002E6BD9 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6618B7FD1800A9E918 /* Parse.framework */; };
 		B9578B4E18BE9F05002E6BD9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B99E017618601B2400E70892 /* SystemConfiguration.framework */; };
 		B9578B4F18BE9F0A002E6BD9 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A7218B7FD9100A9E918 /* Security.framework */; };
 		B9578B5018BE9F68002E6BD9 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */; };
@@ -137,7 +136,7 @@
 		B980D59F18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B980D59E18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m */; };
 		B987BE5F18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */; };
 		B987BE6218DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE6118DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m */; };
-		B9910A6718B7FD1800A9E918 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6618B7FD1800A9E918 /* Parse.framework */; };
+		B98A489E1928679700065484 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98A489D1928679700065484 /* Parse.framework */; };
 		B9910A6918B7FD4C00A9E918 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */; };
 		B9910A6B18B7FD5500A9E918 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6A18B7FD5500A9E918 /* CFNetwork.framework */; };
 		B9910A6D18B7FD6400A9E918 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6C18B7FD6400A9E918 /* CoreLocation.framework */; };
@@ -411,7 +410,7 @@
 		B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUS2ConditionLowerAlphaEmotis.m; path = Supporting/US2Conditions/HuUS2ConditionLowerAlphaEmotis.m; sourceTree = "<group>"; };
 		B987BE6018DEB1D800499034 /* HuUS2ConditionEmojiStringRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuUS2ConditionEmojiStringRange.h; path = Supporting/US2Conditions/HuUS2ConditionEmojiStringRange.h; sourceTree = "<group>"; };
 		B987BE6118DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUS2ConditionEmojiStringRange.m; path = Supporting/US2Conditions/HuUS2ConditionEmojiStringRange.m; sourceTree = "<group>"; };
-		B9910A6618B7FD1800A9E918 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		B98A489D1928679700065484 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B9910A6A18B7FD5500A9E918 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		B9910A6C18B7FD6400A9E918 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -592,8 +591,8 @@
 				B93024A31895B887000168E4 /* libz.dylib in Frameworks */,
 				B99E017718601B2400E70892 /* SystemConfiguration.framework in Frameworks */,
 				B91BE75418A29D1F00D6E171 /* Crashlytics.framework in Frameworks */,
+				B98A489E1928679700065484 /* Parse.framework in Frameworks */,
 				B9F51779185BC4930083CA36 /* CoreGraphics.framework in Frameworks */,
-				B9910A6718B7FD1800A9E918 /* Parse.framework in Frameworks */,
 				B9F26E3818F6E89600B25D52 /* HockeySDK.framework in Frameworks */,
 				B9F5177B185BC4930083CA36 /* UIKit.framework in Frameworks */,
 				B9F51777185BC4930083CA36 /* Foundation.framework in Frameworks */,
@@ -614,7 +613,6 @@
 				B9578B5018BE9F68002E6BD9 /* AudioToolbox.framework in Frameworks */,
 				B9578B4F18BE9F0A002E6BD9 /* Security.framework in Frameworks */,
 				B9578B4E18BE9F05002E6BD9 /* SystemConfiguration.framework in Frameworks */,
-				B9578B4D18BE9A73002E6BD9 /* Parse.framework in Frameworks */,
 				B99E019618619A0500E70892 /* CoreGraphics.framework in Frameworks */,
 				B9F51796185BC4930083CA36 /* XCTest.framework in Frameworks */,
 				B9F51798185BC4930083CA36 /* UIKit.framework in Frameworks */,
@@ -1155,6 +1153,7 @@
 		B9F51775185BC4930083CA36 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B98A489D1928679700065484 /* Parse.framework */,
 				B9C6C8E718FB6BAE00CA129F /* AdSupport.framework */,
 				B9F26E3318F6E89600B25D52 /* HockeySDK.embeddedframework */,
 				B9C61BD218D3DB1000E1822B /* CoreText.framework */,
@@ -1164,7 +1163,6 @@
 				B9910A6C18B7FD6400A9E918 /* CoreLocation.framework */,
 				B9910A6A18B7FD5500A9E918 /* CFNetwork.framework */,
 				B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */,
-				B9910A6618B7FD1800A9E918 /* Parse.framework */,
 				B9C281AE18B42798005AC80F /* Reveal.framework */,
 				B91BE75318A29D1F00D6E171 /* Crashlytics.framework */,
 				B93024A21895B887000168E4 /* libz.dylib */,
@@ -1811,6 +1809,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/humans/HockeySDK-iOS/HockeySDK.embeddedframework",
 					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+					"$(PROJECT_DIR)",
 				);
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1874,6 +1873,7 @@
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/humans/HockeySDK-iOS/HockeySDK.embeddedframework",
 					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "humans/humans-Prefix.pch";

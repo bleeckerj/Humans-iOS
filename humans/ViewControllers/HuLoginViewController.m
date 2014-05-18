@@ -17,7 +17,7 @@
 //#import "Flurry.h"
 #import <Crashlytics/Crashlytics.h>
 #import "HuHumansProfileCarouselViewController.h"
-#import <Parse/Parse.h>
+//#import <Parse/Parse.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
@@ -138,14 +138,16 @@
     
     [userHandler userRequestTokenForUsername:[usernameTextField text] forPassword:[passwordTextField text] withCompletionHandler:^(BOOL success, NSError *error) {
         //
-        NSDictionary *dimensions = @{@"user": [usernameTextField text], @"success": success?@"YES":@"NO" ,@"error": error==nil?@"nil":[[error userInfo]description]};
-        [PFAnalytics trackEvent:@"service-login" dimensions:dimensions];
+        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"user": [usernameTextField text], @"success": success?@"YES":@"NO" ,@"error": error==nil?@"nil":[[error userInfo]description]};
+        [[LELog sharedInstance]log:dimensions];
+
+        //[PFAnalytics trackEvent:@"service-login" dimensions:dimensions];
        // [Flurry logEvent:@"service-login" withParameters:dimensions];
 
         if(success) {
             NSString *userid = [[[userHandler humans_user]id]description];
-            [Crashlytics setUserName:[usernameTextField text]];
-            [Crashlytics setUserIdentifier: userid];
+//            [Crashlytics setUserName:[usernameTextField text]];
+//            [Crashlytics setUserIdentifier: userid];
             
             [[FXKeychain defaultKeychain]setObject:[usernameTextField text] forKey:@"username"];
             [[FXKeychain defaultKeychain]setObject:[passwordTextField text] forKey:@"password"];
@@ -187,7 +189,10 @@
             } afterDelay:5.0];
             //shake
             NSString *msg =[NSString stringWithFormat:@"%@ had trouble logging in with %@ cause of %@", [usernameTextField text], [passwordTextField text], error ];
-            [PFAnalytics trackEvent:msg];
+            dimensions = @{@"key": CLUSTERED_UUID,@"info": msg};
+            [[LELog sharedInstance]log:dimensions];
+
+            //[PFAnalytics trackEvent:msg];
             //[Flurry logError:msg message:msg error:error];
 
         }

@@ -336,10 +336,9 @@ MGLine *check_;
         MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:aWebView animated:YES];
         progressView.mode = MRProgressOverlayViewModeCross;
         progressView.titleLabelText = [NSString stringWithFormat:@"There was a problem authenticating. %@", msg];
-        NSDictionary *dimensions = @{@"msg": msg};
-        [PFAnalytics trackEvent:[json description] dimensions:dimensions];
-        //[Flurry logError:[json description] message:msg error:nil];
-        
+        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"msg": msg};
+        LELog *log = [LELog sharedInstance];
+        [log log:dimensions];
         [self performBlock:^{
             [progressView dismiss:YES];
             [self.navigationController popToRootViewControllerAnimated:YES];

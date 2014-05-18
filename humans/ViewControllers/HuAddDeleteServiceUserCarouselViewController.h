@@ -14,7 +14,7 @@
 #import "HuUserHandler.h"
 #import "HuAppDelegate.h"
 //#import "Flurry.h"
-#import <Parse/Parse.h>
+//#import <Parse/Parse.h>
 
 #import <MZFormSheetController.h>
 #import <UIView+MCLayout.h>

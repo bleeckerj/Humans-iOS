@@ -224,10 +224,9 @@ CGRect frame;
                 
             } else {
                 noticeView.titleLabelText = @"There was a problem deleting..";
-                NSDictionary *dimensions = @{@"user-remove-human": human, @"user" : [user_handler humans_user],  @"success": success?@"YES":@"NO", @"error" : error};
-                [PFAnalytics trackEvent:@"user-remove-human" dimensions:dimensions];
-                //[Flurry logEvent:@"user-remove-human" withParameters:dimensions];
-                
+                NSDictionary *dimensions = @{@"key": CLUSTERED_UUID, @"user-remove-human": human, @"user" : [user_handler humans_user],  @"success": success?@"YES":@"NO", @"error" : error};
+                LELog *log = [LELog sharedInstance];
+                [log log:dimensions];
                 [self performBlock:^{
                     [noticeView dismiss:YES];
                     //[self.navigationController popViewControllerAnimated:YES];

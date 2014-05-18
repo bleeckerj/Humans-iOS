@@ -175,7 +175,10 @@ static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturela
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"failure: operation: %@ \n\nerror: %@", task, error);
-        [PFAnalytics trackEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
+        //[PFAnalytics trackEvent:[NSString stringWithFormat:@"Error loading friends %@", error]];
+        LELog *log = [LELog sharedInstance];
+        NSDictionary *dimentions = @{@"error": error};
+        [log log:dimentions];
         if(completionHandler) {
             completionHandler(nil);
         }

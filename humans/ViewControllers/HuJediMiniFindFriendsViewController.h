@@ -18,7 +18,7 @@
 #import <UIColor+Crayola.h>
 #import <UIColor+FlatUI.h>
 #import <MGScrollView.h>
-#import <Parse/Parse.h>
+//#import <Parse/Parse.h>
 #import <FlatUIKit.h>
 #import <MZFormSheetController.h>
 #import <MRProgress.h>

@@ -482,9 +482,9 @@
     if(validatorUI == passwordTextField) {
         NSDictionary *dimensions;
         if(conditions != nil) {
-        dimensions = @{@"signup-password-field": conditions};
+        dimensions = @{@"key": CLUSTERED_UUID,@"signup-password-field": conditions};
         } else {
-            dimensions = @{@"signup-password-field" : @"nil"};
+            dimensions = @{@"key": CLUSTERED_UUID,@"signup-password-field" : @"nil"};
         }
         [[LELog sharedInstance]log:dimensions];
         LOG_UI(0, @"%@", conditions);
@@ -685,9 +685,9 @@
         //
         NSDictionary *dimensions;
         if(data != nil) {
-            dimensions = @{@"create-new-user": [user username], @"success" : success ? @"YES" : @"NO", @"data" : data};
+            dimensions = @{@"key": CLUSTERED_UUID,@"create-new-user": [user username], @"success" : success ? @"YES" : @"NO", @"data" : data};
         } else {
-            dimensions = @{@"create-new-user" :[user username],  @"success" : success ? @"YES" : @"NO", @"data" : @"nil"};
+            dimensions = @{@"key": CLUSTERED_UUID,@"create-new-user" :[user username],  @"success" : success ? @"YES" : @"NO", @"data" : @"nil"};
         }
         [[LELog sharedInstance]log:dimensions];
         

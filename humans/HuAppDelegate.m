@@ -11,7 +11,7 @@
 #import "defines.h"
 #import <Crashlytics/Crashlytics.h>
 #import <HockeySDK/HockeySDK.h>
-#import <Parse/Parse.h>
+//#import <Parse/Parse.h>
 #import "HuHumansProfileCarouselViewController.h"
 
 @implementation HuAppDelegate
@@ -27,11 +27,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
-                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
-    
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    
+//    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
+//                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
+//    
+//    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+//    
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"89a415bf14fb56ed6e81ef153d4cb481"];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];

@@ -120,7 +120,8 @@
 #endif
     [buildLabel setSize:CGSizeMake(self.view.size.width, 40)];
     [buildLabel mc_setPosition:MCViewPositionBottomHCenter inView:self.view];
-    NSDictionary *dimensions = @{@"start" : CLUSTERED_UUID};
+    
+    NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"start" : CLUSTERED_EDITION};
     [[LELog sharedInstance]log:dimensions];
     //[PFAnalytics trackEvent:@"start" dimensions:dimensions];
     //[Flurry logEvent:@"start" withParameters:dimensions];
@@ -163,7 +164,7 @@
     //[[FXKeychain defaultKeychain]objectForKey:@"username"];
     
     if([[FXKeychain defaultKeychain]objectForKey:@"username"] != nil) {
-        NSDictionary *dimensions = @{@"username" : [[FXKeychain defaultKeychain]objectForKey:@"username"]};
+        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"username" : [[FXKeychain defaultKeychain]objectForKey:@"username"]};
         [[LELog sharedInstance]log:dimensions];
         // only one really
         NSString *username = [[FXKeychain defaultKeychain] objectForKey:@"username"];

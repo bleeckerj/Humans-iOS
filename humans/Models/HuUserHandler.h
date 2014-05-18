@@ -47,7 +47,7 @@
 
 #import "HuFoursquareCheckin.h"
 
-#import <Parse/Parse.h>
+//#import <Parse/Parse.h>
 #import <ObjectiveSugar.h>
 
 @interface HuUserHandler : NSObject <NSURLConnectionDelegate>
