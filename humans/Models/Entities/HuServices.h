@@ -7,7 +7,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface HuServices : NSObject
+@interface HuServices : NSObject <NSCopying>
 
 
 

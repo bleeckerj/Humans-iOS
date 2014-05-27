@@ -110,11 +110,17 @@
 {
 	// PARSER
 //	id _id_ = [dic objectForKey:@"_id"];
-//	if([_id_ isKindOfClass:[NSDictionary class]])
+//	if([_id_ isKindOfClass:[NSNumber class]])
 //	{
-//		self._id = [[_id alloc] initWithJSONDictionary:_id_];
+//		self.flickr_id = _id_;
 //	}
-
+    id status_on_behalf_of_ = [dic objectForKey:@"status_on_behalf_of"];
+    if([status_on_behalf_of_ isKindOfClass:[NSDictionary class]])
+    {
+        self.status_on_behalf_of = [[HuOnBehalfOf alloc]initWithJSONDictionary:status_on_behalf_of_];
+    }
+    
+    
 	id accuracy_ = [dic objectForKey:@"accuracy"];
 	if([accuracy_ isKindOfClass:[NSNumber class]])
 	{
@@ -235,7 +241,7 @@
 		self.iconserver = iconserver_;
 	}
 
-	id flickr_id_ = [dic objectForKey:@"flickr_id"];
+	id flickr_id_ = [dic objectForKey:@"id"];
 	if([flickr_id_ isKindOfClass:[NSString class]])
 	{
 		self.flickr_id = flickr_id_;

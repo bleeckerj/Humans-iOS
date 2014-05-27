@@ -25,7 +25,9 @@
 {
 	if(self = [super init])
 	{
-		[self parseJSONDictionary:dic];
+        if(dic != NULL) {
+            [self parseJSONDictionary:dic];
+        }
 	}
 	
 	return self;
@@ -53,6 +55,31 @@
 
 	
 }
+
+- (BOOL)isEqual:(id)onBehalfOf {
+    if(self == onBehalfOf) {
+        return YES;
+    }
+    
+    if([onBehalfOf isKindOfClass:[HuOnBehalfOf class]] == NO) {
+        return NO;
+    }
+    
+    if([self.serviceName isEqualToString:[onBehalfOf serviceName]] &&
+       [self.serviceUserID isEqualToString:[onBehalfOf serviceUserID]] &&
+       [self.serviceUsername isEqualToString:[onBehalfOf serviceUsername]]) {
+       
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+
+- (NSUInteger)hash {
+    return [self.serviceUsername hash] ^ [self.serviceUserID hash] ^ [self.serviceName hash];
+}
+
 
 -(NSString *)serviceName
 {

@@ -7,8 +7,29 @@
 //
 
 #import "HuJediFindFriends_ViewController.h"
-//#import "Flurry.h"
 
+#import "defines.h"
+#import "LoggerClient.h"
+#import "HuAppDelegate.h"
+#import "HuUserHandler.h"
+#import "UIImage+Resize.h"
+#import "MGTableBoxStyled.h"
+#import "MGBox.h"
+#import "PhotoBox.h"
+#import "MGScrollView.h"
+#import "MGLineStyled.h"
+#import "HuTextFieldLine.h"
+#import "HuServiceUserProfilePhoto.h"
+#import "StateMachine.h"
+#import "MBProgressHUD.h"
+#import <UIView+MCLayout.h>
+#import <ViewUtils.h>
+#import <MRProgress/MRProgress.h>
+#import <UIColor+Crayola.h>
+#import <UIColor+FlatUI.h>
+#import <MRProgress.h>
+#import <Crashlytics/Crashlytics.h>
+#import "HuHuman.h"
 
 #define ROW_HEIGHT 70
 #define EDGE_INSETS
@@ -124,6 +145,9 @@ UISearchBar *mSearchBar;
 - (void)commonInit
 {
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
+    HuUserHandler *h = HuUserHandler.new;
+    h = [appDel humansAppUser];
+    
     self.appUser = [appDel humansAppUser];
     LOG_GENERAL(0, @"HuUserHandler is now %@", self.appUser);
     

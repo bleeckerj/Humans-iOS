@@ -8,48 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-#import "HuHumansHTTPSessionManager.h"
 #import "defines.h"
-#import "HuUser.h"
-#import "HuHuman.h"
-#import "HuServices.h"
-#import "HuServiceUser.h"
 
-// new twitter
-#import "HuTwitterStatus.h"
-#import "HuTwitterUser.h"
-#import "HuTwitterCoordinates.h"
-#import "HuTwitterPlace.h"
-#import "HuTwitterStatusEntities.h"
-#import "HuTwitterEntitesHashtag.h"
-#import "HuTwitterEntitiesSymbols.h"
-#import "HuTwitterEntitiesUserMentions.h"
-#import "HuTwitterEntitiesURL.h"
-#import "HuTwitterStatusMedia.h"
-#import "HuTwitterMediaSize.h"
-//#import "TwitterStatus.h"
-//#import "TwitterUser.h"
 
-#import "InstagramStatus.h"
-#import "InstagramCaption.h"
-#import "InstagramUser.h"
-#import "TransientInstagramUser.h"
-#import "InstagramImages.h"
-#import "InstagramCounts.h"
-#import "InstagramImage.h"
-#import "InstagramComments.h"
-#import "InstagramCommenter.h"
-#import "InstagramLikes.h"
-#import "InstagramLike.h"
-
-#import "HuFlickrStatus.h"
-#import "HuFlickrDescription.h"
-
-#import "HuFoursquareCheckin.h"
-
-//#import <Parse/Parse.h>
-#import <ObjectiveSugar.h>
-
+@class InstagramStatus;
+@class HuUser;
+@class HuHuman;
+@class HuServices;
+@class HuServiceUser;
+@class HuHumansHTTPSessionManager;
+@class HuOnBehalfOf;
 @interface HuUserHandler : NSObject <NSURLConnectionDelegate>
 
 typedef enum networkStateTypes
@@ -68,6 +36,7 @@ typedef enum networkStateTypes
 @property (nonatomic, retain) NSDictionary *lastStatusResultHeader;
 @property (nonatomic, retain) NSMutableArray *friends;
 @property HuNetworkState networkState;
+@property (nonatomic, retain) NSMutableDictionary *authForServices;
 
 - (NSTimeInterval)lastPeekTimeFor:(HuHuman *)aHuman;
 - (void)parseCreateNewUser:(HuUser *)aUser password:(NSString *)aPassword withCompletionHandler:(CompletionHandlerWithData)completionHandler;
@@ -91,6 +60,9 @@ typedef enum networkStateTypes
 
 + (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionhandler;
+
+
+- (NSMutableDictionary *)getAuthForService:(HuOnBehalfOf *)onBehalfOf;
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler;
 
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;

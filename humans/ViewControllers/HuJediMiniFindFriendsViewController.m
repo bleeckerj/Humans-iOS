@@ -7,6 +7,7 @@
 //
 
 #import "HuJediMiniFindFriendsViewController.h"
+#import "HuProfilePhotoBlank.h"
 
 #define ROW_HEIGHT 45
 #define EDGE_INSETS

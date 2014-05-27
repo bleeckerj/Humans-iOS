@@ -125,6 +125,12 @@
 - (void) parseJSONDictionary:(NSDictionary *)dic
 {
 	// PARSER
+    id status_on_behalf_of_ = [dic objectForKey:@"status_on_behalf_of"];
+    if([status_on_behalf_of_ isKindOfClass:[NSDictionary class]])
+    {
+        self.status_on_behalf_of = [[HuOnBehalfOf alloc]initWithJSONDictionary:status_on_behalf_of_];
+    }
+    
 	id caption_ = [dic objectForKey:@"caption"];
 	if([caption_ isKindOfClass:[NSDictionary class]])
 	{
@@ -150,7 +156,7 @@
 		self.filter = filter_;
 	}
 
-	id _instagram_id_ = [dic objectForKey:@"instagram_id"];
+	id _instagram_id_ = [dic objectForKey:@"id"];
 	if([_instagram_id_ isKindOfClass:[NSString class]])
 	{
 		self.instagram_id = _instagram_id_;

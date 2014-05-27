@@ -11,7 +11,7 @@
 #import "defines.h"
 #import <Crashlytics/Crashlytics.h>
 #import <HockeySDK/HockeySDK.h>
-//#import <Parse/Parse.h>
+#import <SDWebImageManager.h>
 #import "HuHumansProfileCarouselViewController.h"
 
 @implementation HuAppDelegate

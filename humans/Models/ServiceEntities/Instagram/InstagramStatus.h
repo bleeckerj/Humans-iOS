@@ -7,6 +7,7 @@
 #import <Foundation/Foundation.h>
 #import "HuServiceStatus.h"
 #import "InstagramUser.h"
+#import "HuOnBehalfOf.h"
 
 @class InstagramCaption;
 @class InstagramComments;
@@ -19,7 +20,7 @@
 @interface InstagramStatus : NSObject <HuServiceStatus>
 
 
-
+@property (strong, nonatomic) HuOnBehalfOf *status_on_behalf_of;
 @property (strong, nonatomic) InstagramCaption *caption;
 @property (strong, nonatomic) InstagramComments *comments;
 @property (strong, nonatomic) NSDate *created_time;

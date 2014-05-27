@@ -8,6 +8,7 @@
 #import "HuServiceStatus.h"
 #import "HuTwitterStatusMedia.h"
 #import "defines.h"
+#import "HuOnBehalfOf.h"
 
 @class HuTwitterUser;
 @class HuTwitterCoordinates;
@@ -18,7 +19,7 @@
 @interface HuTwitterStatus : NSObject <HuServiceStatus>
 
 
-
+@property (strong, nonatomic) HuOnBehalfOf *status_on_behalf_of;
 @property (strong, nonatomic) NSDate *created_at;
 @property (strong, nonatomic) NSDecimalNumber *created;
 @property (strong, nonatomic) NSDecimalNumber *tweet_id;

@@ -19,6 +19,7 @@
 #import <ViewUtils.h>
 #import "HuUserHandler.h"
 #import "HuAppDelegate.h"
+#import <ObjectiveSugar.h>
 
 #define VISIBLE_ITEMS_IN_CAROUSEL 4
 
@@ -142,7 +143,7 @@
 #pragma mark -- set up the HuViewForServiceStatus based on the status
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         HuViewForServiceStatus *result = HuViewForServiceStatus.new;
-        result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:idx]];
+        result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:idx] with:self];
         [result setOnTap:^(){
             LOG_UI(0, @"On Tap");
             [carousel scrollToItemAtIndex:0 duration:0.5];

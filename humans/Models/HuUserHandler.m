@@ -7,12 +7,12 @@
 //
 
 #import "HuUserHandler.h"
-#import "defines.h"
+#import "HuHumansHTTPSessionManager.h"
 #import "LoggerClient.h"
 #import <AFNetworking.h>
 #import <RNDecryptor.h>
 #import <ObjectiveSugar.h>
-//#import "Flurry.h"
+
 #import <ConciseKit.h>
 #import "HuFriend.h"
 #import "HuUser.h"
@@ -21,7 +21,45 @@
 #import "HuServiceUser.h"
 #import "HuAppDelegate.h"
 #import <WSLObjectSwitch.h>
-//#import <Parse/Parse.h>
+#import "HuInstagramHTTPSessionManager.h"
+#import "HuUser.h"
+#import "HuHuman.h"
+#import "HuServices.h"
+#import "HuServiceUser.h"
+
+// new twitter
+#import "HuTwitterStatus.h"
+#import "HuTwitterUser.h"
+#import "HuTwitterCoordinates.h"
+#import "HuTwitterPlace.h"
+#import "HuTwitterStatusEntities.h"
+#import "HuTwitterEntitesHashtag.h"
+#import "HuTwitterEntitiesSymbols.h"
+#import "HuTwitterEntitiesUserMentions.h"
+#import "HuTwitterEntitiesURL.h"
+#import "HuTwitterStatusMedia.h"
+#import "HuTwitterMediaSize.h"
+
+
+//#import "InstagramStatus.h"
+#import "InstagramCaption.h"
+#import "InstagramUser.h"
+#import "TransientInstagramUser.h"
+#import "InstagramImages.h"
+#import "InstagramCounts.h"
+#import "InstagramImage.h"
+#import "InstagramComments.h"
+#import "InstagramCommenter.h"
+#import "InstagramLikes.h"
+#import "InstagramLike.h"
+
+#import "HuFlickrStatus.h"
+#import "HuFlickrDescription.h"
+
+#import "HuFoursquareCheckin.h"
+
+
+#import <ObjectiveSugar.h>
 
 
 @implementation HuUserHandler
@@ -238,7 +276,22 @@ NSDateFormatter *twitter_formatter;
 #pragma mark here's where we set the access token to live in the requestSerializer for this manager.. =============
         [self setAccess_token:[responseObject objectForKey:@"access_token"]];
         [huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithToken:self.access_token];
-        [self getHumansWithCompletionHandler:completionHandler];
+        
+        [self getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+            //
+            if(success == NO) {
+                completionHandler(NO, error);
+            }
+            if(success == YES && completionHandler != NULL) {
+                [self getAuthForServicesWithCompletionHandler:completionHandler];
+            }
+            if(success == YES && completionHandler == NULL) {
+                [self getAuthForServicesWithCompletionHandler:nil];
+            }
+
+        }];
+        
+        
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Failure %@", error);
@@ -590,6 +643,11 @@ NSDateFormatter *twitter_formatter;
         [self getStatusForHuman:aHuman withCompletionHandler:^(BOOL success, NSError *error) {
             //
             obj =  [[self statusForHumanId]objectForKey:[aHuman humanid]];
+            //TODO Need to time this out after awhile..
+            [[self statusForHumanId]setObject:obj forKey:[aHuman humanid]];
+            [self performBlock:^{
+                [[self statusForHumanId]removeObjectForKey:[aHuman humanid]];
+            } afterDelay:5*60];
         }];
     }
     return obj;
@@ -621,14 +679,24 @@ NSDateFormatter *twitter_formatter;
             if([[object valueForKey:@"service"] isEqualToString:@"flickr"]) {
                 HuFlickrStatus *status = [[HuFlickrStatus alloc]initWithJSONDictionary:object];
                 [saved_status addObject:status];
+                //LOG_FLICKR(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
             }
             if([[object valueForKey:@"service"] isEqualToString:@"instagram"]) {
-                InstagramStatus *status = [[InstagramStatus alloc]initWithJSONDictionary:object];
-                [saved_status addObject:status];
+//                InstagramStatus *status = [[InstagramStatus alloc]initWithJSONDictionary:object];
+//                [saved_status addObject:status];
+                //LOG_INSTAGRAM(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
+//                HuInstagramHTTPSessionManager *mgr = [HuInstagramHTTPSessionManager sharedInstagramClient];
+//                NSDictionary *stuff = [self getAuthForService:[status status_on_behalf_of]];
+//                NSString *access_token = [stuff objectForKey:@"token_key"];
+//                LOG_INSTAGRAM(0, @"access_token=%@", access_token);
+//                [mgr like:[status instagram_id] withAccessToken:access_token];
+                
             }
             if([[object valueForKey:@"service"] isEqualToString:@"twitter"]) {
                 HuTwitterStatus *status = [[HuTwitterStatus alloc]initWithJSONDictionary:object];
                 [saved_status addObject:status];
+                //LOG_TWITTER(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
+
             }
             if([[object valueForKey:@"service"] isEqualToString:@"foursquare"]) {
                 HuFoursquareCheckin *status = [[HuFoursquareCheckin alloc]initWithJSONDictionary:object];
@@ -721,6 +789,46 @@ NSDateFormatter *twitter_formatter;
 }
 
 #pragma mark access token crap for a specific service. name the service and get the authentication parcel
+
+- (NSMutableDictionary *)getAuthForService:(HuOnBehalfOf *)onBehalfOf
+{
+    NSMutableDictionary *result;
+    HuServices *equivalent = HuServices.new;
+    [equivalent setServiceName:[onBehalfOf serviceName]];
+    [equivalent setServiceUserID:[onBehalfOf serviceUserID]];
+    [equivalent setServiceUsername:[onBehalfOf serviceUsername]];
+    
+    result = [self.authForServices objectForKey:equivalent];
+    
+    if(result == NULL) {
+        result = NSMutableDictionary.new;
+    }
+    
+    return result;
+}
+
+
+//TODO Ugh..
+- (void)getAuthForServicesWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    __block HuUserHandler *bself = self;
+    if(self.authForServices == NULL) {
+        self.authForServices = [[NSMutableDictionary alloc]init];
+    }
+    [[humans_user services] each:^(id object) {
+        [self getAuthForService:object with:^(id data, BOOL success, NSError *error) {
+            //
+            [bself.authForServices setObject:data forKey:object];
+        }];
+    }];
+    
+    // yeah, but..
+    if(completionHandler) {
+        completionHandler(YES, nil);
+    }
+}
+
+
 // given a HuService this will try and get the access token particulars for that service + user
 
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler
@@ -796,8 +904,12 @@ NSDateFormatter *twitter_formatter;
             LOG_GENERAL(0, @"What we got..%@", result);
         }
         @catch (NSException *ne) {
+            NSString *username = [humans_user username]!=nil ? [humans_user username] : @"nil";
             NSString *loc = [NSString stringWithFormat:@"%s", __PRETTY_FUNCTION__];
             NSError *error = [[NSError alloc]initWithDomain:@"HuUserHandler" code:99 userInfo:@{@"reason": [ne reason], @"name": [ne name], @"place": loc, @"exception": ne}];
+            NSDictionary *dimensions = @{@"key": CLUSTERED_UUID, @"username": username, @"error": error};
+            [PFAnalytics trackEvent:@"getAuthForService" dimensions:dimensions];
+            
             //[Flurry logError:[ne reason] message:[ne reason] error:error];
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
@@ -852,6 +964,12 @@ NSDateFormatter *twitter_formatter;
         }
     }
     [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+}
+
+// perform a block after a specified number of seconds
+- (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
 }
 
 @end

@@ -7,7 +7,7 @@
 // Import
 #import "HuServices.h"
 
-@implementation HuServices
+@implementation HuServices 
 
 
 @synthesize serviceName = _serviceName;
@@ -80,11 +80,52 @@
     return jsonData;
 }
 
+
+- (BOOL)isEqual:(id)service {
+    if(self == service) {
+        return YES;
+    }
+    
+    if([service isKindOfClass:[HuServices class]] == NO) {
+        return NO;
+    }
+    
+    if([self.serviceName isEqualToString:[service serviceName]] &&
+       [self.serviceUserID isEqualToString:[service serviceUserID]] &&
+       [self.serviceUsername isEqualToString:[service serviceUsername]]) {
+        
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+
+- (NSUInteger)hash {
+    return [self.serviceUsername hash] ^ [self.serviceUserID hash] ^ [self.serviceName hash];
+}
+
+
 -(NSString *)description
 {
     //NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self dictionary] options:NSJSONWritingPrettyPrinted error:&err];
     return [[NSString alloc] initWithData:[self json] encoding:NSUTF8StringEncoding];
    
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    id copy = [[[self class] alloc] init];
+    
+    if (copy) {
+        // Copy NSObject subclasses
+        [copy setServiceName:[self.serviceName copyWithZone:zone]];
+        [copy setServiceUserID:[self.serviceUserID copyWithZone:zone]];
+        [copy setServiceUsername:[self.serviceUsername copyWithZone:zone]];
+        
+    }
+    
+    return copy;
 }
 
 @end

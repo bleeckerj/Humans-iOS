@@ -25,7 +25,7 @@
 
 
 //- (id)initWithStatus:(HuTwitterStatus *)mStatus;
-- (HuViewForServiceStatus *)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus;
+- (HuViewForServiceStatus *)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus with:(UIViewController *)mparent;
 + (HuViewForServiceStatus *)viewForStatus:(id<HuServiceStatus>)mstatus withFrame:(CGRect)frame;
 - (void)showOrRefreshPhoto;
 - (UIView *)headerForServiceStatus:(id<HuServiceStatus>)mStatus;

@@ -7,29 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "defines.h"
-#import "LoggerClient.h"
-#import "HuAppDelegate.h"
-#import "HuUserHandler.h"
-#import "UIImage+Resize.h"
-#import "MGTableBoxStyled.h"
-#import "MGBox.h"
-#import "PhotoBox.h"
-#import "MGScrollView.h"
-#import "MGLineStyled.h"
-#import "HuTextFieldLine.h"
-#import "HuServiceUserProfilePhoto.h"
-#import "StateMachine.h"
-#import "MBProgressHUD.h"
-#import <UIView+MCLayout.h>
-#import <ViewUtils.h>
-//#import "Flurry.h"
-//#import <Parse/Parse.h>
-#import <MRProgress/MRProgress.h>
-#import <UIColor+Crayola.h>
-#import <UIColor+FlatUI.h>
-#import <MRProgress.h>
-#import <Crashlytics/Crashlytics.h>
+#import <MBProgressHUD.h>
+
+@class HuUserHandler;
+
+@class StateMachine;
 
 @interface HuJediFindFriends_ViewController : UIViewController <UINavigationControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate, UISearchBarDelegate, MBProgressHUDDelegate>
 typedef enum {

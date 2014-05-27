@@ -8,6 +8,7 @@
 #import "HuServiceStatus.h"
 #import "defines.h"
 #import <SBJson4Writer.h>
+#import "HuOnBehalfOf.h"
 
 //@class _id;
 @class HuFlickrDescription;
@@ -15,8 +16,8 @@
 @interface HuFlickrStatus : NSObject <HuServiceStatus>
 
 
-
-//@property (strong, nonatomic) _id *_id;
+@property (strong, nonatomic) HuOnBehalfOf *status_on_behalf_of;
+//@property (strong, nonatomic) NSNumber *flickr_id;
 @property (strong, nonatomic) NSDecimalNumber *accuracy;
 @property (strong, nonatomic) NSDecimalNumber *context;
 @property (strong, nonatomic) NSNumber *created;

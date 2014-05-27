@@ -94,7 +94,9 @@ UIImage *serviceImage;
      ,nil
      ];
     
-    serviceImage = [serviceImage resizedImageToSize:CGSizeMake(35, 35)];
+    serviceImage = [serviceImage resizedImage:CGSizeMake(34, 35) interpolationQuality:kCGInterpolationMedium];
+    
+    //serviceImage = [serviceImage resizedImageToSize:CGSizeMake(35, 35)];
 
 
     NSString *trunc;
@@ -108,7 +110,8 @@ UIImage *serviceImage;
     self.leftItems = [NSMutableArray arrayWithObjects:serviceImage, @"  ", trunc, nil];
     
     UIImage *garbage = [UIImage imageNamed:@"garbage-gray"];
-    garbage = [garbage resizedImageToSize:CGSizeMake(35, 35)];
+    //garbage = [garbage resizedImageToSize:CGSizeMake(35, 35)];
+    garbage = [garbage resizedImage:CGSizeMake(35, 35) interpolationQuality:kCGInterpolationMedium];
     __block MGLine *garbage_box = [MGLine lineWithSize:[garbage size]];
     __block HuServiceViewLine *bself = self;
     [[garbage_box leftItems]addObject:garbage];

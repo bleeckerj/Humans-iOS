@@ -12,11 +12,12 @@
 #import "HuAppDelegate.h"
 #import "HuUserHandler.h"
 #import "UIImage+Resize.h"
-#import "MGBox.h"
+//#import "MGBox.h"
 #import <MRProgress.h>
 //#import "Flurry.h"
 #import <FUIButton.h>
 #import <MRProgress.h>
+#import <MGLineStyled.h>
 
 @interface HuAuthenticateServiceWebViewController : UIViewController <UIWebViewDelegate>
 @property (nonatomic, retain) MGLineStyled *header;

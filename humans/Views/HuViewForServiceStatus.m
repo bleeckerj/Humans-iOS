@@ -16,10 +16,19 @@
 #import "HuFoursquareCheckin.h"
 #import "HuFoursquareVenue.h"
 #import "HuStatusPhotoBox.h"
-#import "defines.h"
 #import "LoggerClient.h"
 #import "UILabel+withDate.h"
+#import <BlocksKit+UIKit.h>
+#import <IDMPhotoBrowser.h>
+#import "HuInstagramHTTPSessionManager.h"
 
+#import <UIColor+FPBrandColor.h>
+#import <UIColor+Crayola.h>
+#import <UIImage+Resize.h>
+#import <Masonry.h>
+#import "JBAttributedAwareScrollView.h"
+#import <UIImageView+AFNetworking.h>
+#import <UIView+MCLayout.h>
 
 @interface HuTwitterStatusView : HuViewForServiceStatus <TTTAttributedLabelDelegate> {
     UIImageView *photoView;
@@ -45,6 +54,7 @@
     JBAttributedAwareScrollView *statusView;
     InstagramStatus *status;
     UIImageView *photoView;
+    UIViewController *parent;
 }
 
 @end
@@ -85,27 +95,27 @@ UIImageView *exView;
 }
 
 
-- (HuViewForServiceStatus *)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus
+- (HuViewForServiceStatus *)initWithFrame:(CGRect)frame forStatus:(id<HuServiceStatus>)mstatus with:(UIViewController *)mparent
 {
     HuViewForServiceStatus* hView = nil;
     
     if([mstatus isKindOfClass:[HuTwitterStatus class]]) {
         //hView = [[HuTwitterStatusView alloc]initWithFrame:frame forStatus:mstatus];
         // hView = [[HuTwitterStatusView alloc]init];
-        hView = [[HuTwitterStatusView alloc]initWithFrame:frame forStatus:mstatus];
+        hView = [[HuTwitterStatusView alloc]initWithFrame:frame forStatus:mstatus with:mparent];
         
     }
     if([mstatus isKindOfClass:[InstagramStatus class]]) {
-        hView = [[HuInstagramStatusView alloc]initWithFrame:frame forStatus:mstatus];
+        hView = [[HuInstagramStatusView alloc]initWithFrame:frame forStatus:mstatus with:mparent];
     }
     
     if([mstatus isKindOfClass:[HuFlickrStatus class]]) {
-        hView = [[HuFlickrStatusView alloc]initWithFrame:frame forStatus:mstatus];
+        hView = [[HuFlickrStatusView alloc]initWithFrame:frame forStatus:mstatus with:mparent];
     }
     
     
     if([mstatus isKindOfClass:[HuFoursquareCheckin class]]) {
-        hView = [[HuFoursquareStatusView alloc]initWithFrame:frame forStatus:mstatus];
+        hView = [[HuFoursquareStatusView alloc]initWithFrame:frame forStatus:mstatus with:mparent];
     }
     
     //LOG_GENERAL(0, @"View is %@", hView);
@@ -113,10 +123,10 @@ UIImageView *exView;
 }
 
 #pragma mark gets a view for a specific status
-+ (UIView *)viewForStatus:(id<HuServiceStatus>)mstatus withFrame:(CGRect)frame
++ (UIView *)viewForStatus:(id<HuServiceStatus>)mstatus withFrame:(CGRect)frame with:(UIViewController *)mparent
 {
     //UIView *result;
-    return[[HuViewForServiceStatus alloc]initWithFrame:frame forStatus:mstatus];
+    return[[HuViewForServiceStatus alloc]initWithFrame:frame forStatus:mstatus with:mparent];
 }
 
 
@@ -342,17 +352,17 @@ UIImageView *exView;
     return self;
 }
 
--(HuTwitterStatusView *)initWithFrame:(CGRect)frame forStatus:(HuTwitterStatus *)mstatus
+-(HuTwitterStatusView *)initWithFrame:(CGRect)frame forStatus:(HuTwitterStatus *)mstatus with:(UIViewController *)mparent
 {
     self = [super initWithFrame:frame];
     if(self) {
         status = mstatus;
-
+        
         Boolean hasStatusText = NO;
         if([status statusText] != nil) {
             hasStatusText = YES;
         }
-
+        
         
         UIView *head = [self headerForServiceStatus:mstatus];
         __block HuTwitterStatusView *bself = self;
@@ -432,7 +442,7 @@ UIImageView *exView;
             
             NSString *t = [NSString stringWithFormat:@"%@", [status statusText]];
             //[NSString stringWithFormat:@"%@ in_reply_to=%@ %@", [status statusText], [status in_reply_to_status_id], [status place] == nil ? @"nowhere" : [[status place]jsonString]];
-
+            
             LOG_DEEBUG(0, @"%@ %@", t, [status place]);
             statusView.text = t;
             statusView.backgroundColor = [UIColor whiteColor];
@@ -440,7 +450,7 @@ UIImageView *exView;
                 make.top.equalTo(head.mas_bottom).with.offset(3);
                 if([status place] == nil) {
                     make.bottom.equalTo(self.mas_bottom).with.offset(-3);
-
+                    
                 } else {
                     make.height.greaterThanOrEqualTo(@200).with.priorityMedium();
                 }
@@ -498,8 +508,8 @@ UIImageView *exView;
                 make.top.equalTo(locView.mas_top).with.offset(3);
                 make.bottom.equalTo(locView.mas_bottom).with.offset(-3);
             }];
-        
-        
+            
+            
         }
         
     }
@@ -530,16 +540,16 @@ UIImageView *exView;
 - (void)showOrRefreshPhoto
 {
     
-//    if([status containsMedia]) {
-//        
-//        [status statusImageURL];
-//        
-//        if([status statusImageURL] == nil) {
-//            LOG_TWITTER(0, @"Weird. The photo box urlStr should've been set?");
-//            //[photoBox setUrlStr:[status statusImageURL]];
-//        }
-//        
-//    }
+    //    if([status containsMedia]) {
+    //
+    //        [status statusImageURL];
+    //
+    //        if([status statusImageURL] == nil) {
+    //            LOG_TWITTER(0, @"Weird. The photo box urlStr should've been set?");
+    //            //[photoBox setUrlStr:[status statusImageURL]];
+    //        }
+    //
+    //    }
 }
 
 - (void)updateStatusView
@@ -556,21 +566,25 @@ UIImageView *exView;
     
 }
 
--(HuInstagramStatusView *)initWithFrame:(CGRect)frame forStatus:(InstagramStatus*)mstatus
+
+-(HuInstagramStatusView *)initWithFrame:(CGRect)frame forStatus:(InstagramStatus*)mstatus with:(UIViewController *)mparent
 {
     self = [super initWithFrame:frame];
     
     if(self) {
+        
         [self setBackgroundColor:[UIColor crayolaGraniteGrayColor]];
         [self.layer setCornerRadius:3.0];
         status = mstatus;
+        //[[status status_on_behalf_of]accessToken];
+        parent = mparent;
         
         Boolean hasStatusText = NO;
         if([status statusText] != nil) {
             hasStatusText = YES;
         }
-
-
+        
+        
         
         __block HuViewForServiceStatus *bself = self;
         InstagramLocation *loc = [status location];
@@ -584,6 +598,38 @@ UIImageView *exView;
         [photoView setContentMode:(UIViewContentModeScaleAspectFit)];
         [photoView setClipsToBounds:YES];
         [photoView.layer setCornerRadius:5.0];
+        [photoView setUserInteractionEnabled:YES];
+        
+        UITapGestureRecognizer *singleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            LOG_UI(0, @"Single tap.");
+        } delay:0.18];
+        [photoView addGestureRecognizer:singleTap];
+        
+        UITapGestureRecognizer *doubleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            [singleTap bk_cancel];
+            LOG_UI(0, @"Double tap.");
+//            [[HuInstagramHTTPSessionManager sharedInstagramClient]like:status];
+//            [[HuInstagramHTTPSessionManager sharedInstagramClient]like:status];
+        }];
+        doubleTap.numberOfTapsRequired = 2;
+        [photoView addGestureRecognizer:doubleTap];
+        
+        __block UIImageView *bphotoView = photoView;
+        
+        
+        //        UILongPressGestureRecognizer *longPress = [UILongPressGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        //            if(state == UIGestureRecognizerStateBegan) {
+        //                LOG_UI(0, @"Long Press.");
+        //
+        //            IDMPhoto *idmphoto = [IDMPhoto photoWithImage:bphotoView.image];
+        //
+        //            NSArray *photo = @[idmphoto];
+        //            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photo];
+        //            [parent presentViewController:browser animated:NO completion:nil];
+        //            }
+        //
+        //        }];
+        //        [photoView addGestureRecognizer:longPress];
         
         [photoView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
         [photoView setBackgroundColor:[UIColor crayolaManateeColor]];
@@ -609,7 +655,6 @@ UIImageView *exView;
         
         
         
-        __block UIImageView *bphotoView = photoView;
         
         [photoView setImageWithURL:[NSURL URLWithString:[mstatus statusImageURL]] placeholderImage:[UIImage imageNamed:@"BoozyBear"] options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if(error == nil) {
@@ -650,46 +695,46 @@ UIImageView *exView;
         }];
         
         if(hasStatusText == YES || [[status type]isEqualToString:@"video"]) {
-        statusView = JBAttributedAwareScrollView.new;
-        
-        
-        [self addSubview:statusView];
-        
-        [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(photoView.mas_bottom).with.offset(3);
-            make.left.equalTo(head.mas_left);
-            make.right.equalTo(head.mas_right);
-            if(loc == nil) {
-                make.bottom.equalTo(self.mas_bottom).with.offset(-3);
-            } else {
-                //if(hasStatusText == YES || [[status type] isEqualToString:@"video"]) {
+            statusView = JBAttributedAwareScrollView.new;
+            
+            
+            [self addSubview:statusView];
+            
+            [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(photoView.mas_bottom).with.offset(3);
+                make.left.equalTo(head.mas_left);
+                make.right.equalTo(head.mas_right);
+                if(loc == nil) {
+                    make.bottom.equalTo(self.mas_bottom).with.offset(-3);
+                } else {
+                    //if(hasStatusText == YES || [[status type] isEqualToString:@"video"]) {
                     make.height.greaterThanOrEqualTo(@100).with.priorityMedium();
-                //}
-            }
-        }];
-        [statusView setFrame:CGRectZero];
-        [[statusView layer]setCornerRadius:5.0];
-        statusView.backgroundColor = [UIColor whiteColor];//[UIColor colorWithRed:186.0/255.0 green:187.0/255.0 blue:188.0/255.0 alpha:1.0];
-        
-        statusView.label.delegate = self;
-        [statusView setFont:INSTAGRAM_FONT];
-        [statusView setTextColor:[UIColor blackColor]];
-        
-        NSString *description;
-        
-        if([status statusText] != nil) {
+                    //}
+                }
+            }];
+            [statusView setFrame:CGRectZero];
+            [[statusView layer]setCornerRadius:5.0];
+            statusView.backgroundColor = [UIColor whiteColor];//[UIColor colorWithRed:186.0/255.0 green:187.0/255.0 blue:188.0/255.0 alpha:1.0];
             
-            if([[status type] isEqualToString:@"video"]) {
-                description = [NSString stringWithFormat:@"(video soon) %@", [status statusText]];
+            statusView.label.delegate = self;
+            [statusView setFont:INSTAGRAM_FONT];
+            [statusView setTextColor:[UIColor blackColor]];
+            
+            NSString *description;
+            
+            if([status statusText] != nil) {
+                
+                if([[status type] isEqualToString:@"video"]) {
+                    description = [NSString stringWithFormat:@"(video soon) %@", [status statusText]];
+                } else {
+                    description = [NSString stringWithFormat:@"%@",[status statusText]];
+                }
+                statusView.text = description;
             } else {
-                description = [NSString stringWithFormat:@"%@",[status statusText]];
+                statusView.text = @"";
             }
-            statusView.text = description;
-        } else {
-            statusView.text = @"";
         }
-        }
-            
+        
         if(loc != nil) {
             UIView *locView = UIView.new;
             [self addSubview:locView];
@@ -713,7 +758,7 @@ UIImageView *exView;
             
             [locView mas_makeConstraints:^(MASConstraintMaker *make) {
                 if(hasStatusText == YES) {
-                make.top.equalTo(statusView.mas_bottom).offset(3);
+                    make.top.equalTo(statusView.mas_bottom).offset(3);
                 } else {
                     make.top.equalTo(photoView.mas_bottom).offset(3);
                 }
@@ -762,7 +807,7 @@ UIImageView *exView;
 @class CALayer;
 
 
--(id)initWithFrame:(CGRect)frame forStatus:(HuFlickrStatus*)mstatus
+-(id)initWithFrame:(CGRect)frame forStatus:(HuFlickrStatus*)mstatus with:(UIViewController *)mparent
 {
     
     

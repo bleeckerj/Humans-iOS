@@ -1,11 +1,12 @@
 #import <LoggerClient.h>
 #import <Parse/Parse.h>
-#import "lelib.h"
+//#import "lelib.h"
+#import <lelib.h>
 
 //#import "Flurry.h"
 
 #pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
-#undef DEV
+#define DEV
 
 
 #define IMAGEDEBUG

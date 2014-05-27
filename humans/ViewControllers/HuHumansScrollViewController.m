@@ -283,7 +283,8 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
             //
             UIImage *profile_image = [human largestServiceUserProfileImage];
             
-            profile_image = [profile_image resizedImageToFitInSize:CGSizeMake(110,110) scaleIfSmaller:YES];
+            profile_image = [profile_image resizedImage:CGSizeMake(110, 110) interpolationQuality:kCGInterpolationHigh];
+            //profile_image = [profile_image resizedImageToFitInSize:CGSizeMake(110,110) scaleIfSmaller:YES];
             
             UIImageView *profile_iv = [[UIImageView alloc]initWithImage:profile_image];
             CALayer *maskLayer = [CALayer layer];

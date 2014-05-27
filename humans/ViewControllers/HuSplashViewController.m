@@ -118,7 +118,9 @@
 
 #endif
 #endif
-    [buildLabel setSize:CGSizeMake(self.view.size.width, 40)];
+//    [buildLabel setSize:CGSizeMake(40, 40)];
+//
+//    [buildLabel setSize:CGSizeMake(self.view.size.width, 40)];
     [buildLabel mc_setPosition:MCViewPositionBottomHCenter inView:self.view];
     
     NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"start" : CLUSTERED_EDITION};
