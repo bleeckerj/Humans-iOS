@@ -131,9 +131,9 @@
 		B9578B5418BE9F8A002E6BD9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A6E18B7FD7100A9E918 /* MobileCoreServices.framework */; };
 		B9578B5518BE9F8F002E6BD9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9910A7018B7FD8700A9E918 /* QuartzCore.framework */; };
 		B9578B5618BE9F95002E6BD9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F517AB185BC4E20083CA36 /* StoreKit.framework */; };
-		B96A29F118F8D396006459D6 /* JBAttributedAwareTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A29F018F8D396006459D6 /* JBAttributedAwareTextView.m */; };
 		B96EF1B118C191C7001E2B5A /* HuEditHumanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96EF1B018C191C7001E2B5A /* HuEditHumanViewController.m */; };
-		B980D59F18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B980D59E18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m */; };
+		B970C28E19367AAC00557855 /* HeartHeart.png in Resources */ = {isa = PBXBuildFile; fileRef = B970C28D19367AAC00557855 /* HeartHeart.png */; };
+		B970C29119367C3D00557855 /* HuTwitterServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B970C29019367C3D00557855 /* HuTwitterServiceManager.m */; };
 		B987BE5F18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */; };
 		B987BE6218DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE6118DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m */; };
 		B98A489E1928679700065484 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98A489D1928679700065484 /* Parse.framework */; };
@@ -157,6 +157,8 @@
 		B99E017D18604B0400E70892 /* HuUserHandlerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E017C18604B0400E70892 /* HuUserHandlerTest.m */; };
 		B99E019618619A0500E70892 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F51778185BC4930083CA36 /* CoreGraphics.framework */; };
 		B99E01991862AEEB00E70892 /* HuLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E01981862AEEB00E70892 /* HuLoginViewController.m */; };
+		B99F8E5919327D05008F20B0 /* HuFlickrHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B99F8E5819327D05008F20B0 /* HuFlickrHTTPSessionManager.m */; };
+		B99F8E5C19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B99F8E5B19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m */; };
 		B9AC5EC118A9E07900BEE77C /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AC5EC018A9E07900BEE77C /* libFlurry_4.3.2.a */; };
 		B9AC5EC518AA15FD00BEE77C /* foursquare-icon-16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */; };
 		B9AC5EC618AA15FD00BEE77C /* foursquare-icon-gray-16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */; };
@@ -198,12 +200,6 @@
 		B9C2C282187BBA6E00F1DF47 /* HuServiceUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */; };
 		B9C2C28B187C619A00F1DF47 /* HuTwitterStatusTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */; };
 		B9C61BD318D3DB1000E1822B /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C61BD218D3DB1000E1822B /* CoreText.framework */; };
-		B9C6C8E118FB681200CA129F /* LEBackgroundThread.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C6C8D418FB681200CA129F /* LEBackgroundThread.m */; };
-		B9C6C8E218FB681200CA129F /* lecore.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C6C8D618FB681200CA129F /* lecore.m */; };
-		B9C6C8E318FB681200CA129F /* LELog.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C6C8DA18FB681200CA129F /* LELog.m */; };
-		B9C6C8E418FB681200CA129F /* LeNetworkStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C6C8DC18FB681200CA129F /* LeNetworkStatus.m */; };
-		B9C6C8E518FB681200CA129F /* LogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C6C8DE18FB681200CA129F /* LogFile.m */; };
-		B9C6C8E618FB681200CA129F /* LogFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C6C8E018FB681200CA129F /* LogFiles.m */; };
 		B9C6C8E818FB6BAE00CA129F /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C6C8E718FB6BAE00CA129F /* AdSupport.framework */; };
 		B9D29F9818A4D1EF000D94EA /* fontawesome-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */; };
 		B9D2B83D18B2831D00A963BD /* HuHumansProfileCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D2B83C18B2831D00A963BD /* HuHumansProfileCarouselViewController.m */; };
@@ -402,10 +398,11 @@
 		B96A29F018F8D396006459D6 /* JBAttributedAwareTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JBAttributedAwareTextView.m; path = ../../../JBAttributedAwareTextView/JBAttributedAwareTextView/JBAttributedAwareTextView.m; sourceTree = "<group>"; };
 		B96EF1AF18C191C7001E2B5A /* HuEditHumanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuEditHumanViewController.h; sourceTree = "<group>"; };
 		B96EF1B018C191C7001E2B5A /* HuEditHumanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuEditHumanViewController.m; sourceTree = "<group>"; };
+		B970C28D19367AAC00557855 /* HeartHeart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HeartHeart.png; sourceTree = "<group>"; };
+		B970C28F19367C3D00557855 /* HuTwitterServiceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuTwitterServiceManager.h; sourceTree = "<group>"; };
+		B970C29019367C3D00557855 /* HuTwitterServiceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuTwitterServiceManager.m; sourceTree = "<group>"; };
 		B9787924186360A900D72288 /* XCTestCase+AsyncTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "XCTestCase+AsyncTesting.h"; path = "../humans/Supporting/XCTestCase+AsyncTesting.h"; sourceTree = "<group>"; };
 		B9787925186360A900D72288 /* XCTestCase+AsyncTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "XCTestCase+AsyncTesting.m"; path = "../humans/Supporting/XCTestCase+AsyncTesting.m"; sourceTree = "<group>"; };
-		B980D59D18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuFlickrHTTPSessionManager.h; path = Clients/HuFlickrHTTPSessionManager.h; sourceTree = "<group>"; };
-		B980D59E18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuFlickrHTTPSessionManager.m; path = Clients/HuFlickrHTTPSessionManager.m; sourceTree = "<group>"; };
 		B987BE5D18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuUS2ConditionLowerAlphaEmotis.h; path = Supporting/US2Conditions/HuUS2ConditionLowerAlphaEmotis.h; sourceTree = "<group>"; };
 		B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUS2ConditionLowerAlphaEmotis.m; path = Supporting/US2Conditions/HuUS2ConditionLowerAlphaEmotis.m; sourceTree = "<group>"; };
 		B987BE6018DEB1D800499034 /* HuUS2ConditionEmojiStringRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuUS2ConditionEmojiStringRange.h; path = Supporting/US2Conditions/HuUS2ConditionEmojiStringRange.h; sourceTree = "<group>"; };
@@ -441,6 +438,10 @@
 		B99E017C18604B0400E70892 /* HuUserHandlerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUserHandlerTest.m; path = ../HuUserHandlerTest.m; sourceTree = "<group>"; };
 		B99E01971862AEEB00E70892 /* HuLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuLoginViewController.h; sourceTree = "<group>"; };
 		B99E01981862AEEB00E70892 /* HuLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuLoginViewController.m; sourceTree = "<group>"; };
+		B99F8E5719327D05008F20B0 /* HuFlickrHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFlickrHTTPSessionManager.h; sourceTree = "<group>"; };
+		B99F8E5819327D05008F20B0 /* HuFlickrHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFlickrHTTPSessionManager.m; sourceTree = "<group>"; };
+		B99F8E5A19327D5D008F20B0 /* HuInstagramHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuInstagramHTTPSessionManager.h; sourceTree = "<group>"; };
+		B99F8E5B19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuInstagramHTTPSessionManager.m; sourceTree = "<group>"; };
 		B9AC5EC018A9E07900BEE77C /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
 		B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-16x16.png"; sourceTree = "<group>"; };
 		B9AC5EC318AA15FD00BEE77C /* foursquare-icon-gray-16x16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-gray-16x16.png"; sourceTree = "<group>"; };
@@ -517,20 +518,6 @@
 		B9C2C280187BBA6E00F1DF47 /* HuServiceUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuServiceUserTest.m; sourceTree = "<group>"; };
 		B9C2C28A187C619A00F1DF47 /* HuTwitterStatusTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuTwitterStatusTest.m; sourceTree = "<group>"; };
 		B9C61BD218D3DB1000E1822B /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		B9C6C8D318FB681200CA129F /* LEBackgroundThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEBackgroundThread.h; sourceTree = "<group>"; };
-		B9C6C8D418FB681200CA129F /* LEBackgroundThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEBackgroundThread.m; sourceTree = "<group>"; };
-		B9C6C8D518FB681200CA129F /* lecore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lecore.h; sourceTree = "<group>"; };
-		B9C6C8D618FB681200CA129F /* lecore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = lecore.m; sourceTree = "<group>"; };
-		B9C6C8D718FB681200CA129F /* lelib-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "lelib-Prefix.pch"; sourceTree = "<group>"; };
-		B9C6C8D818FB681200CA129F /* lelib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lelib.h; sourceTree = "<group>"; };
-		B9C6C8D918FB681200CA129F /* LELog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LELog.h; sourceTree = "<group>"; };
-		B9C6C8DA18FB681200CA129F /* LELog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LELog.m; sourceTree = "<group>"; };
-		B9C6C8DB18FB681200CA129F /* LeNetworkStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeNetworkStatus.h; sourceTree = "<group>"; };
-		B9C6C8DC18FB681200CA129F /* LeNetworkStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeNetworkStatus.m; sourceTree = "<group>"; };
-		B9C6C8DD18FB681200CA129F /* LogFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogFile.h; sourceTree = "<group>"; };
-		B9C6C8DE18FB681200CA129F /* LogFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogFile.m; sourceTree = "<group>"; };
-		B9C6C8DF18FB681200CA129F /* LogFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogFiles.h; sourceTree = "<group>"; };
-		B9C6C8E018FB681200CA129F /* LogFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogFiles.m; sourceTree = "<group>"; };
 		B9C6C8E718FB6BAE00CA129F /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		B9D29F9718A4D1EF000D94EA /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
 		B9D2B83B18B2831D00A963BD /* HuHumansProfileCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuHumansProfileCarouselViewController.h; sourceTree = "<group>"; };
@@ -692,6 +679,7 @@
 		B91BE6DA18A29B9600D6E171 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				B970C28D19367AAC00557855 /* HeartHeart.png */,
 				B9182A3F18DFCCF700B32D6B /* Humans-iPhone@2x.png */,
 				B9182A3D18DFCCD100B32D6B /* Humans-iPhone.png */,
 				B911EDB418DAB66200A5C2D0 /* BoozyBear.png */,
@@ -941,12 +929,25 @@
 		B99E016C1860042700E70892 /* Client */ = {
 			isa = PBXGroup;
 			children = (
-				B980D59D18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.h */,
-				B980D59E18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m */,
+				B99F8E5619327D05008F20B0 /* Service Clients */,
 				B99E016D1860044400E70892 /* HuHumansHTTPSessionManager.h */,
 				B99E016E1860044400E70892 /* HuHumansHTTPSessionManager.m */,
 			);
 			name = Client;
+			sourceTree = "<group>";
+		};
+		B99F8E5619327D05008F20B0 /* Service Clients */ = {
+			isa = PBXGroup;
+			children = (
+				B99F8E5719327D05008F20B0 /* HuFlickrHTTPSessionManager.h */,
+				B99F8E5819327D05008F20B0 /* HuFlickrHTTPSessionManager.m */,
+				B99F8E5A19327D5D008F20B0 /* HuInstagramHTTPSessionManager.h */,
+				B99F8E5B19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m */,
+				B970C28F19367C3D00557855 /* HuTwitterServiceManager.h */,
+				B970C29019367C3D00557855 /* HuTwitterServiceManager.m */,
+			);
+			name = "Service Clients";
+			path = "Clients/Service Clients";
 			sourceTree = "<group>";
 		};
 		B9C2C209187BB65700F1DF47 /* Entities */ = {
@@ -1087,28 +1088,6 @@
 			name = Twitter;
 			sourceTree = "<group>";
 		};
-		B9C6C8D218FB681200CA129F /* lelib */ = {
-			isa = PBXGroup;
-			children = (
-				B9C6C8D318FB681200CA129F /* LEBackgroundThread.h */,
-				B9C6C8D418FB681200CA129F /* LEBackgroundThread.m */,
-				B9C6C8D518FB681200CA129F /* lecore.h */,
-				B9C6C8D618FB681200CA129F /* lecore.m */,
-				B9C6C8D718FB681200CA129F /* lelib-Prefix.pch */,
-				B9C6C8D818FB681200CA129F /* lelib.h */,
-				B9C6C8D918FB681200CA129F /* LELog.h */,
-				B9C6C8DA18FB681200CA129F /* LELog.m */,
-				B9C6C8DB18FB681200CA129F /* LeNetworkStatus.h */,
-				B9C6C8DC18FB681200CA129F /* LeNetworkStatus.m */,
-				B9C6C8DD18FB681200CA129F /* LogFile.h */,
-				B9C6C8DE18FB681200CA129F /* LogFile.m */,
-				B9C6C8DF18FB681200CA129F /* LogFiles.h */,
-				B9C6C8E018FB681200CA129F /* LogFiles.m */,
-			);
-			name = lelib;
-			path = ../../../le_ios/lelib;
-			sourceTree = "<group>";
-		};
 		B9F26E3318F6E89600B25D52 /* HockeySDK.embeddedframework */ = {
 			isa = PBXGroup;
 			children = (
@@ -1199,7 +1178,6 @@
 		B9F5177D185BC4930083CA36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B9C6C8D218FB681200CA129F /* lelib */,
 				B987BE5918DE8FF500499034 /* US2Conditions */,
 				B9178A0C18C179A500058E1A /* Vendor */,
 				B91BE75F18A29EFD00D6E171 /* Flurry */,
@@ -1420,6 +1398,7 @@
 				B91BE71F18A29B9600D6E171 /* Default.png in Resources */,
 				B91BE73718A29B9600D6E171 /* checkbox-unchecked.png in Resources */,
 				B91BE72318A29B9600D6E171 /* HumanAppIcon29pt.png in Resources */,
+				B970C28E19367AAC00557855 /* HeartHeart.png in Resources */,
 				B91BE73818A29B9600D6E171 /* checkmark-gray.png in Resources */,
 				B91BE71718A29B9600D6E171 /* CREAMPUF.TTF in Resources */,
 				B9087BB618D5464A003507A4 /* hublankbackground@2x.png in Resources */,
@@ -1576,7 +1555,6 @@
 				B9C2C262187BB6E100F1DF47 /* InstagramCommenter.m in Sources */,
 				B99657D21867FDA800C4AB01 /* HuStatusPhotoBox.m in Sources */,
 				B9C2C26E187BB6E100F1DF47 /* HuTwitterCoordinates.m in Sources */,
-				B9C6C8E118FB681200CA129F /* LEBackgroundThread.m in Sources */,
 				B919BD2F18CD33C9005217F3 /* HuFoursquareUserPhoto.m in Sources */,
 				B9C2C218187BB65700F1DF47 /* HuOnBehalfOf.m in Sources */,
 				B99657D31867FDA800C4AB01 /* HuTextFieldLine.m in Sources */,
@@ -1599,7 +1577,6 @@
 				B99657CF1867FDA800C4AB01 /* DateyMGStyledBox.m in Sources */,
 				B987BE5F18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m in Sources */,
 				B9F646AE186766D0008EB970 /* HuHumanMGLine.m in Sources */,
-				B9C6C8E318FB681200CA129F /* LELog.m in Sources */,
 				B9C2C266187BB6E100F1DF47 /* InstagramImages.m in Sources */,
 				B9C2C261187BB6E100F1DF47 /* InstagramCaption.m in Sources */,
 				B944BB3A1896F06500015B10 /* HuFoursquareLocation.m in Sources */,
@@ -1611,19 +1588,17 @@
 				B91D2DC1190E269500D20D17 /* JBAttributedAwareScrollView.m in Sources */,
 				B944BB3B1896F06500015B10 /* HuFoursquareSource.m in Sources */,
 				B99657D41867FDA800C4AB01 /* HuTwitterStatus_Box.m in Sources */,
-				B9C6C8E518FB681200CA129F /* LogFile.m in Sources */,
-				B96A29F118F8D396006459D6 /* JBAttributedAwareTextView.m in Sources */,
 				B9C2C217187BB65700F1DF47 /* HuHuman.m in Sources */,
 				B944BB3D1896F06500015B10 /* HuFoursquareVenue.m in Sources */,
 				B9C2C271187BB6E100F1DF47 /* HuTwitterEntitiesURL.m in Sources */,
 				B9C2C26B187BB6E100F1DF47 /* TransientInstagramUser.m in Sources */,
 				B9161902186803050010A34F /* UIImage+Alpha.m in Sources */,
 				B99657D61867FDA800C4AB01 /* SwipeAwayMGLineStyled.m in Sources */,
-				B9C6C8E218FB681200CA129F /* lecore.m in Sources */,
+				B970C29119367C3D00557855 /* HuTwitterServiceManager.m in Sources */,
+				B99F8E5919327D05008F20B0 /* HuFlickrHTTPSessionManager.m in Sources */,
 				B9F51783185BC4930083CA36 /* main.m in Sources */,
 				B9C2C275187BB6E100F1DF47 /* HuTwitterStatus.m in Sources */,
 				B9C2C273187BB6E100F1DF47 /* HuTwitterMediaSize.m in Sources */,
-				B9C6C8E418FB681200CA129F /* LeNetworkStatus.m in Sources */,
 				B9F646A4186572FF008EB970 /* HuHumansScrollViewController.m in Sources */,
 				B944BB391896F06500015B10 /* HuFoursquareContact.m in Sources */,
 				B9C2C270187BB6E100F1DF47 /* HuTwitterEntitiesSymbols.m in Sources */,
@@ -1654,7 +1629,6 @@
 				B9C2C274187BB6E100F1DF47 /* HuTwitterPlace.m in Sources */,
 				B9161904186803050010A34F /* UIImage+ResizeToFit.m in Sources */,
 				B92400C0185C12FA00A10410 /* HuSplashViewController.m in Sources */,
-				B980D59F18EA344B00BF1E40 /* HuFlickrHTTPSessionManager.m in Sources */,
 				B94FAEE718A6F80600EA4463 /* HuShowServicesViewController.m in Sources */,
 				B99E016F1860044400E70892 /* HuHumansHTTPSessionManager.m in Sources */,
 				B944BB421896FE5500015B10 /* HuFoursquareVenueIcon.m in Sources */,
@@ -1666,9 +1640,9 @@
 				B908171D18A8A2480019AC23 /* HuAuthenticateServiceWebViewController.m in Sources */,
 				B9FEA8C718C266AC005C5B40 /* HuAddDeleteServiceUserCarouselViewController.m in Sources */,
 				B9374658188CCF920037A95C /* HuProfilePhotoBlank.m in Sources */,
+				B99F8E5C19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m in Sources */,
 				B937465B188CD0910037A95C /* HuServiceUserProfilePhoto.m in Sources */,
 				B99657D51867FDA800C4AB01 /* PhotoBox.m in Sources */,
-				B9C6C8E618FB681200CA129F /* LogFiles.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1803,8 +1777,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Julian Bleecker (93F8G7B58C)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Julian Bleecker (93F8G7B58C)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/humans/HockeySDK-iOS/HockeySDK.embeddedframework",
@@ -1856,7 +1830,7 @@
 					Reveal,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "98E76A51-98A0-4DF4-A6C6-6FE86914E4A5";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1867,8 +1841,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Julian Bleecker (9DCTLJ9BY7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Julian Bleecker (9DCTLJ9BY7)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/humans/HockeySDK-iOS/HockeySDK.embeddedframework",
@@ -1919,7 +1893,7 @@
 					Reveal,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "98E76A51-98A0-4DF4-A6C6-6FE86914E4A5";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

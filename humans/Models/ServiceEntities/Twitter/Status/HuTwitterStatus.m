@@ -98,7 +98,7 @@
 		self.created = created_;
 	}
 
-	id tweet_id_ = [dic objectForKey:@"tweet_id"];
+	id tweet_id_ = [dic objectForKey:@"id"];
 	if([tweet_id_ isKindOfClass:[NSNumber class]])
 	{
 		self.tweet_id = tweet_id_;

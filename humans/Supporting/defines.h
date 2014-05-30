@@ -6,7 +6,7 @@
 //#import "Flurry.h"
 
 #pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
-#define DEV
+#undef DEV
 
 
 #define IMAGEDEBUG

@@ -61,6 +61,9 @@ typedef enum networkStateTypes
 + (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionhandler;
 
+- (void)updateInstagramMediaByID:(NSString *)mediaID for:(NSString*)username;
+
+
 
 - (NSMutableDictionary *)getAuthForService:(HuOnBehalfOf *)onBehalfOf;
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler;

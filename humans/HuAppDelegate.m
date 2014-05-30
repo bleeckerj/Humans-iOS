@@ -189,6 +189,99 @@
     
 }
 
++ (void)popGoodToastNotification:(NSString *)notice withColor:(UIColor *)color withImage:(UIImage *)image
+{
+    [CRToastManager dismissNotification:YES];
+    
+    NSDictionary *options = @{
+                              kCRToastTextKey :notice,
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : [UIColor Garmin],
+                              kCRToastFontKey : HEADER_FONT_LARGE,
+                              //kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypeCover),
+                              kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypePush),
+                              kCRToastImageKey : image,
+                              kCRToastAnimationInTimeIntervalKey: @0.5,
+                              //kCRToastAnimationOutTimeIntervalKey: @0.5,
+                              kCRToastTimeIntervalKey : @0.5,
+                              kCRToastUnderStatusBarKey : @NO,
+                              kCRToastNotificationPreferredHeightKey : @HEADER_HEIGHT,
+                              kCRToastNotificationTypeKey : @(CRToastTypeCustom),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop)
+                              };
+    
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
+
+}
+
+
++ (void)popGoodToastNotification:(NSString *)notice withColor:(UIColor *)color
+{
+    
+    [CRToastManager dismissNotification:YES];
+    
+    NSDictionary *options = @{
+                              kCRToastTextKey :notice,
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : color,
+                              kCRToastFontKey : HEADER_FONT_LARGE,
+                              //kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypeCover),
+                              kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypePush),
+                              kCRToastAnimationInTimeIntervalKey: @0.5,
+                              //kCRToastAnimationOutTimeIntervalKey: @0.5,
+                              kCRToastTimeIntervalKey : @1,
+                              kCRToastUnderStatusBarKey : @NO,
+                              kCRToastNotificationPreferredHeightKey : @HEADER_HEIGHT,
+                              kCRToastNotificationTypeKey : @(CRToastTypeCustom),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop)
+                              };
+    
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
+}
+
++ (void)popBadToastNotification:(NSString *)notice withSubnotice:(NSString *)subnotice
+{
+    [CRToastManager dismissNotification:YES];
+    
+    NSDictionary *options = @{
+                              kCRToastTextKey :notice,
+                              kCRToastSubtitleTextKey : subnotice,
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : [UIColor crayolaManateeColor],
+                              kCRToastFontKey : HEADER_FONT_LARGE,
+                              kCRToastSubtitleFontKey : HEADER_FONT,
+                              kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypePush),
+                              kCRToastAnimationInTimeIntervalKey: @0.5,
+                              kCRToastAnimationOutTimeIntervalKey: @0.5,
+                              kCRToastTimeIntervalKey : @3,
+                              kCRToastUnderStatusBarKey : @NO,
+                              kCRToastNotificationPreferredHeightKey : @HEADER_HEIGHT,
+                              kCRToastNotificationTypeKey : @(CRToastTypeCustom),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop)
+                              };
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
+    
+}
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

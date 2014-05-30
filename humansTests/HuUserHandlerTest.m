@@ -36,7 +36,7 @@ HuUserHandler *user_handler;
     [super setUp];
     ASYNC_TEST_START
     user_handler = [[HuUserHandler alloc]init];
-    [user_handler userRequestTokenForUsername:@"fabien" forPassword:@"fabien" withCompletionHandler:^(BOOL success, NSError *error) {
+    [user_handler userRequestTokenForUsername:@"darthjulian" forPassword:@"darthjulian" withCompletionHandler:^(BOOL success, NSError *error) {
         ASYNC_DONE
         
     }];
@@ -49,6 +49,25 @@ HuUserHandler *user_handler;
     [super tearDown];
 }
 
+
+- (void)test_getAuthForServices
+{
+    ASYNC_START
+    HuUser *user = [user_handler humans_user];
+    [[user services]each:^(id object) {
+        //
+        LOG_DEEBUG(0, @"%@", object);
+        HuOnBehalfOf *equivalent = HuOnBehalfOf.new;
+        [equivalent setServiceUsername:[object serviceUsername]];
+        [equivalent setServiceUserID:[object serviceUserID]];
+        [equivalent setServiceName:[object serviceName]];
+
+        [user_handler getAuthForService:equivalent];
+    }];
+    ASYNC_TEST_DONE
+    
+    ASYNC_TEST_END_LONG_TIMEOUT
+}
 
 - (void)test_parseCreateNewUser
 {

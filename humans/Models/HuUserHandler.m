@@ -669,8 +669,13 @@ NSDateFormatter *twitter_formatter;
     
     queryParams = @{@"humanid": humanid, @"page":page};
     
+    NSDate *methodStart = [NSDate date];
+    LOG_NETWORK(1, @"start status fetch %@", methodStart);
     [huRequestOperationManager GET:@"/rest/human/status" parameters:queryParams success:^(NSURLSessionDataTask *task, id responseObject) {
-        //[[self statusForHumanId] setObject:[responseObject objectForKey:@"status"] forKey:[aHuman humanid]];
+        NSDate *methodFinish = [NSDate date];
+        NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+        LOG_NETWORK(1, @"status fetch executionTime = %f", executionTime);
+        
         [self setLastStatusResultHeader:[responseObject objectForKey:@"head"]];
         
         NSArray *sent_status = [responseObject objectForKey:@"status"];
@@ -678,12 +683,24 @@ NSDateFormatter *twitter_formatter;
         [sent_status each:^(id object) {
             if([[object valueForKey:@"service"] isEqualToString:@"flickr"]) {
                 HuFlickrStatus *status = [[HuFlickrStatus alloc]initWithJSONDictionary:object];
+                
+                HuOnBehalfOf *onBehalfOf = [aHuman getOnBehalfOfForServiceUserWithServiceUserID:[status owner] withServiceName:@"flickr" withServiceUsername:[status ownername]];
+                
+                [status setStatus_on_behalf_of:onBehalfOf];
+
+                
                 [saved_status addObject:status];
                 //LOG_FLICKR(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
             }
             if([[object valueForKey:@"service"] isEqualToString:@"instagram"]) {
-//                InstagramStatus *status = [[InstagramStatus alloc]initWithJSONDictionary:object];
-//                [saved_status addObject:status];
+                InstagramStatus *status = [[InstagramStatus alloc]initWithJSONDictionary:object];
+                InstagramUser *user = [status user];
+                
+                HuOnBehalfOf *onBehalfOf = [aHuman getOnBehalfOfForServiceUserWithServiceUserID:[user id] withServiceName:@"instagram" withServiceUsername:[user username]];
+                
+                [status setStatus_on_behalf_of:onBehalfOf];
+                
+                [saved_status addObject:status];
                 //LOG_INSTAGRAM(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
 //                HuInstagramHTTPSessionManager *mgr = [HuInstagramHTTPSessionManager sharedInstagramClient];
 //                NSDictionary *stuff = [self getAuthForService:[status status_on_behalf_of]];
@@ -694,6 +711,12 @@ NSDateFormatter *twitter_formatter;
             }
             if([[object valueForKey:@"service"] isEqualToString:@"twitter"]) {
                 HuTwitterStatus *status = [[HuTwitterStatus alloc]initWithJSONDictionary:object];
+                HuTwitterUser *user = [status user];
+                HuOnBehalfOf *onBehalfOf = [aHuman getOnBehalfOfForServiceUserWithServiceUserID:[user id_str] withServiceName:@"twitter" withServiceUsername:[user screen_name]];
+                
+                [status setStatus_on_behalf_of:onBehalfOf];
+
+                
                 [saved_status addObject:status];
                 //LOG_TWITTER(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
 
@@ -788,6 +811,20 @@ NSDateFormatter *twitter_formatter;
     }];
 }
 
+
+// Make an API call to kick of an update of a specific Instagram media id on behalf of an Instagram username
+- (void)updateInstagramMediaByID:(NSString *)mediaID for:(NSString*)username
+{
+    NSString *url = $str(@"rest/user/getty/update/instagram/%@/status/%@", username, mediaID);
+    [huRequestOperationManager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        //
+        LOG_NETWORK(0, @"%@", responseObject);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        //
+        LOG_NETWORK(0, @"%@", error);
+    }];
+}
+
 #pragma mark access token crap for a specific service. name the service and get the authentication parcel
 
 - (NSMutableDictionary *)getAuthForService:(HuOnBehalfOf *)onBehalfOf
@@ -802,6 +839,9 @@ NSDateFormatter *twitter_formatter;
     
     if(result == NULL) {
         result = NSMutableDictionary.new;
+        // too bad..maybe we lost something??
+        // try to reload this thing..
+        [self getAuthForServicesWithCompletionHandler:nil];
     }
     
     return result;
@@ -809,6 +849,7 @@ NSDateFormatter *twitter_formatter;
 
 
 //TODO Ugh..
+// the key is
 - (void)getAuthForServicesWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     __block HuUserHandler *bself = self;
@@ -818,6 +859,7 @@ NSDateFormatter *twitter_formatter;
     [[humans_user services] each:^(id object) {
         [self getAuthForService:object with:^(id data, BOOL success, NSError *error) {
             //
+            //LOG_GENERAL(0, @"getAuthForServicesWithCompletionHandler %@ %@", data, object);
             [bself.authForServices setObject:data forKey:object];
         }];
     }];
@@ -830,7 +872,7 @@ NSDateFormatter *twitter_formatter;
 
 
 // given a HuService this will try and get the access token particulars for that service + user
-
+// @"consumer_key", consumer_secret, @"consumer_secret", token_key, @"token_key", token_secret, @"token_secret"
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler
 {
     
@@ -901,7 +943,7 @@ NSDateFormatter *twitter_formatter;
             if(completionHandler) {
                 completionHandler(result, YES, nil);
             }
-            LOG_GENERAL(0, @"What we got..%@", result);
+            //LOG_GENERAL(0, @"What we got..%@", result);
         }
         @catch (NSException *ne) {
             NSString *username = [humans_user username]!=nil ? [humans_user username] : @"nil";

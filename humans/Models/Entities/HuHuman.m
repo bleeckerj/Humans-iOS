@@ -10,6 +10,8 @@
 #import "SBJson4Writer.h"
 //#import <AFNetworking/AFNetworking.h>
 #import <UIImageView+AFNetworking.h>
+#import <ObjectiveSugar.h>
+#import <Objective-Shorthand.h>
 
 @implementation HuHuman
 
@@ -193,6 +195,32 @@
             [result addObject:[s imageURL]];
         }
     }
+    return result;
+}
+
+
+- (HuOnBehalfOf *)getOnBehalfOfForServiceUserWithServiceUserID:(NSString *)serviceUserID withServiceName:(NSString *)serviceName withServiceUsername:(NSString *)serviceUsername
+{
+//    HuServiceUser *x = HuServiceUser.new;
+//    [x setServiceName:serviceName];
+//    [x setServiceUserID:serviceUserID];
+//    [x setUsername:serviceUsername];
+    //LOG_GENERAL(0, @"%@", self.serviceUsers);
+    NSArray *items = [self.serviceUsers select:^BOOL(id object) {
+        if(([[object serviceUserID] isEqualToStringIgnoringCase:serviceUserID] ) &&
+           ([[object username] isEqualToStringIgnoringCase:serviceUsername] ) &&
+             ([[object serviceName] isEqualToStringIgnoringCase:serviceName] ) ) {
+            return YES;
+        }
+        else {
+            return NO;
+        }
+    }];
+    HuOnBehalfOf *result = nil;
+    if([items count] > 0) {
+        result = [[items objectAtIndex:0]onBehalfOf];
+    }
+    //LOG_GENERAL(0, @"result= %@", result);
     return result;
 }
 

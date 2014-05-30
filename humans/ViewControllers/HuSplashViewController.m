@@ -148,7 +148,7 @@
     
     [self performBlock:^{
         [self loginViaKeychain];
-    } afterDelay:4.0];
+    } afterDelay:3.0];
 
 }
 

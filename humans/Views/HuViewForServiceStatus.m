@@ -30,6 +30,9 @@
 #import <UIImageView+AFNetworking.h>
 #import <UIView+MCLayout.h>
 
+#import "HuServiceStatus.h"
+#import "HuTwitterServiceManager.h"
+
 @interface HuTwitterStatusView : HuViewForServiceStatus <TTTAttributedLabelDelegate> {
     UIImageView *photoView;
     JBAttributedAwareScrollView *statusView;
@@ -387,8 +390,27 @@ UIImageView *exView;
         statusView.label.delegate = self;
         [statusView setFont:TWITTER_FONT_LARGE];
         
+        
+        // prepare to like/fav
+        UITapGestureRecognizer *singleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            LOG_UI(0, @"Single tap.");
+        } delay:0.18];
+        [statusView addGestureRecognizer:singleTap];
+        
+        UITapGestureRecognizer *doubleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            [singleTap bk_cancel];
+            LOG_UI(0, @"Double tap.");
+            HuOnBehalfOf *on_behalf_of = [status status_on_behalf_of];
+            [[HuTwitterServiceManager sharedTwitterClientOnBehalfOf:on_behalf_of ]like:status];
+        }];
+        doubleTap.numberOfTapsRequired = 2;
+        [statusView addGestureRecognizer:doubleTap];
+
+        
+        
         if([status containsMedia]) {
             photoView = UIImageView.new;
+            [photoView setUserInteractionEnabled:YES];
             [photoView setContentMode:(UIViewContentModeScaleAspectFill | UIViewContentModeTop)];
             [photoView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
             [photoView setClipsToBounds:YES];
@@ -411,6 +433,37 @@ UIImageView *exView;
             }];
             
             __block UIImageView *bphotoView = photoView;
+            UILongPressGestureRecognizer *longPress = [UILongPressGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+                if(state == UIGestureRecognizerStateBegan) {
+                    LOG_UI(0, @"Long Press.");
+                    
+                    IDMPhoto *idmphoto = [IDMPhoto photoWithImage:bphotoView.image];
+                    
+                    NSArray *photo = @[idmphoto];
+                    IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photo];
+                    [mparent presentViewController:browser animated:NO completion:nil];
+                }
+                
+            }];
+            [photoView addGestureRecognizer:longPress];
+
+            
+            
+            UITapGestureRecognizer *singleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+                LOG_UI(0, @"Single tap.");
+            } delay:0.18];
+            [photoView addGestureRecognizer:singleTap];
+            
+            UITapGestureRecognizer *doubleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+                [singleTap bk_cancel];
+                LOG_UI(0, @"Double tap.");
+                HuOnBehalfOf *on_behalf_of = [status status_on_behalf_of];
+                [[HuTwitterServiceManager sharedTwitterClientOnBehalfOf:on_behalf_of ]like:status];
+            }];
+            doubleTap.numberOfTapsRequired = 2;
+            [photoView addGestureRecognizer:doubleTap];
+
+            
             [photoView setImageWithURL:[NSURL URLWithString:[mstatus statusImageURL]] placeholderImage: [UIImage imageNamed:@"BoozyBear.png"] options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                 if(error == nil) {
                     CGSize resizeSize = CGSizeMake(320, 320);
@@ -430,20 +483,8 @@ UIImageView *exView;
             }];
         }
         
-        if(/*[status statusText] != nil && */[status containsMedia] == false) {
-            
-            statusView = JBAttributedAwareScrollView.new;
-            [self addSubview:statusView];
-            //[statusView.label setTextColor:[UIColor whiteColor]];
-            [statusView.layer setCornerRadius:5];
-            [statusView setFrame:CGRectZero];
-            statusView.label.delegate = self;
-            [statusView setFont:TWITTER_FONT_LARGE];
-            
+        if([status containsMedia] == false) {
             NSString *t = [NSString stringWithFormat:@"%@", [status statusText]];
-            //[NSString stringWithFormat:@"%@ in_reply_to=%@ %@", [status statusText], [status in_reply_to_status_id], [status place] == nil ? @"nowhere" : [[status place]jsonString]];
-            
-            LOG_DEEBUG(0, @"%@ %@", t, [status place]);
             statusView.text = t;
             statusView.backgroundColor = [UIColor whiteColor];
             [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -458,7 +499,7 @@ UIImageView *exView;
                 make.right.equalTo(head.mas_right);
             }];
         }
-        if(/*[status statusText] != nil && */[status containsMedia] == true) {
+        if([status containsMedia] == true) {
             
             NSString *t = [NSString stringWithFormat:@"%@ %@ in_reply_to=%@", [status statusText], [status statusImageURL], [status in_reply_to_status_id]];
             statusView.text = t;//[status statusText];
@@ -467,8 +508,6 @@ UIImageView *exView;
         }
         
         if([status place]  != nil) {
-            LOG_TWITTER(0, @"PLACE=%@", [status place]);
-            
             UIView *locView = UIView.new;
             [self addSubview:locView];
             CGColorRef color = [[UIColor crayolaManateeColor]CGColor];
@@ -594,6 +633,7 @@ UIImageView *exView;
         [self addSubview:head];
         
         photoView = UIImageView.new;
+        [photoView setUserInteractionEnabled:YES];
         [self addSubview:photoView];
         [photoView setContentMode:(UIViewContentModeScaleAspectFit)];
         [photoView setClipsToBounds:YES];
@@ -608,8 +648,8 @@ UIImageView *exView;
         UITapGestureRecognizer *doubleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
             [singleTap bk_cancel];
             LOG_UI(0, @"Double tap.");
-//            [[HuInstagramHTTPSessionManager sharedInstagramClient]like:status];
-//            [[HuInstagramHTTPSessionManager sharedInstagramClient]like:status];
+            [[HuInstagramHTTPSessionManager sharedInstagramClient]like:status];
+            //            [[HuInstagramHTTPSessionManager sharedInstagramClient]like:status];
         }];
         doubleTap.numberOfTapsRequired = 2;
         [photoView addGestureRecognizer:doubleTap];
@@ -617,19 +657,19 @@ UIImageView *exView;
         __block UIImageView *bphotoView = photoView;
         
         
-        //        UILongPressGestureRecognizer *longPress = [UILongPressGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
-        //            if(state == UIGestureRecognizerStateBegan) {
-        //                LOG_UI(0, @"Long Press.");
-        //
-        //            IDMPhoto *idmphoto = [IDMPhoto photoWithImage:bphotoView.image];
-        //
-        //            NSArray *photo = @[idmphoto];
-        //            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photo];
-        //            [parent presentViewController:browser animated:NO completion:nil];
-        //            }
-        //
-        //        }];
-        //        [photoView addGestureRecognizer:longPress];
+        UILongPressGestureRecognizer *longPress = [UILongPressGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            if(state == UIGestureRecognizerStateBegan) {
+                LOG_UI(0, @"Long Press.");
+                
+                IDMPhoto *idmphoto = [IDMPhoto photoWithImage:bphotoView.image];
+                
+                NSArray *photo = @[idmphoto];
+                IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photo];
+                [parent presentViewController:browser animated:NO completion:nil];
+            }
+            
+        }];
+        [photoView addGestureRecognizer:longPress];
         
         [photoView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
         [photoView setBackgroundColor:[UIColor crayolaManateeColor]];
@@ -822,7 +862,7 @@ UIImageView *exView;
         
         //photoBox = [HuStatusPhotoBox photoBoxFor:[status statusImageURL] size:CGSizeMake(frame.size.width, frame.size.height) deferLoad:NO];
         photoView = UIImageView.new;
-        __block UIImageView *bphotoView = photoView;
+        [photoView setUserInteractionEnabled:YES];
         [self addSubview:photoView];
         
         [head mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -832,6 +872,9 @@ UIImageView *exView;
             make.right.equalTo(self.mas_right).with.offset(-5);
             make.height.equalTo(@55).priorityHigh();
         }];
+        
+        __block UIImageView *bphotoView = photoView;
+
         
         [photoView setImageWithURL:[NSURL URLWithString:[mstatus statusImageURL]] placeholderImage:[UIImage imageNamed:@"BoozyBear"] options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if(error == nil) {
@@ -858,7 +901,21 @@ UIImageView *exView;
             }
         }];
         
+        UILongPressGestureRecognizer *longPress = [UILongPressGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            if(state == UIGestureRecognizerStateBegan) {
+                LOG_UI(0, @"Long Press.");
+                
+                IDMPhoto *idmphoto = [IDMPhoto photoWithImage:bphotoView.image];
+                
+                NSArray *photo = @[idmphoto];
+                IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photo];
+                [mparent presentViewController:browser animated:NO completion:nil];
+            }
+            
+        }];
+        [photoView addGestureRecognizer:longPress];
         
+
         [photoView setBackgroundColor:[UIColor grayColor]];
         [photoView.layer setCornerRadius:15];
         

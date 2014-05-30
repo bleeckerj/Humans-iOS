@@ -32,6 +32,9 @@
 - (HuHumansProfileCarouselViewController*)humansProfileCarouselViewController;
 - (NSString *)clusteredUUID;
 - (NSString *)clusteredVersionBuild;
++ (void)popGoodToastNotification:(NSString *)notice withColor:(UIColor *)color withImage:(UIImage *)image;
++ (void)popGoodToastNotification:(NSString *)notice withColor:(UIColor *)color;
++ (void)popBadToastNotification:(NSString *)notice withSubnotice:(NSString *)subnotice;
 
 
 @property (strong, nonatomic) UIWindow *window;

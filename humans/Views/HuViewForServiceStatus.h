@@ -7,17 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HuServiceStatus.h"
-#import <UIColor+FPBrandColor.h>
-#import <UIColor+Crayola.h>
-#import <UIImage+Resize.h>
-#import <Masonry.h>
-#import "JBAttributedAwareScrollView.h"
-#import <UIImageView+AFNetworking.h>
-#import <UIView+MCLayout.h>
 #import "defines.h"
+#import <TTTAttributedLabel.h>
+#import "HuServiceStatus.h"
 
 @class HuTwitterStatus;
+//@class HuServiceStatus;
 
 @interface HuViewForServiceStatus : UIView <TTTAttributedLabelDelegate>
 @property (nonatomic, strong) id<HuServiceStatus> status;

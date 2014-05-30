@@ -192,17 +192,21 @@
     [carousel reloadData];
 }
 
+// TODO Figure out how to tell *why the view disappeared
+// If it disappears just cause the IDMPhotoBrowser appears, we do
+// not need to delete all these things and clean up
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [items each:^(id object) {
-        object = [NSNull null];
-    }];
-    [statusViews each:^(id object) {
-        object = [NSNull null];
-    }];
-    [items removeAllObjects];
-    [statusViews removeAllObjects];
+//    [items each:^(id object) {
+//        object = [NSNull null];
+//    }];
+//    [statusViews each:^(id object) {
+//        object = [NSNull null];
+//    }];
+//    [items removeAllObjects];
+//    [statusViews removeAllObjects];
 }
 
 - (void)onSwipeNameLabel:(id)gesture
@@ -352,6 +356,14 @@ NSUInteger last_index, current_index;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+        [items each:^(id object) {
+            object = [NSNull null];
+        }];
+        [statusViews each:^(id object) {
+            object = [NSNull null];
+        }];
+        [items removeAllObjects];
+        [statusViews removeAllObjects];
 }
 
 @end

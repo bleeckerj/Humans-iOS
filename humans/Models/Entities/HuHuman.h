@@ -8,6 +8,7 @@
 #import "defines.h"
 
 @class NSArray;
+@class HuOnBehalfOf;
 
 @interface HuHuman : NSObject
 
@@ -27,5 +28,6 @@
 -(void)loadServiceUsersProfileImagesWithCompletionHandler:(CompletionHandler)completionHandler;
 -(UIImage *)largestServiceUserProfileImage;
 -(NSString *)jsonString;
+-(HuOnBehalfOf *)getOnBehalfOfForServiceUserWithServiceUserID:(NSString *)serviceUserID withServiceName:(NSString *)serviceName withServiceUsername:(NSString *)serviceUsername;
 
 @end
