@@ -76,7 +76,7 @@ NSString *consumer_secret;
 
 - (void)like:(HuFlickrStatus *)status
 {
-    [HuAppDelegate popGoodToastNotification:@"Like that" withColor:[UIColor FlickrBlue]];
+    [HuAppDelegate popGoodToastNotification:@"Like That" withColor:[UIColor FlickrBlue]];
     
     if (![flickrRequest isRunning]) {
 		//[flickrRequest callAPIMethodWithGET:@"flickr.photos.getRecent" arguments:[NSDictionary dictionaryWithObjectsAndKeys:@"1", @"per_page", nil]];

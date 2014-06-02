@@ -71,7 +71,7 @@ static NSString * const kInstagramAPIBaseURLString = @"https://api.instagram.com
     if(user_has_liked == NO) {
     
     // it'll seem zippier if we just show this first before waiting for the "like" API call to return
-    [HuAppDelegate popGoodToastNotification:@"Liked That." withColor:[UIColor Instagram]];
+    [HuAppDelegate popGoodToastNotification:@"Like That" withColor:[UIColor Instagram]];
 
     HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
     NSDictionary *auth_stuff = [[delegate humansAppUser]getAuthForService:[status status_on_behalf_of]];

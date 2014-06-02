@@ -88,7 +88,7 @@ STTwitterAPI *twitter;
 //@"consumer_key", consumer_secret, @"consumer_secret", token_key, @"token_key", token_secret, @"token_secret"
 - (void)like:(HuTwitterStatus*)status
 {
-    [HuAppDelegate popGoodToastNotification:@"Liked That." withColor:[UIColor Twitter]];
+    [HuAppDelegate popGoodToastNotification:@"Like That" withColor:[UIColor Twitter]];
     
     __block HuTwitterStatus *bstatus = status;
     if([status favorited] == NO) {
