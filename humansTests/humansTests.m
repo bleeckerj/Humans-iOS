@@ -9,6 +9,8 @@
 #import "XCTestCase+AsyncTesting.h"
 
 #import "HuUserHandler.h"
+#import "HuFlickrServicer.h"
+
 @interface humansTests : XCTestCase
 
 @end
@@ -39,6 +41,12 @@
     [self waitForTimeout:30];
 
     //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+}
+
+- (void)testFlickr
+{
+    HuFlickrServicer *flickr = [[HuFlickrServicer alloc]init];
+    [flickr like];
 }
 
 @end

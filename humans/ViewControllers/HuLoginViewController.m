@@ -208,22 +208,22 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    LOG_UI(0, @"prepareForSegue %@ %@", segue, sender);
+    //LOG_UI(0, @"prepareForSegue %@ %@", segue, sender);
 }
 
 - (IBAction)textEditingDidEnd:(UITextField *)sender {
-    LOG_UI(9, @"End %@", [sender text]);
+    //LOG_UI(9, @"End %@", [sender text]);
 }
 
 - (IBAction)textEditingDidBeginFTW:(UITextField *)sender {
-    LOG_UI(0, @"Begin %@", [sender text]);
+    //LOG_UI(0, @"Begin %@", [sender text]);
     
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    LOG_UI(0, @"View Did Appear");
+    //LOG_UI(0, @"View Did Appear");
 
 }
 

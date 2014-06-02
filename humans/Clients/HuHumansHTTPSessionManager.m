@@ -15,7 +15,6 @@ static NSString * const kHumansLocalDevBaseURLString = @"https://localhost:8443/
 static NSString * const kHumansProdBaseURLString = @"https://humans.nearfuturelaboratory.com:8443/";
 
 
-
 + (HuHumansHTTPSessionManager *)sharedDevClient {
     static HuHumansHTTPSessionManager *_sharedClient = nil;
     static dispatch_once_t onceToken;

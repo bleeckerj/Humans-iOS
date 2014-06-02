@@ -9,7 +9,22 @@
 //
 
 #import "HuEditHumanViewController.h"
-
+#import <FUIButton.h>
+#import <UIColor+Crayola.h>
+#import <UIColor+FlatUI.h>
+#import <UIColor+FPBrandColor.h>
+#import "HuHuman.h"
+#import <RDVKeyboardAvoidingScrollView.h>
+#import <BlocksKit+UIKit.h>
+#import "HuAppDelegate.h"
+#import "HuUserHandler.h"
+#import <MZFormSheetBackgroundWindow.h>
+#import <MZFormSheetController.h>
+#import "HuAddDeleteServiceUserCarouselViewController.h"
+#import "HuJediMiniFindFriendsViewController.h"
+#import "HuHumansProfileCarouselViewController.h"
+#import <Masonry.h>
+#import <UIImage+Resize.h>
 
 @interface HuEditHumanViewController ()
 {

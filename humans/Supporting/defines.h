@@ -8,6 +8,7 @@
 #pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
 #undef DEV
 
+#undef LE_DEBUG_LOGS
 
 #define IMAGEDEBUG
 #define CA_DEBUG_TRANSACTIONS

@@ -232,12 +232,12 @@ MGLine *check_;
         
         if([[cookie domain] rangeOfString:@"flickr"].location != NSNotFound) {
             [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-            LOG_UI(0, @" DROP=%@", [cookie domain]);
+            //LOG_UI(0, @" DROP=%@", [cookie domain]);
             
         }
         if([[cookie domain] rangeOfString:@"yahoo"].location != NSNotFound) {
             [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-            LOG_UI(0, @" DROP=%@", [cookie domain]);
+            //LOG_UI(0, @" DROP=%@", [cookie domain]);
             
         }
 

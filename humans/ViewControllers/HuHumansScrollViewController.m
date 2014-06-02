@@ -142,7 +142,7 @@ static const char *HuHumansScrollViewControllerTimerQueueContext = "HuHumansScro
     
     // restart the timer
     if(timerForStatusRefresh == nil) {
-        timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:120
+        timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:300
                                                                      target:self
                                                                    selector:@selector(updateHumanStatusCounts)
                                                                    userInfo:nil

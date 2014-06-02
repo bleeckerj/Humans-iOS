@@ -196,19 +196,19 @@
     NSDictionary *options = @{
                               kCRToastTextKey :notice,
                               kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
-                              kCRToastBackgroundColorKey : [UIColor Garmin],
+                              kCRToastBackgroundColorKey : color,
                               kCRToastFontKey : HEADER_FONT_LARGE,
                               //kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypeCover),
                               kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypePush),
                               kCRToastImageKey : image,
                               kCRToastAnimationInTimeIntervalKey: @0.5,
-                              //kCRToastAnimationOutTimeIntervalKey: @0.5,
-                              kCRToastTimeIntervalKey : @0.5,
+                              kCRToastAnimationOutTimeIntervalKey: @0.5,
+                              kCRToastTimeIntervalKey : @1.0,
                               kCRToastUnderStatusBarKey : @NO,
-                              kCRToastNotificationPreferredHeightKey : @HEADER_HEIGHT,
+                              kCRToastNotificationPreferredHeightKey : @(HEADER_HEIGHT/2),
                               kCRToastNotificationTypeKey : @(CRToastTypeCustom),
-                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
-                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeSpring),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeSpring),
                               kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
                               kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop)
                               };
@@ -234,13 +234,13 @@
                               //kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypeCover),
                               kCRToastNotificationPresentationTypeKey : @(CRToastPresentationTypePush),
                               kCRToastAnimationInTimeIntervalKey: @0.5,
-                              //kCRToastAnimationOutTimeIntervalKey: @0.5,
+                              kCRToastAnimationOutTimeIntervalKey: @0.5,
                               kCRToastTimeIntervalKey : @1,
                               kCRToastUnderStatusBarKey : @NO,
-                              kCRToastNotificationPreferredHeightKey : @HEADER_HEIGHT,
+                              kCRToastNotificationPreferredHeightKey : @(HEADER_HEIGHT/2),
                               kCRToastNotificationTypeKey : @(CRToastTypeCustom),
-                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
-                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeSpring),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeSpring),
                               kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
                               kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop)
                               };
@@ -269,8 +269,8 @@
                               kCRToastUnderStatusBarKey : @NO,
                               kCRToastNotificationPreferredHeightKey : @HEADER_HEIGHT,
                               kCRToastNotificationTypeKey : @(CRToastTypeCustom),
-                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
-                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeSpring),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeSpring),
                               kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
                               kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop)
                               };
@@ -337,4 +337,6 @@
 {
     return YES;
 }
+
+
 @end

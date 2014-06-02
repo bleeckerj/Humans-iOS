@@ -30,6 +30,7 @@ typedef enum networkStateTypes
 } HuNetworkState;
 
 @property (nonatomic, retain) HuHumansHTTPSessionManager *huRequestOperationManager;
+//@property (nonatomic, retain) HuHumansHTTPSessionManager *huAuthRequestOperationManager;
 @property (nonatomic, copy) NSString *access_token;
 @property (nonatomic, copy) HuUser *humans_user;
 @property (nonatomic, readonly) NSMutableDictionary *statusForHumanId;

@@ -33,6 +33,9 @@
 #import "HuServiceStatus.h"
 #import "HuTwitterServiceManager.h"
 
+#import "HuFlickrServiceManager.h"
+#import "HuFlickrServicer.h"
+
 @interface HuTwitterStatusView : HuViewForServiceStatus <TTTAttributedLabelDelegate> {
     UIImageView *photoView;
     JBAttributedAwareScrollView *statusView;
@@ -318,11 +321,6 @@ UIImageView *exView;
 {
 }
 
-//- (void)touchesEnded:(NSSet *)touches
-//           withEvent:(UIEvent *)event
-//{
-//    NSLog(@"GOODBYE %@", event);
-//}
 
 #pragma mark TTTAttributedLabelDelegate method
 - (void)attributedLabel:(TTTAttributedLabel *)label
@@ -330,6 +328,8 @@ UIImageView *exView;
 {
     //NSLog(@"%@", url);
     LOG_DEEBUG(0, @"clicked: %@", url);
+    [[UIApplication sharedApplication]openURL:url];
+    
     if(self.backgroundColor == [UIColor crayolaApricotColor]) {
         [self setBackgroundColor:[UIColor crayolaAquaPearlColor]];
     } else {
@@ -665,6 +665,7 @@ UIImageView *exView;
                 
                 NSArray *photo = @[idmphoto];
                 IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photo];
+                
                 [parent presentViewController:browser animated:NO completion:nil];
             }
             
@@ -865,6 +866,27 @@ UIImageView *exView;
         [photoView setUserInteractionEnabled:YES];
         [self addSubview:photoView];
         
+        UITapGestureRecognizer *singleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            LOG_UI(0, @"Single tap.");
+        } delay:0.18];
+        [photoView addGestureRecognizer:singleTap];
+        
+        __strong __block HuFlickrServicer *servicer;
+        __strong __block HuFlickrServiceManager *mgr;
+        UITapGestureRecognizer *doubleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            [singleTap bk_cancel];
+            LOG_UI(0, @"Double tap.");
+//            servicer = [[HuFlickrServicer alloc]init];
+//            [servicer like];
+                mgr = [[HuFlickrServiceManager alloc]initFor:status];
+            [mgr like:status];
+            
+            //            [[HuInstagramHTTPSessionManager sharedInstagramClient]like:status];
+        }];
+        doubleTap.numberOfTapsRequired = 2;
+        [photoView addGestureRecognizer:doubleTap];
+
+        
         [head mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(bself.mas_top);
             //make.width.equalTo(bself.mas_width);
@@ -905,8 +927,8 @@ UIImageView *exView;
             if(state == UIGestureRecognizerStateBegan) {
                 LOG_UI(0, @"Long Press.");
                 
-                IDMPhoto *idmphoto = [IDMPhoto photoWithImage:bphotoView.image];
-                
+               // IDMPhoto *idmphoto = [IDMPhoto photoWithImage:bphotoView.image];
+                IDMPhoto *idmphoto = [IDMPhoto photoWithURL:[NSURL URLWithString:[status url_l]]];
                 NSArray *photo = @[idmphoto];
                 IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photo];
                 [mparent presentViewController:browser animated:NO completion:nil];
@@ -928,11 +950,8 @@ UIImageView *exView;
             statusView.label.delegate = self;
             [statusView setFont:FLICKR_FONT];
             statusView.text = [NSString stringWithFormat:@"%@ - %@", [status title], [status statusText]];
-            statusView.backgroundColor =[UIColor whiteColor];// [UIColor colorWithRed:186.0/255.0 green:187.0/255.0 blue:188.0/255.0 alpha:1.0];
+            statusView.backgroundColor =[UIColor whiteColor];
             [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
-                //UIEdgeInsets padding = UIEdgeInsetsMake(5, 5, 5, 5);
-                //make.edges.equalTo(self).with.insets(padding);
-                //make.center.equalTo(self);
                 make.top.equalTo(photoView.mas_bottom).with.offset(3);
                 make.bottom.equalTo(self.mas_bottom).with.offset(-5.0);
                 make.left.equalTo(head.mas_left);
@@ -946,37 +965,10 @@ UIImageView *exView;
     return self;
 }
 
-//- (void)updateStatusView
-//{
-//    [statusView setFrame:[self getStatusViewFrame]];
-//}
-//
-//- (CGRect) getStatusViewFrame
-//{
-//    float screen_height;
-//
-//    if(IS_IPHONE && IS_IPHONE_5) {
-//        screen_height = IPHONE_5_PORTRAIT_SIZE_HEIGHT;
-//    } else {
-//        screen_height = IPHONE_PORTRAIT_SIZE_HEIGHT;
-//    }
-//
-//    float clear_bottom = screen_height - CGRectGetMaxY(photoView.frame);
-//    CGRect statusview_frame = (CGRectMake(CGRectGetMinX(photoView.frame), CGRectGetMaxY(photoView.frame), CGRectGetWidth(photoView.frame), clear_bottom));
-//
-//    return CGRectInset(statusview_frame, 8, 12);
-//
-//}
 
 - (void)showOrRefreshPhoto
 {
-    //    [photoBox loadPhotoWithCompletionHandler:^(BOOL success, NSError *error) {
-    //        if(success) {
-    //            [self updateStatusView];
-    //        } else {
-    //            LOG_ERROR(0, @"Error loading flickr photo %@", error);
-    //        }
-    //    }];
+
 }
 
 

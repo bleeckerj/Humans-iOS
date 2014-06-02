@@ -65,6 +65,7 @@
 @implementation HuUserHandler
 
 @synthesize huRequestOperationManager;
+//@synthesize huAuthRequestOperationManager;
 @synthesize humans_user;
 @synthesize statusForHumanId;
 @synthesize lastStatusResultHeader;
@@ -96,6 +97,7 @@ NSDateFormatter *twitter_formatter;
     huRequestOperationManager = [HuHumansHTTPSessionManager sharedDevClient];
 #else
     huRequestOperationManager = [HuHumansHTTPSessionManager sharedProdClient];
+    
 #endif
     __block HuUserHandler *bself = self;
 
@@ -655,8 +657,121 @@ NSDateFormatter *twitter_formatter;
 
 - (void)getStatusForHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    [self getStatusForHuman:(HuHuman *)aHuman atPage:0 withCompletionHandler:(CompletionHandlerWithResult)completionHandler];
+    //[self getStatusForHuman:(HuHuman *)aHuman atPage:0 withCompletionHandler:(CompletionHandlerWithResult)completionHandler];
+    [self testGetStatusForHuman:aHuman atPage:0 withCompletionHandler:completionHandler];
+}
+#pragma mark testing to see if this is quicker - i just switched the above method to point to it
+- (void)testGetStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    // Request: Get Status For Human By Id (https://humans.nearfuturelaboratory.com:8443/rest/human/status?humanid=535d9bbde4b0e5df8054ac01&page=0)
+    NSString *str = [NSString stringWithFormat:@"https://humans.nearfuturelaboratory.com:8443/rest/human/status?humanid=%@&page=%d", [aHuman humanid], aPage];
+    NSURL* URL = [NSURL URLWithString:str];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"GET";
+    request.timeoutInterval = 60;
     
+    // Headers
+    // auth token from humans service
+    [request addValue:[self access_token] forHTTPHeaderField:@"Authorization"];
+    //[request addValue:@"fd9f3d93107c34ad5826bad38ee05ed6" forHTTPHeaderField:@"Authorization"];
+    
+    // Request Operation
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    
+    // Progress & Completion blocks
+    
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        NSLog(@"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+    }];
+    
+   
+    __block NSDate *methodStart;
+    methodStart = [NSDate date];
+
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDate *methodFinish = [NSDate date];
+        NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+
+        LOG_NETWORK(1, @"status fetch executionTime = %f", executionTime);
+        NSLog(@"Success: Status Code %ld", (long)operation.response.statusCode);
+        [self setLastStatusResultHeader:[responseObject objectForKey:@"head"]];
+        
+        NSArray *sent_status = [responseObject objectForKey:@"status"];
+        NSMutableArray *saved_status = [[NSMutableArray alloc]initWithCapacity:[sent_status count]];
+        [sent_status each:^(id object) {
+            if([[object valueForKey:@"service"] isEqualToString:@"flickr"]) {
+                HuFlickrStatus *status = [[HuFlickrStatus alloc]initWithJSONDictionary:object];
+                
+                HuOnBehalfOf *onBehalfOf = [aHuman getOnBehalfOfForServiceUserWithServiceUserID:[status owner] withServiceName:@"flickr" withServiceUsername:[status ownername]];
+                
+                [status setStatus_on_behalf_of:onBehalfOf];
+                
+                
+                [saved_status addObject:status];
+                LOG_FLICKR(0, @"Flickr - %@", [self getAuthForService:[status status_on_behalf_of]]);
+            }
+            if([[object valueForKey:@"service"] isEqualToString:@"instagram"]) {
+                InstagramStatus *status = [[InstagramStatus alloc]initWithJSONDictionary:object];
+                InstagramUser *user = [status user];
+                
+                HuOnBehalfOf *onBehalfOf = [aHuman getOnBehalfOfForServiceUserWithServiceUserID:[user id] withServiceName:@"instagram" withServiceUsername:[user username]];
+                
+                [status setStatus_on_behalf_of:onBehalfOf];
+                
+                [saved_status addObject:status];
+                //LOG_INSTAGRAM(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
+                //                HuInstagramHTTPSessionManager *mgr = [HuInstagramHTTPSessionManager sharedInstagramClient];
+                //                NSDictionary *stuff = [self getAuthForService:[status status_on_behalf_of]];
+                //                NSString *access_token = [stuff objectForKey:@"token_key"];
+                //                LOG_INSTAGRAM(0, @"access_token=%@", access_token);
+                //                [mgr like:[status instagram_id] withAccessToken:access_token];
+                
+            }
+            if([[object valueForKey:@"service"] isEqualToString:@"twitter"]) {
+                HuTwitterStatus *status = [[HuTwitterStatus alloc]initWithJSONDictionary:object];
+                HuTwitterUser *user = [status user];
+                HuOnBehalfOf *onBehalfOf = [aHuman getOnBehalfOfForServiceUserWithServiceUserID:[user id_str] withServiceName:@"twitter" withServiceUsername:[user screen_name]];
+                
+                [status setStatus_on_behalf_of:onBehalfOf];
+                
+                
+                [saved_status addObject:status];
+                //LOG_TWITTER(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
+                
+            }
+            //            if([[object valueForKey:@"service"] isEqualToString:@"foursquare"]) {
+            //                HuFoursquareCheckin *status = [[HuFoursquareCheckin alloc]initWithJSONDictionary:object];
+            //                [saved_status addObject:status];
+            //            }
+        }];
+        
+#pragma TODO does not seem like we do anything with this yet
+        [[self statusForHumanId] setObject:saved_status forKey:[aHuman humanid]];
+        
+        LOG_GENERAL(0, @"%@", [self lastStatusResultHeader]);
+        if(completionHandler) {
+            completionHandler(true, nil);
+        }
+
+        //NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:&error];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error.localizedDescription);
+        [self setLastStatusResultHeader:nil];
+        [[self statusForHumanId]removeObjectForKey:[aHuman humanid]];
+        if(completionHandler) {
+            completionHandler(false, error);
+        }
+        
+
+    }];
+    
+    // Connection
+    LOG_NETWORK(1, @"start status fetch %@", methodStart);
+    [operation start];
+    
+
 }
 
 - (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler
@@ -690,7 +805,7 @@ NSDateFormatter *twitter_formatter;
 
                 
                 [saved_status addObject:status];
-                //LOG_FLICKR(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
+                LOG_FLICKR(0, @"Flickr - %@", [self getAuthForService:[status status_on_behalf_of]]);
             }
             if([[object valueForKey:@"service"] isEqualToString:@"instagram"]) {
                 InstagramStatus *status = [[InstagramStatus alloc]initWithJSONDictionary:object];
@@ -721,10 +836,10 @@ NSDateFormatter *twitter_formatter;
                 //LOG_TWITTER(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
 
             }
-            if([[object valueForKey:@"service"] isEqualToString:@"foursquare"]) {
-                HuFoursquareCheckin *status = [[HuFoursquareCheckin alloc]initWithJSONDictionary:object];
-                [saved_status addObject:status];
-            }
+//            if([[object valueForKey:@"service"] isEqualToString:@"foursquare"]) {
+//                HuFoursquareCheckin *status = [[HuFoursquareCheckin alloc]initWithJSONDictionary:object];
+//                [saved_status addObject:status];
+//            }
         }];
         
 #pragma TODO does not seem like we do anything with this yet
@@ -856,18 +971,35 @@ NSDateFormatter *twitter_formatter;
     if(self.authForServices == NULL) {
         self.authForServices = [[NSMutableDictionary alloc]init];
     }
-    [[humans_user services] each:^(id object) {
+    
+    [[humans_user services] eachWithIndex:^(id object, NSUInteger index) {
         [self getAuthForService:object with:^(id data, BOOL success, NSError *error) {
             //
-            //LOG_GENERAL(0, @"getAuthForServicesWithCompletionHandler %@ %@", data, object);
+            LOG_GENERAL(0, @"getAuthForServicesWithCompletionHandler %@ %@", data, object);
+            NSAssert(object != nil, @"What The Fuck?");
             [bself.authForServices setObject:data forKey:object];
         }];
+        if(index == [[humans_user services]count] - 1) {
+            if(completionHandler) {
+                completionHandler(YES, nil);
+            }
+        }
+  
     }];
     
+//    [[humans_user services] each:^(id object) {
+//        [self getAuthForService:object with:^(id data, BOOL success, NSError *error) {
+//            //
+//            LOG_GENERAL(0, @"getAuthForServicesWithCompletionHandler %@ %@", data, object);
+//            NSAssert(object != nil, @"What The Fuck?");
+//            [bself.authForServices setObject:data forKey:object];
+//        }];
+//    }];
+    
     // yeah, but..
-    if(completionHandler) {
-        completionHandler(YES, nil);
-    }
+//    if(completionHandler) {
+//        completionHandler(YES, nil);
+//    }
 }
 
 
@@ -982,7 +1114,10 @@ NSDateFormatter *twitter_formatter;
 - (NSURL *)urlForFlickrAuthentication
 {
     NSURL *result;
+    // this because it looks like iOS 7.1.1 doesn't make it easy to ignore untrusted certificates
+    // which I don't have on the server right now cause of dollars
     NSString *url = [NSString stringWithFormat:@"%@/rest/auth/flickr?access_token=%@", [huRequestOperationManager baseURL], [self access_token]];
+    LOG_NETWORK(0, @"urlForFlickrAuthentication %@ baseURL %@", url, [huRequestOperationManager baseURL]);
     result = [NSURL URLWithString:url];
     return result;
 }

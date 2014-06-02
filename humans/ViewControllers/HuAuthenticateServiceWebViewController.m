@@ -8,6 +8,7 @@
 
 #import "HuAuthenticateServiceWebViewController.h"
 #import <UIView+MCLayout.h>
+#import "NSURLRequest+NSURLRequestIgnoreSSL.h"
 
 @interface HuAuthenticateServiceWebViewController ()
 
@@ -64,7 +65,6 @@ HuUserHandler *userHandler;
     });
     // give the progress overlay time to show up
     [self performBlock:^{
-        
         NSURLRequest* request = [NSURLRequest requestWithURL:authURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
         NSURLRequest *logout = [NSURLRequest requestWithURL:logoutURL];
         NSURLResponse * response = nil;
@@ -72,6 +72,7 @@ HuUserHandler *userHandler;
         [NSURLConnection sendSynchronousRequest:logout returningResponse:&response error:&error];
         if(webView == nil) {
             webView = [[UIWebView alloc]init];
+            
         }
         [webView loadRequest:request];
     } afterDelay:0.5];
@@ -150,7 +151,34 @@ HuUserHandler *userHandler;
         handleWebViewDidFailLoadWithError(webView, error);
     }
 }
+NSURLRequest *req;
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    //BOOL result = _Authenticated;
+    //if (!_Authenticated) {
+        //_FailedRequest = request;
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    //}
+    return YES;
+}
 
+-(void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+//    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+//        NSURL* baseURL = [NSURL URLWithString:_BaseRequest];
+//        if ([challenge.protectionSpace.host isEqualToString:baseURL.host]) {
+//            NSLog(@"trusting connection to host %@", challenge.protectionSpace.host);
+            [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+
+//        } else
+//            NSLog(@"Not trusting connection to host %@", challenge.protectionSpace.host);
+//    }
+//    [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+}
+
+-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)pResponse {
+    //_Authenticated = YES;
+    [connection cancel];
+    [webView loadRequest:req];
+}
 
 - (void)performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay {
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC));

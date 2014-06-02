@@ -16,6 +16,7 @@
 
 +(HuHumansHTTPSessionManager *)sharedDevClient;
 +(HuHumansHTTPSessionManager *)sharedProdClient;
++ (HuHumansHTTPSessionManager *)sharedNoSSLProdClient;
 
 - (void)getStatusCountForHuman:(HuHuman *)human after:(NSTimeInterval)timestamp withCompletionHandler:(CompletionHandlerWithData)completionHandler;
 - (void)humanAddServiceUser:(HuServiceUser *)aServiceUser forHuman:(HuHuman *)aHuman withProgress:(NSProgress *__autoreleasing *)progress withCompletionHandler:(CompletionHandlerWithData)completionHandler;

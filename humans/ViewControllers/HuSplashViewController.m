@@ -99,8 +99,10 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
     [versionLabel setText:shortVersionString];
     NSString *build  = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CWBuildNumber"];
+#ifndef DEBUG
     LELog *log = [LELog sharedInstance];
     [log log:[NSString stringWithFormat:@"Splash %@ %@ %@", shortVersionString, version, build]];
+#endif
     
 #ifdef DEV
 #ifdef DEBUG
@@ -177,7 +179,6 @@
             NSDictionary *dimensions = @{@"key" : CLUSTERED_UUID ,@"edition" : CLUSTERED_EDITION, @"login-user" : username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
             [[LELog sharedInstance]log:dimensions];
             if(success) {
-                //[PFAnalytics trackEvent:@"keychain-login" dimensions:dimensions];
                 
                 HuHumansProfileCarouselViewController *theHumansProfileCarousel = [delegate humansProfileCarouselViewController];
                 UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;

@@ -19,7 +19,7 @@
 #import <MRProgress.h>
 #import <MGLineStyled.h>
 
-@interface HuAuthenticateServiceWebViewController : UIViewController <UIWebViewDelegate>
+@interface HuAuthenticateServiceWebViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDataDelegate>
 @property (nonatomic, retain) MGLineStyled *header;
 
 // handler (service specific) for the web view so we can do the right thing

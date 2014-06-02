@@ -6,6 +6,8 @@ pod 'ObjectiveSugar'
 pod 'TTTAttributedLabel'
 pod 'STTwitter'
 pod 'Objective-Shorthand'
+pod 'FlickrKit', :path => '~/Code/FlickrKit'
+#pod 'objectiveflickr'
 
 pod 'oauthconsumer', :path => '~/Code/oauthconsumer/'
 pod 'IDMPhotoBrowser'

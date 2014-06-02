@@ -94,6 +94,8 @@
 		B91BE75118A29B9600D6E171 /* user-profile-image-mask-80px.png in Resources */ = {isa = PBXBuildFile; fileRef = B91BE71518A29B9600D6E171 /* user-profile-image-mask-80px.png */; };
 		B91BE75218A29B9600D6E171 /* user-profile-image-mask.png in Resources */ = {isa = PBXBuildFile; fileRef = B91BE71618A29B9600D6E171 /* user-profile-image-mask.png */; };
 		B91BE75418A29D1F00D6E171 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B91BE75318A29D1F00D6E171 /* Crashlytics.framework */; };
+		B91D2112193C057E005C1B80 /* Reveal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B91D2111193C057E005C1B80 /* Reveal.framework */; };
+		B91D2116193C20BA005C1B80 /* HuFlickrServicer.m in Sources */ = {isa = PBXBuildFile; fileRef = B91D2115193C20BA005C1B80 /* HuFlickrServicer.m */; };
 		B91D2DC1190E269500D20D17 /* JBAttributedAwareScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = B91D2DC0190E269500D20D17 /* JBAttributedAwareScrollView.m */; };
 		B92400C0185C12FA00A10410 /* HuSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B92400BE185C12FA00A10410 /* HuSplashViewController.m */; };
 		B93024A31895B887000168E4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B93024A21895B887000168E4 /* libz.dylib */; };
@@ -134,6 +136,7 @@
 		B96EF1B118C191C7001E2B5A /* HuEditHumanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96EF1B018C191C7001E2B5A /* HuEditHumanViewController.m */; };
 		B970C28E19367AAC00557855 /* HeartHeart.png in Resources */ = {isa = PBXBuildFile; fileRef = B970C28D19367AAC00557855 /* HeartHeart.png */; };
 		B970C29119367C3D00557855 /* HuTwitterServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B970C29019367C3D00557855 /* HuTwitterServiceManager.m */; };
+		B986B94D1939A00D00DE5D68 /* NSURLRequest+NSURLRequestIgnoreSSL.m in Sources */ = {isa = PBXBuildFile; fileRef = B986B94C1939A00D00DE5D68 /* NSURLRequest+NSURLRequestIgnoreSSL.m */; };
 		B987BE5F18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */; };
 		B987BE6218DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m in Sources */ = {isa = PBXBuildFile; fileRef = B987BE6118DEB1D800499034 /* HuUS2ConditionEmojiStringRange.m */; };
 		B98A489E1928679700065484 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98A489D1928679700065484 /* Parse.framework */; };
@@ -157,7 +160,7 @@
 		B99E017D18604B0400E70892 /* HuUserHandlerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E017C18604B0400E70892 /* HuUserHandlerTest.m */; };
 		B99E019618619A0500E70892 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9F51778185BC4930083CA36 /* CoreGraphics.framework */; };
 		B99E01991862AEEB00E70892 /* HuLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E01981862AEEB00E70892 /* HuLoginViewController.m */; };
-		B99F8E5919327D05008F20B0 /* HuFlickrHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B99F8E5819327D05008F20B0 /* HuFlickrHTTPSessionManager.m */; };
+		B99F8E5919327D05008F20B0 /* HuFlickrServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B99F8E5819327D05008F20B0 /* HuFlickrServiceManager.m */; };
 		B99F8E5C19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B99F8E5B19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m */; };
 		B9AC5EC118A9E07900BEE77C /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AC5EC018A9E07900BEE77C /* libFlurry_4.3.2.a */; };
 		B9AC5EC518AA15FD00BEE77C /* foursquare-icon-16x16.png in Resources */ = {isa = PBXBuildFile; fileRef = B9AC5EC218AA15FD00BEE77C /* foursquare-icon-16x16.png */; };
@@ -342,6 +345,9 @@
 		B91BE71618A29B9600D6E171 /* user-profile-image-mask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-profile-image-mask.png"; sourceTree = "<group>"; };
 		B91BE75318A29D1F00D6E171 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		B91BE76018A29EFD00D6E171 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		B91D2111193C057E005C1B80 /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
+		B91D2115193C20BA005C1B80 /* HuFlickrServicer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFlickrServicer.m; sourceTree = "<group>"; };
+		B91D211A193C5056005C1B80 /* HuFlickrServicer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFlickrServicer.h; sourceTree = "<group>"; };
 		B91D2DBF190E269500D20D17 /* JBAttributedAwareScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JBAttributedAwareScrollView.h; path = Views/JBAttributedAwareScrollView.h; sourceTree = "<group>"; };
 		B91D2DC0190E269500D20D17 /* JBAttributedAwareScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JBAttributedAwareScrollView.m; path = Views/JBAttributedAwareScrollView.m; sourceTree = "<group>"; };
 		B92400BB185C12FA00A10410 /* HuFriendsGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFriendsGridViewController.h; sourceTree = "<group>"; };
@@ -403,6 +409,8 @@
 		B970C29019367C3D00557855 /* HuTwitterServiceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuTwitterServiceManager.m; sourceTree = "<group>"; };
 		B9787924186360A900D72288 /* XCTestCase+AsyncTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "XCTestCase+AsyncTesting.h"; path = "../humans/Supporting/XCTestCase+AsyncTesting.h"; sourceTree = "<group>"; };
 		B9787925186360A900D72288 /* XCTestCase+AsyncTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "XCTestCase+AsyncTesting.m"; path = "../humans/Supporting/XCTestCase+AsyncTesting.m"; sourceTree = "<group>"; };
+		B986B94B1939A00D00DE5D68 /* NSURLRequest+NSURLRequestIgnoreSSL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSURLRequest+NSURLRequestIgnoreSSL.h"; path = "humans/Supporting/NSURLRequest+NSURLRequestIgnoreSSL.h"; sourceTree = "<group>"; };
+		B986B94C1939A00D00DE5D68 /* NSURLRequest+NSURLRequestIgnoreSSL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSURLRequest+NSURLRequestIgnoreSSL.m"; path = "humans/Supporting/NSURLRequest+NSURLRequestIgnoreSSL.m"; sourceTree = "<group>"; };
 		B987BE5D18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuUS2ConditionLowerAlphaEmotis.h; path = Supporting/US2Conditions/HuUS2ConditionLowerAlphaEmotis.h; sourceTree = "<group>"; };
 		B987BE5E18DE909600499034 /* HuUS2ConditionLowerAlphaEmotis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUS2ConditionLowerAlphaEmotis.m; path = Supporting/US2Conditions/HuUS2ConditionLowerAlphaEmotis.m; sourceTree = "<group>"; };
 		B987BE6018DEB1D800499034 /* HuUS2ConditionEmojiStringRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HuUS2ConditionEmojiStringRange.h; path = Supporting/US2Conditions/HuUS2ConditionEmojiStringRange.h; sourceTree = "<group>"; };
@@ -438,8 +446,8 @@
 		B99E017C18604B0400E70892 /* HuUserHandlerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HuUserHandlerTest.m; path = ../HuUserHandlerTest.m; sourceTree = "<group>"; };
 		B99E01971862AEEB00E70892 /* HuLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuLoginViewController.h; sourceTree = "<group>"; };
 		B99E01981862AEEB00E70892 /* HuLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuLoginViewController.m; sourceTree = "<group>"; };
-		B99F8E5719327D05008F20B0 /* HuFlickrHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFlickrHTTPSessionManager.h; sourceTree = "<group>"; };
-		B99F8E5819327D05008F20B0 /* HuFlickrHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFlickrHTTPSessionManager.m; sourceTree = "<group>"; };
+		B99F8E5719327D05008F20B0 /* HuFlickrServiceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFlickrServiceManager.h; sourceTree = "<group>"; };
+		B99F8E5819327D05008F20B0 /* HuFlickrServiceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFlickrServiceManager.m; sourceTree = "<group>"; };
 		B99F8E5A19327D5D008F20B0 /* HuInstagramHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuInstagramHTTPSessionManager.h; sourceTree = "<group>"; };
 		B99F8E5B19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuInstagramHTTPSessionManager.m; sourceTree = "<group>"; };
 		B9AC5EC018A9E07900BEE77C /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
@@ -448,7 +456,6 @@
 		B9AC5EC418AA15FD00BEE77C /* foursquare-icon-gray-36x36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "foursquare-icon-gray-36x36.png"; sourceTree = "<group>"; };
 		B9C1034818B99D4E006E7D66 /* HuLoginOrSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuLoginOrSignUpViewController.h; sourceTree = "<group>"; };
 		B9C1034918B99D4E006E7D66 /* HuLoginOrSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuLoginOrSignUpViewController.m; sourceTree = "<group>"; };
-		B9C281AE18B42798005AC80F /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
 		B9C2C20A187BB65700F1DF47 /* HuFriend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuFriend.h; sourceTree = "<group>"; };
 		B9C2C20B187BB65700F1DF47 /* HuFriend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HuFriend.m; sourceTree = "<group>"; };
 		B9C2C20C187BB65700F1DF47 /* HuHuman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HuHuman.h; sourceTree = "<group>"; };
@@ -572,6 +579,7 @@
 				B9910A7118B7FD8700A9E918 /* QuartzCore.framework in Frameworks */,
 				B9910A6F18B7FD7100A9E918 /* MobileCoreServices.framework in Frameworks */,
 				B9910A6D18B7FD6400A9E918 /* CoreLocation.framework in Frameworks */,
+				B91D2112193C057E005C1B80 /* Reveal.framework in Frameworks */,
 				B9910A6B18B7FD5500A9E918 /* CFNetwork.framework in Frameworks */,
 				B9910A6918B7FD4C00A9E918 /* AudioToolbox.framework in Frameworks */,
 				B9AC5EC118A9E07900BEE77C /* libFlurry_4.3.2.a in Frameworks */,
@@ -939,12 +947,14 @@
 		B99F8E5619327D05008F20B0 /* Service Clients */ = {
 			isa = PBXGroup;
 			children = (
-				B99F8E5719327D05008F20B0 /* HuFlickrHTTPSessionManager.h */,
-				B99F8E5819327D05008F20B0 /* HuFlickrHTTPSessionManager.m */,
+				B99F8E5719327D05008F20B0 /* HuFlickrServiceManager.h */,
+				B99F8E5819327D05008F20B0 /* HuFlickrServiceManager.m */,
 				B99F8E5A19327D5D008F20B0 /* HuInstagramHTTPSessionManager.h */,
 				B99F8E5B19327D5D008F20B0 /* HuInstagramHTTPSessionManager.m */,
 				B970C28F19367C3D00557855 /* HuTwitterServiceManager.h */,
 				B970C29019367C3D00557855 /* HuTwitterServiceManager.m */,
+				B91D2115193C20BA005C1B80 /* HuFlickrServicer.m */,
+				B91D211A193C5056005C1B80 /* HuFlickrServicer.h */,
 			);
 			name = "Service Clients";
 			path = "Clients/Service Clients";
@@ -1110,6 +1120,8 @@
 		B9F5176A185BC4930083CA36 = {
 			isa = PBXGroup;
 			children = (
+				B986B94B1939A00D00DE5D68 /* NSURLRequest+NSURLRequestIgnoreSSL.h */,
+				B986B94C1939A00D00DE5D68 /* NSURLRequest+NSURLRequestIgnoreSSL.m */,
 				B9547C7918C3B11700CD2D1E /* HuJediMiniFindFriendsViewController.xib */,
 				B9F5177C185BC4930083CA36 /* humans */,
 				B9F5179B185BC4930083CA36 /* humansTests */,
@@ -1132,6 +1144,7 @@
 		B9F51775185BC4930083CA36 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B91D2111193C057E005C1B80 /* Reveal.framework */,
 				B98A489D1928679700065484 /* Parse.framework */,
 				B9C6C8E718FB6BAE00CA129F /* AdSupport.framework */,
 				B9F26E3318F6E89600B25D52 /* HockeySDK.embeddedframework */,
@@ -1142,7 +1155,6 @@
 				B9910A6C18B7FD6400A9E918 /* CoreLocation.framework */,
 				B9910A6A18B7FD5500A9E918 /* CFNetwork.framework */,
 				B9910A6818B7FD4C00A9E918 /* AudioToolbox.framework */,
-				B9C281AE18B42798005AC80F /* Reveal.framework */,
 				B91BE75318A29D1F00D6E171 /* Crashlytics.framework */,
 				B93024A21895B887000168E4 /* libz.dylib */,
 				B99E017618601B2400E70892 /* SystemConfiguration.framework */,
@@ -1569,6 +1581,7 @@
 				B919BD2D18CD33C9005217F3 /* HuFoursquareTips.m in Sources */,
 				B916190A18680E3C0010A34F /* UILabel+withDate.m in Sources */,
 				B9F646E31867BF6E008EB970 /* HuStatusCarouselViewController.m in Sources */,
+				B91D2116193C20BA005C1B80 /* HuFlickrServicer.m in Sources */,
 				B9374650188CCA120037A95C /* HuFindFollowsMain_ViewController.m in Sources */,
 				B944BB431896FE5500015B10 /* HuFoursquareVenueIcons.m in Sources */,
 				B9C2C267187BB6E100F1DF47 /* InstagramLike.m in Sources */,
@@ -1588,6 +1601,7 @@
 				B91D2DC1190E269500D20D17 /* JBAttributedAwareScrollView.m in Sources */,
 				B944BB3B1896F06500015B10 /* HuFoursquareSource.m in Sources */,
 				B99657D41867FDA800C4AB01 /* HuTwitterStatus_Box.m in Sources */,
+				B986B94D1939A00D00DE5D68 /* NSURLRequest+NSURLRequestIgnoreSSL.m in Sources */,
 				B9C2C217187BB65700F1DF47 /* HuHuman.m in Sources */,
 				B944BB3D1896F06500015B10 /* HuFoursquareVenue.m in Sources */,
 				B9C2C271187BB6E100F1DF47 /* HuTwitterEntitiesURL.m in Sources */,
@@ -1595,7 +1609,7 @@
 				B9161902186803050010A34F /* UIImage+Alpha.m in Sources */,
 				B99657D61867FDA800C4AB01 /* SwipeAwayMGLineStyled.m in Sources */,
 				B970C29119367C3D00557855 /* HuTwitterServiceManager.m in Sources */,
-				B99F8E5919327D05008F20B0 /* HuFlickrHTTPSessionManager.m in Sources */,
+				B99F8E5919327D05008F20B0 /* HuFlickrServiceManager.m in Sources */,
 				B9F51783185BC4930083CA36 /* main.m in Sources */,
 				B9C2C275187BB6E100F1DF47 /* HuTwitterStatus.m in Sources */,
 				B9C2C273187BB6E100F1DF47 /* HuTwitterMediaSize.m in Sources */,
