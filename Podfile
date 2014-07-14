@@ -1,13 +1,17 @@
 platform :ios, '7.0'
 inhibit_all_warnings!
 
+#pod 'ScrollViewDynamicContentViewSize', :path=> '~/Code/ScrollViewDynamicContentViewSize/'
 pod 'AFNetworking'
 pod 'ObjectiveSugar'
-pod 'TTTAttributedLabel'
+pod 'TTTAttributedLabel', :path => '~/Code/TTTAttributedLabel/'
+#pod 'TTTAttributedLabel', :path => '~/Code/TTTAttributedLabel-Fork/TTTAttributedLabel/'
 pod 'STTwitter'
 pod 'Objective-Shorthand'
 pod 'FlickrKit', :path => '~/Code/FlickrKit'
-#pod 'objectiveflickr'
+pod 'objectiveflickr'
+pod 'MMPopLabel'
+pod 'MSDynamicsDrawerViewController'
 
 pod 'oauthconsumer', :path => '~/Code/oauthconsumer/'
 pod 'IDMPhotoBrowser'
@@ -37,7 +41,8 @@ pod 'AQGridView', '~> 1.3'
 pod 'UIColor-Crayola'
 #pod 'ionicons'
 pod 'TYMActivityIndicatorView'
-pod 'Masonry', '~> 0.4.0'
+#pod 'Masonry', '~> 0.4.0'
+pod 'Masonry'
 pod 'LogEntries'
 pod 'iCarousel', :git => 'https://github.com/bleeckerj/iCarousel'
 pod 'RNCryptor', '~> 2.2'
@@ -60,11 +65,12 @@ pod 'MMDrawerController', '~> 0.5.2'
 pod 'DropdownMenu'
 pod 'REMenu', '~> 1.8'
 pod 'FontAwesome-iOS', '~> 0.0.4'
+pod 'FXLabel'
 
 target :humansTests, :exclusive => true do
-pod 'OCHamcrest', '~> 3.0.1'
-  pod 'Expecta',     '~> 0.2.3'   # expecta matchers
-    pod 'OCMockito', '~> 1.0'
+pod 'OCHamcrest'#, '~> 3.0.1'
+  pod 'Expecta'#,     '~> 0.2.3'   # expecta matchers
+    pod 'OCMockito'#, '~> 1.0'
 end
 pod 'MGBoxKit', :git => 'https://github.com/sobri909/MGBoxKit.git', :commit => '7474eef2cb16b7f1338607115b3dc0a92ef88e71'
 

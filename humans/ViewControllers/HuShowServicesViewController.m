@@ -74,9 +74,9 @@ HuConnectServicesViewController *connectServicesViewController;
         }
     };
     
-    UIImage *small_checkbox_img = [UIImage imageNamed:@"add-cloud-gray.png"];
+    UIImage *small_cloud_img = [UIImage imageNamed:@"add-cloud-gray.png"];
     
-    check_ = [MGLine lineWithLeft:small_checkbox_img right:nil size:[small_checkbox_img size]];
+    check_ = [MGLine lineWithLeft:small_cloud_img right:nil size:[small_cloud_img size]];
     check_.alpha = 1.0;
     check_.onTap = ^{
         LOG_UI(0, @"Tapped Add Service");

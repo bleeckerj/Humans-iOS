@@ -99,4 +99,14 @@
 {
     return [self dictionary];
 }
+
+-(id)copyWithZone:(NSZone *)zone
+{
+    HuOnBehalfOf *onBehalfOf = [[self class] allocWithZone:zone];
+    [onBehalfOf setServiceName:self.serviceName];
+    [onBehalfOf setServiceUserID:self.serviceUserID];
+    [onBehalfOf setServiceUsername:self.serviceUsername];
+    return onBehalfOf;
+}
+
 @end

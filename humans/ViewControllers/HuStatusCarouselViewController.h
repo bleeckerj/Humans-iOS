@@ -11,10 +11,13 @@
 #import <iCarousel.h>
 #import "HuHumansProfileCarouselViewController.h"
 #import <Masonry.h>
+#import "HuViewForServiceStatus.h"
+#import <MZFormSheetController.h>
+#import "StatusView.h"
 
 //@class HuHumansProfileCarouselViewController;
 
-@interface HuStatusCarouselViewController : UIViewController
+@interface HuStatusCarouselViewController : UIViewController <HuViewControllerForStatusDelegate, MZFormSheetBackgroundWindowDelegate, UIWebViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, strong) HuHuman *human;

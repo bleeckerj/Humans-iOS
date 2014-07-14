@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "defines.h"
-#import "LoggerClient.h"
+
 
 @interface UILabel (withDate)
 //@property (nonatomic, retain) UILabel *dateLabel;
-//@property (nonatomic, retain) NSDate *dateToShow;
+@property (nonatomic, retain) NSDate *dateToShow;
 - (id)initWithFrame:(CGRect)frame withDate:(NSDate *)date;
 - (void)animateDate;
 + (NSString *)dateToStringInterval:(NSDate *)pastDate;

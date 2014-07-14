@@ -16,10 +16,14 @@
 
 + (HuTwitterServiceManager *)sharedTwitterClientOnBehalfOf:(HuOnBehalfOf *)onBehalfOf;
 
+- (void)like:(HuTwitterStatus*)status;
+- (void)retweet:(HuTwitterStatus*)status;
+- (void)getStatus:(NSString *)statusID withStatuses:(NSArray *)statuses withCompletion:(CompletionHandlerWithData)completion;
+
+
 //+ (HuTwitterServiceManager *)sharedTwitterClientWithOAuthConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret oauthToken:(NSString *)oauthToken;
 
 //- (id)initWithOAuthConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret oauthToken:(NSString *)oauthToken oauthSecret:(NSString *)oauthSecret;
-- (void)like:(HuTwitterStatus*)status;
 
 
 @end

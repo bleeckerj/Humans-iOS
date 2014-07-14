@@ -20,6 +20,8 @@
 #import "HuUserHandler.h"
 #import "HuAppDelegate.h"
 #import <ObjectiveSugar.h>
+#import "HuTwitterStatus.h"
+#import "HuTwitterPlace.h"
 
 #define VISIBLE_ITEMS_IN_CAROUSEL 4
 
@@ -38,6 +40,8 @@
     UIStoryboardSegue *segueToFriends;
     NSMutableArray *statusViews;
     HuUserHandler *user_handler;
+    MRProgressOverlayView *activityIndicatorViewForWebView;
+
 }
 
 @synthesize carousel;
@@ -65,16 +69,9 @@
 
 - (void)commonInit
 {
+    activityIndicatorViewForWebView = [[MRProgressOverlayView alloc]init];
     items = [[NSMutableArray alloc]init];
     carousel = [[iCarousel alloc] init];
-    
-    header = [[HuHeaderForServiceStatusView alloc]init];
-//    UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(onSwipeNameLabel:)];
-//    [gesture setDirection:UISwipeGestureRecognizerDirectionRight];
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onSwipeNameLabel:)];
-    [gesture setNumberOfTapsRequired:2];
-    
-    [header addGestureRecognizer:gesture];
     
     carousel.type = iCarouselTypeLinear;
 	carousel.delegate = self;
@@ -92,11 +89,11 @@
 - (void)setItems:(NSMutableArray *)_items
 {
     items = _items;
-    
-//    [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//        
-//    }];
-    
+    if(statusViews && [statusViews count] > 0) {
+        [statusViews removeAllObjects];
+        [self buildViewsForStatus];
+    }
+    [carousel reloadData];
 }
 
 -(UIStatusBarStyle)preferredStatusBarStyle{
@@ -119,16 +116,9 @@
 
     
     // header
-    header.frame = CGRectMake(0, 0, self.view.frame.size.width, HEADER_HEIGHT);
-    [header setBackgroundColor:[UIColor Amazon]];
-    
-    
-    [header setStatus:[items objectAtIndex:0]];
-    //[self.view addSubview:header];
-    
     [carousel setBackgroundColor:[UIColor crayolaTimberwolfColor]];
       
-    carouselFrame = self.view.frame;//CGRectMake(0, 0/*HEADER_HEIGHT*/, 320, CGRectGetHeight(self.view.frame) - CGRectGetHeight(header.frame));
+    carouselFrame = self.view.frame;
     
     [carousel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_top);
@@ -138,14 +128,14 @@
     }];
     
     [carousel setFrame:carouselFrame];
-//	carousel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
+    [self buildViewsForStatus];
+    /*
 #pragma mark -- set up the HuViewForServiceStatus based on the status
     [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         HuViewForServiceStatus *result = HuViewForServiceStatus.new;
         result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:idx] with:self];
-        [result setOnTap:^(){
-            LOG_UI(0, @"On Tap");
+        [result setOnTapBackButton:^(){
+            LOG_UI(0, @"Back On Tap");
             [carousel scrollToItemAtIndex:0 duration:0.5];
             [self performBlock:^{
                 [[self navigationController]popViewControllerAnimated:YES];
@@ -163,8 +153,75 @@
                 });
         
     }];
-
+*/
     LOG_UI(0, @"view (%@) header= carousel=%@", self.view, NSStringFromCGRect(carousel.frame));
+}
+// we get here when the view loads or from somewhere else
+- (void)buildViewsForStatus
+{
+#pragma mark -- create the UIView (HuViewForServiceStatus) for a specific status element
+    [items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //UIView *result = UIView.new;
+        //
+        id status = [items objectAtIndex:idx];
+        if([status isKindOfClass:[HuTwitterStatus class]]) {
+            HuTwitterStatus *s = (HuTwitterStatus*)status;
+            StatusView *v = [[StatusView alloc]initWithFrame:self.carousel.frame];
+            [v applySeaAndSkyPalette];
+            [v setNameViewColor:[UIColor Twitter]];
+            
+            [v setupTwitterWithStatus:[s statusText] hasImage:NO inReplyTo:nil];
+            [[v scrollView]setBounces:YES];
+            [v scrollToStatusTop];
+            // NSLog(@"%@", dateInLocalTimezone);
+            
+            [v setName:[s serviceUsername]];
+            [v setDate:[s dateForSorting]];
+            if([s place] != nil) {
+                HuTwitterPlace *place = [s place];
+                [v setLocation:[place full_name]];
+            }
+            
+            [v setOnTapBackButton:^(){
+                LOG_UI(0, @"Back On Tap");
+                [carousel scrollToItemAtIndex:0 duration:0.5];
+                [self performBlock:^{
+                    [[self navigationController]popViewControllerAnimated:YES];
+                } afterDelay:0.6];
+                
+            }];
+            
+            [statusViews addObject:v];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [v setNeedsDisplay];
+                
+            });
+
+        } else {
+            HuViewForServiceStatus *result = HuViewForServiceStatus.new;
+            result = [[HuViewForServiceStatus alloc]initWithFrame:self.carousel.frame forStatus:[items objectAtIndex:idx] with:self];
+       
+        [result setOnTapBackButton:^(){
+            LOG_UI(0, @"Back On Tap");
+            [carousel scrollToItemAtIndex:0 duration:0.5];
+            [self performBlock:^{
+                [[self navigationController]popViewControllerAnimated:YES];
+            } afterDelay:0.6];
+        
+        }];
+        if(idx < 10) {
+            [result showOrRefreshPhoto];
+        }
+        [statusViews addObject:result];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [result setNeedsDisplay];
+            
+        });
+        }
+    }];
+    
+
 }
 
 - (void)trackOpenTime
@@ -189,7 +246,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [carousel reloadData];
 }
 
 // TODO Figure out how to tell *why the view disappeared
@@ -234,23 +290,17 @@
 
 
 
-- (CATransform3D)carousel:(iCarousel *)mcarousel itemTransformForOffset:(CGFloat)offset baseTransform:(CATransform3D)transform
+- (CATransform3D)carousel:(iCarousel *)carousel itemTransformForOffset:(CGFloat)offset baseTransform:(CATransform3D)transform
 {
-    
-    if (offset >= 0)
+    if (offset > 0)
     {
         //move back
-        transform = CATransform3DTranslate(transform, 0, 0, -10 * offset);
+        transform = CATransform3DTranslate(transform, 0, 0, -50 * offset);
     }
     else
     {
-        if(offset < 0 && offset > -0.9) {
-            transform  = CATransform3DTranslate(transform, offset*[self carouselItemWidth:self.carousel], 0, 0);
-        } else {
-            //flip around
-            transform = CATransform3DTranslate(transform, -1 * [self carouselItemWidth:self.carousel] * sin(MIN(1, -1*offset) * M_PI) , 0, 500 * offset);
-        }
-        
+        //flip around
+        transform = CATransform3DTranslate(transform, 250 * sin(MIN(1, -offset) * M_PI), 0, 100 * offset);
     }
     return transform;
 }
@@ -273,9 +323,12 @@ NSUInteger last_index, current_index;
     // HuServiceStatus *status = (HuServiceStatus*)[items objectAtIndex:current_index];
     current_index = [mcarousel currentItemIndex];
     
-    
+//    @try {
     for(NSUInteger i=current_index; i<[carousel numberOfItems] && i < current_index + 3; i++) {
-        [[statusViews objectAtIndex:i]showOrRefreshPhoto];
+        id obj = [statusViews objectAtIndex:i];
+        if([obj respondsToSelector:@selector(showOrRefreshPhoto)]) {
+            [[statusViews objectAtIndex:i]showOrRefreshPhoto];
+        }
     }
     
     if([[items objectAtIndex:current_index] isKindOfClass:[UIView class]] == YES) {
@@ -291,7 +344,9 @@ NSUInteger last_index, current_index;
     [header setStatus:[items objectAtIndex:current_index]];
     
     }
-    
+//    } @catch(NSException *e) {
+//        [[self navigationController]popViewControllerAnimated:YES];
+//    }
     
     last_index = [mcarousel currentItemIndex];
 }
@@ -319,7 +374,7 @@ NSUInteger last_index, current_index;
 
 
 
-#pragma mark iCarouselDelegate methods
+#pragma mark iCarouselDataSource methods
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
     return [items count];
@@ -343,6 +398,16 @@ NSUInteger last_index, current_index;
     if(view != nil) {
        // LOG_TODO(0, @"How do you reuse a view? %@", view);
     }
+//    NSAssert(statusViews != nil, @"StatusViews is nil?");
+//    NSAssert([statusViews count] < index, @"Index is out of bounds??");
+    // woops..this shouldn't happen at all, but it seems to and then causes a crash
+    if(statusViews == nil || [statusViews count] < index) {
+        NSDictionary *dimensions = @{@"error": [NSString stringWithFormat:@"statusViews=%@ index=%ld", statusViews, (unsigned long)index]};
+        [[LELog sharedInstance]log:dimensions];
+        LOG_ERROR(1, @"Weird %@", dimensions);
+        [[self navigationController]popViewControllerAnimated:YES];
+        [HuAppDelegate popBadToastNotification:@"Woops." withSubnotice:[dimensions description] ];
+    }
     
     return [statusViews objectAtIndex:index];
     
@@ -352,18 +417,127 @@ NSUInteger last_index, current_index;
     dispatch_after(popTime, dispatch_get_main_queue(), block);
 }
 
+
+
+#pragma mark ==========================
+
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    [HuAppDelegate popBadToastNotification:@"Memories" withSubnotice:@"Too Much Pressure"];
+    
     // Dispose of any resources that can be recreated.
-        [items each:^(id object) {
-            object = [NSNull null];
-        }];
-        [statusViews each:^(id object) {
-            object = [NSNull null];
-        }];
-        [items removeAllObjects];
-        [statusViews removeAllObjects];
+//        [items each:^(id object) {
+//            object = [NSNull null];
+//        }];
+//        [statusViews each:^(id object) {
+//            object = [NSNull null];
+//        }];
+//        [items removeAllObjects];
+//        [statusViews removeAllObjects];
 }
+
+
+
+#pragma mark HuViewControllerForStatusDelegate methods
+// these get used when the HuViewForServiceStatus (Twitter, Instagram, Flickr, etc.) need to do something
+// more at the ViewController level. Delegate-y. PITA.
+MZFormSheetController *webViewFormSheet;
+
+- (void)popWebViewFor:(NSURL *)url over:(UIView *)view
+{
+    LOG_UI(0, @"You must've done something %@", url);
+    
+    //CGRect rect = [view frame];
+    CGSize size = [view size];
+    
+    [[MZFormSheetBackgroundWindow appearance] setBackgroundBlurEffect:YES];
+    [[MZFormSheetBackgroundWindow appearance] setBlurRadius:2.0];
+    
+    
+    UIWebView *webView = [HuAppDelegate sharedWebView:url];
+
+    
+    UIViewController *webViewController = [[UIViewController alloc]init];
+    [webViewController setView:webView];
+    
+    //if(webViewFormSheet == nil) {
+    webViewFormSheet = [[MZFormSheetController alloc] initWithViewController:webViewController];
+    //}
+    __block MZFormSheetController *bformWebViewFormSheet = webViewFormSheet;
+    [webViewFormSheet setCornerRadius:3.0f];
+    webViewFormSheet.presentedFormSheetSize = CGSizeMake(size.width-10, size.height-90);
+    webViewFormSheet.transitionStyle = MZFormSheetTransitionStyleSlideFromTop;
+    webViewFormSheet.shadowRadius = 4.0;
+    webViewFormSheet.shadowOpacity = 0.5;
+    webViewFormSheet.shouldDismissOnBackgroundViewTap = YES;
+    webViewFormSheet.shouldCenterVertically = YES;
+    webViewFormSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
+    webViewFormSheet.didPresentCompletionHandler = ^(UIViewController *presentedFromViewController) {
+        LOG_UI(0, @"%@", presentedFromViewController);
+    };
+    
+    webViewFormSheet.didDismissCompletionHandler = ^(UIViewController *dismissedFromViewController) {
+        LOG_UI(0, @"%@", dismissedFromViewController);
+        [MRProgressOverlayView dismissAllOverlaysForView:bformWebViewFormSheet.view animated:YES];
+    };
+
+    [webView setDelegate:self];
+
+    [self mz_presentFormSheetController:webViewFormSheet animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+        
+    }];
+    
+}
+
+#pragma mark UIWebViewDelegate methods
+//only used here to enable or disable the back and forward buttons
+- (void)webViewDidStartLoad:(UIWebView *)thisWebView
+{
+    if([MRProgressOverlayView overlayForView:thisWebView] == nil) {
+        
+    MRProgressOverlayView *overlay = [MRProgressOverlayView showOverlayAddedTo:thisWebView title:@"Loading" mode:MRProgressOverlayViewModeIndeterminate animated:YES stopBlock:^(MRProgressOverlayView *progressOverlayView) {
+        //
+        LOG_UI(0, @"%@", progressOverlayView);
+        //[MRProgressOverlayView dismissAllOverlaysForView:webViewFormSheet.view animated:YES];
+//        [webViewFormSheet dismissAnimated:YES completionHandler:^(UIViewController *presentedFSViewController) {
+//            //
+//        }];
+        
+    }];
+        overlay.stopBlock = ^(MRProgressOverlayView *progressOverlayView) {
+            [MRProgressOverlayView dismissAllOverlaysForView:thisWebView animated:YES];
+        };
+        
+    } else {
+        [MRProgressOverlayView dismissAllOverlaysForView:thisWebView animated:NO];
+    }
+	//back.enabled = NO;
+	//forward.enabled = NO;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)thisWebView
+{
+    
+	//stop the activity indicator when done loading
+    [MRProgressOverlayView dismissAllOverlaysForView:thisWebView animated:YES];
+    
+    //canGoBack and canGoForward are properties which indicate if there is
+    //any forward or backward history
+//	if(thisWebView.canGoBack == YES)
+//	{
+//		back.enabled = YES;
+//		back.highlighted = YES;
+//	}
+//	if(thisWebView.canGoForward == YES)
+//	{
+//		forward.enabled = YES;
+//		forward.highlighted = YES;
+//	}
+	
+}
+
 
 @end

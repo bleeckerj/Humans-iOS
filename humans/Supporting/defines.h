@@ -306,6 +306,7 @@ typedef void(^Handler)();
 typedef void(^WebViewHandler)(UIWebView *webView);
 typedef void(^WebViewHandlerWithError)(UIWebView *webView, NSError *error);
 typedef void(^BlockCallback)();
+typedef void(^ProgressHandler)(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead);
 typedef enum {
     kListGridView = 0,
     kHalfHeightScrollView,

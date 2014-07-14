@@ -6,7 +6,7 @@
 
 // Import
 #import "TumblrPost.h"
-#import "NSString.h"
+//#import "NSString.h"
 
 
 @implementation TumblrPost

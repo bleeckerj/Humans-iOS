@@ -1,4 +1,4 @@
-//
+ //
 //  HuHumansProfileCarouselViewController.m
 //  humans
 //
@@ -35,6 +35,9 @@
 #import "MSWeakTimer.h"
 #import <REMenu.h>
 #import "HuConnectServicesViewController.h"
+#import "HuHumanStatusScrollView.h"
+#import "HuSimpleViewController.h"
+
 #import <ObjectiveSugar.h>
 
 #define SERVICEUSER_COLUMNS 6
@@ -205,15 +208,13 @@
     
     [self bk_whenTapped:^{
         //
-        activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
-        activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
-        [activityIndicatorView setTitleLabelText:@"Gathering Stuff.."];
-        activityIndicatorView.tintColor = [UIColor orangeColor];
-        [self performBlock:^{
-            //[noticeView dismiss:YES];
-            
+//        activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
+//        activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
+//        [activityIndicatorView setTitleLabelText:@"Gathering"];
+//        activityIndicatorView.tintColor = [UIColor orangeColor];
+//        [self performBlock:^{
             [self showHuman];
-        } afterDelay:0.25];
+//        } afterDelay:0.25];
         
     }];
     
@@ -275,64 +276,103 @@
     
     HuAppDelegate *delegate =  [[UIApplication sharedApplication]delegate];
     HuUserHandler *user_handler = [delegate humansAppUser];
-//    [self performBlock:^{
-//        [activityIndicatorView setTitleLabelText:@"Found Services"];
-//    } afterDelay:2.0];
-//    [self performBlock:^{
-//        [activityIndicatorView setTitleLabelText:@"Milling Stuff"];
-//    } afterDelay:3.0];
-//    [self performBlock:^{
-//        [activityIndicatorView setTitleLabelText:@"Milling Stuff."];
-//    } afterDelay:5.0];
-//    [self performBlock:^{
-//        [activityIndicatorView setTitleLabelText:@"Milling Stuff.."];
-//    } afterDelay:7.0];
     
+    __block NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
+    if(items != nil && [items count] > 0) {
+        return [self prepareAndShowHumanStatus:human withItems:items];
+    }
     
-    [user_handler getStatusForHuman:human withCompletionHandler:^(BOOL success, NSError *error) {
+    activityIndicatorView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
+    activityIndicatorView.mode = MRProgressOverlayViewModeIndeterminate;
+    [activityIndicatorView setTitleLabelText:@"Gathering"];
+    activityIndicatorView.tintColor = [UIColor orangeColor];
+    
+    [user_handler getStatusForHuman:human withProgressHandler:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         //
-        [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
-        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID, @"show-human" : [human name], @"error" : error == nil ? @"nil":error, @"success" : success ? @"YES":@"NO"};
+        if(activityIndicatorView.mode != MRProgressOverlayViewModeDeterminateCircular) {
+            activityIndicatorView.mode = MRProgressOverlayViewModeDeterminateCircular;
+        }
+        [activityIndicatorView setProgress:totalBytesRead/totalBytesExpectedToRead animated:YES];
+        //[[user_handler statusForHumanId]invalidateTimeoutForKey:[human humanid]];
+        
+    } withCompletionHandler:^(BOOL success, NSError *error) {
+        //
+        
+        items = [[user_handler statusForHuman:human]mutableCopy];
+        
+        NSDictionary *dimensions = @{@"key": CLUSTERED_UUID, @"show-human" : [human name], @"count" : items == nil ? @"nil" : [NSString stringWithFormat:@"%ld", [items count]], @"error" : error == nil ? @"nil":error, @"success" : success ? @"YES":@"NO"};
         [[LELog sharedInstance]log:dimensions];
+        
         if(success) {
             LOG_GENERAL(0, @"Loaded Status for %@", human);
-            //[Flurry logEvent:[NSString stringWithFormat:@"Successfully loaded human %@", [human name]]];
+            [self prepareAndShowHumanStatus:human withItems:items];
             
             
-            statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
-            [statusCarouselViewController setHuman:human];
-            
-            NSMutableArray *items = [[user_handler statusForHuman:human]mutableCopy];
-            
-            [statusCarouselViewController setItems:items];
-            
-            [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
-            
-            UINavigationController *nav = [parentViewController navigationController];
-            [nav pushViewController:statusCarouselViewController animated:YES];
-            
-            // turn off the indicator that the status has new stuff..assume once we're showing it, it won't when
-            // we return to the carousel
-            [self shouldMakeStatusLabel:self.countLabel ringOn:NO];
+//            statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
+//            [statusCarouselViewController setHuman:human];
+//            
+//            
+//            [statusCarouselViewController setItems:items];
+//            [self performBlock:^{
+//                [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
+//                    UINavigationController *nav = [parentViewController navigationController];
+//                    [nav pushViewController:statusCarouselViewController animated:YES];
+//            } afterDelay:1];
+//
+//
+//            
+//            // turn off the indicator that the status has new stuff..assume once we're showing it, it won't when
+//            // we return to the carousel
+//            [self shouldMakeStatusLabel:self.countLabel ringOn:NO];
             
         } else {
-            LOG_ERROR(0, @"Error loading status %@", error);
-            //[Flurry logEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
-            //[PFAnalytics trackEvent:[NSString stringWithFormat:@"Error loading human %@ %@", [human name], error]];
+            LOG_ERROR(0, @"Error loading status or count is weird %@ count=%ld", error, [items count]);
+            
             [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:NO];
             MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:parentViewController.view animated:YES];
             noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-            noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@", error];
+            noticeView.titleLabelText = [NSString stringWithFormat:@"Problem loading %@ count=%ld", error, [items count]];
             
             [self performBlock:^{
                 [noticeView dismiss:YES];
             } afterDelay:3.0];
-            
         }
-        
     }];
+
+
 }
 
+-(void)prepareAndShowHumanStatus:(HuHuman*)aHuman withItems:(NSMutableArray *)items
+{
+    /*
+    HuHumanStatusScrollView *test = HuHumanStatusScrollView.new;
+    HuSimpleViewController *simple = [[HuSimpleViewController alloc]initWithView:test];
+    [test configureWithStatusItems:items withParentViewController:simple];
+
+    UINavigationController *nav = [parentViewController navigationController];
+    [nav pushViewController:simple animated:YES];
+    */
+    
+    
+    HuAppDelegate *delegate = DELEGATE;
+    statusCarouselViewController = [delegate statusCarouselViewController];//[[HuStatusCarouselViewController alloc]init];
+    [statusCarouselViewController setHuman:human];
+    
+    
+    [statusCarouselViewController setItems:items];
+    [self performBlock:^{
+        [MRProgressOverlayView dismissAllOverlaysForView:parentViewController.view animated:YES];
+        UINavigationController *nav = [parentViewController navigationController];
+        [nav pushViewController:statusCarouselViewController animated:YES];
+    } afterDelay:0.5];
+    
+    
+    
+    // turn off the indicator that the status has new stuff..assume once we're showing it, it won't when
+    // we return to the carousel
+    [self shouldMakeStatusLabel:self.countLabel ringOn:NO];
+    
+}
 
 
 #pragma mark here's where we turn on the status activity indicator
@@ -511,6 +551,7 @@
     //    MGLineStyled *header;
     MGLine *add_human;
     HuShowServicesViewController *showServicesViewController;
+    MSWeakTimer *timerForStatusCountRefresh;
     MSWeakTimer *timerForStatusRefresh;
     dispatch_queue_t privateQueue;
     CGRect full_sized, half_sized;
@@ -544,6 +585,16 @@
     }
     return self;
 }
+
+//- (id)init
+//{
+//    self = [super init];
+//    if(self) {
+//        [self commonInit];
+//    
+//    }
+//    return self;
+//}
 
 - (void)commonInit
 {
@@ -594,17 +645,17 @@
                 HuHumanProfileView *humanProfileView = (HuHumanProfileView *)obj;
                 HuHuman *human = [humanProfileView human];
                 [humanProfileView refreshStats:data];
-                NSTimeInterval last = [userHandler lastPeekTimeFor:human];
-                
-                [userHandler getStatusCountForHuman:human after:last withCompletionHandler:^(id data, BOOL success, NSError *error) {
-                    //
-                    if(success) {
-                        //service.count.total
-                        [humanProfileView statusSinceLast:data];
-                    } else {
-                        
-                    }
-                }];
+//                NSTimeInterval last = [userHandler lastPeekTimeFor:human];
+//                
+//                [userHandler getStatusCountForHuman:human after:last withCompletionHandler:^(id data, BOOL success, NSError *error) {
+//                    //
+//                    if(success) {
+//                        //service.count.total
+//                        [humanProfileView statusSinceLast:data];
+//                    } else {
+//                        
+//                    }
+//                }];
                 
                 NSNumber *c = [data objectForKey:[human humanid]];
                 if([c intValue] < 1) {
@@ -613,7 +664,7 @@
                 
             }];
             if(containsEmptyStatus) {
-                [self resetStatusRefreshTimer:30];
+                [self resetStatusRefreshTimer:20];
             } else {
                 [self resetStatusRefreshTimer:240];
             }
@@ -634,13 +685,13 @@
 
 - (void)invalidateStatusRefreshTimer
 {
-    [timerForStatusRefresh invalidate];
+    [timerForStatusCountRefresh invalidate];
 }
 
 - (void)resetStatusRefreshTimer:(NSTimeInterval)refreshTime
 {
     [self invalidateStatusRefreshTimer];
-    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:refreshTime
+    timerForStatusCountRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:refreshTime
                                                                  target:self
                                                                selector:@selector(updateHumanProfileViewsStatusCounts)
                                                                userInfo:nil
@@ -696,6 +747,11 @@
 
 - (void)freshenHumansForView
 {
+    [self freshenHumansForView:YES];
+}
+
+- (void)freshenHumansForView:(Boolean)updateProfileImages
+{
     NSArray *list_of_humans = [[userHandler humans_user]humans];
     arrayOfHumans = [list_of_humans copy];
     
@@ -717,7 +773,9 @@
                 HuHuman *fresh_human = (HuHuman*)object;
                 if([human_of_view isEqual:fresh_human]) {
                     [view setHuman:fresh_human];
-                    [view updateProfileImageContainer];
+                    if(updateProfileImages) {
+                        [view updateProfileImageContainer];
+                    }
                 }
             }];
         }
@@ -763,14 +821,14 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [timerForStatusRefresh invalidate];
+    [timerForStatusCountRefresh invalidate];
     indexToShow = [carousel currentItemIndex];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self freshenHumansForView];
+   /// [self freshenHumansForView];
     
     
     [super viewWillAppear:animated];
@@ -781,18 +839,18 @@
     [carousel setCurrentItemIndex:indexToShow];
     
     
-    if(timerForStatusRefresh != nil) {
-        [timerForStatusRefresh invalidate];
+    if(timerForStatusCountRefresh != nil) {
+        [timerForStatusCountRefresh invalidate];
         
     }
-    timerForStatusRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:240
+    timerForStatusCountRefresh = [MSWeakTimer scheduledTimerWithTimeInterval:240
                                                                  target:self
                                                                selector:@selector(updateHumanProfileViewsStatusCounts)
                                                                userInfo:nil
                                                                 repeats:YES
                                                           dispatchQueue:privateQueue];
     
-    [timerForStatusRefresh fire];
+    [timerForStatusCountRefresh fire];
     
     if(viewType == kHalfHeightScrollView) {
         if([carousel numberOfItems] == 1 ) {
@@ -837,6 +895,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //[self freshenHumansForView];
+
+    
     NSUInteger servicesCount = [[[userHandler humans_user]services]count];
     
     HuHumansProfileCarouselViewController *bself = self;
@@ -924,6 +986,7 @@
                                            image:[UIImage imageNamed:@"Icon_Home"]
                                 highlightedImage:nil
                                           action:^(REMenuItem *item) {
+                                              
                                               HuHumanProfileView *current = (HuHumanProfileView*)[carousel currentItemView];
                                               //                                                            NSString *human_name = [[current human]name];
                                               //                                                            [item setTitle:[NSString stringWithFormat:@"Edit %@", human_name]];
@@ -931,6 +994,7 @@
                                               if([human isYouMan] == NO) {
                                                   [current editHuman];
                                               }
+                                            
                                           }];
     
     
@@ -990,6 +1054,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             //[[self navigationController]popViewControllerAnimated:YES];
             HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+            LOG_UI(0, @"Current Stack=%@", [[self navigationController]viewControllers]);
             [[self navigationController]setViewControllers:[delegate freshNavigationStack] animated:YES];
         });
         

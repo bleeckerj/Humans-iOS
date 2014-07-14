@@ -13,29 +13,28 @@
 #import <HockeySDK/HockeySDK.h>
 #import <SDWebImageManager.h>
 #import "HuHumansProfileCarouselViewController.h"
+#import "HuStatusCarouselViewController.h"
 
 @implementation HuAppDelegate
 {
     HuLoginViewController *loginViewController;
     HuSignUpViewController *signUpViewController;
-    HuHumansProfileCarouselViewController *humansProfileCarouselViewController;
+    HuStatusCarouselViewController *statusCarouselViewController;
+    //HuHumansProfileCarouselViewController *humansProfileCarouselViewController;
 }
 @synthesize humansAppUser;
 @synthesize jediFindFriendsViewController;
-
+@synthesize humansProfileCarouselViewController;
 //@synthesize findFollowsMainViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    [Parse setApplicationId:@"RBemMZQt31HNHJBfEXTj5oFcxo1ZBwbiZDutTbAe"
-//                  clientKey:@"rOKCHpW5MnjSHwCgLAGFQk72UNvZNzdKUbQ4qXeW"];
-//    
-//    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-//    
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"89a415bf14fb56ed6e81ef153d4cb481"];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
+    [Crashlytics startWithAPIKey:@"f3ea4d3148c2d7cf3a017fdad4bd9871d2f1a988"];
+    
     [application setStatusBarHidden:NO];
 
     [self setupApplication];
@@ -96,6 +95,26 @@
     return  @[loginOrSignUpViewController];
 }
 
+
+- (void)popToProfileCarouselView
+{
+    UINavigationController *navigator = (UINavigationController *)[self.window rootViewController];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [navigator setViewControllers:@[[self humansProfileCarouselViewController]] animated:YES];
+    });
+}
+
+- (void)popToLoginViewController
+{
+    UINavigationController *navigator = (UINavigationController *)[self.window rootViewController];
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+    [navigator setViewControllers:@[[self loginViewController]] animated:YES];
+    });
+
+}
+
 // only makes sense once we are logged in
 - (HuHumansProfileCarouselViewController *)humansProfileCarouselViewController
 {
@@ -105,6 +124,21 @@
     }
     return humansProfileCarouselViewController;
 }
+
+- (HuStatusCarouselViewController *)statusCarouselViewController
+{
+    if(statusCarouselViewController == nil) {
+        statusCarouselViewController = [[HuStatusCarouselViewController alloc]init];
+    }
+    return statusCarouselViewController;
+}
+
+
+//- (void)setHumansHumansProfileCarouselViewController:(HuHumansProfileCarouselViewController *)viewController
+//{
+//    humansProfileCarouselViewController = viewController;
+//}
+
 
 - (NSString *)humansUsername
 {
@@ -155,10 +189,6 @@
     }
 }
 
-- (void)setHumansHumansProfileCarouselViewController:(HuHumansProfileCarouselViewController *)viewController
-{
-    humansProfileCarouselViewController = viewController;
-}
 
 
 - (HuJediFindFriends_ViewController *)jediFindFriendsViewController
@@ -168,6 +198,7 @@
     }
     return jediFindFriendsViewController;
 }
+
 
 - (HuLoginViewController *)loginViewController
 {
@@ -188,6 +219,23 @@
     return signUpViewController;
     
 }
+static UIWebView *sharedWebView;
+
++ (UIWebView *)sharedWebView:(NSURL *)url
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedWebView = [[UIWebView alloc]init];
+        [sharedWebView setScalesPageToFit:YES];
+    });
+    // clear the browser which'll cache..
+    [sharedWebView loadHTMLString:@"" baseURL:nil];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [sharedWebView loadRequest:request];
+    
+    return sharedWebView;
+}
+
 
 + (void)popGoodToastNotification:(NSString *)notice withColor:(UIColor *)color withImage:(UIImage *)image
 {

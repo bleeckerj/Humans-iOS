@@ -14,14 +14,14 @@
 
 @implementation HuAddDeleteServiceUserCarouselViewController
 @synthesize deletesWereMade;
-@synthesize addMoreHuman;
+@synthesize addsWereMade;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        addMoreHuman = NO;
+        addsWereMade = NO;
         deletesWereMade = NO;
     }
     return self;
@@ -124,7 +124,7 @@
         add_service_user_view.layer.masksToBounds = YES;
 #pragma mark === add more human button event stuff
         FUIButton *add_user = [[FUIButton alloc]initWithFrame:view_frame];
-        [add_user setTitle:@"Add More Human" forState:UIControlStateNormal];
+        [add_user setTitle:@"Add Another" forState:UIControlStateNormal];
         [[add_user titleLabel]setFont:BUTTON_FONT_LARGE];
         [add_user setButtonColor:[UIColor crayolaCaribbeanGreenColor]];
         UIColor *foo = [UIColor crayolaCaribbeanGreenColor];
@@ -134,7 +134,8 @@
         
         [add_user bk_addEventHandler:^(id sender) {
             // bunky flag we'll use to tell the HuEditHumanViewController to pop-up HuJediMiniViewController
-            addMoreHuman = YES;
+            addsWereMade = YES;
+            
             
             [[self formSheetController]dismissAnimated:YES completionHandler:nil ];
             
@@ -250,6 +251,8 @@
                 LOG_UI(0, @"Delete %@", [service_user username]);
 
                 deletesWereMade = YES;
+                
+                
                 [handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
                     
                     if(success) {
@@ -262,6 +265,9 @@
                         
                         [self performBlock:^{
                             [MRProgressOverlayView dismissAllOverlaysForView:self.view animated:YES];
+
+                        
+                        
                         } afterDelay:0.5];
                     } else {
                         NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"service-user-id": [service_user id], @"service-user-username" : [service_user username], @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};

@@ -30,7 +30,7 @@
 @interface HuAddDeleteServiceUserCarouselViewController : UIViewController <iCarouselDataSource, iCarouselDelegate>
 @property BOOL showStatusBar;
 @property BOOL deletesWereMade;
-@property BOOL addMoreHuman;
+@property BOOL addsWereMade;
 @property (strong, nonatomic) IBOutlet UILabel *label;
 @property (strong, nonatomic) IBOutlet iCarousel *carousel;
 @property (strong, nonatomic) HuHuman *human;

@@ -114,11 +114,11 @@
 //	{
 //		self.flickr_id = _id_;
 //	}
-    id status_on_behalf_of_ = [dic objectForKey:@"status_on_behalf_of"];
-    if([status_on_behalf_of_ isKindOfClass:[NSDictionary class]])
-    {
-        self.status_on_behalf_of = [[HuOnBehalfOf alloc]initWithJSONDictionary:status_on_behalf_of_];
-    }
+//    id status_on_behalf_of_ = [dic objectForKey:@"status_on_behalf_of"];
+//    if([status_on_behalf_of_ isKindOfClass:[NSDictionary class]])
+//    {
+//        self.status_on_behalf_of = [[HuOnBehalfOf alloc]initWithJSONDictionary:status_on_behalf_of_];
+//    }
     
     
 	id accuracy_ = [dic objectForKey:@"accuracy"];

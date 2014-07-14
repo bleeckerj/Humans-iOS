@@ -1,21 +1,23 @@
 PODS:
-  - AFNetworking (2.2.4):
+  - AFNetworking (2.3.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.2.4):
+  - AFNetworking/NSURLConnection (2.3.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.2.4):
-    - AFNetworking/NSURLConnection
-  - AFNetworking/Reachability (2.2.4)
-  - AFNetworking/Security (2.2.4)
-  - AFNetworking/Serialization (2.2.4)
-  - AFNetworking/UIKit (2.2.4):
+  - AFNetworking/NSURLSession (2.3.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.3.1)
+  - AFNetworking/Security (2.3.1)
+  - AFNetworking/Serialization (2.3.1)
+  - AFNetworking/UIKit (2.3.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - AQGridView (1.3)
@@ -41,15 +43,17 @@ PODS:
   - DropdownMenu (1.0.0)
   - ECSlidingViewController (2.0.2)
   - EKKeyboardAvoiding (2.0)
-  - Expecta (0.2.4)
+  - Expecta (0.3.1)
   - EZForm (1.1.4)
-  - Facebook-iOS-SDK (3.14.1):
+  - Facebook-iOS-SDK (3.15.1):
     - Bolts
-  - FlatUIKit (1.3)
+  - FlatUIKit (1.4)
+  - FlickrKit (1.0.3)
   - FLKAutoLayout (0.1.1)
   - FontAwesome-iOS (0.0.4)
   - FPBrandColors (0.1.3)
   - FXKeychain (1.5.1)
+  - FXLabel (1.5.8)
   - iCarousel (1.7.6)
   - IDMPhotoBrowser (1.3.5):
     - AFNetworking (~> 2.2.3)
@@ -59,12 +63,12 @@ PODS:
   - KeyboardController (1.0.0)
   - kvo-block-binding (0.0.1)
   - LogEntries (0.0.1)
-  - Masonry (0.4.0)
+  - Masonry (0.5.2)
   - MBProgressHUD (0.8)
   - MCUIViewLayout (0.3.4)
-  - MGBoxKit (4.0.0):
-    - MGBoxKit/Categories
-  - MGBoxKit/Categories (4.0.0)
+  - MGBoxKit (5.0.2):
+    - MGEvents
+  - MGEvents (1.0.3)
   - MHTextField (0.0.4)
   - MKFoundationKit (1.1.0):
     - MKFoundationKit/AutoDescribe
@@ -91,19 +95,21 @@ PODS:
     - MKFoundationKit/Base64
   - MKFoundationKit/Queue (1.1.0)
   - MKFoundationKit/Stack (1.1.0)
-  - MMDrawerController (0.5.5):
+  - MMDrawerController (0.5.6):
     - MMDrawerController/Core
     - MMDrawerController/MMDrawerBarButtonItem
     - MMDrawerController/MMDrawerVisualStates
     - MMDrawerController/Subclass
-  - MMDrawerController/Core (0.5.5)
-  - MMDrawerController/MMDrawerBarButtonItem (0.5.5):
+  - MMDrawerController/Core (0.5.6)
+  - MMDrawerController/MMDrawerBarButtonItem (0.5.6):
     - MMDrawerController/Core
-  - MMDrawerController/MMDrawerVisualStates (0.5.5):
+  - MMDrawerController/MMDrawerVisualStates (0.5.6):
     - MMDrawerController/Core
-  - MMDrawerController/Subclass (0.5.5):
+  - MMDrawerController/Subclass (0.5.6):
     - MMDrawerController/Core
+  - MMPopLabel (0.1.1)
   - MRProgress (0.3.1)
+  - MSDynamicsDrawerViewController (1.5.1)
   - MSWeakTimer (1.1.0)
   - MZAppearance (1.1.3)
   - MZFormSheetController (2.3.4):
@@ -111,13 +117,14 @@ PODS:
   - NHBalancedFlowLayout (0.1.2)
   - NSLogger (1.2)
   - oauthconsumer (1.0.0)
-  - Objective-Shorthand (1.2.1)
+  - Objective-Shorthand (1.3.1)
   - objectiveflickr (2.0.4)
   - ObjectiveSugar (1.1.0)
-  - OCHamcrest (3.0.1)
-  - OCMock (2.2.4)
-  - OCMockito (1.2.0):
-    - OCHamcrest (~> 3.0)
+  - OCHamcrest (4.0.1)
+  - OCMock (3.0.2)
+  - OCMockito (1.3.0):
+    - OCHamcrest (~> 4.0)
+    - TPWeakProxy (~> 1.0)
   - RDVKeyboardAvoiding (1.1.0)
   - ReactiveCocoa (2.3.1):
     - ReactiveCocoa/UI
@@ -126,7 +133,7 @@ PODS:
   - ReactiveCocoa/no-arc (2.3.1)
   - ReactiveCocoa/UI (2.3.1):
     - ReactiveCocoa/Core
-  - REMenu (1.8.5)
+  - REMenu (1.9)
   - RFRotate (1.0.0)
   - RNBlurModalView (0.1.0)
   - RNCryptor (2.2)
@@ -137,11 +144,12 @@ PODS:
   - SDWebImage/Core (3.6)
   - Sequencer (1.0.1)
   - SKSlideViewController (0.0.1)
-  - STTwitter (0.1.3)
+  - STTwitter (0.1.4)
   - SVProgressHUD (1.0)
   - TestFlightSDK (3.0.2)
   - TPKeyboardAvoiding (1.2.3)
-  - TTTAttributedLabel (1.10.0)
+  - TPWeakProxy (1.0.0)
+  - TTTAttributedLabel (1.9.4)
   - TYMActivityIndicatorView (0.2.0)
   - UIColor-Crayola (1.0)
   - UIImage-Categories (0.0.1)
@@ -159,21 +167,23 @@ DEPENDENCIES:
   - DropdownMenu
   - ECSlidingViewController (~> 2.0.0-beta2)
   - EKKeyboardAvoiding
-  - Expecta (~> 0.2.3)
+  - Expecta
   - EZForm
   - Facebook-iOS-SDK
   - FlatUIKit
+  - FlickrKit (from `~/Code/FlickrKit`)
   - FLKAutoLayout
   - FontAwesome-iOS (~> 0.0.4)
   - FPBrandColors (~> 0.1.3)
   - FXKeychain
+  - FXLabel
   - iCarousel (from `https://github.com/bleeckerj/iCarousel`)
   - IDMPhotoBrowser
   - ionicons
   - KeyboardController (~> 1.0.0)
   - kvo-block-binding (from `~/Code/kvo-block-binding`)
   - LogEntries
-  - Masonry (~> 0.4.0)
+  - Masonry
   - MBProgressHUD (~> 0.8)
   - MCUIViewLayout (from `https://github.com/mirego/MCUIViewLayout.git`)
   - MGBoxKit
@@ -181,7 +191,9 @@ DEPENDENCIES:
   - MHTextField (~> 0.0.3)
   - MKFoundationKit (~> 1.1.0)
   - MMDrawerController (~> 0.5.2)
+  - MMPopLabel
   - MRProgress (~> 0.3.1)
+  - MSDynamicsDrawerViewController
   - MSWeakTimer (~> 1.1.0)
   - MZFormSheetController
   - NHBalancedFlowLayout (~> 0.1.2)
@@ -190,9 +202,9 @@ DEPENDENCIES:
   - Objective-Shorthand
   - objectiveflickr
   - ObjectiveSugar
-  - OCHamcrest (~> 3.0.1)
+  - OCHamcrest
   - OCMock
-  - OCMockito (~> 1.0)
+  - OCMockito
   - RDVKeyboardAvoiding
   - ReactiveCocoa
   - REMenu (~> 1.8)
@@ -208,7 +220,7 @@ DEPENDENCIES:
   - STTwitter
   - TestFlightSDK (~> 3.0.0)
   - TPKeyboardAvoiding
-  - TTTAttributedLabel
+  - TTTAttributedLabel (from `~/Code/TTTAttributedLabel/`)
   - TYMActivityIndicatorView
   - UIColor-Crayola
   - UIImage-Categories (~> 0.0.1)
@@ -220,6 +232,8 @@ EXTERNAL SOURCES:
   CRToast:
     :commit: 6ff567d4fbb7b339289c95901d6d188a8d78abbd
     :git: https://github.com/cruffenach/CRToast.git
+  FlickrKit:
+    :path: ~/Code/FlickrKit
   iCarousel:
     :git: https://github.com/bleeckerj/iCarousel
   kvo-block-binding:
@@ -233,11 +247,13 @@ EXTERNAL SOURCES:
     :path: ~/Code/oauthconsumer/
   RFRotate:
     :path: ~/Code/RFRotate
+  TTTAttributedLabel:
+    :path: ~/Code/TTTAttributedLabel/
   WSLObjectSwitch:
     :path: ~/Code/WSLObjectSwitch
 
 SPEC CHECKSUMS:
-  AFNetworking: ab63e259fe91eef4519b371ef0a4955af0e73e64
+  AFNetworking: 6d7b76aa5d04c8c37daad3eef4b7e3f2a7620da3
   AQGridView: ea23eba433713b5b36efc258f58b38a6b4c3cc35
   BlocksKit: 07c8a80f04275efac6a5f8b973782489c083a182
   Bolts: 91c2af8eae1d44e1dd75946a5b0ae04a43ea43e4
@@ -247,43 +263,48 @@ SPEC CHECKSUMS:
   DropdownMenu: ad71a2fcb932cc04a4f7c29aadaf2e8ed0c08e42
   ECSlidingViewController: 6c11fadb10d720c2d48bc577962332bdd4264c9f
   EKKeyboardAvoiding: 4dd6f1fdd6eb7dd7eaa1fe7832a0392e0c533e1c
-  Expecta: 112bcafa2304ee0f3c5e586505f24555a47b25d5
+  Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
   EZForm: 0846af5f3f42f6cd490c6e9e56164ae9b587b668
-  Facebook-iOS-SDK: e9b3d5ac54ee3e5e693f4eef470b97911b3d076d
-  FlatUIKit: b84e5d51225bcbd8d7fe264ec15f8ffc7c94e6d1
+  Facebook-iOS-SDK: 56214af8e0ef16e751eb2804250326b709e571b8
+  FlatUIKit: edc1ed0c130687dc64a10e45851cc58925f6893d
+  FlickrKit: 1c2e90d8a6a351866dc46b5f3420ce062edf3953
   FLKAutoLayout: 9fa39aac2903b274fbeed6be74154cdb937a04fc
   FontAwesome-iOS: 0c39b9f5d4687d36cf8958f61295c2b7960a7308
   FPBrandColors: 8cc97e2d7dc66e78abe99ae4c1a77721db78cd20
   FXKeychain: beb642a4218ba783507af08865eda05e9b26a612
+  FXLabel: d7c2cb1d2903d7a7ac04855d470ecf2079f4881e
   iCarousel: 390c2aa0d9509200f7e96ded24c268011c778c72
   IDMPhotoBrowser: d691bcdf470553e165f8eb982c5cd8e9a58bcdef
   ionicons: 83f9b09405311133e7c5118819150f1cbf2c3d64
   KeyboardController: 5a08b759c49d3efb57afc7aaec7b58f81a9ca24b
   kvo-block-binding: 12d5ef24cab0bd8e74fed4bb20c2a40d05771e98
   LogEntries: 3762499e15bd054a7f2ab230291becf8326ecf9a
-  Masonry: 392466f4090cb28cc5349adec067453463e2ecd9
+  Masonry: ec0189e1a07af00913e4a1a335ea76887adc86e1
   MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
   MCUIViewLayout: db43d391388bcee6763ac3364c2109e32016f04d
-  MGBoxKit: 7ac48f05d3de5d47db054919394d8296b1e1f1a5
+  MGBoxKit: 29143fca276538b711503b71e47835248dff7e6f
+  MGEvents: e6254d7873bcb90b266801d171f9948194010927
   MHTextField: 4a8fc9ab79e99cf097aaecad0fd60cba3ecff546
   MKFoundationKit: eb3eb35e6c484dd47c57b0d129a01f60f1881281
-  MMDrawerController: 45c08be28375eac9f0ecaa75f1f0e47eb38c8eb1
+  MMDrawerController: 4bae84535ca7a5f4cb55a66a001e6035c3571677
+  MMPopLabel: 93cf43ff12eb7d102d0cfac7f8d78ec7a5477285
   MRProgress: 365b18b18b35309dd268ac72ed8b474e9236e2f5
+  MSDynamicsDrawerViewController: 0002059480a4b5ddde7eafbafb958a79a9b0ffaf
   MSWeakTimer: 6bd071c058fd49daa62013e4ae70caf61d0f2dc2
   MZAppearance: c88502c0c2345120630c34e09d5ff09e2969ba30
   MZFormSheetController: 8c453908080c338274e68908849029435d3e2736
   NHBalancedFlowLayout: 8efb9df89105ae2eb5cc00aeab9243f7ee6cca75
   NSLogger: c4df4b0208d724f244c05f1966b7402f14d7bf55
   oauthconsumer: 96e97f21400a93ab501a0a98920e33766f8d6178
-  Objective-Shorthand: 1fe595f2f532cca9d3106e2370fd97f26a3412c2
+  Objective-Shorthand: d6b620f28fac7c3c054ce9c45be3414db7e53f5f
   objectiveflickr: 39b43d8db58c75c82295d1babe4596f3e9b4493b
   ObjectiveSugar: f48793f5902c77cfc02a4ce46d2e8ecddcad4dc2
-  OCHamcrest: 207233b7d7a44dadd66aca398947cc7e029c9be5
-  OCMock: 6db79185520e24f9f299548f2b8b07e41d881bd5
-  OCMockito: e4b9564b2b9165a143fd54a41dbfb55595699624
+  OCHamcrest: b464725bbb48d0f1cd9c6f4ec3cb35fe0c4f2b94
+  OCMock: b9836ab89d8d5e66cbe6333f93857037c310ee62
+  OCMockito: eca2670b3ce4a457d316b046a36d6f2b980a4da7
   RDVKeyboardAvoiding: d5a26844bcc3c282d747c4c550518dba91f78e8b
   ReactiveCocoa: dca75777b9d18990c8714a3a6f2149f29b4d1462
-  REMenu: e1512b09121d3f8fd9bb533423ac467675eef95c
+  REMenu: b2e2ff55c00e7e6a190b7bedf16ca928e836fc5e
   RFRotate: 32613810b400f04cce8b6e532f52fe9f59effb68
   RNBlurModalView: 38380c10dcaf7804f7ba5e3516abcaf8bc8eddb3
   RNCryptor: 4f562062c39f288b99601674f2c50dd44b68d58a
@@ -292,11 +313,12 @@ SPEC CHECKSUMS:
   SDWebImage: c6989652c1cdf27cbdf3f56957e2030f825af5bc
   Sequencer: a73abaa4dccffb68ff67f512ad6c6d39881387a1
   SKSlideViewController: d9756f32ee8880bbf6aeb33fd5baca0521015ad7
-  STTwitter: cbfe847b9dc263e6206fc1e92ce325764bbbc18b
+  STTwitter: 809f63f856341fdd103fbc6d9e4818d48a91be0c
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
   TestFlightSDK: 0c24c533748d0d84bfe7a3cb6036fa79124d84ee
   TPKeyboardAvoiding: ca26afa683d829cb96fe69b887fc8be4178f0b9a
-  TTTAttributedLabel: c3a11b538bc7beb4815f156e2ba4b066929e13f9
+  TPWeakProxy: a23251ba7fbe268c93f809cc072ef834f5063798
+  TTTAttributedLabel: f228c16e9d404f3c54b3959a7224e28b211dc152
   TYMActivityIndicatorView: b65789b48feca6f6d546831d8ae5ad62acd58403
   UIColor-Crayola: 8dad18d86c040cdc6fbd21f98733c340b6bab732
   UIImage-Categories: 99245612a4725173db4f0a9ed8ba9dbe2a1e0b4f

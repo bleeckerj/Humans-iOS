@@ -7,6 +7,7 @@
 //
 
 #import "HuSplashViewController.h"
+#import <Crashlytics/Crashlytics.h>
 
 @interface HuSplashViewController ()
 
@@ -56,6 +57,7 @@
 
 - (void)viewDidLoad
 {
+    
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
@@ -150,7 +152,7 @@
     
     [self performBlock:^{
         [self loginViaKeychain];
-    } afterDelay:3.0];
+    } afterDelay:1.0];
 
 }
 
@@ -176,11 +178,16 @@
         
         [self loginWithUsername:username password:password completionHandler:^(BOOL success, NSError *error) {
             //
+#ifndef DEV
+            if([username isEqualToString:@"darthjulian"] == NO) {
             NSDictionary *dimensions = @{@"key" : CLUSTERED_UUID ,@"edition" : CLUSTERED_EDITION, @"login-user" : username, @"success": success?@"YES":@"NO", @"error": error==nil?@"nil":[[error userInfo]description]};
             [[LELog sharedInstance]log:dimensions];
+            }
+#endif
             if(success) {
                 
                 HuHumansProfileCarouselViewController *theHumansProfileCarousel = [delegate humansProfileCarouselViewController];
+                
                 UINavigationController *root = (UINavigationController*)delegate.window.rootViewController;
                 [root pushViewController:theHumansProfileCarousel animated:YES];
             } else {

@@ -125,11 +125,11 @@
 - (void) parseJSONDictionary:(NSDictionary *)dic
 {
 	// PARSER
-    id status_on_behalf_of_ = [dic objectForKey:@"status_on_behalf_of"];
-    if([status_on_behalf_of_ isKindOfClass:[NSDictionary class]])
-    {
-        self.status_on_behalf_of = [[HuOnBehalfOf alloc]initWithJSONDictionary:status_on_behalf_of_];
-    }
+//    id status_on_behalf_of_ = [dic objectForKey:@"status_on_behalf_of"];
+//    if([status_on_behalf_of_ isKindOfClass:[NSDictionary class]])
+//    {
+//        self.status_on_behalf_of = [[HuOnBehalfOf alloc]initWithJSONDictionary:status_on_behalf_of_];
+//    }
     
 	id caption_ = [dic objectForKey:@"caption"];
 	if([caption_ isKindOfClass:[NSDictionary class]])

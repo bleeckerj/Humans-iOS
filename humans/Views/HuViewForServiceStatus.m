@@ -13,6 +13,8 @@
 #import "HuTwitterStatus.h"
 #import "HuTwitterCoordinates.h"
 #import "HuTwitterPlace.h"
+#import "HuTwitterEntitiesURL.h"
+
 #import "HuFoursquareCheckin.h"
 #import "HuFoursquareVenue.h"
 #import "HuStatusPhotoBox.h"
@@ -21,7 +23,7 @@
 #import <BlocksKit+UIKit.h>
 #import <IDMPhotoBrowser.h>
 #import "HuInstagramHTTPSessionManager.h"
-
+#import "HuTwitterStatusEntities.h"
 #import <UIColor+FPBrandColor.h>
 #import <UIColor+Crayola.h>
 #import <UIImage+Resize.h>
@@ -33,14 +35,22 @@
 #import "HuServiceStatus.h"
 #import "HuTwitterServiceManager.h"
 
-#import "HuFlickrServiceManager.h"
-#import "HuFlickrServicer.h"
 
-@interface HuTwitterStatusView : HuViewForServiceStatus <TTTAttributedLabelDelegate> {
+#import "HuFlickrServiceManager.h"
+//#import "HuFlickrServicer.h"
+@class HuTwitterStatusView;
+
+@interface HuTwitterStatusView : HuViewForServiceStatus <TTTAttributedLabelDelegate, UIViewControllerAnimatedTransitioning, UIGestureRecognizerDelegate> {
     UIImageView *photoView;
     JBAttributedAwareScrollView *statusView;
     HuTwitterStatus *status;
+    UIViewController<HuViewControllerForStatusDelegate> *parent;
+    //UIScreenEdgePanGestureRecognizer *bottomEdgeRecognizer;
+
 }
+@property (nonatomic, strong) UIPercentDrivenInteractiveTransition* interactiveTransition;
+@property (nonatomic, strong) UIScreenEdgePanGestureRecognizer *bottomEdgeRecognizer;
+
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
@@ -52,6 +62,8 @@
     UIImageView *photoView;
     JBAttributedAwareScrollView *statusView;
     HuFlickrStatus *status;
+    UIViewController<HuViewControllerForStatusDelegate> *parent;
+
 }
 @end
 
@@ -60,7 +72,7 @@
     JBAttributedAwareScrollView *statusView;
     InstagramStatus *status;
     UIImageView *photoView;
-    UIViewController *parent;
+    UIViewController<HuViewControllerForStatusDelegate> *parent;
 }
 
 @end
@@ -79,7 +91,7 @@
 
 @implementation HuViewForServiceStatus
 #pragma mark TTTAttributedLabelDelegate method
-@synthesize onTap;
+@synthesize onTapBackButton;
 UIImageView *exView;
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url
@@ -204,7 +216,7 @@ UIImageView *exView;
     [avatar setContentMode:(UIViewContentModeScaleAspectFit)];
     [avatar setClipsToBounds:YES];
     [avatar setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-    [avatar.layer setCornerRadius:5.0];
+    [avatar.layer setCornerRadius:0.0];
     __block UIImageView *bavatar = avatar;
     [avatar setImageWithURL:[mStatus userProfileImageURL] placeholderImage:[UIImage imageNamed:@"GIJoeAngry"] options:(SDWebImageRetryFailed) completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if(error == nil) {
@@ -233,7 +245,7 @@ UIImageView *exView;
     [button setUserInteractionEnabled:YES];
     [button setBackgroundColor:[UIColor crayolaYellowOrangeColor]];
     [button setTitle:@"Back" forState:UIControlStateNormal];
-    [button.layer setCornerRadius:5];
+    [button.layer setCornerRadius:0];
     
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapHeader:)];
     [gesture setNumberOfTapsRequired:1];
@@ -258,8 +270,8 @@ UIImageView *exView;
 
 
 - (void)onTapHeader:(id)sender {
-    if(self.onTap != nil) {
-        self.onTap();
+    if(self.onTapBackButton != nil) {
+        self.onTapBackButton();
     }
 }
 
@@ -320,51 +332,91 @@ UIImageView *exView;
 @implementation HuTwitterStatusView
 {
 }
+- (id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    return self;
+}
 
+
+- (NSTimeInterval)transitionDuration:(id <UIViewControllerContextTransitioning>)transitionContext;
+{
+    return 0.4;
+}
+
+#pragma mark UIViewControllerAnimatedTransitioning delegate methods
+- (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext
+{
+    LOG_UI(0, @"transitionContext=%@", transitionContext);
+}
 
 #pragma mark TTTAttributedLabelDelegate method
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url
 {
-    //NSLog(@"%@", url);
     LOG_DEEBUG(0, @"clicked: %@", url);
-    [[UIApplication sharedApplication]openURL:url];
-    
-    if(self.backgroundColor == [UIColor crayolaApricotColor]) {
-        [self setBackgroundColor:[UIColor crayolaAquaPearlColor]];
-    } else {
-        [self setBackgroundColor:[UIColor crayolaApricotColor]];
+    if(parent != nil) {
+        [parent popWebViewFor:url over:self];
     }
+}
+
+
+- (void)attributedLabel:(TTTAttributedLabel *)label didLongPressLinkWithURL:(NSURL *)url atPoint:(CGPoint)point
+{
+    LOG_DEEBUG(0, @"%@ %@ %@", label, url, NSStringFromCGPoint(point));
+    if(parent != nil) {
+        [parent popWebViewFor:url over:self];
+    }
+
+}
+
+- (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithTextCheckingResult:(NSTextCheckingResult *)result
+{
+    LOG_DEEBUG(0, @"%@ %@", label, result);
+    //NSMutableArray *data = [NSMutableArray array];
+
+    //[data addObject:[statusView.text substringWithRange:[result rangeAtIndex:1]]];
+    NSString *foo = [statusView.text substringWithRange:[result rangeAtIndex:1]];
+    LOG_DEEBUG(0, @"clicked=%@", foo);
+    
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     LOG_UI(0, @"HELLO TOUCH=%@", event);
 }
 
--(HuTwitterStatusView *)initWithStatus:(HuTwitterStatus *)mStatus
-{
-    self = [super init];
-    if(!self) return nil;
-    
-    if([status containsMedia]) {
-        
-        
-    }
-    
-    
-    return self;
-}
 
--(HuTwitterStatusView *)initWithFrame:(CGRect)frame forStatus:(HuTwitterStatus *)mstatus with:(UIViewController *)mparent
+-(HuTwitterStatusView *)initWithFrame:(CGRect)frame forStatus:(HuTwitterStatus *)mstatus with:(UIViewController<HuViewControllerForStatusDelegate> *)mparent
 {
     self = [super initWithFrame:frame];
     if(self) {
         status = mstatus;
-        
+        parent = mparent;
         Boolean hasStatusText = NO;
         if([status statusText] != nil) {
             hasStatusText = YES;
+            
         }
+
+//        UIScreenEdgePanGestureRecognizer *sep = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(panUp:)];
+//        self.bottomEdgeRecognizer = sep;
+//        sep.edges = UIRectEdgeBottom;
+//        [self addGestureRecognizer:sep];
+//        sep.delegate = self;
+        
+        
+        HuTwitterStatusEntities *entities = [status entities];
+        NSMutableString *str = [[NSMutableString alloc]init];
+
+        NSArray *links = [entities urls];
+        if(links && [links count]) {
+            [links each:^(id object) {
+                if(object) {
+                    HuTwitterEntitiesURL *url = (HuTwitterEntitiesURL*)object;
+                    [str appendString:[url url]];
+                }
+            }];
+        }
+
         
         
         UIView *head = [self headerForServiceStatus:mstatus];
@@ -374,8 +426,8 @@ UIImageView *exView;
         dispatch_async(dispatch_get_main_queue(), ^{
             [head mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(bself.mas_top);
-                make.left.equalTo(bself.mas_left).with.offset(5);
-                make.right.equalTo(bself.mas_right).with.offset(-5);
+                make.left.equalTo(bself.mas_left).with.offset(0);
+                make.right.equalTo(bself.mas_right).with.offset(0);
                 make.height.equalTo(@55).priorityHigh();
             }];
         });
@@ -386,7 +438,7 @@ UIImageView *exView;
         statusView = JBAttributedAwareScrollView.new;
         [self addSubview:statusView];
         [statusView setFrame:CGRectZero];
-        [statusView.layer setCornerRadius:5];
+        [statusView.layer setCornerRadius:0];
         statusView.label.delegate = self;
         [statusView setFont:TWITTER_FONT_LARGE];
         
@@ -407,6 +459,17 @@ UIImageView *exView;
         [statusView addGestureRecognizer:doubleTap];
 
         
+//        UILongPressGestureRecognizer *longPress = [UILongPressGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+//            if(state == UIGestureRecognizerStateBegan) {
+//                LOG_UI(0, @"Long Press.");
+//                
+//                HuOnBehalfOf *on_behalf_of = [status status_on_behalf_of];
+//                [[HuTwitterServiceManager sharedTwitterClientOnBehalfOf:on_behalf_of ]retweet:status];
+//            }
+//            
+//        }];
+//        [statusView addGestureRecognizer:longPress];
+        
         
         if([status containsMedia]) {
             photoView = UIImageView.new;
@@ -419,15 +482,15 @@ UIImageView *exView;
             [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.greaterThanOrEqualTo(photoView.mas_bottom).with.offset(3);
                 make.bottom.equalTo(self.mas_bottom).with.offset(-3);
-                make.left.equalTo(head.mas_left);
-                make.right.equalTo(head.mas_right);
+                make.left.equalTo(head.mas_left).with.offset(6);
+                make.right.equalTo(head.mas_right).with.offset(-6);
             }];
             
             [photoView setBackgroundColor:[UIColor crayolaJellyBeanColor]];
             [photoView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(head.mas_bottom).with.offset(3);
-                make.left.equalTo(head.mas_left);
-                make.right.equalTo(head.mas_right);
+                make.top.equalTo(head.mas_bottom).with.offset(0);
+                make.left.equalTo(head.mas_left).with.offset(0);
+                make.right.equalTo(head.mas_right).with.offset(0);
                 make.height.equalTo(@320).priorityHigh();
                 //make.bottom.lessThanOrEqualTo(bself.statusView.mas_top).with.offset(3);
             }];
@@ -446,8 +509,6 @@ UIImageView *exView;
                 
             }];
             [photoView addGestureRecognizer:longPress];
-
-            
             
             UITapGestureRecognizer *singleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
                 LOG_UI(0, @"Single tap.");
@@ -484,7 +545,8 @@ UIImageView *exView;
         }
         
         if([status containsMedia] == false) {
-            NSString *t = [NSString stringWithFormat:@"%@", [status statusText]];
+            NSString *t = [NSString stringWithFormat:@"%@ %@", [status statusText], str];
+            
             statusView.text = t;
             statusView.backgroundColor = [UIColor whiteColor];
             [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -495,16 +557,29 @@ UIImageView *exView;
                 } else {
                     make.height.greaterThanOrEqualTo(@200).with.priorityMedium();
                 }
-                make.left.equalTo(head.mas_left);
-                make.right.equalTo(head.mas_right);
+                make.left.equalTo(head.mas_left).with.offset(6);
+                make.right.equalTo(head.mas_right).with.offset(-6);
             }];
         }
         if([status containsMedia] == true) {
             
-            NSString *t = [NSString stringWithFormat:@"%@ %@ in_reply_to=%@", [status statusText], [status statusImageURL], [status in_reply_to_status_id]];
-            statusView.text = t;//[status statusText];
-            statusView.backgroundColor = [UIColor crayolaKeyLimePearlColor];
+            NSString *t = [NSString stringWithFormat:@"%@ %@", [status statusText], str];
             
+            statusView.text = t;
+            //statusView.backgroundColor = [UIColor crayolaKeyLimePearlColor];
+            
+        }
+        
+        if([status in_reply_to_status_id] != nil) {
+            HuOnBehalfOf *on_behalf_of = [status status_on_behalf_of];
+            [[HuTwitterServiceManager sharedTwitterClientOnBehalfOf:on_behalf_of ]getStatus:[status in_reply_to_status_id] withStatuses:@[status] withCompletion:^(id data, BOOL success, NSError *error) {
+                if(success) {
+                    NSString *t = statusView.text;
+                    NSLog(0, @"reply: %@", data);
+                    NSString *f = [NSString stringWithFormat:@"%@\n%@", data, t];
+                    [statusView setText:f];
+                }
+            }];
         }
         
         if([status place]  != nil) {
@@ -536,14 +611,14 @@ UIImageView *exView;
                 }
                 //make.bottom.equalTo(self.mas_bottom).offset(-3);
                 
-                make.left.equalTo(head.mas_left);
-                make.right.equalTo(head.mas_right);
+                make.left.equalTo(head.mas_left).with.offset(0);
+                make.right.equalTo(head.mas_right).with.offset(0);
                 make.height.greaterThanOrEqualTo(@150).with.priorityMedium();
                 
             }];
             [locLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(locView.mas_left).with.offset(3);
-                make.right.equalTo(locView.mas_right).with.offset(-3);
+                make.left.equalTo(locView.mas_left).with.offset(0);
+                make.right.equalTo(locView.mas_right).with.offset(0);
                 make.top.equalTo(locView.mas_top).with.offset(3);
                 make.bottom.equalTo(locView.mas_bottom).with.offset(-3);
             }];
@@ -569,26 +644,61 @@ UIImageView *exView;
     
     //float clear_bottom = screen_height - HEADER_HEIGHT;
     CGRect statusview_frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
-    
-    //(CGRectMake(CGRectGetMinX(photoBox.frame), CGRectGetMaxY(photoBox.frame), CGRectGetWidth(photoBox.frame), clear_bottom));
-    
     return CGRectInset(statusview_frame, 8, 12);
     
 }
 
+-(BOOL)gestureRecognizerShouldBegin:(UIScreenEdgePanGestureRecognizer *)g {
+    LOG_UI(0, @"gesture=%@", g);
+    if(g == self.bottomEdgeRecognizer) {
+        // Do something
+        
+    }
+
+    return YES;
+}
+
+
+- (void) panUp: (UIScreenEdgePanGestureRecognizer *) g
+{
+    UIView* v = g.view;
+    LOG_UI(0, @"pan gesture=%@", g);
+    if (g.state == UIGestureRecognizerStateBegan) {
+        //NSLog(@"%@", @"begin");
+        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+    }
+    else if (g.state == UIGestureRecognizerStateChanged) {
+        CGPoint delta = [g translationInView: v];
+        CGFloat percent = fabs(delta.x/v.bounds.size.width);
+        [self.interactiveTransition updateInteractiveTransition:percent];
+        LOG_UI(0, @"delta=%@ percent=%f v=%@ v.bounds.size=%@", NSStringFromCGPoint(delta), percent, v, NSStringFromCGSize(v.bounds.size));
+    }
+    else if (g.state == UIGestureRecognizerStateEnded) {
+        CGPoint delta = [g translationInView: v];
+        CGFloat percent = fabs(delta.x/v.bounds.size.width);
+        self.interactiveTransition.completionSpeed = 0.5;
+        // (try completionSpeed = 2 to see "ghosting" problem after a partial)
+        // (can occur with 1 as well)
+        // (setting to 0.5 seems to fix it)
+        
+        if (percent > 0.5) {
+            LOG_UI(0, @"%@", @"calling finish");
+            [self.interactiveTransition finishInteractiveTransition];
+        }
+        else {
+            LOG_UI(0, @"%@", @"calling cancel");
+            [self.interactiveTransition cancelInteractiveTransition];
+        }
+    } else if (g.state == UIGestureRecognizerStateCancelled) {
+        [self.interactiveTransition cancelInteractiveTransition];
+    }
+
+}
+
+
 - (void)showOrRefreshPhoto
 {
-    
-    //    if([status containsMedia]) {
-    //
-    //        [status statusImageURL];
-    //
-    //        if([status statusImageURL] == nil) {
-    //            LOG_TWITTER(0, @"Weird. The photo box urlStr should've been set?");
-    //            //[photoBox setUrlStr:[status statusImageURL]];
-    //        }
-    //
-    //    }
+
 }
 
 - (void)updateStatusView
@@ -606,14 +716,14 @@ UIImageView *exView;
 }
 
 
--(HuInstagramStatusView *)initWithFrame:(CGRect)frame forStatus:(InstagramStatus*)mstatus with:(UIViewController *)mparent
+-(HuInstagramStatusView *)initWithFrame:(CGRect)frame forStatus:(InstagramStatus*)mstatus with:(UIViewController<HuViewControllerForStatusDelegate> *)mparent
 {
     self = [super initWithFrame:frame];
     
     if(self) {
         
         [self setBackgroundColor:[UIColor crayolaGraniteGrayColor]];
-        [self.layer setCornerRadius:3.0];
+        [self.layer setCornerRadius:0.0];
         status = mstatus;
         //[[status status_on_behalf_of]accessToken];
         parent = mparent;
@@ -637,7 +747,7 @@ UIImageView *exView;
         [self addSubview:photoView];
         [photoView setContentMode:(UIViewContentModeScaleAspectFit)];
         [photoView setClipsToBounds:YES];
-        [photoView.layer setCornerRadius:5.0];
+        [photoView.layer setCornerRadius:0.0];
         [photoView setUserInteractionEnabled:YES];
         
         UITapGestureRecognizer *singleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
@@ -675,25 +785,18 @@ UIImageView *exView;
         [photoView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
         [photoView setBackgroundColor:[UIColor crayolaManateeColor]];
         [photoView mas_makeConstraints:^(MASConstraintMaker *make) {
-            
-            make.top.equalTo(head.mas_bottom).with.offset(3);
-            make.left.equalTo(self.mas_left).with.offset(3);
-            make.right.equalTo(self.mas_right).with.offset(-3);
-            make.height.lessThanOrEqualTo(@310).with.priorityHigh();
-            
-            //[photoView sizeToFit];
-            
+            make.top.equalTo(head.mas_bottom).with.offset(0);
+            make.left.equalTo(head.mas_left).with.offset(0);
+            make.right.equalTo(head.mas_right).with.offset(0);
+            make.height.equalTo(@(self.frame.size.width)).with.priorityHigh();
         }];
         // dispatch_async(dispatch_get_main_queue(), ^{
         [head mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(bself.mas_top);
-            make.width.equalTo(photoView.mas_width);
-            make.left.equalTo(photoView.mas_left);
-            //                make.right.equalTo(bself.mas_right).with.offset(0);
+            make.width.equalTo(bself.mas_width);
+            make.left.equalTo(bself.mas_left);
             make.height.equalTo(@55).priorityHigh();
         }];
-        // });
-        
         
         
         
@@ -702,8 +805,7 @@ UIImageView *exView;
                 
                 bphotoView.image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:CGSizeMake(310,310) interpolationQuality:kCGInterpolationHigh];
                 
-                //bphotoView.image = image;
-                //__block CGRect frame;
+
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [bphotoView setNeedsDisplay];
                     
@@ -714,18 +816,16 @@ UIImageView *exView;
                 NSDictionary *dimensions = @{err: [mstatus statusImageURL] == nil ? @"(null statusImageURL)" : [mstatus statusImageURL]};
                 [[LELog sharedInstance]log:dimensions];
                 bphotoView.image = [UIImage imageNamed:@"BoozyBear.png"];
-                //                UILabel *label = UILabel.new;
-                //                [bself addSubview:label];
-                //                [label setText:[mstatus statusImageURL]];
+
                 NSString *diagnostic = [NSString stringWithFormat:@"Diagnostic null statusImageURL %@", [mstatus statusImageURL]];
                 [bself.status setStatusText:diagnostic];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [bphotoView mas_makeConstraints:^(MASConstraintMaker *make) {
                         
-                        make.top.equalTo(head.mas_bottom).with.offset(3);
-                        make.left.equalTo(bself.mas_left).with.offset(3);
-                        make.right.equalTo(bself.mas_right).with.offset(-3);
+                        make.top.equalTo(head.mas_bottom).with.offset(0);
+                        make.left.equalTo(head.mas_left).with.offset(0);
+                        make.right.equalTo(head.mas_right).with.offset(0);
                         make.height.lessThanOrEqualTo(@310).with.priorityHigh();
                         [bphotoView sizeToFit];
                     }];
@@ -743,8 +843,8 @@ UIImageView *exView;
             
             [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(photoView.mas_bottom).with.offset(3);
-                make.left.equalTo(head.mas_left);
-                make.right.equalTo(head.mas_right);
+                make.left.equalTo(head.mas_left).with.offset(0);
+                make.right.equalTo(head.mas_right).with.offset(0);
                 if(loc == nil) {
                     make.bottom.equalTo(self.mas_bottom).with.offset(-3);
                 } else {
@@ -754,7 +854,7 @@ UIImageView *exView;
                 }
             }];
             [statusView setFrame:CGRectZero];
-            [[statusView layer]setCornerRadius:5.0];
+            [[statusView layer]setCornerRadius:0.0];
             statusView.backgroundColor = [UIColor whiteColor];//[UIColor colorWithRed:186.0/255.0 green:187.0/255.0 blue:188.0/255.0 alpha:1.0];
             
             statusView.label.delegate = self;
@@ -782,7 +882,7 @@ UIImageView *exView;
             CGColorRef color = [[UIColor crayolaManateeColor]CGColor];
             [[locView layer]setBorderColor:color];
             [[locView layer]setBorderWidth:1];
-            [[locView layer]setCornerRadius:5.0];
+            [[locView layer]setCornerRadius:0.0];
             [locView setBackgroundColor:[UIColor whiteColor]];
             UILabel *locLabel = UILabel.new;
             [locLabel setFrame:CGRectZero];
@@ -805,14 +905,14 @@ UIImageView *exView;
                 }
                 make.bottom.equalTo(self.mas_bottom).offset(-3);
                 
-                make.left.equalTo(head.mas_left);
-                make.right.equalTo(head.mas_right);
+                make.left.equalTo(head.mas_left).with.offset(0);
+                make.right.equalTo(head.mas_right).with.offset(0);
                 make.height.greaterThanOrEqualTo(@100).with.priorityMedium();
                 
             }];
             [locLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(locView.mas_left).with.offset(3);
-                make.right.equalTo(locView.mas_right).with.offset(-3);
+                make.left.equalTo(locView.mas_left).with.offset(5);
+                make.right.equalTo(locView.mas_right).with.offset(5);
                 make.top.equalTo(locView.mas_top).with.offset(3);
                 make.bottom.equalTo(locView.mas_bottom).with.offset(-3);
             }];
@@ -871,17 +971,14 @@ UIImageView *exView;
         } delay:0.18];
         [photoView addGestureRecognizer:singleTap];
         
-        __strong __block HuFlickrServicer *servicer;
+        //__strong __block HuFlickrServicer *servicer;
         __strong __block HuFlickrServiceManager *mgr;
         UITapGestureRecognizer *doubleTap = [UITapGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
             [singleTap bk_cancel];
             LOG_UI(0, @"Double tap.");
-//            servicer = [[HuFlickrServicer alloc]init];
-//            [servicer like];
+
                 mgr = [[HuFlickrServiceManager alloc]initFor:status];
             [mgr like:status];
-            
-            //            [[HuInstagramHTTPSessionManager sharedInstagramClient]like:status];
         }];
         doubleTap.numberOfTapsRequired = 2;
         [photoView addGestureRecognizer:doubleTap];
@@ -890,8 +987,8 @@ UIImageView *exView;
         [head mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(bself.mas_top);
             //make.width.equalTo(bself.mas_width);
-            make.left.equalTo(self.mas_left).with.offset(5);
-            make.right.equalTo(self.mas_right).with.offset(-5);
+            make.left.equalTo(self.mas_left).with.offset(0);
+            make.right.equalTo(self.mas_right).with.offset(0);
             make.height.equalTo(@55).priorityHigh();
         }];
         
@@ -903,23 +1000,19 @@ UIImageView *exView;
                 
                 bphotoView.image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:CGSizeMake(310,310) interpolationQuality:kCGInterpolationHigh];
                 
-                //bphotoView.image = image;
-                //__block CGRect frame;
-                //dispatch_async(dispatch_get_main_queue(), ^{
+
                 [bphotoView mas_makeConstraints:^(MASConstraintMaker *make) {
                     
-                    make.top.equalTo(head.mas_bottom).with.offset(3);
-                    make.left.equalTo(head.mas_left);
-                    make.right.equalTo(head.mas_right);
+                    make.top.equalTo(head.mas_bottom).with.offset(0);
+                    make.left.equalTo(head.mas_left).with.offset(5);
+                    make.right.equalTo(head.mas_right).with.offset(-5);
                     make.height.lessThanOrEqualTo(@310).with.priorityHigh();
                     
                     [bphotoView sizeToFit];
                     
                 }];
                 [bphotoView setNeedsDisplay];
-                
-                //});
-                
+
             }
         }];
         
@@ -939,28 +1032,28 @@ UIImageView *exView;
         
 
         [photoView setBackgroundColor:[UIColor grayColor]];
-        [photoView.layer setCornerRadius:15];
+        [photoView.layer setCornerRadius:0];
         
         if([status statusText] != nil) {
             
             statusView = JBAttributedAwareScrollView.new;
             [self addSubview:statusView];
-            [statusView.layer setCornerRadius:5];
+            [statusView.layer setCornerRadius:0];
             [statusView setFrame:CGRectZero];
             statusView.label.delegate = self;
             [statusView setFont:FLICKR_FONT];
             statusView.text = [NSString stringWithFormat:@"%@ - %@", [status title], [status statusText]];
             statusView.backgroundColor =[UIColor whiteColor];
             [statusView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(photoView.mas_bottom).with.offset(3);
+                make.top.equalTo(photoView.mas_bottom).with.offset(0);
                 make.bottom.equalTo(self.mas_bottom).with.offset(-5.0);
-                make.left.equalTo(head.mas_left);
-                make.right.equalTo(head.mas_right);
+                make.left.equalTo(head.mas_left).with.offset(0);
+                make.right.equalTo(head.mas_right).with.offset(0);
             }];
             
         }
     }
-    self.layer.cornerRadius = CORNER_RADIUS;
+    self.layer.cornerRadius = 0.0;//CORNER_RADIUS;
     
     return self;
 }

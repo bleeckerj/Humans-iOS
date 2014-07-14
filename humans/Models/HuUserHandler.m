@@ -12,6 +12,7 @@
 #import <AFNetworking.h>
 #import <RNDecryptor.h>
 #import <ObjectiveSugar.h>
+#import "NSMutableDictionary+JCBDictionaryTimedCache.h"
 
 #import <ConciseKit.h>
 #import "HuFriend.h"
@@ -40,6 +41,7 @@
 #import "HuTwitterStatusMedia.h"
 #import "HuTwitterMediaSize.h"
 
+#import "HuTwitterServiceManager.h"
 
 //#import "InstagramStatus.h"
 #import "InstagramCaption.h"
@@ -193,7 +195,9 @@ NSDateFormatter *twitter_formatter;
         NSString *result = [responseObject valueForKey:@"result"];
         
         NSDictionary *dimensions = @{@"key": CLUSTERED_UUID,@"username": [aUser username], @"result": result};
-        [PFAnalytics trackEvent:@"create-new-user" dimensions:dimensions];
+        
+        LELog *log = [LELog sharedInstance];
+        [log log:dimensions];
         
         //[Flurry logEvent:@"create-new-user" withParameters:dimensions];
         
@@ -277,8 +281,8 @@ NSDateFormatter *twitter_formatter;
         LOG_NETWORK(0, @"Success %@", responseObject);
 #pragma mark here's where we set the access token to live in the requestSerializer for this manager.. =============
         [self setAccess_token:[responseObject objectForKey:@"access_token"]];
-        [huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithToken:self.access_token];
-        
+        //[huRequestOperationManager.requestSerializer setAuthorizationHeaderFieldWithToken:self.access_token];
+        [huRequestOperationManager.requestSerializer setValue:self.access_token forHTTPHeaderField:@"Authorization"];
         [self getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
             //
             if(success == NO) {
@@ -292,14 +296,8 @@ NSDateFormatter *twitter_formatter;
             }
 
         }];
-        
-        
-        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         LOG_NETWORK(0, @"Failure %@", error);
-        
-        //[Flurry logError:error.localizedDescription message:@"" error:error];
-        
         [self setAccess_token:nil];
         if(completionHandler) {
             completionHandler(NO, error);
@@ -315,15 +313,66 @@ NSDateFormatter *twitter_formatter;
     return [humans_user getYouman];
 }
 
+#pragma mark is this faster??
+- (void)testGetHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    // Request: Get User Details (https://localhost:8443/rest/user/get/)
+    NSURL *baseURL = [huRequestOperationManager baseURL];
+    NSURL *URL = [NSURL URLWithString:@"/rest/user/get" relativeToURL:baseURL];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"GET";
+    request.timeoutInterval = 30;
+    
+    // Headers
+    
+    [request addValue:[self access_token] forHTTPHeaderField:@"Authorization"];
+    
+    // Request Operation
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [operation setResponseSerializer:[AFJSONResponseSerializer serializer]];
+#ifdef DEV
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+    securityPolicy.allowInvalidCertificates = YES;
+    [operation setSecurityPolicy:securityPolicy];
+#endif
+    // Progress & Completion blocks
+    
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+    }];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //NSLog(@"Success: Status Code %ld", operation.response.statusCode);
+        humans_user = [[HuUser alloc]initWithJSONDictionary:responseObject];
+        if(completionHandler) {
+            completionHandler(true, nil);
+        }
+
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        LOG_NETWORK(0, @"User Get Failed.. %@", error);
+        LOG_NETWORK(0, @"%@", [error localizedDescription]);
+        if(completionHandler) {
+            completionHandler(false, error);
+        }
+    }];
+    
+    // Connection
+    
+    [operation start];
+
+}
+
+
 
 #pragma --- mark get the user's humans as well as the user's details, id, services, username, etc.
 
 - (void)getHumansWithCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
+    [self testGetHumansWithCompletionHandler:completionHandler];
+    /**
     [huRequestOperationManager GET:@"/rest/user/get" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         //
-        //[Flurry logEvent:[NSString stringWithFormat:@"Successful getHumansWithCompletion %@" , [humans_user username]]];
-        
+     
         humans_user = [[HuUser alloc]initWithJSONDictionary:responseObject];
 
         if(completionHandler) {
@@ -341,14 +390,67 @@ NSDateFormatter *twitter_formatter;
         }
         
     }];
+    **/
 }
 
 
 #pragma mark /human/status/count
+- (void)testGetStatusCountsWithCompletionHandler:(CompletionHandlerWithData)completionHandler
+{
+    // Request: Get Status Count For Users Humans (https://humans.nearfuturelaboratory.com:8443/rest/human/status/count)
+    NSURL *baseURL = [huRequestOperationManager baseURL];
+    NSURL *URL = [NSURL URLWithString:@"/rest/human/status/count" relativeToURL:baseURL];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"GET";
+    request.timeoutInterval = 30;
+    
+    // Headers
+    
+    [request addValue:[self access_token] forHTTPHeaderField:@"Authorization"];
+    
+    // Request Operation
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [operation setResponseSerializer:[AFJSONResponseSerializer serializer]];
+#ifdef DEV
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+    securityPolicy.allowInvalidCertificates = YES;
+    [operation setSecurityPolicy:securityPolicy];
+#endif
+    
+    // Progress & Completion blocks
+    
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+    }];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //NSLog(@"Success: Status Code %ld", operation.response.statusCode);
+        if(completionHandler) {
+            completionHandler(responseObject, true, nil);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+        
+        if(completionHandler) {
+            completionHandler(nil, false, error);
+        }
+    }];
+    
+    // Connection
+    
+    [operation start];
+
+}
+
+
+
+
 -(void)getStatusCountsWithCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
+    [self testGetStatusCountsWithCompletionHandler:completionHandler];
+    /*
+    
     NSString *path =@"/rest/human/status/count";
-    /*NSURLSessionDataTask *statusCountTask = */
     [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         if(completionHandler) {
             completionHandler(responseObject, true, nil);
@@ -361,14 +463,63 @@ NSDateFormatter *twitter_formatter;
             completionHandler(nil, false, error);
         }
     }];
+     */
 }
 
 
 
 
 #pragma mark /status/count/{humanid}
+
+- (void)testGetStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler
+{
+    // Request: Get Status Count For Human By Id After (https://humans.nearfuturelaboratory.com:8443/rest/human/status/count/533cead0ef86e511a56520f7/after/1394890009000)
+    NSURL *baseURL = [huRequestOperationManager baseURL];
+    NSString *str = [NSString stringWithFormat:@"/rest/human/status/count/%@/",[human humanid] ];
+    NSURL *URL = [NSURL URLWithString:str relativeToURL:baseURL];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"GET";
+    request.timeoutInterval = 30;
+    
+    // Headers
+    
+    [request addValue:[self access_token] forHTTPHeaderField:@"Authorization"];
+    
+    // Request Operation
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [operation setResponseSerializer:[AFJSONResponseSerializer serializer]];
+#ifdef DEV
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+    securityPolicy.allowInvalidCertificates = YES;
+    [operation setSecurityPolicy:securityPolicy];
+#endif    // Progress & Completion blocks
+    
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+    }];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+       // NSLog(@"Success: Status Code %ld", operation.response.statusCode);
+        if(completionHandler) {
+            completionHandler(responseObject, true, nil);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+        
+        if(completionHandler) {
+            completionHandler(nil, false, error);
+        }
+    }];
+    
+    // Connection
+    
+    [operation start];
+}
+
 - (void)getStatusCountForHuman:(HuHuman *)human withCompletionHandler:(CompletionHandlerWithData)completionHandler
 {
+    [self testGetStatusCountForHuman:human withCompletionHandler:completionHandler];
+/*
     NSString *path =[NSString stringWithFormat:@"/rest/human/status/count/%@", [human humanid]];
     
     [huRequestOperationManager GET:path parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -385,6 +536,7 @@ NSDateFormatter *twitter_formatter;
         }
         
     }];
+ */
 }
 
 #pragma mark /status/count/{humanid}/after/{timestamp}
@@ -582,6 +734,7 @@ NSDateFormatter *twitter_formatter;
 
 
 #pragma mark Get Friends
+/**
 - (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler
 {
     NSString *path = @"rest/user/friends/get";
@@ -605,6 +758,72 @@ NSDateFormatter *twitter_formatter;
     
     
 }
+**/
+
+
+- (void)userFriendsGetWithProgressHandler:(ProgressHandler)progressHandler withCompletionHandler:(ArrayOfResultsHandler)completionHandler
+{
+    // Request: Get Friends (https://humans.nearfuturelaboratory.com:8443/rest/user/friends/get)
+    
+    //NSURL* URL = [NSURL URLWithString:@"https://humans.nearfuturelaboratory.com:8443/rest/user/friends/get"];
+    NSURL *baseURL = [huRequestOperationManager baseURL];
+    NSURL *URL = [NSURL URLWithString:@"/rest/user/friends/get" relativeToURL:baseURL];
+
+    
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"GET";
+    request.timeoutInterval = 30;
+    
+    // Headers
+    // auth token from humans service
+    [request addValue:[self access_token] forHTTPHeaderField:@"Authorization"];
+    
+    // Request Operation
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+
+#ifdef DEV
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+    securityPolicy.allowInvalidCertificates = YES;
+    [operation setSecurityPolicy:securityPolicy];
+#endif
+
+    // Progress & Completion blocks
+    
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+        if(progressHandler) {
+            progressHandler(bytesRead, totalBytesRead, totalBytesExpectedToRead);
+        }
+
+    }];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        LOG_NETWORK(0, @"Success: Status Code %ld", operation.response.statusCode);
+        NSMutableArray *result = [[NSMutableArray alloc]init];
+        [responseObject each:^(id object) {
+            HuFriend *friend = [[HuFriend alloc]initWithJSONDictionary:object];
+            [result addObject:friend];
+        }];
+        self.friends = result;
+        if(completionHandler) {
+            completionHandler(result);
+        }
+
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        LOG_NETWORK(0, @"Error: %@", error.localizedDescription);
+        if(completionHandler) {
+            completionHandler(nil);
+        }
+
+    }];
+    
+    // Connection
+    
+    [operation start];
+
+}
+
 
 -(void)searchFriendsWith:(NSRegularExpression *)regex withCompletionHandler:(ArrayOfResultsHandler)handler
 {
@@ -636,54 +855,71 @@ NSDateFormatter *twitter_formatter;
 #pragma mark ---  GET Status for a Human ---
 
 
-// An array of status. This will check this temporary object cache first. No strategy for dumping it other than
-// when the application or GC dumps it..
+// An array of status. This will check this temporary object cache first.
 - (NSArray *)statusForHuman:(HuHuman *)aHuman
 {
-    __block id obj =  [[self statusForHumanId]objectForKey:[aHuman humanid]];
-    if(obj == nil) {
-        [self getStatusForHuman:aHuman withCompletionHandler:^(BOOL success, NSError *error) {
-            //
-            obj =  [[self statusForHumanId]objectForKey:[aHuman humanid]];
-            //TODO Need to time this out after awhile..
-            [[self statusForHumanId]setObject:obj forKey:[aHuman humanid]];
-            [self performBlock:^{
-                [[self statusForHumanId]removeObjectForKey:[aHuman humanid]];
-            } afterDelay:5*60];
-        }];
-    }
+    id obj =  [[self statusForHumanId]objectForKey:[aHuman humanid]];
+//    if(obj == nil) {
+//        // basically kicks off reloading the cache..
+//        [self getStatusForHuman:aHuman withCompletionHandler:^(BOOL success, NSError *error) {
+//            //
+//            if(success) {
+//            obj =  [[self statusForHumanId]objectForKey:[aHuman humanid]];
+//                [[self statusForHumanId]setObject:obj forKey:[aHuman humanid] removeAfter:5*60];
+//            }
+////            //TODO Need to time this out after awhile..
+////            [[self statusForHumanId]setObject:obj forKey:[aHuman humanid]];
+////            [self performBlock:^{
+////                [[self statusForHumanId]removeObjectForKey:[aHuman humanid]];
+////            } afterDelay:5*60];
+//        }];
+//        }
     return obj;
 }
 
+
 - (void)getStatusForHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
-    //[self getStatusForHuman:(HuHuman *)aHuman atPage:0 withCompletionHandler:(CompletionHandlerWithResult)completionHandler];
-    [self testGetStatusForHuman:aHuman atPage:0 withCompletionHandler:completionHandler];
+    [self getStatusForHuman:aHuman withProgressHandler:nil withCompletionHandler:completionHandler];
 }
+
+- (void)getStatusForHuman:(HuHuman *)aHuman withProgressHandler:(ProgressHandler)progressHandler withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+{
+    //[self getStatusForHuman:(HuHuman *)aHuman atPage:0 withCompletionHandler:(CompletionHandlerWithResult)completionHandler];
+    [self testGetStatusForHuman:aHuman atPage:0 withProgressHandler:progressHandler withCompletionHandler:completionHandler];
+}
+
 #pragma mark testing to see if this is quicker - i just switched the above method to point to it
-- (void)testGetStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler
+- (void)testGetStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withProgressHandler:(ProgressHandler)progressHandler withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     // Request: Get Status For Human By Id (https://humans.nearfuturelaboratory.com:8443/rest/human/status?humanid=535d9bbde4b0e5df8054ac01&page=0)
-    NSString *str = [NSString stringWithFormat:@"https://humans.nearfuturelaboratory.com:8443/rest/human/status?humanid=%@&page=%d", [aHuman humanid], aPage];
-    NSURL* URL = [NSURL URLWithString:str];
+    NSURL *baseURL = [huRequestOperationManager baseURL];
+    NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"/rest/human/status?humanid=%@&page=%d", [aHuman humanid], aPage] relativeToURL:baseURL];
+    
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"GET";
-    request.timeoutInterval = 60;
+    request.timeoutInterval = 30;
     
     // Headers
     // auth token from humans service
     [request addValue:[self access_token] forHTTPHeaderField:@"Authorization"];
-    //[request addValue:@"fd9f3d93107c34ad5826bad38ee05ed6" forHTTPHeaderField:@"Authorization"];
-    
-    // Request Operation
-    
+    // Request Operation    
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
+
+#ifdef DEV
+    AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+    securityPolicy.allowInvalidCertificates = YES;
+    [operation setSecurityPolicy:securityPolicy];
+#endif
+
     // Progress & Completion blocks
     
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        NSLog(@"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+        LOG_NETWORK(0, @"Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+        if(progressHandler) {
+            progressHandler(bytesRead, totalBytesRead, totalBytesExpectedToRead);
+        }
     }];
     
    
@@ -695,7 +931,7 @@ NSDateFormatter *twitter_formatter;
         NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
 
         LOG_NETWORK(1, @"status fetch executionTime = %f", executionTime);
-        NSLog(@"Success: Status Code %ld", (long)operation.response.statusCode);
+        LOG_NETWORK(0, @"Success: Status Code %ld", (long)operation.response.statusCode);
         [self setLastStatusResultHeader:[responseObject objectForKey:@"head"]];
         
         NSArray *sent_status = [responseObject objectForKey:@"status"];
@@ -736,26 +972,26 @@ NSDateFormatter *twitter_formatter;
                 
                 [status setStatus_on_behalf_of:onBehalfOf];
                 
+                if([status in_reply_to_status_id] != NULL && onBehalfOf != NULL) {
+//                    [[HuTwitterServiceManager sharedTwitterClientOnBehalfOf:onBehalfOf]statusById:[status in_reply_to_status_id]];
+                }
                 
                 [saved_status addObject:status];
-                //LOG_TWITTER(0, @"%@", [self getAuthForService:[status status_on_behalf_of]]);
-                
             }
-            //            if([[object valueForKey:@"service"] isEqualToString:@"foursquare"]) {
-            //                HuFoursquareCheckin *status = [[HuFoursquareCheckin alloc]initWithJSONDictionary:object];
-            //                [saved_status addObject:status];
-            //            }
         }];
         
-#pragma TODO does not seem like we do anything with this yet
-        [[self statusForHumanId] setObject:saved_status forKey:[aHuman humanid]];
+#pragma Here we cache the status with a ten minute time-out
+        [[self statusForHumanId] setObject:saved_status forKey:[aHuman humanid] removeAfter:10*60 notifyOnRemoval:^(id<NSCopying> aKey) {
+            LOG_GENERAL(0, @"Now what should I do that I removed %@", aKey);
+            [HuAppDelegate popBadToastNotification:[NSString stringWithFormat:@"Now what should I do that I removed %@", aKey] withSubnotice:@"Ehh?"];
+        }];
+        
+
         
         LOG_GENERAL(0, @"%@", [self lastStatusResultHeader]);
         if(completionHandler) {
             completionHandler(true, nil);
         }
-
-        //NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:&error];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error.localizedDescription);
         [self setLastStatusResultHeader:nil];
@@ -763,10 +999,7 @@ NSDateFormatter *twitter_formatter;
         if(completionHandler) {
             completionHandler(false, error);
         }
-        
-
     }];
-    
     // Connection
     LOG_NETWORK(1, @"start status fetch %@", methodStart);
     [operation start];
@@ -774,6 +1007,7 @@ NSDateFormatter *twitter_formatter;
 
 }
 
+/*
 - (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
     NSString *humanid = [aHuman humanid];
@@ -863,7 +1097,7 @@ NSDateFormatter *twitter_formatter;
         
     }];
 }
-
+*/
 
 + (void)usernameExists:(NSString *)username withCompletionHandler:(CompletionHandlerWithResult)completionHandler
 {
@@ -976,8 +1210,23 @@ NSDateFormatter *twitter_formatter;
         [self getAuthForService:object with:^(id data, BOOL success, NSError *error) {
             //
             LOG_GENERAL(0, @"getAuthForServicesWithCompletionHandler %@ %@", data, object);
-            NSAssert(object != nil, @"What The Fuck?");
+            if(data == nil) {
+                [HuAppDelegate popBadToastNotification:@"Woops. Internets!" withSubnotice:@"WTFF"];
+                [self performBlock:^{
+                    HuAppDelegate *delegate = DELEGATE;
+                    [delegate popToProfileCarouselView];
+                    NSDictionary *dimensions = @{@"key":CLUSTERED_UUID, @"error": error==nil?@"nil data back from getAuthForService":[[error userInfo]description]};
+                    LELog *log = [LELog sharedInstance];
+                    [log log:dimensions];
+                    
+                    
+                } afterDelay:1.0];
+            } else {
+            
+            
+            
             [bself.authForServices setObject:data forKey:object];
+            }
         }];
         if(index == [[humans_user services]count] - 1) {
             if(completionHandler) {
@@ -1082,7 +1331,9 @@ NSDateFormatter *twitter_formatter;
             NSString *loc = [NSString stringWithFormat:@"%s", __PRETTY_FUNCTION__];
             NSError *error = [[NSError alloc]initWithDomain:@"HuUserHandler" code:99 userInfo:@{@"reason": [ne reason], @"name": [ne name], @"place": loc, @"exception": ne}];
             NSDictionary *dimensions = @{@"key": CLUSTERED_UUID, @"username": username, @"error": error};
-            [PFAnalytics trackEvent:@"getAuthForService" dimensions:dimensions];
+            
+            LELog *log = [LELog sharedInstance];
+            [log log:dimensions];
             
             //[Flurry logError:[ne reason] message:[ne reason] error:error];
         }

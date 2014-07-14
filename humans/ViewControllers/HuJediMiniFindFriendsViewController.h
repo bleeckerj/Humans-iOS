@@ -8,24 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "defines.h"
-#import "HuAppDelegate.h"
-#import "HuUserHandler.h"
-#import "HuUserHandler.h"
-#import <UIImage+Resize.h>
-#import <MGBox.h>
-#import <MGScrollView.h>
-#import <MGLineStyled.h>
-#import <UIColor+Crayola.h>
-#import <UIColor+FlatUI.h>
-#import <MGScrollView.h>
-//#import <Parse/Parse.h>
-#import <FlatUIKit.h>
-#import <MZFormSheetController.h>
-#import <MRProgress.h>
-#import <UIView+MCLayout.h>
-#import "HuEditHumanViewController.h"
+
 
 @class HuEditHumanViewController;
+@class HuHuman;
 
 @interface HuJediMiniFindFriendsViewController : UIViewController <UITextFieldDelegate>
 

@@ -48,14 +48,14 @@
 @synthesize refreshOnReturn;
 @synthesize humansProfileCarouselViewController;
 
-- (id)init
-{
-    self = [super init];
-    if(self) {
-        [self commonInit];
-    }
-    return self;
-}
+//- (id)init
+//{
+//    self = [super init];
+//    if(self) {
+//        [self commonInit];
+//    }
+//    return self;
+//}
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -152,7 +152,7 @@ CGRect frame;
         
         // If you want to animate status bar use this code
         formSheet.didTapOnBackgroundViewCompletionHandler = ^(CGPoint location) {
-            if([vc deletesWereMade] == YES) {
+            if([vc deletesWereMade] == YES || [vc addsWereMade] == YES ) {
                 // gettyup
                 refreshOnReturn = YES;
                 
@@ -174,16 +174,14 @@ CGRect frame;
         
         
         formSheet.didDismissCompletionHandler = ^(UIViewController *presentedFSViewController) {
-            LOG_UI(0, @"Dismissed %@ deletesWereMade=%@ wantsNewUser=%@", presentedFSViewController, [vc deletesWereMade]?@"YES":@"NO", [vc addMoreHuman]?@"YES":@"NO");
+            LOG_UI(0, @"Dismissed %@ deletesWereMade=%@ wantsNewUser=%@", presentedFSViewController, [vc deletesWereMade]?@"YES":@"NO", [vc addsWereMade]?@"YES":@"NO");
             [MZFormSheetController sharedBackgroundWindow].formSheetBackgroundWindowDelegate = nil;
             
             //update our human just in case
             HuUser *user = [user_handler humans_user];
             self.human = [user getHumanByID:self.human.humanid];
-            //  bit gauche..
-            //            self.human = [vc human];
-            //
-            if([vc addMoreHuman]) {
+
+            if([vc addsWereMade]) {
                 [self performBlock:^{
                     [self addServiceUser];
                     
@@ -228,10 +226,15 @@ CGRect frame;
             if(success) {
                 [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
 
-                
+                    HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+                    HuHumansProfileCarouselViewController *profileCarouselViewController = [delegate humansProfileCarouselViewController];
+                    [profileCarouselViewController freshenHumansForView];
+                    
                     refreshOnReturn = YES;
                     [self performBlock:^{
                         [noticeView dismiss:YES];
+                        
+
                         [self.navigationController popViewControllerAnimated:YES];
                         
                     } afterDelay:1.0];
@@ -293,22 +296,29 @@ CGRect frame;
     [goBackButton bk_addEventHandler:^(id sender) {
         if(refreshOnReturn == YES) {
             refreshOnReturn = NO;
+            HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+            HuHumansProfileCarouselViewController *profileCarouselViewController = [delegate humansProfileCarouselViewController];
+            [profileCarouselViewController freshenHumansForView:YES];
+            
+            __block MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+            noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+            noticeView.tintColor = [UIColor crayolaRazzleDazzleRoseColor];
+            noticeView.titleLabelText = @"Knolling changes..";
             
             [user_handler userGettyUpdate:self.human withCompletionHandler:nil];
-            
             [user_handler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
                 if(success) {
                     
-                    MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
-                    noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
-                    noticeView.tintColor = [UIColor crayolaRazzleDazzleRoseColor];
-                    noticeView.titleLabelText = @"Knolling changes..";
+//                    MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
+//                    noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;
+//                    noticeView.tintColor = [UIColor crayolaRazzleDazzleRoseColor];
+//                    noticeView.titleLabelText = @"Knolling changes..";
                     //[humansProfileCarouselViewController updateHumansForView];
                     [self performBlock:^{
                         [noticeView dismiss:YES];
                         [self.navigationController popViewControllerAnimated:YES];
                         
-                    } afterDelay:2.0];
+                    } afterDelay:0.5];
                 } else {
                     MRProgressOverlayView *noticeView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
                     noticeView.mode = MRProgressOverlayViewModeIndeterminateSmall;

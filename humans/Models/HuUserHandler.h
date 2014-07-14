@@ -69,12 +69,15 @@ typedef enum networkStateTypes
 - (NSMutableDictionary *)getAuthForService:(HuOnBehalfOf *)onBehalfOf;
 - (void)getAuthForService:(HuServices *)service with:(CompletionHandlerWithData)completionHandler;
 
-- (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;
+//- (void)userFriendsGet:(ArrayOfResultsHandler)completionHandler;
+- (void)userFriendsGetWithProgressHandler:(ProgressHandler)progressHandler withCompletionHandler:(ArrayOfResultsHandler)completionHandler;
+
 - (void)userGettyUpdate:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userGettyUpdateYoumanWithCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)userGettyUpdateFriends:(CompletionHandlerWithResult)completionHandler;
 
-- (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+//- (void)getStatusForHuman:(HuHuman *)aHuman atPage:(int)aPage withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
+- (void)getStatusForHuman:(HuHuman *)aHuman withProgressHandler:(ProgressHandler)progressHandler withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (void)getStatusForHuman:(HuHuman *)aHuman withCompletionHandler:(CompletionHandlerWithResult)completionHandler;
 - (NSArray *)statusForHuman:(HuHuman *)aHuman;
 -(void)searchFriendsWith:(NSRegularExpression *)regex withCompletionHandler:(ArrayOfResultsHandler)handler;

@@ -8,6 +8,22 @@
 
 #import "HuJediMiniFindFriendsViewController.h"
 #import "HuProfilePhotoBlank.h"
+#import "HuServiceUser.h"
+#import "HuAppDelegate.h"
+#import "HuUserHandler.h"
+#import "HuUserHandler.h"
+#import <UIImage+Resize.h>
+#import <MGBox.h>
+#import <MGScrollView.h>
+#import <MGLineStyled.h>
+#import <UIColor+Crayola.h>
+#import <UIColor+FlatUI.h>
+#import <MGScrollView.h>
+#import <FlatUIKit.h>
+#import <MZFormSheetController.h>
+#import <MRProgress.h>
+#import <UIView+MCLayout.h>
+#import "HuEditHumanViewController.h"
 
 #define ROW_HEIGHT 45
 #define EDGE_INSETS
@@ -169,10 +185,10 @@
             
             HuFriend *friend = [p mFriend];
             LOG_UI(0, @"Adding %@ for %@", [friend username], [friend serviceName]);
-            dispatch_async(dispatch_get_main_queue(), ^{
+            //dispatch_async(dispatch_get_main_queue(), ^{
                 progressView.titleLabelText = [NSString stringWithFormat:@"Adding %@", [friend username]];
                 [progressView setNeedsDisplay];
-            });
+            //});
             
             HuServiceUser *service_user = [[HuServiceUser alloc]initWithFriend:friend];
         //TODO:
@@ -192,7 +208,13 @@
                     [picksGrid.boxes removeAllObjects];
                     [picksGrid setNeedsDisplay];
                 });
+                [invokingViewController setRefreshOnReturn:YES];
                 [userHandler getHumansWithCompletionHandler:^(BOOL success, NSError *error) {
+                    
+                    HuAppDelegate *delegate = DELEGATE;
+                    HuHumansProfileCarouselViewController *profileCarouselViewController = [delegate humansProfileCarouselViewController];
+                    [profileCarouselViewController freshenHumansForView];
+                    
                     [self performBlock:^{
                         [progressView dismiss:YES completion:^{
                             [bself mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
@@ -201,7 +223,7 @@
                             }];
                         }];
                         
-                    } afterDelay:1.0];
+                    } afterDelay:0.2];
                 }];
             } else {
                 [progressView dismiss:YES completion:^{
@@ -235,7 +257,7 @@
         progressView.tintColor = [UIColor carrotColor];
         progressView.titleLabelText = @"Finding Friends";
         
-        [userHandler userFriendsGet:^(NSMutableArray *results) {
+        [userHandler userFriendsGetWithProgressHandler:nil withCompletionHandler:^(NSMutableArray *results) {
             progressView.mode = MRProgressOverlayViewModeCheckmark;
             progressView.titleLabelText = [NSString stringWithFormat:@"Found %lu Friends",  (unsigned long)[[userHandler friends] count]];
             [self performBlock:^{

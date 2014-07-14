@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "HuUser.h"
+#import "NSMutableDictionary+JCBDictionaryTimedCache.h"
 //#import "HuUserHandler.h"
 
 @class HuUserHandler;
@@ -21,6 +22,8 @@
 - (void)resetStatusRefreshTimer:(NSTimeInterval)refreshTime;
 - (void)setHumansUserHandler:(HuUserHandler *)aUserHandler;
 - (void)populateViewsForHumans;
+- (void)freshenHumansForView:(Boolean)updateProfileImages;
+- (void)freshenHumansForView;
 //- (id)initWithUserHandler:(HuUserHandler *)aUserHandler;
 
 @end

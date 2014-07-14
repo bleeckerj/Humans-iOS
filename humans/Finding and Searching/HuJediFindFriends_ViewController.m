@@ -144,7 +144,7 @@ UISearchBar *mSearchBar;
 
 - (void)commonInit
 {
-    HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
+    HuAppDelegate *appDel = DELEGATE;
     HuUserHandler *h = HuUserHandler.new;
     h = [appDel humansAppUser];
     
@@ -339,6 +339,11 @@ UISearchBar *mSearchBar;
                     HuJediFindFriends_ViewController *bself = self;
                     
                     if(success) {
+                        
+                        HuAppDelegate *delegate = DELEGATE;
+                        [[delegate humansProfileCarouselViewController]freshenHumansForView:NO];
+                        
+                                                
                         progressView.titleLabelText = @"Good deal. New Humans.";
                         // reload the representation of ourself..our profile data and list of humans
                         // so that when we go back to the main humans scroll view, the new human could
@@ -907,12 +912,18 @@ NSUInteger lastLength;
     MRProgressOverlayView *progressView = [MRProgressOverlayView showOverlayAddedTo:self.view animated:YES];
     progressView.mode = MRProgressOverlayViewModeIndeterminate;
     progressView.titleLabelText = @"Finding Friends";
-    
+    //[progressView setProgress:0.1 animated:NO];
     
     HuAppDelegate *appDel = [[UIApplication sharedApplication]delegate];
     appUser = [appDel humansAppUser];//[[HuAppUser alloc]init];
     
-    [appUser userFriendsGet:^(NSMutableArray *results) {
+    [appUser userFriendsGetWithProgressHandler:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        //
+        if(progressView.mode != MRProgressOverlayViewModeDeterminateCircular) {
+            progressView.mode = MRProgressOverlayViewModeDeterminateCircular;
+        }
+        [progressView setProgress:totalBytesExpectedToRead/totalBytesExpectedToRead animated:YES];
+    } withCompletionHandler:^(NSMutableArray *results) {
         // now appUser has all my friends..
         LOG_GENERAL(0, @"Load Follows of %@ found %ld follows/friends.", [[appUser humans_user]username], [[appUser friends] count]);
         

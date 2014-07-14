@@ -7,7 +7,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface HuOnBehalfOf : NSObject
+@interface HuOnBehalfOf : NSObject <NSCopying>
 
 
 @property (strong, nonatomic) NSString *serviceName;

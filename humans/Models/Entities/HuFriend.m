@@ -200,7 +200,7 @@
     NSURL *url = [[NSURL alloc]initWithString:self.imageURL];
     
     [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        LOG_NETWORK(0, @"cacheType=%d", cacheType);
+        LOG_NETWORK(0, @"cacheType=%ld", cacheType);
         if(error == nil) {
             self.profileImage = image;
         }
@@ -217,7 +217,7 @@
     NSURL *url = [[NSURL alloc]initWithString:self.largeImageURL];
     
     [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"angry_unicorn_tiny.png"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        LOG_NETWORK(0, @"cacheType=%d", cacheType);
+        LOG_NETWORK(0, @"cacheType=%ld", cacheType);
         if(error == nil) {
             self.profileImage = image;
         }

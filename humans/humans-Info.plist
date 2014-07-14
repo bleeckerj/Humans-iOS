@@ -21,9 +21,9 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.2.9.4</string>
+	<string>0.2.9.4.7</string>
 	<key>CWBuildNumber</key>
-	<integer>2784</integer>
+	<integer>3115</integer>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>

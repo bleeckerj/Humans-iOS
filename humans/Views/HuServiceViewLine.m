@@ -63,7 +63,7 @@ UIImage *serviceImage;
     
     [WSLObjectSwitch switchOn:[aService serviceName] defaultBlock:^{
         LOG_UI(0, @"Default?");
-        NSString *error = [NSString stringWithFormat:@"No service match for serviceName=%@ serviceUserID=%@", [aService serviceName], [aService serviceUserID]];
+        //NSString *error = [NSString stringWithFormat:@"No service match for serviceName=%@ serviceUserID=%@", [aService serviceName], [aService serviceUserID]];
         //[Flurry logError:error message:error error:nil];
     } cases:
      @"twitter", ^{

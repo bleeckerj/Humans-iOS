@@ -38,6 +38,7 @@
 @synthesize retweeted = _retweeted;
 @synthesize possibly_sensitive = _possibly_sensitive;
 @synthesize lang = _lang;
+@synthesize status_on_behalf_of = _status_on_behalf_of;
 
 @synthesize hasBeenRead;
 @synthesize doNotShow;
@@ -79,11 +80,11 @@
 - (void) parseJSONDictionary:(NSDictionary *)dic
 {
 	// PARSER
-    id status_on_behalf_of_ = [dic objectForKey:@"status_on_behalf_of"];
-    if([status_on_behalf_of_ isKindOfClass:[NSDictionary class]])
-    {
-        self.status_on_behalf_of = [[HuOnBehalfOf alloc]initWithJSONDictionary:status_on_behalf_of_];
-    }
+//    id status_on_behalf_of_ = [dic objectForKey:@"status_on_behalf_of"];
+//    if([status_on_behalf_of_ isKindOfClass:[NSDictionary class]])
+//    {
+//        self.status_on_behalf_of = [[HuOnBehalfOf alloc]initWithJSONDictionary:status_on_behalf_of_];
+//    }
     
 	id created_at_ = [dic objectForKey:@"created_at"];
 	if([created_at_ isKindOfClass:[NSString class]])

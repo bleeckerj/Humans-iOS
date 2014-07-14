@@ -7,7 +7,7 @@
 #import <Foundation/Foundation.h>
 #import "HuServiceStatus.h"
 #import "HuTwitterStatusMedia.h"
-#import "defines.h"
+//#import "defines.h"
 #import "HuOnBehalfOf.h"
 
 @class HuTwitterUser;
@@ -15,7 +15,7 @@
 @class HuTwitterPlace;
 @class HuTwitterStatusEntities;
 @class HuTwitterStatusMedia;
-
+@class HuOnBehalfOf;
 @interface HuTwitterStatus : NSObject <HuServiceStatus>
 
 

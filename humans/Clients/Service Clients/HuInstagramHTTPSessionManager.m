@@ -67,8 +67,8 @@ static NSString * const kInstagramAPIBaseURLString = @"https://api.instagram.com
 
 - (void)like:(InstagramStatus*)status
 {
-    BOOL user_has_liked = [[status user_has_liked]boolValue];
-    if(user_has_liked == NO) {
+//    BOOL user_has_liked = [[status user_has_liked]boolValue];
+//    if(user_has_liked == NO) {
     
     // it'll seem zippier if we just show this first before waiting for the "like" API call to return
     [HuAppDelegate popGoodToastNotification:@"Like That" withColor:[UIColor Instagram]];
@@ -91,7 +91,7 @@ static NSString * const kInstagramAPIBaseURLString = @"https://api.instagram.com
 
         }
     }];
-    }
+//    }
 }
 
 - (void)like:(NSString *)mediaId withAccessToken:(NSString *)accessToken withCompletionHandler:(CompletionHandlerWithResult)completionHandler

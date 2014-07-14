@@ -62,8 +62,8 @@ NSArray *icons, *titles, *descriptions, *viewControllers;
                     @"Find humans from your Flickr",
                     @"Find humans from Jedi-type shit.", nil];
     
-    HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
-    LOG_TODO(0, @"Does the delegate need an instance of JEDI!?");
+   // HuAppDelegate *delegate = [[UIApplication sharedApplication]delegate];
+    //LOG_TODO(0, @"Does the delegate need an instance of JEDI!?");
     
     ///HuJediFindFriends_ViewController *jedi = [delegate jediFindFriendsViewController];
     
@@ -150,7 +150,7 @@ NSArray *icons, *titles, *descriptions, *viewControllers;
     MGLine *instruction_line = [MGLine lineWithSize:(CGSize){320,HEADER_HEIGHT*1.5}];
     [instruction_line setFont:INFO_FONT_MEDIUM];
     [instruction_line setMultilineMiddle:@"Lorey ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor."];
-    instruction_line.middleItemsAlignment = UITextAlignmentLeft;
+    instruction_line.middleItemsAlignment = NSTextAlignmentLeft;
     //instruction_line.middleFont = INFO_FONT_MEDIUM;
     instruction_line.padding = UIEdgeInsetsMake(4, 20, 4, 8);
     [instruction_line setBorderColors:[scroller backgroundColor]];
@@ -170,13 +170,13 @@ NSArray *icons, *titles, *descriptions, *viewControllers;
         line.backgroundColor = [scroller backgroundColor];
         line.padding = UIEdgeInsetsMake(2, 8, 0, 12);
 
-        line.leftItems = [NSArray arrayWithObject:[icons objectAtIndex:idx]];
+        line.leftItems = [NSMutableArray arrayWithObject:[icons objectAtIndex:idx]];
         
         line.multilineMiddle = [NSString stringWithFormat:@"**%@**\n%@|mush", [titles objectAtIndex:idx], [descriptions objectAtIndex:idx]];
         line.sidePrecedence = MGSidePrecedenceRight;
         
         [line setRightItems:[NSMutableArray arrayWithObject:[UIImage imageNamed:@"right-arrowhead-gray"]]];
-        line.middleItemsAlignment = UITextAlignmentLeft;
+        line.middleItemsAlignment = NSTextAlignmentLeft;// UITextAlignmentLeft;
         
         // whacky. have to set the border to some color besides clear in order to set the
         // borders to a custom UIView. just the way it is for now.

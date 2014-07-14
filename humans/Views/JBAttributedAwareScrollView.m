@@ -54,7 +54,7 @@
     self.label.lineBreakMode = NSLineBreakByWordWrapping;
     self.label.numberOfLines = 0;
     self.label.backgroundColor = [UIColor clearColor];
-    self.label.enabledTextCheckingTypes = NSTextCheckingTypeLink;
+    self.label.enabledTextCheckingTypes = (NSTextCheckingTypeLink | NSTextCheckingTypeRegularExpression);
     lastView = self.label;
     
     UIView *sizingView = UIView.new;
@@ -161,6 +161,7 @@
     return self;
 }
 
+#pragma mark this is how we highlight @ style mentions and hashtags
 - (void)highlightMentionsWithColor:(UIColor *)color isUnderlined:(BOOL)underlined
 {
     NSRegularExpression *mentionExpression = [NSRegularExpression regularExpressionWithPattern:@"(?:^|\\s)((#|@)\\w+)" options:NO error:nil];
@@ -187,6 +188,7 @@
     
 }
 
+#pragma mark this is how we highlight @ style mentions and hashtags
 - (void)highlightMentionsInString:(NSString *)string withColor:(UIColor *)color isBold:(BOOL)bold isUnderlined:(BOOL)underlined
 {
     NSRegularExpression *mentionExpression = [NSRegularExpression regularExpressionWithPattern:@"(?:^|\\s)((#|@)\\w+)" options:NO error:nil];

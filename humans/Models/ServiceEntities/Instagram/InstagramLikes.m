@@ -40,7 +40,7 @@
 		self.count = count_;
 	}
 
-	id data_ = [dic objectForKey:@"data"];
+//	id data_ = [dic objectForKey:@"data"];
 //	if([data_ isKindOfClass:[NSArray class]])
 //	{
 //		NSMutableArray *array = [NSMutableArray array];

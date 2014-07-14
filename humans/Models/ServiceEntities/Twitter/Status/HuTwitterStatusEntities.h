@@ -7,10 +7,10 @@
 #import <Foundation/Foundation.h>
 
 @class NSArray;
-@class NSArray;
-@class NSArray;
-@class NSArray;
-@class NSArray;
+//@class NSArray;
+//@class NSArray;
+//@class NSArray;
+//@class NSArray;
 
 @interface HuTwitterStatusEntities : NSObject
 
