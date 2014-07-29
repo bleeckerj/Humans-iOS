@@ -589,7 +589,11 @@
 
 - (NSString *)statusText
 {
+    if([self.flickr_description _content] == nil || [[self.flickr_description _content]length] < 1) {
+        return self.title;
+    } else {
     return [self.flickr_description _content];
+    }
 }
 
 

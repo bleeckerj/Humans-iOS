@@ -6,7 +6,7 @@
 //#import "Flurry.h"
 
 #pragma mark This is where you set either the sharedDevhuRequestOperationManager or the sharedProdhuRequestOperationManager
-#undef DEV
+#define DEV
 
 #undef LE_DEBUG_LOGS
 
@@ -138,6 +138,8 @@ if (!hasCalledBack) { assert(@"Timeout"); }
 #define HEADER_FONT_LARGE       [UIFont fontWithName:@"AvenirNext-Medium" size:20]
 #define HEADER_FONT_XLARGE       [UIFont fontWithName:@"AvenirNext-Bold" size:26]
 
+#define NAME_VIEW_HEIGHT        @54
+#define NAME_VIEW_FONT [UIFont fontWithName:@"Avenir-Roman" size:28]
 #define LOGIN_VIEW_FONT_LARGE    [UIFont fontWithName:@"AvenirNext-Medium" size:32]
 
 #define PROFILE_VIEW_FONT_LARGE  [UIFont fontWithName:@"AvenirNext-Medium" size:24]
@@ -312,3 +314,18 @@ typedef enum {
     kHalfHeightScrollView,
     kFullHeightScrollView
 } tViewType;
+
+
+// this is bunk. when i was creating the new StatusView class I wanted something I could
+// develop in a different project cause otherwise it's a PITA to test a view independent of the
+// larger project (it takes time to navigate through the project ot get to the view to test simple
+// changes and fixes. So..whatever. This protocol is needed both in the app and in the independent
+// StatusView class project. Dunno what to do. The independent view class test build project ends up
+// needing project dependencies to work — I just can't make it entirely independent.
+@protocol HuViewControllerForStatusDelegate <NSObject>
+
+@required
+- (void)popWebViewFor:(NSURL *)url over:(UIView *)view;
+
+
+@end

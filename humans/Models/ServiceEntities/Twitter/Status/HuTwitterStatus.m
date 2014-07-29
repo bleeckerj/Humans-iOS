@@ -134,6 +134,10 @@
 	{
 		self.in_reply_to_status_id = in_reply_to_status_id_;
 	}
+    if([in_reply_to_status_id_ isKindOfClass:[NSNumber class]])
+    {
+        self.in_reply_to_status_id = [in_reply_to_status_id_ stringValue];
+    }
     
 	id in_reply_to_status_id_str_ = [dic objectForKey:@"in_reply_to_status_id_str"];
 	if([in_reply_to_status_id_str_ isKindOfClass:[NSString class]])
@@ -234,6 +238,13 @@
 	
 }
 
+- (BOOL)containsInstagramMedia {
+    if([[[self entities]instagramURLs]count] > 0) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
 
 
 #pragma mark HuServiceStatus delegate methods

@@ -23,11 +23,18 @@
 	<key>CFBundleVersion</key>
 	<string>0.2.9.4.7</string>
 	<key>CWBuildNumber</key>
-	<integer>3115</integer>
+	<integer>3320</integer>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>DIN Light.ttf</string>
+		<string>DINPro-Black.otf</string>
+		<string>DIN Medium.ttf</string>
+		<string>DINPro-Bold.otf</string>
+		<string>DINPro-Light.ttf</string>
+		<string>DINPro-Medium.otf</string>
+		<string>DINPro-Regular.otf</string>
 		<string>HelveticaLTStd-BlkObl.otf</string>
 		<string>fontawesome-webfont.ttf</string>
 		<string>'ionicons.ttf'. [Info.plist modification]()</string>

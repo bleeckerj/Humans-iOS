@@ -38,6 +38,25 @@
 //    return jsonString;
 }
 
+- (NSArray *)instagramURLs
+{
+    NSMutableArray *result = [NSMutableArray new];
+    if(self.urls != nil) {
+        [self.urls enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            HuTwitterEntitiesURL *url = obj;
+            NSString *display_url = [url display_url];
+            if([display_url isKindOfClass:[NSString class]]) {
+                
+                NSRange isInstagramURL = [display_url rangeOfString:@"instagram" options:NSCaseInsensitiveSearch];
+                if(isInstagramURL.location != NSNotFound) {
+                    [result addObject:display_url];
+                }
+            }
+        }];
+    }
+    return result;
+}
+
 - (id) initWithJSONDictionary:(NSDictionary *)dic
 {
 	if(self = [super init])

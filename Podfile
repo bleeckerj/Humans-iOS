@@ -26,7 +26,7 @@ pod 'MSWeakTimer', '~> 1.1.0'
 pod 'Sequencer'
 pod 'EZForm'
 pod 'US2FormValidator'
-
+pod 'UIImage-ResizeMagick'
 
 #pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast.git', :commit => '8187f23e1398f94b466c371f9cc1a3f9e1ffd234'
 pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast.git', :commit => '6ff567d4fbb7b339289c95901d6d188a8d78abbd'

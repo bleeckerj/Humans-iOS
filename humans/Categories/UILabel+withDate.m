@@ -272,9 +272,10 @@ static NSDateFormatter *formatter_2;// = [[NSDateFormatter alloc]init];
     NSString *stringTimeAgo = [self fdateToStringInterval:self.dateToShow];
     NSDateFormatter *dateFormat = [NSDateFormatter new];
     [dateFormat setDateStyle:NSDateFormatterMediumStyle];
-    
+    [dateFormat setTimeStyle:NSDateFormatterShortStyle];
+
     NSString *dateString = [dateFormat stringFromDate:self.dateToShow];
-    
+
     [UIView animateWithDuration:2 animations:^{
         [self setText:dateString];
         [self setAlpha:.9];

@@ -166,19 +166,23 @@ STTwitterAPI *twitter;
  
 }
 
-
+// recursively go back and get all the statuses to which this statusID is in reply (to)
 - (void)getStatus:(NSString *)statusID withStatuses:(NSArray *)statuses withCompletion:(CompletionHandlerWithData)completion
 {
     [twitter getStatusesShowID:statusID trimUser:@0 includeMyRetweet:@0 includeEntities:@1 successBlock:^(NSDictionary *result) {
         //
         HuTwitterStatus *status = [[HuTwitterStatus alloc]initWithJSONDictionary:result];
         if(status && [status in_reply_to_status_id] != nil) {
-            [self getStatus:[status in_reply_to_status_id] withStatuses:@[status, statuses] withCompletion:completion];
-        }
+            NSMutableArray *x = NSMutableArray.new;
+            [x addObjectsFromArray:statuses];
+            [x addObject:status];
+            [self getStatus:[status in_reply_to_status_id] withStatuses:x withCompletion:completion];
+        } else {
         //NSString *statusText = [status text];
         
         if(completion) {
             completion(statuses, YES, nil);
+        }
         }
     } errorBlock:^(NSError *error) {
         //

@@ -76,12 +76,14 @@ NSString *consumer_secret;
 
 - (void)like:(HuFlickrStatus *)status
 {
-    [HuAppDelegate popGoodToastNotification:@"Like That" withColor:[UIColor FlickrBlue]];
     
     if (![flickrRequest isRunning]) {
+        [HuAppDelegate popGoodToastNotification:@"Like That" withColor:[UIColor FlickrBlue]];
 		//[flickrRequest callAPIMethodWithGET:@"flickr.photos.getRecent" arguments:[NSDictionary dictionaryWithObjectsAndKeys:@"1", @"per_page", nil]];
         [flickrRequest callAPIMethodWithGET:@"flickr.favorites.add" arguments:@{@"photo_id": [status flickr_id]}];
-	}
+	} else {
+        [HuAppDelegate popBadToastNotification:@"Wait a moment" withSubnotice:@"Try again in a moment"];
+    }
 
 }
 

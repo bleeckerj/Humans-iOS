@@ -13,6 +13,7 @@
 #import <ObjectiveSugar.h>
 #import <Objective-Shorthand.h>
 
+
 @implementation HuHuman
 
 
@@ -170,7 +171,7 @@
     
             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                 //
-                LOG_ERROR(0, @"For %@ failed to load %@ %@ %@", [self name], obj, request, error);
+                //LOG_ERROR(0, @"For %@ failed to load %@ %@ %@", [self name], obj, request, error);
                 [profile_images addObject:[UIImage imageNamed:@"angry_unicorn_tiny.png"]];
                 dispatch_group_leave(group);
     

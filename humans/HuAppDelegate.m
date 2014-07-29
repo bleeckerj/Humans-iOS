@@ -253,7 +253,7 @@ static UIWebView *sharedWebView;
                               kCRToastAnimationOutTimeIntervalKey: @0.5,
                               kCRToastTimeIntervalKey : @1.0,
                               kCRToastUnderStatusBarKey : @NO,
-                              kCRToastNotificationPreferredHeightKey : @(HEADER_HEIGHT/2),
+                              kCRToastNotificationPreferredHeightKey : NAME_VIEW_HEIGHT,
                               kCRToastNotificationTypeKey : @(CRToastTypeCustom),
                               kCRToastAnimationInTypeKey : @(CRToastAnimationTypeSpring),
                               kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeSpring),
@@ -267,6 +267,8 @@ static UIWebView *sharedWebView;
                                 }];
 
 }
+
+
 
 
 + (void)popGoodToastNotification:(NSString *)notice withColor:(UIColor *)color
@@ -285,7 +287,7 @@ static UIWebView *sharedWebView;
                               kCRToastAnimationOutTimeIntervalKey: @0.5,
                               kCRToastTimeIntervalKey : @1,
                               kCRToastUnderStatusBarKey : @NO,
-                              kCRToastNotificationPreferredHeightKey : @(HEADER_HEIGHT/2),
+                              kCRToastNotificationPreferredHeightKey : NAME_VIEW_HEIGHT,
                               kCRToastNotificationTypeKey : @(CRToastTypeCustom),
                               kCRToastAnimationInTypeKey : @(CRToastAnimationTypeSpring),
                               kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeSpring),

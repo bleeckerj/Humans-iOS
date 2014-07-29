@@ -7,10 +7,7 @@
 #import <Foundation/Foundation.h>
 
 @class NSArray;
-//@class NSArray;
-//@class NSArray;
-//@class NSArray;
-//@class NSArray;
+
 
 @interface HuTwitterStatusEntities : NSObject
 
@@ -22,6 +19,7 @@
 @property (strong, nonatomic) NSArray *user_mentions;
 @property (strong, nonatomic) NSArray *media;
 
+- (NSArray *)instagramURLs;
 - (id) initWithJSONDictionary:(NSDictionary *)dic;
 - (void) parseJSONDictionary:(NSDictionary *)dic;
 

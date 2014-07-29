@@ -14,6 +14,7 @@
 #import "HuViewForServiceStatus.h"
 #import <MZFormSheetController.h>
 #import "StatusView.h"
+#import <CoreLocation/CoreLocation.h>
 
 //@class HuHumansProfileCarouselViewController;
 
